@@ -20,6 +20,7 @@ st.set_page_config(layout="wide", page_title="SuperDepot", page_icon=":bar_chart
 def LadeBewegungsdaten():
     dfDaten = pd.read_excel('Data/Bewegungsdaten.xlsx')
     return dfDaten
+@st.cache(allow_output_mutation=True)
 def LadeLSDaten():
     df = pd.read_excel('Data/df.xlsx')
     return df
@@ -38,15 +39,15 @@ if authentication_status == True:
     if selected2 == 'Live Status':
         st.markdown("Hier kommt der Live Status Screen")
     if selected2 == 'Mitarbeiterauswertung':
-        dfDaten = LoadData()
+        dfDaten = LadeBewegungsdaten()
         Seite = Seite1()
         Seite.Ladeseite(dfDaten)
     if selected2 == 'Lagerbewegungen':
-        dfDaten = LoadData()
+        dfDaten = LadeBewegungsdaten()
         pageLager = Page_Bewegungsdaten()
         pageLager.LadeBewegungsdaten(dfDaten)
     if selected2 == 'Auftragsübersicht':
-        df = Daten()
+        df = LadeLSDaten()
         pageLieferscheine = Page_Auftragsübersicht()
         pageLieferscheine.LadeAuftragsübersicht(df)
         
