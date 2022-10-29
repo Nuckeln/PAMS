@@ -116,33 +116,3 @@ class Page_Bewegungsdaten:
                 FigHeatmapBINS()
 
 
-
-
-
-            # ------ Picks zu Zeit
-
-            # ------ Heatmap SKU's
-
-
-        #### -________________________________________________________________________________________           
-            # unique items from dflt['PickZeit']
-            # unique_items = dflt['Pick Zeit'].unique()
-            # anzZu = dflt.groupby('Pick Zeit').size().reset_index(name='Anzahl Zugriffe')
-            # # delete all rows with Anzahl Zugriffe =>1
-            # anzZu = anzZu[anzZu['Anzahl Zugriffe'] > 1]
-            # st.line_chart(data=anzZu,x='Pick Zeit',y='Anzahl Zugriffe')
-
-            # #Zugriffe = anzZu['B']
-            # np.random.seed(1)
-            # dates = anzZu['Pick Zeit']
-            # z = np.random.poisson(size=(len(bins), len(dates)))
-            # fig4 = go.Figure(data=go.Heatmap(
-            #         z=z,
-            #         x=dates,
-            #         y=unique_items,
-            #         colorscale='Viridis'))
-            # fig4.update_layout(
-            #     title='Anzahl Zugriffe auf SKU am Tag in 30 min Intervallen',
-            #     xaxis_nticks=48)
-            # st.plotly_chart(fig4)
-        #### -________________________________________________________________________________________
