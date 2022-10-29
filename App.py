@@ -17,11 +17,13 @@ from Data_Class.C_Daten_Lieferscheine import *
 st.set_page_config(layout="wide", page_title="SuperDepot", page_icon=":bar_chart:")
 # ----- Load aggregated data -----
 @st.cache(allow_output_mutation=True)
-def LoadData():
-@st.cache(allow_output_mutation=True)
-df = LsAuswerten()
+def LadeBewegungsdaten():
     dfDaten = pd.read_excel('Data/Bewegungsdaten.xlsx')
     return dfDaten
+def LadeLSDaten():
+    df = pd.read_excel('Data/df.xlsx')
+    return df
+
 # ----- Config Main Menue -----
 selected2 = option_menu(None, ["Live Status", "Lagerbewegungen", 'Mitarbeiterauswertung', "Auftragsübersicht", 'Einstellungen'], 
     icons=['cloud-fog2', 'award', "list-task", 'back'], 
@@ -44,6 +46,7 @@ if authentication_status == True:
         pageLager = Page_Bewegungsdaten()
         pageLager.LadeBewegungsdaten(dfDaten)
     if selected2 == 'Auftragsübersicht':
+        df = Daten()
         pageLieferscheine = Page_Auftragsübersicht()
         pageLieferscheine.LadeAuftragsübersicht(df)
         

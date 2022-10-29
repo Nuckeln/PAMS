@@ -63,6 +63,6 @@ class LsAuswerten:
             #mögliche CS picks abziehen
                 if (df.loc[i,'Picks CS'] >=1):
                     df.loc[i,'Picks OUT'] = 0#(df.loc[i,'O'] - (df.loc[i,'Picks CS'] * df.loc[i,'CS'])) * df.loc[i,'OUT']
-        print(df)
-        return df
+        df.to_excel('Data/df.xlsx')
+
     Berechnung()
