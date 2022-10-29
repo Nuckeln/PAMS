@@ -6,6 +6,7 @@ import pandas as pd #Pip install pandas
 from Pages.P_Login import Login
 from Pages.P_Mitarbeiterauswertung import *
 from Pages.P_Bewegungsdaten import *
+# ist das jetzt ein Kommentar?
 
 # Zum Ausführen
 #     streamlit run "/Users/martinwolf/Desktop/SuperDepot Python/App.py"
