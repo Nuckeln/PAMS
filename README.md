@@ -35,6 +35,7 @@ Module:
         pyodbc (SQL)
 
         pip install streamlit-option-menu
+        pip install openpyxl
         
 Benötigte Daten: 
     Excel User übersicht OneID Name Funktion 
