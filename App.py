@@ -9,8 +9,8 @@ from Pages.P_Bewegungsdaten import *
 # ist das jetzt ein Kommentar?
 
 # Zum Ausführen
-#     streamlit run "/Users/martinwolf/Desktop/SuperDepot Python/App.py"
-
+#MAC#    streamlit run "/Users/martinwolf/Desktop/SuperDepot Python/App.py"
+#WIN#    streamlit run "D:\SuperDepot Python 2\App.py"
 # --- Set Global Page Configs ---
 st.set_page_config(layout="wide", page_title="SuperDepot", page_icon=":bar_chart:")
 # ----- Load aggregated data -----
