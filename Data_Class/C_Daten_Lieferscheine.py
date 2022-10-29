@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 
 
-class DatenAuswerten:
+class LsAuswerten:
 #     pass
 
     def go():
@@ -28,12 +28,41 @@ class DatenAuswerten:
                 dfStammdaten.loc[each, 'PAL'] = dfStammdaten.loc[each, 'C'] / dfStammdaten.loc[each, 'D']
             else:
                 dfStammdaten.loc[each, 'PAL'] = 0
-            
+    
+        df = df.rename(columns={'M':'SKU'})
+        dfStammdaten = dfStammdaten.rename(columns={'B':'SKU'})
+#df.set_index('SKU')
+# change df.sku to string
+        df['SKU'] = df['SKU'].astype(str)
+        df = pd.merge(df, dfStammdaten[dfStammdaten['A'] == 'CS'][['SKU','CS']],left_on='SKU', right_on='SKU',how='left')
+        df = pd.merge(df, dfStammdaten[dfStammdaten['A'] == 'D97'][['SKU','PAL']],left_on='SKU', right_on='SKU',how='left')
+        df = pd.merge(df, dfStammdaten[dfStammdaten['A'] == 'OUT'][['SKU','OUT']],left_on='SKU', right_on='SKU',how='left')
 
+        df['Picks PAL'] = df.O / df.PAL
+        df['Picks CS'] = df.O / df.CS
+        df['Picks OUT'] = df.O/ df.OUT
 
-
-       
-
+        for i in range(0,len(df.index)):
+            #----PAL bereinigen
+                if (df.loc[i,'Picks PAL'] <1):
+                    df.loc[i,'Picks PAL'] = 0
+            #----cs bereinigen
+                if (df.loc[i,'Picks CS'] <1):
+                    df.loc[i,'Picks CS'] = 0 
+            #mögliche PAL picks abziehen
+                if (df.loc[i,'Picks PAL'] >=1):
+                    df.loc[i,'Picks CS'] = (df.loc[i,'O'] - (df.loc[i,'Picks PAL'] * df.loc[i,'PAL'])) * df.loc[i,'CS']
+            #---OUT bereinigen
+                if (df.loc[i,'Picks OUT'] <1):
+                    df.loc[i,'Picks OUT'] = 0
+            #mögliche PAL picks abziehen
+                if (df.loc[i,'Picks PAL'] >=1):
+                    df.loc[i,'Picks OUT'] = (df.loc[i,'O'] - (df.loc[i,'Picks PAL'] * df.loc[i,'PAL'])) * df.loc[i,'OUT']
+            #mögliche CS picks abziehen
+                if (df.loc[i,'Picks CS'] >=1):
+                    df.loc[i,'Picks OUT'] = 0#(df.loc[i,'O'] - (df.loc[i,'Picks CS'] * df.loc[i,'CS'])) * df.loc[i,'OUT']
         print('Bewegungsdaten wurden erstellt')
+        return df
 
-    go()
+    df = go()
+    print(df)
