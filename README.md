@@ -3,37 +3,38 @@ Auswertung und grafische Darstellung der Logistikprozesse am Standort sowie die 
  
 ## Notwendige Module
 Module:
-        Streamlit
-        Pandas
-        Numpy
-        pyodbc (SQL)
+        Streamlit 
+        Pandas 
+        Numpy 
+        pyodbc (SQL) 
 
+## Installation
         pip install streamlit-option-menu
         pip install openpyxl
 
 ## Zu Implementierende Funktionen:
 Notwendig zum Release: 
-Das aktuelle Wetter in der Sidebar! (Einfach nur zum Lernen API)
+Das aktuelle Wetter in der Sidebar! (Einfach nur zum Lernen API) 
 Hey, kommt man eventuell an Live Temp aus dem Depot? 
-Home:
+Home: 
     Live Tagesübersicht 
-Mitarbeiter:
-    Durchschnitt über alle Mitarbeiter
-    Auswertung Mitarbeiter Picks am Tag mit Zeitachse
-    Auswertung Wochenleistung
-Auftragsübersicht / DDS :
-    Lieferschein Volumen pro Kunde
-    Übertagungszeitraum vs. Volumen
+Mitarbeiter: 
+    Durchschnitt über alle Mitarbeiter 
+    Auswertung Mitarbeiter Picks am Tag mit Zeitachse 
+    Auswertung Wochenleistung 
+Auftragsübersicht / DDS : 
+    Lieferschein Volumen pro Kunde 
+    Übertagungszeitraum vs. Volumen 
     Anteile der Zugriffe pro LS 
-Artikelübersichten (ABC Analyse):
-    Heatmap der Lagerbereiche
-    Heatmap der SKU Zugriffe
-Vorstellbare Funktionen:
-    Kunden Forecast in Picks (Stichwort Python ARIMA-MODELL)
-    Datenerfassung Fehlverladung
-    Auswertung Fehlverladung
-    Datenerfassung Arbeitsanweisungen
-    Reminder Funktion für AA und Schulungsnachweisen
+Artikelübersichten (ABC Analyse): 
+    Heatmap der Lagerbereiche 
+    Heatmap der SKU Zugriffe 
+Vorstellbare Funktionen: 
+    Kunden Forecast in Picks (Stichwort Python ARIMA-MODELL) 
+    Datenerfassung Fehlverladung 
+    Auswertung Fehlverladung 
+    Datenerfassung Arbeitsanweisungen 
+    Reminder Funktion für AA und Schulungsnachweisen 
 
 Codebasis: 
         Python 3.10.7
