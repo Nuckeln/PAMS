@@ -20,8 +20,8 @@ class Page_Bewegungsdaten:
             dflt['Pick Zeit'] = pd.to_datetime(dflt['Pick Zeit'])            
             dflt['Pick Datum']= pd.to_datetime(dflt['Pick Datum']).dt.date
             # -------- Sidebar Config
-            st.sidebar.title("Wähle den Zeitraum aus")
-            startdatum = st.sidebar.date_input("Start Datum")
+            
+            startdatum = st.sidebar.date_input("Datum")
             #enddatum = st.sidebar.date_input("Ende Datum")
             # if startdatum < enddatum:
             #     pass

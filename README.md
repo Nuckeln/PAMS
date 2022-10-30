@@ -1,4 +1,4 @@
-
+| :bowtie: `:bowtie:` | :smile: `:smile:` | :laughing: `:laughing:` |
 ### MD EDIT <https://www.heise.de/mac-and-i/downloads/65/1/1/6/7/1/0/3/Markdown-CheatSheet-Deutsch.pdf>
 # Kurzbeschreibung
 Auswertung und grafische Darstellung der Logistikprozesse am Standort sowie die Möglichkeit der Datenerfassung (z.B. Fehlverladungen)

@@ -64,6 +64,8 @@ class LsAuswerten:
                     df.loc[i,'Picks OUT'] = 0#(df.loc[i,'O'] - (df.loc[i,'Picks CS'] * df.loc[i,'CS'])) * df.loc[i,'OUT']
         # Picks Gesamt
         df['Picks Gesamt'] = df['Picks PAL'] + df['Picks CS'] + df['Picks OUT']
+        df['Kalender Woche'] = df['B'].dt.strftime('%U')
+        df['Monat'] = df['B'].dt.month
         df.to_excel('Data/df.xlsx')
 
     Berechnung()
