@@ -16,9 +16,9 @@ from Pages.P_Bewegungsdaten import *
 #WIN#    streamlit run "D:\SuperDepot Python 2\App.py"
 
 # --- Set Global Page Configs ---
-st.set_page_config(layout="wide", page_title="SuperDepot", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
-st.markdown("<style> ul {display: none;} </style>", unsafe_allow_html=True)
-img = Image.open('Data/Logo.png')
+st.set_page_config(layout="wide", page_title="SuperDepot", page_icon=":bar_chart:",initial_sidebar_state="expanded")
+#st.markdown("<style> ul {display: none;} </style>", unsafe_allow_html=True)
+img = Image.open('Data/img/logo.png', mode='r')
 # ----- Load aggregated data -----
 @st.cache(allow_output_mutation=True)
 def LadeBewegungsdaten():
@@ -31,7 +31,7 @@ def LadeLSDaten():
 
 # ----- Config Main Menue -----
 # BAT LOGO 
-st.sidebar.image(img, width=200)
+st.sidebar.image(img, width=300)
 with st.sidebar:
     selected2 = option_menu('"Menu', ["Live Status", "Lagerbewegungen", 'Mitarbeiterauswertung', "Auftragsübersicht", 'Einstellungen'], 
         icons=['cloud-fog2', 'award', "list-task", 'back'], 

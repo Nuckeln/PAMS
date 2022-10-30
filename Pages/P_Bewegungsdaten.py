@@ -22,13 +22,6 @@ class Page_Bewegungsdaten:
             # -------- Sidebar Config
             
             startdatum = st.sidebar.date_input("Datum")
-            #enddatum = st.sidebar.date_input("Ende Datum")
-            # if startdatum < enddatum:
-            #     pass
-            # else:
-            #     #t.snow()
-                #st.sidebar.error('Einstein sagt "Geht nicht"')
-            # ------- Dataframe nach Usereingaben Filtern
             mask = (dflt['Pick Datum'] == startdatum)
             dflt = dflt.loc[mask]
 
@@ -108,8 +101,21 @@ class Page_Bewegungsdaten:
                     title='BIN Heatmap',
                     xaxis_nticks=48)            
                 st.plotly_chart(fig3)
-            
+            def FigTimeLine():
+                df = dflt.groupby(['Pick Zeit'])['PICKS'].sum().reset_index()
+                df['Zeit'] = df['Pick Zeit'].dt.strftime('%H:%M:%S')
+                df.drop(['Pick Zeit'], axis=1, inplace=True)
+                time = df['Zeit']
+                picks = df['PICKS']
+                #fig = px.histogram(df, x="total_bill")
+                fig = px.histogram(df, x=time, y=picks, title='Picks Timeline'
+                ,animation_frame="Zeit", animation_group="PICKS", range_x=[time.min(), time.max()], range_y=[picks.min(), picks.max()])
+                st.plotly_chart(fig)
+                st.dataframe(df)
+                st.write(picks)
+                st.write(time)
             left_heat,right_heat = st.columns(2)
+            FigTimeLine()
             with left_heat:
                 FigHeatmapSKU()
             with right_heat:
