@@ -29,9 +29,10 @@ class Page_Auftragsübersicht:
             
 
             def Tagesanalyse():
-                Kunden = df.groupby(['L'])['Picks Gesamt'].sum().reset_index()#.sort_values(by='Picks Gesamt', ascending=False)
-                #sort kunden by picks
+                Kunden = df.groupby(['L','B'])['Picks Gesamt'].sum().reset_index()#.sort_values(by='Picks Gesamt', ascending=False)
                 Kunden = Kunden.sort_values(by='Picks Gesamt', ascending=False)
+                st.dataframe(Kunden)
+                st.bar_chart(Kunden,x='B', y='B', width=0, height=0, use_container_width=True)
                 
 
 

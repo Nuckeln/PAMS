@@ -1,9 +1,17 @@
-## Kurzbeschreibung
+# Kurzbeschreibung
+Auswertung und grafische Darstellung der Logistikprozesse am Standort sowie die Möglichkeit der Datenerfassung (z.B. Fehlverladungen)
+ 
+## Notwendige Module
+Module:
+        Streamlit
+        Pandas
+        Numpy
+        pyodbc (SQL)
 
-### Auswertung und grafische Darstellung der Logistikprozesse am Standort sowie die Möglichkeit der Datenerfassung (z.B. Fehlverladungen)
+        pip install streamlit-option-menu
+        pip install openpyxl
 
-
-Zu Implementierende Funktionen:
+## Zu Implementierende Funktionen:
 Notwendig zum Release: 
 Das aktuelle Wetter in der Sidebar! (Einfach nur zum Lernen API)
 Hey, kommt man eventuell an Live Temp aus dem Depot? 

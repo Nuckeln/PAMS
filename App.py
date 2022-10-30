@@ -7,7 +7,7 @@ from Pages.P_Auftragsübersicht import Page_Auftragsübersicht #Pip install pand
 from Pages.P_Login import Login
 from Pages.P_Mitarbeiterauswertung import *
 from Pages.P_Bewegungsdaten import *
-from Data_Class.C_Daten_Lieferscheine import *
+#from Data_Class.C_Daten_Lieferscheine import *
 # ist das jetzt ein Kommentar?
 
 # Zum Ausführen
