@@ -32,17 +32,17 @@ class Page_Auftragsübersicht:
             wochen = st.sidebar.selectbox('Wochen', df['Kalender Woche'].unique())
             #monate = st.sidebar.selectbox('Monate', ['Tag', 'Woche', 'Monat', 'Jahr'])
 
-            def FilterNachDatum(day1, day2,df):
+        def FilterNachDatum(day1, day2,df):
                 mask = (df['Pick Datum'] >= day1) & (df['Pick Datum'] <= day2)         
                 df = df.loc[mask]
                 return df
-            def FilterNachWochen(wochen):
+        def FilterNachWochen(wochen):
                 mask = (df['Kalender Woche'] == wochen)
                 df = df.loc[mask]
             #def FilterNachMonate(monate):
                 mask = (df['Monat'] == monate)
                 df = df.loc[mask]
-            def DatenKundeaufbereiten(dfa):
+        def DatenKundeaufbereiten(dfa):
                 # DataFrame Picks zu Kunden
                 dfapicks = dfa.groupby(['Lieferschein','Pick Datum','Kunde'],dropna =False)['Picks Gesamt'].sum().reset_index()
                 dfapicksinCS = dfa.groupby(['Lieferschein','Pick Datum'])['Picks CS'].sum().reset_index()
@@ -53,7 +53,7 @@ class Page_Auftragsübersicht:
                 dfakunden = pd.merge(dfakunden, dfapicksinPAL[['Lieferschein','Picks PAL']],left_on='Lieferschein', right_on='Lieferschein',how='left')
                 # DataFrame Picks zu Tag
                 return dfakunden
-            def DatenPickTagaufbereiten(dfT):
+        def DatenPickTagaufbereiten(dfT):
                 dfaPicksTag = dfT.groupby(['Pick Datum'])['Picks Gesamt'].sum().reset_index()
                 dfaCStag = dfT.groupby(['Pick Datum'])['Picks CS'].sum().reset_index()   
                 dfaPALtag = dfT.groupby(['Pick Datum'])['Picks PAL'].sum().reset_index()      
@@ -64,7 +64,7 @@ class Page_Auftragsübersicht:
                 return dfaZugriffe
 
                 # ----- Hardfacts Auftragsübersicht -----
-            def Tagesanalyse(df, dfakunden):
+        def Tagesanalyse(df, dfakunden):
                 st.header('Auftragsübersicht Tagesanalyse')
                 # ----- Datenfiltern -----            
                 ## ----- Hardfacts Auftragsübersicht -----
@@ -86,7 +86,7 @@ class Page_Auftragsübersicht:
                 fig = px.bar(dfakunden, x="Kunde", y="Picks Gesamt", barmode="group", title="Auftragsübersicht")
                 st.plotly_chart(fig)
 
-            def Zeitraumanalyse(df,dfakunden,dfaPicks):
+        def Zeitraumanalyse(df,dfakunden,dfaPicks):
                 # Header
                 
                 st.header('Auftragsübersicht Zeitraumanalyse')
@@ -120,10 +120,10 @@ class Page_Auftragsübersicht:
             
 
             
-            df = FilterNachDatum(day1, day1,df)
-            dfaPicks = DatenPickTagaufbereiten(df)
-            dfakunden = DatenKundeaufbereiten(df)
-            Tagesanalyse(dfaPicks,dfakunden)
+        df = FilterNachDatum(day1, day1,df)
+        dfaPicks = DatenPickTagaufbereiten(df)
+        dfakunden = DatenKundeaufbereiten(df)
+        Tagesanalyse(dfaPicks,dfakunden)
 
 
 
