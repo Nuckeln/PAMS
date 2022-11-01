@@ -7,7 +7,7 @@ class DatenAuswerten:
 #     pass
 
     def go():
-
+        print('Start')
         dflt22 = pd.read_excel('Data/lt22.XLSX', 0, header=0)
         dfStammdaten = pd.read_excel('Data/Stammdaten.xlsx', 0, header=0)
         dfLabel = pd.read_csv('Data/Label.csv', sep=",")
@@ -77,16 +77,16 @@ class DatenAuswerten:
         dflt22['Pick Zeit'] = dflt22['K']  
 
         #-------Label mit anhängen ----------------
-        for each in dfLabel.index:
-            a= {"L": dfLabel.loc[each, 'DATUM'],"K": dfLabel.loc[each, 'TIME'], "O": dfLabel.loc[each, 'One ID'], "Label": dfLabel.loc[each, 'I']}
-            dflt22 = dflt22.append(a, ignore_index=True)
+        # for each in dfLabel.index:
+        #     a= {"L": dfLabel.loc[each, 'DATUM'],"K": dfLabel.loc[each, 'TIME'], "O": dfLabel.loc[each, 'One ID'], "Label": dfLabel.loc[each, 'I']}
+        #     dflt22 = dflt22.append(a, ignore_index=True)
 
         dflt22['L'] = pd.to_datetime(dflt22['L'])
         dflt22['Pick Datum'] = dflt22['L'].dt.strftime('%m/%d/%y')
         dflt22['Pick Zeit'] = dflt22['K']  
         dflt22 = pd.merge(dflt22, dfUser, left_on='O', right_on='One ID')
-
+        print('ausgabe Excel')
         # --- Ausgabe in Excel
-        dflt22.to_excel('/Users/martinwolf/Desktop/SuperDepot Python/Data/Bewegungsdaten.xlsx', index=False)
-
+        dflt22.to_excel('Data/Bewegungsdaten.xlsx', index=False)
+        print('ausgabe Excel fertig')
     go()

@@ -9,6 +9,8 @@ df = pd.read_excel("Data\vl06o items.XLSX",0)
 df.columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R']
 dfStammdaten = pd.read_excel("Data\Stammdaten.xlsx", 0, header=0)
 dfStammdaten.columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q']
+#df drop index
+
 
 dfStammdaten['B'] = dfStammdaten['B'].str.replace('0000000000', '')
 for each in dfStammdaten.index:
