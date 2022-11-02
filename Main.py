@@ -8,9 +8,8 @@ from PIL import Image # Bilder
 from Seiten.P_Login import Login
 from Seiten.P_Mitarbeiterauswertung import *
 from Seiten.P_Bewegungsdaten import *
-#from Seiten.P_Auftragsübersicht import *
-
-# ist das jetzt ein Kommentar?
+from Seiten.P_Auftragsübersicht import *
+from Seiten.P_Forecast import *
 
 # Zum Ausführen
 #MAC#    streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
@@ -38,14 +37,15 @@ def LadeBewegungsdaten():
     return dfDaten
 @st.cache(allow_output_mutation=True)
 def LadeLSDaten():
-    df = pd.read_excel('Data/df.xlsx')
-    return df
+    st.balloons()
+    dfLS = pd.read_excel('Data/df.xlsx')
+    return dfLS
 
 # ----- Config Main Menue -----
 # BAT LOGO 
 st.sidebar.image(img, width=300)
 with st.sidebar:
-    selected2 = option_menu('"Menu', ["Live Status", "Lagerbewegungen", 'Mitarbeiterauswertung', "Auftragsübersicht", 'Einstellungen'], 
+    selected2 = option_menu('"Menu', ["Live Status","Auftragsübersicht","Lagerbewegungen",'Forecast', 'Einstellungen'], 
         icons=['cloud-fog2', 'award', "list-task", 'back'], 
         menu_icon="cast", )
 #selected2
@@ -65,10 +65,14 @@ if authentication_status == True:
         dfDaten = LadeBewegungsdaten()
         pageLager = Page_Bewegungsdaten()
         pageLager.LadeBewegungsdatenTag(dfDaten)
-    # if selected2 == 'Auftragsübersicht':
-        # df = LadeLSDaten()
-        # pageLieferscheine = Page_Auftragsübersicht()
-        # pageLieferscheine.LadeAuftragsübersicht(df)
+    if selected2 == 'Auftragsübersicht':
+        dfLS = LadeLSDaten()
+        pageAuftrag = Page_Auftragsübersicht()
+        pageAuftrag.Auftragsübersicht_Page(dfLS)
+    if selected2 == 'Forecast':
+        pageForecast = Forecast()
+        pageForecast.LadeForecast()
+
         
 
 
