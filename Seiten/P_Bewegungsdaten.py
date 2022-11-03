@@ -14,14 +14,22 @@ from PIL import Image
 
 class Page_Bewegungsdaten:
         
-        def LadeBewegungsdatenTag(self, dflt):
+        def GoGO(self, dflt):
+            st.header('Lagerbewegungen')
             # ------ Änderungen am Dataframe
             # Rundung auf 5 min takt
             dflt['Pick Zeit'] = pd.to_datetime(dflt['Pick Zeit'])            
             dflt['Pick Datum']= pd.to_datetime(dflt['Pick Datum']).dt.date
             # -------- Sidebar Config
-            
-            startdatum = st.sidebar.date_input("Datum",value=dflt['Pick Datum'].max() ,max_value=dflt['Pick Datum'].max(), min_value=dflt['Pick Datum'].min())
+            st.sidebar.title("Wähle den Zeitraum aus")
+            startdatum = st.sidebar.date_input("Start Datum")
+            #enddatum = st.sidebar.date_input("Ende Datum")
+            # if startdatum < enddatum:
+            #     pass
+            # else:
+            #     #t.snow()
+                #st.sidebar.error('Einstein sagt "Geht nicht"')
+            # ------- Dataframe nach Usereingaben Filtern
             mask = (dflt['Pick Datum'] == startdatum)
             dflt = dflt.loc[mask]
 
@@ -47,24 +55,23 @@ class Page_Bewegungsdaten:
             with right_column:
                 st.write(f"GesamtPicks: {pickscs + picksout + pickspal:,}")
                 st.write(f"Picks/h: {((pickscs + picksout + pickspal) * aktivenutzer)/ 7.5:,}")
-                #st.select_slider('Datum wählen',options=dflt['Pick Datum'].unique())
-                
             # -------- Charts------------------------#
-            def FigTimeLine():
-                # ------ Timeline
-                #dfTime = dflt['Pick Zeit']
-                #dfTime['Zeit'] = dfTime['Pick Zeit'].dt.strftime('%H:%M:%S')
-                #dflt['Pick Zeit'] = dflt['Pick Zeit'].dt.round(timefeq)
-                dfTime = dflt.groupby(['Pick Zeit'])['PICKS'].sum().reset_index()
-                time = dfTime['Pick Zeit']
-                picks = dfTime['PICKS']
-                st.dataframe(dflt)
-                #fig = px.histogram(dfTime, x=time y=picks, title='Picks Timeline')#,animation_frame="Zeit", animation_group="PICKS", range_x=[0, 24], range_y=[0, 200])
-                #st.plotly_chart(fig,use_container_width=True)
-            FigTimeLine()
-            # ------ Picks in Mitarbeiter          
+            # ------ Picks zu Zeit            
+            def FigPicksZeit():
+                dflt['Pick Zeit'] = dflt['Pick Zeit'].dt.round(timefeq)
+                plotdf = dflt.groupby(['Pick Zeit'])['PICKS'].sum().reset_index()
+                st.bar_chart(data=plotdf, y='PICKS', x='Pick Zeit') 
+            FigPicksZeit()
+            def FigPicksZeit2():
+                unique_items = dflt['Pick Zeit'].unique()
+                anzZu = dflt.groupby('Pick Zeit').size().reset_index(name='Anzahl Zugriffe')
+                # delete all rows with Anzahl Zugriffe =>1
+                anzZu = anzZu[anzZu['Anzahl Zugriffe'] > 1]
+                st.line_chart(data=anzZu,x='Pick Zeit',y='Anzahl Zugriffe')
+            FigPicksZeit2()
+            # ------ Picks in Mitarbeiter
             def FigPicksMitarbeiter():
-                fig = px.bar(dflt, x="Pick Zeit", y=['PICKS'], color='Name', title="Wide-Form Input",)#hover_data=['V', 'PICKS'])
+                fig = px.bar(dflt, x="Pick Zeit", y=['PICKS'], color='Name', title="Wide-Form Input")
                 st.plotly_chart(fig,use_container_width=True)
             FigPicksMitarbeiter()
             # ------ Heatmap SKU's
@@ -102,13 +109,11 @@ class Page_Bewegungsdaten:
                 fig3.update_layout(
                     title='BIN Heatmap',
                     xaxis_nticks=48)            
-                st.plotly_chart(fig3)           
+                st.plotly_chart(fig3)
+            
             left_heat,right_heat = st.columns(2)
             with left_heat:
                 FigHeatmapSKU()
             with right_heat:
                 FigHeatmapBINS()
-        def LadeBewegungsdatenZeitraum(self,dflt):
-            st.header("Bewegungsdaten")
-       
 

@@ -37,7 +37,7 @@ def LadeBewegungsdaten():
     return dfDaten
 @st.cache(allow_output_mutation=True)
 def LadeLSDaten():
-    st.balloons()
+
     dfLS = pd.read_excel('Data/df.xlsx')
     return dfLS
 
@@ -45,7 +45,7 @@ def LadeLSDaten():
 # BAT LOGO 
 st.sidebar.image(img, width=300)
 with st.sidebar:
-    selected2 = option_menu('"Menu', ["Live Status","Auftragsübersicht","Lagerbewegungen",'Forecast', 'Einstellungen'], 
+    selected2 = option_menu('"Menu', ["Live Status","Auftragsübersicht","Lagerbewegungen",'Mitarbeiter','Forecast', 'Einstellungen'], 
         icons=['cloud-fog2', 'award', "list-task", 'back'], 
         menu_icon="cast", )
 #selected2
@@ -57,14 +57,14 @@ if authentication_status == True:
     # ----- gewählte Page Laden -----
     if selected2 == 'Live Status':
         st.markdown("Hier kommt der Live Status Screen")
-    if selected2 == 'Mitarbeiterauswertung':
+    if selected2 == 'Mitarbeiter':
         dfDaten = LadeBewegungsdaten()
         Seite = Seite1()
         Seite.Ladeseite(dfDaten)
     if selected2 == 'Lagerbewegungen':
         dfDaten = LadeBewegungsdaten()
         pageLager = Page_Bewegungsdaten()
-        pageLager.LadeBewegungsdatenTag(dfDaten)
+        pageLager.GoGO(dfDaten)
     if selected2 == 'Auftragsübersicht':
         dfLS = LadeLSDaten()
         pageAuftrag = Page_Auftragsübersicht()

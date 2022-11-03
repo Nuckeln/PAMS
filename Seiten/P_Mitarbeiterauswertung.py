@@ -16,7 +16,7 @@ class Seite1:
         
         def Ladeseite(self, dfDaten):
             
-            st.sidebar.title("Wähle den User aus")
+            st.header('Mitarbeiter im Detail')
             userauswahl = pd.Series(dfDaten['Name'].unique())
             userselection = st.sidebar.selectbox("Mitarbeiter", list(userauswahl))
 
@@ -57,5 +57,6 @@ class Seite1:
             fig = px.pie(values=random_x, names=names)
             fig.update_layout(margin=dict(t=20, b=20, l=20, r=20)) 
             # ------ DIAGRAMM ------ #
-            st.bar_chart(data=df,x='Pick Zeit',y=['Picks CS','Picks OUT','PICKS PAL'])
+            st.bar_chart(data=df,x='Pick Zeit',y=['Picks CS','Picks OUT','PICKS PAL','Label'])
+            st.dataframe(df)
             st.plotly_chart(fig)

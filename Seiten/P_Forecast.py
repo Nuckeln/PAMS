@@ -19,7 +19,6 @@ class Forecast:
         def LadeForecast(self):
             
             st.header("Forecast")
-            st.subheader("Mein ganzer Stolz 80 stunden Arbeit")
             st.write("Hier kannst du sehen wie sich die Daten entwickeln")
             st.write("Datenzeitraum ab 01.04.2022")
             df = pd.read_csv('Data/valid.csv', sep=';')

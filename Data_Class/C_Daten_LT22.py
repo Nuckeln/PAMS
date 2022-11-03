@@ -77,9 +77,9 @@ class DatenAuswerten:
         dflt22['Pick Zeit'] = dflt22['K']  
 
         #-------Label mit anhängen ----------------
-        # for each in dfLabel.index:
-        #     a= {"L": dfLabel.loc[each, 'DATUM'],"K": dfLabel.loc[each, 'TIME'], "O": dfLabel.loc[each, 'One ID'], "Label": dfLabel.loc[each, 'I']}
-        #     dflt22 = dflt22.append(a, ignore_index=True)
+        for each in dfLabel.index:
+            a= {"L": dfLabel.loc[each, 'DATUM'],"K": dfLabel.loc[each, 'TIME'], "O": dfLabel.loc[each, 'One ID'], "Label": dfLabel.loc[each, 'I']}
+            dflt22 = dflt22.append(a, ignore_index=True)
 
         dflt22['L'] = pd.to_datetime(dflt22['L'])
         dflt22['Pick Datum'] = dflt22['L'].dt.strftime('%m/%d/%y')

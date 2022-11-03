@@ -68,6 +68,7 @@ class Page_Auftragsübersicht:
 
 ## ABFRAGE DATUM
         def Tagesanalyse(dfKunden,dfPicks):
+            st.header('Auftragsübersicht Tagesanalyse')
             dfKunden = FilterNachDatum(day1,day2,dfKunden)
             dfPicks = FilterNachDatum(day1,day2,dfPicks)
             
@@ -102,13 +103,14 @@ class Page_Auftragsübersicht:
             figPiePickaufteilung()
             def figPicksKunde():
                 figTagKunden = px.bar(dfKunden, x="Kunde", y="Picks Gesamt",  title="Kundenverteilung",hover_data=['Picks Gesamt','Lieferschein','Picks OUT','Picks CS','Picks PAL'],color='Picks Gesamt',color_continuous_scale=px.colors.sequential.RdBu)
-                st.plotly_chart(figTagKunden)         
+                st.plotly_chart(figTagKunden,use_container_width=True)         
             figPicksKunde()
 
             st.dataframe(dfKunden)
 
 
         def Zeitraumanalyse(dfKunden,dfPicks):
+            st.header('Auftragsübersicht Zeitraumanalyse')
             dfKunden = FilterNachDatum(day1,day2,dfKunden)
             dfPicks = FilterNachDatum(day1,day2,dfPicks)
             # add Weekday to dfKunden
@@ -135,11 +137,11 @@ class Page_Auftragsübersicht:
             #---- Anzeige der Picks pro Kunde ----#
             def figPicksGesamt():
                 figTagKunden = px.bar(dfPicks, x="Pick Datum", y="Picks Gesamt",  title="Picks",hover_data=['Pick Datum','Picks OUT','Picks CS','Picks PAL'],color='Picks Gesamt',color_continuous_scale=px.colors.sequential.RdBu)
-                st.plotly_chart(figTagKunden)      
+                st.plotly_chart(figTagKunden,use_container_width=True)      
             figPicksGesamt()
             def figPicksKunde():
                 figTagKunden = px.bar(dfKunden, x="Kunde", y="Picks Gesamt",  title="Kundenverteilung",hover_data=['Picks Gesamt','Lieferschein','Picks OUT','Picks CS','Picks PAL'],color='Picks Gesamt',color_continuous_scale=px.colors.sequential.RdBu)
-                st.plotly_chart(figTagKunden)         
+                st.plotly_chart(figTagKunden,use_container_width=True)         
             figPicksKunde()
             st.markdown('###Was noch folgt:  '
                         '1. Anzeige der Picks pro Kunde pro Tag  '
