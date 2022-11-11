@@ -11,7 +11,7 @@ Auswertung und grafische Darstellung der Logistikprozesse am Standort sowie die 
 
 pip install streamlit <https://docs.streamlit.io/library/api-reference>  
 pip install streamlit-option-menu (für main menu)  
-
+pip install pyodbc (für Datenbankverbindung)
 pip install streamlit-authenticator==0.1.5 (für Login)  
 pip install pandas <https://pandas.pydata.org/docs/reference/index.html#api>  
 pip install numpy <https://numpy.org/install/>  

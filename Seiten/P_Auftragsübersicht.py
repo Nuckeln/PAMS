@@ -102,7 +102,7 @@ class Page_Auftragsübersicht:
             st.write('  ')
             figPiePickaufteilung()
             def figPicksKunde():
-                figTagKunden = px.bar(dfKunden, x="Kunde", y="Picks Gesamt",  title="Kundenverteilung",hover_data=['Picks Gesamt','Lieferschein','Picks OUT','Picks CS','Picks PAL'],color='Picks Gesamt',color_continuous_scale=px.colors.sequential.RdBu)
+                figTagKunden = px.bar(dfKunden, x="Kunde", y="Picks Gesamt",  title="Kundenverteilung",hover_data=['Picks Gesamt','Lieferschein','Picks OUT','Picks CS','Picks PAL'],color='Picks Gesamt',color_continuous_scale=px.colors.sequential.Jet)
                 st.plotly_chart(figTagKunden,use_container_width=True)         
             figPicksKunde()
 

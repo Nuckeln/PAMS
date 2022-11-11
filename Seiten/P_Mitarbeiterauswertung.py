@@ -12,6 +12,10 @@ from requests import head
 import streamlit as st
 from PIL import Image
 
+
+#' Murmade'
+
+
 class Seite1:
         
         def Ladeseite(self, dfDaten):
@@ -58,5 +62,5 @@ class Seite1:
             fig.update_layout(margin=dict(t=20, b=20, l=20, r=20)) 
             # ------ DIAGRAMM ------ #
             st.bar_chart(data=df,x='Pick Zeit',y=['Picks CS','Picks OUT','PICKS PAL','Label'])
-            st.dataframe(df)
+            #st.dataframe(df)
             st.plotly_chart(fig)
