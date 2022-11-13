@@ -24,6 +24,7 @@ hide_streamlit_style = """
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 pages {visibility: hidden;}
+
 </style>
 
 """

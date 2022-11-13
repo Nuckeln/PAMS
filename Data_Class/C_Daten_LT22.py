@@ -4,13 +4,12 @@ import pandas as pd
 
 
 class DatenAuswerten:
-#     pass
+
 
     def go():
         print('Start')
         dflt22 = pd.read_excel('Data/lt22.XLSX', 0, header=0)
         dfStammdaten = pd.read_excel('Data/Stammdaten.xlsx', 0, header=0)
-        dfLabel = pd.read_csv('Data/Label.csv', sep=",")
         dfUser = pd.read_excel('Data/user.xlsx', 0, header=0, index_col=0)
         # Weil ich nunmal ein Excel Idiot bin
         dflt22.columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC']
@@ -77,10 +76,6 @@ class DatenAuswerten:
         dflt22['Pick Zeit'] = dflt22['K']  
 
         #-------Label mit anhängen ----------------
-        for each in dfLabel.index:
-            a= {"L": dfLabel.loc[each, 'DATUM'],"K": dfLabel.loc[each, 'TIME'], "O": dfLabel.loc[each, 'One ID'], "Label": dfLabel.loc[each, 'I']}
-            dflt22 = dflt22.append(a, ignore_index=True)
-
         dflt22['L'] = pd.to_datetime(dflt22['L'])
         dflt22['Pick Datum'] = dflt22['L'].dt.strftime('%m/%d/%y')
         dflt22['Pick Zeit'] = dflt22['K']  
@@ -89,4 +84,4 @@ class DatenAuswerten:
         # --- Ausgabe in Excel
         dflt22.to_excel('Data/Bewegungsdaten.xlsx', index=False)
         print('ausgabe Excel fertig')
-    go()
+    
