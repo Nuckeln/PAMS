@@ -16,6 +16,8 @@ pip install streamlit-authenticator==0.1.5 (für Login)
 pip install pandas <https://pandas.pydata.org/docs/reference/index.html#api>  
 pip install numpy <https://numpy.org/install/>  
 pip install pickle <https://docs.python.org/3/library/pickle.html>  
+pip install pyarrow
+pip install fastparquet (Datenkompression )
 # Funktionen:
 Notwendig zum Release: 
 Das aktuelle Wetter in der Sidebar! (Einfach nur zum Lernen API) Hey, kommt man eventuell an Live Temp aus dem Depot?  

@@ -1,19 +1,12 @@
-import pyodbc 
+import mysql.connector
 
-server = 'tcp:myserver.database.windows.net' 
-database = 'mydb'
-username = 'myusername' 
-password = 'mypassword'
-driver = '{ODBC Driver 18 for SQL Server}'
+mydb = mysql.connector.connect(
+  host="batsql-pd-ne-cmes-dev-10.database.windows.net",
+  user="batedp-cmes-dev-reportinguser",
+  password="b2.5v^H!IKjetuXMVNvW",
+  database="batsdb-pd-ne-dev-reporting_SuperDepot"
+)
 
-try:
-    cnxn = pyodbc.connect('DRIVER=' + driver + 
-                      ';SERVER=' + server + 
-                      ';DATABASE=' + database + 
-                      ';UID=' + username + 
-                      ';PWD=' + password)
+mycursor = mydb.cursor()
 
-    cursor = cnxn.cursor()
-    print('Connection established')
-except:
-    print('Cannot connect to SQL server')
+print(mydb)

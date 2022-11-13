@@ -10,6 +10,7 @@ from Seiten.P_Mitarbeiterauswertung import *
 from Seiten.P_Bewegungsdaten import *
 from Seiten.P_Auftragsübersicht import *
 from Seiten.P_Forecast import *
+from Seiten.P_Einstellungen import *
 
 # Zum Ausführen
 #MAC#    streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
@@ -72,6 +73,9 @@ if authentication_status == True:
     if selected2 == 'Forecast':
         pageForecast = Forecast()
         pageForecast.LadeForecast()
+    if selected2 == 'Einstellungen':
+        pageEinstellungen = Einstellungen()
+        pageEinstellungen.SeiteEinstellungen()
 
         
 
