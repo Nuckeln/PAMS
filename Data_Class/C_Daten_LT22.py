@@ -74,12 +74,15 @@ class LT22Auswerten:
             if dflt22.loc[each, 'E'] == 'TN1' and dflt22.loc[each, 'U'] == '916':
                 dflt22.loc[each, 'PICKS'] = dflt22.loc[each, 'H'] 
                 dflt22.loc[each, 'Picks OUT'] = dflt22.loc[each, 'H'] 
+                dflt22.loc[each, 'Pick Art'] = 'Stange'
             if dflt22.loc[each, 'E'] == 'SN1' and dflt22.loc[each, 'U'] == '916' or dflt22.loc[each, 'E'] == 'SN2' and dflt22.loc[each, 'U'] == '916' or dflt22.loc[each, 'E'] == 'SN3' and dflt22.loc[each, 'U'] == '916' or dflt22.loc[each, 'E'] == 'SN4' and dflt22.loc[each, 'U'] == '916':
                 dflt22.loc[each, 'PICKS'] = (dflt22.loc[each, 'H'] * dflt22.loc[each, 'OUT']) / dflt22.loc[each, 'CS']
                 dflt22.loc[each, 'Picks CS'] = (dflt22.loc[each, 'H'] * dflt22.loc[each, 'OUT']) / dflt22.loc[each, 'CS']
+                dflt22.loc[each, 'Pick Art'] = 'Karton'
             if dflt22.loc[each, 'E'] == 'BS3' and dflt22.loc[each, 'U'] == '916':
                 dflt22.loc[each, 'PICKS'] = (dflt22.loc[each, 'H'] * dflt22.loc[each, 'OUT']) / dflt22.loc[each, 'PAL']
                 dflt22.loc[each, 'PICKS PAL'] = (dflt22.loc[each, 'H'] * dflt22.loc[each, 'OUT']) / dflt22.loc[each, 'PAL']
+                dflt22.loc[each, 'Pick Art'] = 'Palette'
             #Umlagerungen Ermitteln 
             if dflt22.loc[each, 'E'] == 'BS3' and dflt22.loc[each, 'Ziel'] == 'SN':
                dflt22.loc[each, 'Umlagerung'] = 1
@@ -102,5 +105,5 @@ class LT22Auswerten:
         # --- Ausgabe in Excel
         dflt22.to_feather('Data/Bewegungsdaten.feather')
         print('ausgabe Excel fertig')
-    go()
+
     

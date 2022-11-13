@@ -5,7 +5,7 @@ from streamlit_option_menu import option_menu
 from streamlit import cache
 import Data_Class.rerun 
 from Data_Class.toFeather import *
-#from Data_Class.C_Daten_LT22 import *
+from Data_Class.C_Daten_LT22 import *
 
 class Einstellungen:
     pass
@@ -87,9 +87,9 @@ class Einstellungen:
                         st.dataframe(df1,use_container_width=True)
                         df1.to_feather('Data/LT22.feather')
                         st.success("Daten wurden erfolgreich aktualisiert")
-            # if st.button("Daten Berechen"):
-            #     load = LT22Auswerten()
-            #     load.go()
+            if st.button("Daten Berechen"):
+                load = LT22Auswerten()
+                load.go()
 
             
 
