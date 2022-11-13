@@ -33,9 +33,9 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 img = Image.open('Data/img/logo.png', mode='r')
 # ----- Load aggregated data -----
-@st.cache(allow_output_mutation=True)
+#@st.cache(allow_output_mutation=True)
 def LadeBewegungsdaten():
-    dfDaten = pd.read_excel('Data/Bewegungsdaten.xlsx')
+    dfDaten = pd.read_feather('Data/Bewegungsdaten.feather')
     return dfDaten
 @st.cache(allow_output_mutation=True)
 def LadeLSDaten():
@@ -59,6 +59,14 @@ if authentication_status == True:
     # ----- gewählte Page Laden -----
     if selected2 == 'Live Status':
         st.markdown("Hier kommt der Live Status Screen")
+        dfDaten = LadeBewegungsdaten()
+        
+
+        st.dataframe(dfDaten)
+        fig = px.line(dfDaten, x="Pick Datum", y="Umlagerung")
+        st.plotly_chart(fig)
+
+
     if selected2 == 'Mitarbeiter':
         dfDaten = LadeBewegungsdaten()
         Seite = Seite1()

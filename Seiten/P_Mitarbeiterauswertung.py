@@ -61,6 +61,6 @@ class Seite1:
             fig = px.pie(values=random_x, names=names)
             fig.update_layout(margin=dict(t=20, b=20, l=20, r=20)) 
             # ------ DIAGRAMM ------ #
-            st.bar_chart(data=df,x='Pick Zeit',y=['Picks CS','Picks OUT','PICKS PAL','Label'])
+            st.bar_chart(data=df,x='Pick Zeit',y=['Picks CS','Picks OUT','PICKS PAL'])
             #st.dataframe(df)
             st.plotly_chart(fig)

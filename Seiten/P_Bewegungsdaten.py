@@ -18,11 +18,23 @@ class Page_Bewegungsdaten:
             st.header('Lagerbewegungen')
             # ------ Änderungen am Dataframe
             # Rundung auf 5 min takt
-            dflt['Pick Zeit'] = pd.to_datetime(dflt['Pick Zeit'])            
-            dflt['Pick Datum']= pd.to_datetime(dflt['Pick Datum']).dt.date
+            #dflt['Pick Zeit'] = pd.to_datetime(dflt['Pick Zeit'])            
+            #dflt['Pick Datum']= pd.to_datetime(dflt['Pick Datum']).dt.date
             # -------- Sidebar Config
             st.sidebar.title("Wähle den Zeitraum aus")
-            startdatum = st.sidebar.date_input("Start Datum")
+            startdatum = st.date_input("Start Datum")
+            def FilterNachDatum(day1, day2,df):
+                mask = (df['Pick Datum'] >= day1) & (df['Pick Datum'] <= day2)         
+                df = df.loc[mask]
+                return df
+            if startdatum != None:
+                enddatum = st.date_input("End Datum")
+                if enddatum != None:
+                    dflt = FilterNachDatum(startdatum, enddatum, dflt)
+
+
+
+
             #enddatum = st.sidebar.date_input("Ende Datum")
             # if startdatum < enddatum:
             #     pass
@@ -30,7 +42,7 @@ class Page_Bewegungsdaten:
             #     #t.snow()
                 #st.sidebar.error('Einstein sagt "Geht nicht"')
             # ------- Dataframe nach Usereingaben Filtern
-            mask = (dflt['Pick Datum'] == startdatum)
+            mask = (dflt['L'] == startdatum)
             dflt = dflt.loc[mask]
 
             # Columns Kennzahlen
@@ -41,6 +53,7 @@ class Page_Bewegungsdaten:
             pickscs= int(dflt["Picks CS"].sum())
             picksout= int(dflt["Picks OUT"].sum())
             pickspal= int(dflt["PICKS PAL"].sum())
+            st.dataframe(dflt)
             # Columns Darstellung
             left_column, middle_column, right_column = st.columns(3)
             with left_column:

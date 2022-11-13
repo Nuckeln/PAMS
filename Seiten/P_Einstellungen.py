@@ -5,6 +5,7 @@ from streamlit_option_menu import option_menu
 from streamlit import cache
 import Data_Class.rerun 
 from Data_Class.toFeather import *
+#from Data_Class.C_Daten_LT22 import *
 
 class Einstellungen:
     pass
@@ -25,17 +26,19 @@ class Einstellungen:
         def MitarbeiterPflegen(self):
             dfMitarbeiter = pd.read_feather('Data/user.feather')
             # set id to index
-            dfMitarbeiter.set_index('ID', inplace=True)
+            #dfMitarbeiter.set_index('ID', inplace=True)
             name = st.text_input("Name")
             oneId = st.text_input("One ID")
             funktion = st.text_input("Funktion")
             col1,col2,col3 = st.columns(3)
             with col1:
                 speichern = st.button("Speichern")
-                eingabeloeschen = st.button("Eingabe löschen")
+                
             with col2:
                 selMitarbeiter = st.selectbox("Mitarbeiter", dfMitarbeiter['Name'])
             with col3:
+                st.write("")
+                st.write("")
                 löschen = st.button("gewählten Mitarbeiter Löschen")
             st.dataframe(dfMitarbeiter,use_container_width=True)
             if speichern:
@@ -43,6 +46,7 @@ class Einstellungen:
                 try:
                     oneId = int(oneId)
                     dfMitarbeiter = dfMitarbeiter.append({'Name': name, 'One ID': oneId, 'Funktion': funktion}, ignore_index=True)
+                    dfMitarbeiter.reset_index(inplace=True)
                     dfMitarbeiter.to_feather('Data/user.feather')
                     dfMitarbeiter = pd.read_feather('Data/user.feather')                    
                     st.success("Mitarbeiter wurde gespeichert")
@@ -59,23 +63,11 @@ class Einstellungen:
                 dfMitarbeiter = pd.read_feather('Data/user.feather')  
                 #rerun script
                 st.experimental_rerun()
-            if eingabeloeschen: # beende methode
-                st.experimental_rerun()
+
      
         #------------------Daten Update------------------
         def DatenUpdate(self):
             st.markdown("Welche Daten möchtest du Updaten?")
-            with st.form("my_form"):
-                st.write("Inside the form")
-                slider_val = st.slider("Form slider")
-                checkbox_val = st.checkbox("Form checkbox")           
-                # Every form must have a submit button.
-                submitted = st.form_submit_button("Submit")
-                if submitted:
-                    st.write("slider", slider_val, "checkbox", checkbox_val)
-
-            st.write("Outside the form")
-            
 
             ##TODO Bild von SAP Layout einstellungen und Prozess
             with st.expander('Bewegungsdaten LT22', expanded=False):
@@ -95,6 +87,9 @@ class Einstellungen:
                         st.dataframe(df1,use_container_width=True)
                         df1.to_feather('Data/LT22.feather')
                         st.success("Daten wurden erfolgreich aktualisiert")
+            # if st.button("Daten Berechen"):
+            #     load = LT22Auswerten()
+            #     load.go()
 
             
 

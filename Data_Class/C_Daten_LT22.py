@@ -3,49 +3,60 @@ import datetime
 import pandas as pd
 
 
-class DatenAuswerten:
-
+class LT22Auswerten:
 
     def go():
         print('Start')
-        dflt22 = pd.read_excel('Data/lt22.XLSX', 0, header=0)
+
         dfStammdaten = pd.read_excel('Data/Stammdaten.xlsx', 0, header=0)
         dfUser = pd.read_excel('Data/user.xlsx', 0, header=0, index_col=0)
         # Weil ich nunmal ein Excel Idiot bin
+        dflt22 = pd.read_feather('Data/LT22.feather')
         dflt22.columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC']
+        dflt22['Ziel'] = dflt22['U'].str[:2]
+        dflt22['Quelle'] = dflt22['E'].str[:2]
+        dflt22['Pick Datum'] = dflt22['L'].dt.strftime('%m/%d/%y')
+        dflt22['K'] = dflt22['K'].astype(str)
+        dflt22['K'] = pd.to_datetime(dflt22['K'], format='%H:%M:%S')
+        dflt22['Pick Zeit'] = dflt22['K']
+           
+        dflt22['L'] = pd.to_datetime(dflt22['L'])
+        dflt22['Pick Datum'] = dflt22['L'].dt.strftime('%m/%d/%y')
+
+        print('Daten geladen')
+        
         dfStammdaten.columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q']
-        dfLabel.columns = ['A', 'B','C','D','E','F','G','H','I','J','K','L','M','N']
+        #dfLabel.columns = ['A', 'B','C','D','E','F','G','H','I','J','K','L','M','N']
 
         dfStammdaten['B'] = dfStammdaten['B'].str.replace('0000000000', '')
-        dfLabel['B'] = pd.to_datetime(dfLabel['B'])
-        dfLabel['DATUM'] = dfLabel['B'].dt.strftime('%m/%d/%y')
-        dfLabel['TIME'] = dfLabel['B'].dt.strftime('%H:%M:%S')
+        #dfLabel['B'] = pd.to_datetime(dfLabel['B'])
+        #dfLabel['DATUM'] = dfLabel['B'].dt.strftime('%m/%d/%y')
+        #dfLabel['TIME'] = dfLabel['B'].dt.strftime('%H:%M:%S')
         # dfLabel['Time'] plus 1 hour
-        dfLabel['TIME'] = dfLabel['TIME'] + pd.Timedelta(hours=1)
-        dfLabel['TIME'] = dfLabel['B'].dt.strftime('%H:%M:%S')
+        #dfLabel['TIME'] = dfLabel['TIME'] + pd.Timedelta(hours=1)
+        #dfLabel['TIME'] = dfLabel['B'].dt.strftime('%H:%M:%S')
 
-        dfLabel = pd.merge(dfLabel, dfUser, left_on='C', right_on='Name')
+        #dfLabel = pd.merge(dfLabel, dfUser, left_on='C', right_on='Name')
 
         #def StammdatenErweitern(dfStammdaten):
         #Stamdaten erweitern 
+        print('Stammdaten erweitern')
         for each in dfStammdaten.index:
             if dfStammdaten.loc[each, 'A'] == 'CS':
                 dfStammdaten.loc[each, 'CS'] = dfStammdaten.loc[each, 'C'] / dfStammdaten.loc[each, 'D']
             else:
-                dfStammdaten.loc[each, 'CS'] = 0
-        for each in dfStammdaten.index:
+                dfStammdaten.loc[each, 'CS'] = 0        
             if dfStammdaten.loc[each, 'A'] == 'OUT':
                 dfStammdaten.loc[each, 'OUT'] = dfStammdaten.loc[each, 'C'] / dfStammdaten.loc[each, 'D']
             else:
                 dfStammdaten.loc[each, 'OUT'] = 0
-        for each in dfStammdaten.index:
             if dfStammdaten.loc[each, 'A'] == 'D97':
                 dfStammdaten.loc[each, 'PAL'] = dfStammdaten.loc[each, 'C'] / dfStammdaten.loc[each, 'D']
             else:
                 dfStammdaten.loc[each, 'PAL'] = 0
 
-
-
+#####------------------LT22-Bearbeiten-----------------#####
+        print('stammdaten merge')
         # LT22 Stammdaten übergeben 
         dflt22['B'] = dflt22['B'].astype(str)
         df = dfStammdaten[dfStammdaten['A'] == 'CS']
@@ -57,31 +68,39 @@ class DatenAuswerten:
         df = dfStammdaten[dfStammdaten['A'] == 'D97']
         df2 = pd.merge(dflt22, df[['B','PAL']], left_on='B', right_on='B')
         dflt22 = df2
-
-            #Picks Berechnen
+        print('pickschleife')
+        #Schleife erst Picks Berechnen -> Dann Umlagerungen ermitteln
         for each in dflt22.index:
             if dflt22.loc[each, 'E'] == 'TN1' and dflt22.loc[each, 'U'] == '916':
                 dflt22.loc[each, 'PICKS'] = dflt22.loc[each, 'H'] 
                 dflt22.loc[each, 'Picks OUT'] = dflt22.loc[each, 'H'] 
-        for each in dflt22.index:
             if dflt22.loc[each, 'E'] == 'SN1' and dflt22.loc[each, 'U'] == '916' or dflt22.loc[each, 'E'] == 'SN2' and dflt22.loc[each, 'U'] == '916' or dflt22.loc[each, 'E'] == 'SN3' and dflt22.loc[each, 'U'] == '916' or dflt22.loc[each, 'E'] == 'SN4' and dflt22.loc[each, 'U'] == '916':
                 dflt22.loc[each, 'PICKS'] = (dflt22.loc[each, 'H'] * dflt22.loc[each, 'OUT']) / dflt22.loc[each, 'CS']
                 dflt22.loc[each, 'Picks CS'] = (dflt22.loc[each, 'H'] * dflt22.loc[each, 'OUT']) / dflt22.loc[each, 'CS']
-        for each in dflt22.index:
             if dflt22.loc[each, 'E'] == 'BS3' and dflt22.loc[each, 'U'] == '916':
                 dflt22.loc[each, 'PICKS'] = (dflt22.loc[each, 'H'] * dflt22.loc[each, 'OUT']) / dflt22.loc[each, 'PAL']
                 dflt22.loc[each, 'PICKS PAL'] = (dflt22.loc[each, 'H'] * dflt22.loc[each, 'OUT']) / dflt22.loc[each, 'PAL']
+            #Umlagerungen Ermitteln 
+            if dflt22.loc[each, 'E'] == 'BS3' and dflt22.loc[each, 'Ziel'] == 'SN':
+               dflt22.loc[each, 'Umlagerung'] = 1
+               dflt22.loc[each, 'Art'] = 'Karton'
+            if dflt22.loc[each, 'Quelle'] == 'RS' and dflt22.loc[each, 'Ziel'] == 'SN':
+                dflt22.loc[each, 'Umlagerung'] = 1
+                dflt22.loc[each, 'Art'] = 'Karton'
+            if dflt22.loc[each, 'Quelle'] == 'SN' and dflt22.loc[each, 'Ziel'] == 'TN':
+                dflt22.loc[each, 'Umlagerung'] = 1
+                dflt22.loc[each, 'Art'] = 'Gebinde'
 
-        dflt22['Pick Datum'] = dflt22['L'].dt.strftime('%m/%d/%y')
-        dflt22['Pick Zeit'] = dflt22['K']  
+        #Mitarbeiter Hinzufügen
+        adduser = pd.merge(dflt22, dfUser, left_on='O', right_on='One ID')
+        dflt22.set_index('A', inplace=True)
+        adduser.set_index('A', inplace=True)
+        dflt22 = pd.concat([dflt22[~dflt22.index.isin(adduser.index)], adduser],)
+        dflt22.reset_index(inplace=True)
 
-        #-------Label mit anhängen ----------------
-        dflt22['L'] = pd.to_datetime(dflt22['L'])
-        dflt22['Pick Datum'] = dflt22['L'].dt.strftime('%m/%d/%y')
-        dflt22['Pick Zeit'] = dflt22['K']  
-        dflt22 = pd.merge(dflt22, dfUser, left_on='O', right_on='One ID')
         print('ausgabe Excel')
         # --- Ausgabe in Excel
-        dflt22.to_excel('Data/Bewegungsdaten.xlsx', index=False)
+        dflt22.to_feather('Data/Bewegungsdaten.feather')
         print('ausgabe Excel fertig')
+    go()
     
