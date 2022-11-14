@@ -118,6 +118,8 @@ class Seite1:
                 pickspal= int(df["PICKS PAL"].sum())
                 #labelerstellt= int(df["Label"].sum())
                 lieferscheine = df['V'].nunique()
+                l = 10
+                l = 29
                 ## ----- Kennzahlen Mitarbeiter-----##
                 
                 left_column, middle_column, right_column = st.columns(3)
@@ -133,12 +135,16 @@ class Seite1:
                     st.write(f"GesamtPicks: {pickscs + picksout + pickspal:,}")
                 with right_column:
                     st.write(f"Bearbeitete Lieferscheine: {lieferscheine:,}")
-                    st.write(f"Erstellte Label: {pickscs + picksout + pickspal:,}")
-                    st.write(f"Erstellte Paletten Label: {pickscs + picksout + pickspal:,}")
+                    st.write(f"Erstellte Label: {l:,}")
+                    st.write(f"Erstellte Paletten Label: {l:,}")
                     st.write(f"Picks/h: {(pickscs + picksout + pickspal) / 7.5:,}")
                 
                 def FigMitarbeiter():
-                    fig = px.bar(df, x="Pick Datum", y=['Picks CS','Picks OUT','PICKS PAL'], color='Pick Art',hover_data=['V'])
+                    
+
+                    dfapicks = df.groupby(['Name','Pick Datum'],dropna =False)['PICKS'].sum().reset_index()
+                    a = df['PICKS'].sum()
+                    fig = px.bar(df, x="Pick Datum", y=['Picks CS','Picks OUT','PICKS PAL'], color='Pick Art',hover_data=['V','Pick Zeit'])
                     fig.update_layout(barmode='stack' ,showlegend=False)
                     st.plotly_chart(fig,use_container_width=True)
                 FigMitarbeiter()
@@ -158,9 +164,6 @@ class Seite1:
                     st.plotly_chart(fig2,use_container_width=True)
                 FigPicksMitarbeiterLine()
                 
-
-
-
             selected2 = MenueLaden(self)
             if selected2 == "Tag Auswerten":
                 Tagauswahl()

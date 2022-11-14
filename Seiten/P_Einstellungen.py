@@ -5,15 +5,13 @@ from streamlit_option_menu import option_menu
 from streamlit import cache
 import Data_Class.rerun 
 from Data_Class.toFeather import *
-from Data_Class.C_Daten_LT22 import *
+#from Data_Class.C_Daten_LT22 import *
 
 class Einstellungen:
     pass
     def SeiteEinstellungen(self):
         if 'key' not in st.session_state:
             st.session_state['key'] = 'value'
-
-    # Session State also supports attribute based syntax
         if 'key' not in st.session_state:
             st.session_state.key = +1
 
@@ -63,9 +61,7 @@ class Einstellungen:
                 dfMitarbeiter = pd.read_feather('Data/user.feather')  
                 #rerun script
                 st.experimental_rerun()
-
      
-        #------------------Daten Update------------------
         def DatenUpdate(self):
             st.markdown("Welche Daten möchtest du Updaten?")
 
@@ -87,11 +83,7 @@ class Einstellungen:
                         st.dataframe(df1,use_container_width=True)
                         df1.to_feather('Data/LT22.feather')
                         st.success("Daten wurden erfolgreich aktualisiert")
-            if st.button("Daten Berechen"):
-                load = LT22Auswerten()
-                load.go()
 
-            
 
         selected2 = MenueLaden(self)
         if selected2 == 'Ich':

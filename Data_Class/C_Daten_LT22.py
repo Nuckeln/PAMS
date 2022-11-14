@@ -12,6 +12,7 @@ class LT22Auswerten:
         dfUser = pd.read_excel('Data/user.xlsx', 0, header=0, index_col=0)
         # Weil ich nunmal ein Excel Idiot bin
         dflt22 = pd.read_feather('Data/LT22.feather')
+
         dflt22.columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC']
         dflt22['Ziel'] = dflt22['U'].str[:2]
         dflt22['Quelle'] = dflt22['E'].str[:2]
@@ -105,5 +106,5 @@ class LT22Auswerten:
         # --- Ausgabe in Excel
         dflt22.to_feather('Data/Bewegungsdaten.feather')
         print('ausgabe Excel fertig')
-
+    go()
     
