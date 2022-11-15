@@ -7,8 +7,7 @@ Auswertung und grafische Darstellung der Logistikprozesse am Standort sowie die 
         Python 3.10.7
 ## Notwendige Module
         
->pip install openpyxl  
-
+pip install openpyxl  
 pip install streamlit <https://docs.streamlit.io/library/api-reference>  
 pip install streamlit-option-menu (für main menu)  
 pip install pyodbc (für Datenbankverbindung)
@@ -33,8 +32,8 @@ Das aktuelle Wetter in der Sidebar! (Einfach nur zum Lernen API) Hey, kommt man 
     Übertagungszeitraum vs. Volumen  
     Anteile der Zugriffe pro LS  
 ## Einstellungen
-    Dataframe User bearbeiten
-    lt22 hochladen und brechen
+    Dataframe User bearbeiten :smile:
+    lt22 hochladen und brechen :smile: 
 ## Vorstellbare Funktionen:  
     Kunden Forecast in Picks (Stichwort Python ARIMA-MODELL)  
     Datenerfassung Fehlverladung  
