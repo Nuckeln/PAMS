@@ -83,8 +83,8 @@ if authentication_status == True:
         pageForecast = Forecast()
         pageForecast.LadeForecast()
     if selected2 == 'Einstellungen':
-        pageEinstellungen = Einstellungen()
-        pageEinstellungen.SeiteEinstellungen()
+        
+        seiteLaden()
 
         
 

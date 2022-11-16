@@ -1,14 +1,15 @@
 from distutils.log import info
 import datetime
 import pandas as pd
+from SQL import datenLadenStammdaten
 
+##TODO: SAFE BACKUP LT22 BEFORE ANYTHING
+class SapDatenAggregation:
 
-class LT22Auswerten:
-
-    def go():
+    def lt22(self):
         print('Start')
 
-        dfStammdaten = pd.read_excel('Data/Stammdaten.xlsx', 0, header=0)
+        dfStammdaten = datenLadenStammdaten()
         dfUser = pd.read_excel('Data/user.xlsx', 0, header=0, index_col=0)
         # Weil ich nunmal ein Excel Idiot bin
         dflt22 = pd.read_feather('Data/LT22.feather')
@@ -20,7 +21,7 @@ class LT22Auswerten:
         dflt22['K'] = dflt22['K'].astype(str)
         dflt22['K'] = pd.to_datetime(dflt22['K'], format='%H:%M:%S')
         dflt22['Pick Zeit'] = dflt22['K']
-           
+            
         dflt22['L'] = pd.to_datetime(dflt22['L'])
         dflt22['Pick Datum'] = dflt22['L'].dt.strftime('%m/%d/%y')
 
@@ -56,7 +57,7 @@ class LT22Auswerten:
             else:
                 dfStammdaten.loc[each, 'PAL'] = 0
 
-#####------------------LT22-Bearbeiten-----------------#####
+    #####------------------LT22-Bearbeiten-----------------#####
         print('stammdaten merge')
         # LT22 Stammdaten übergeben 
         dflt22['B'] = dflt22['B'].astype(str)
@@ -86,8 +87,8 @@ class LT22Auswerten:
                 dflt22.loc[each, 'Pick Art'] = 'Palette'
             #Umlagerungen Ermitteln 
             if dflt22.loc[each, 'E'] == 'BS3' and dflt22.loc[each, 'Ziel'] == 'SN':
-               dflt22.loc[each, 'Umlagerung'] = 1
-               dflt22.loc[each, 'Art'] = 'Karton'
+                dflt22.loc[each, 'Umlagerung'] = 1
+                dflt22.loc[each, 'Art'] = 'Karton'
             if dflt22.loc[each, 'Quelle'] == 'RS' and dflt22.loc[each, 'Ziel'] == 'SN':
                 dflt22.loc[each, 'Umlagerung'] = 1
                 dflt22.loc[each, 'Art'] = 'Karton'
@@ -106,5 +107,5 @@ class LT22Auswerten:
         # --- Ausgabe in Excel
         dflt22.to_feather('Data/Bewegungsdaten.feather')
         print('ausgabe Excel fertig')
-    go()
+    
     

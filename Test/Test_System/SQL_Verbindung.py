@@ -90,3 +90,4 @@ def datenLadenAufträge():
     db_conn.connect()
     dfAufträge = pd.read_sql('SELECT * FROM [business_depotDEBYKN-DepotDEBYKNOrders]', db_conn.conn)
     return dfAufträge
+
