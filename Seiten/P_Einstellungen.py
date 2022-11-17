@@ -66,6 +66,23 @@ class Einstellungen:
                 if uploaded_file is not None:
                     # To read file as dataframe:
                     df = pd.read_excel(uploaded_file)
+                    try:
+                        dfcheck = df
+                        dfcheck.columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC']
+                        df.to_feather('Data/temp/uploadlt22.feather')
+                        #load file
+                        df1 = pd.read_feather('Data/LT22.feather')
+                        df2 = pd.read_feather('Data/temp/uploadlt22.feather')
+                        df1.set_index('Transfer Order Number', inplace=True)
+                        df2.set_index('Transfer Order Number', inplace=True)
+                        df1 = pd.concat([df1[~df1.index.isin(df2.index)], df2],)
+                        df1.reset_index(inplace=True)
+                        st.dataframe(df1,use_container_width=True)
+                        #df1.to_feather('Data/LT22.feather')
+                        st.success("Daten wurden erfolgreich aktualisiert")
+                    except:
+                        st.error("Bitte die richtige Excel Datei auswählen")
+                        st.stop()
                     #safeloce file
                     df.to_feather('Data/temp/uploadlt22.feather')
                     #load file
