@@ -8,6 +8,8 @@ Auswertung und grafische Darstellung der Logistikprozesse am Standort sowie die 
 ## Notwendige Module
         
 pip install openpyxl  
+pip install extract-msg (Mails auslesen und anzeigen) #
+pip install eml-parser (Mails auslesen und anzeigen) #
 pip install streamlit <https://docs.streamlit.io/library/api-reference>  
 pip install streamlit-option-menu (für main menu)  
 pip install pyodbc (für Datenbankverbindung)

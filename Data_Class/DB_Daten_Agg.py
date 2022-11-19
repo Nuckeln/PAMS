@@ -9,45 +9,41 @@ class DB_DatenAggregation:
     def stammdatenAgg():
         # gibt die fertigen Stammdaten aus
         # Stammdaten laden und Denummerator/Numerator berechnen 
-        dfStammdaten = pd.read_excel('data/Stammdaten.xlsx')
-        ###TODO: Stammdaten aus DB laden übernehmen
-#        dfStammdaten = datenLadenStammdaten()
-        dfStammdaten.columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q'] 
-        dfStammdaten['B'] = dfStammdaten['B'].str.replace('0000000000', '')
+        dfStammdaten = datenLadenStammdaten()
+        
+        dfStammdaten['MaterialNumber'] = dfStammdaten['MaterialNumber'].str.replace('0000000000', '')
         for each in dfStammdaten.index:
-            if dfStammdaten.loc[each, 'A'] == 'CS':
-                dfStammdaten.loc[each, 'CS'] = dfStammdaten.loc[each, 'C'] / dfStammdaten.loc[each, 'D']
+            if dfStammdaten.loc[each, 'UnitOfMeasure'] == 'CS':
+                dfStammdaten.loc[each, 'CS'] = dfStammdaten.loc[each, 'NumeratorToBaseUnitOfMeasure'] / dfStammdaten.loc[each, 'DenominatorToBaseUnitOfMeasure']
             else:
                 dfStammdaten.loc[each, 'CS'] = 0        
-            if dfStammdaten.loc[each, 'A'] == 'OUT':
-                dfStammdaten.loc[each, 'OUT'] = dfStammdaten.loc[each, 'C'] / dfStammdaten.loc[each, 'D']
+            if dfStammdaten.loc[each, 'UnitOfMeasure'] == 'OUT':
+                dfStammdaten.loc[each, 'OUT'] = dfStammdaten.loc[each, 'NumeratorToBaseUnitOfMeasure'] / dfStammdaten.loc[each, 'DenominatorToBaseUnitOfMeasure']
             else:
                 dfStammdaten.loc[each, 'OUT'] = 0
-            if dfStammdaten.loc[each, 'A'] == 'D97':
-                dfStammdaten.loc[each, 'PAL'] = dfStammdaten.loc[each, 'C'] / dfStammdaten.loc[each, 'D']
+            if dfStammdaten.loc[each, 'UnitOfMeasure'] == 'D97':
+                dfStammdaten.loc[each, 'PAL'] = dfStammdaten.loc[each, 'NumeratorToBaseUnitOfMeasure'] / dfStammdaten.loc[each, 'DenominatorToBaseUnitOfMeasure']
             else:
-                dfStammdaten.loc[each, 'PAL'] = 0
-        dfStammdaten = dfStammdaten.rename(columns={'B':'SKU'})
+                dfStammdaten.loc[each, 'PAL'] = 0       
         return dfStammdaten
-
     def labelAgg():
         #TODO: Label aus DB laden übernehmen
         # gibt nur Label aus die von angelegten Mitarbeitern bearbeitet wurden
-        dfUser = pd.read_feather('data/user.feather')
-        dfLabel = pd.read_csv('data/Label.csv')
-        dfLabel.columns = ['A', 'B','C','D','E','F','G','H','I','J','K','L','M','N']
-        #dfLabel = datenLadenLabel()
-        dfLabel['B'] = pd.to_datetime(dfLabel['B'])
-        dfLabel['DATUM'] = dfLabel['B'].dt.strftime('%m/%d/%y')
-        dfLabel['TIME'] = dfLabel['B'].dt.strftime('%H:%M:%S')
-        dfLabel['TIME'] = dfLabel['TIME'] + pd.Timedelta(hours=1)
-        dfLabel['TIME'] = dfLabel['B'].dt.strftime('%H:%M:%S')
-        dfLabel = pd.merge(dfLabel, dfUser, left_on='C', right_on='Name')
+        dfUser = pd.read_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather')
+        dfLabel = datenLadenLabel()
+        
+        
+        # #dfLabel = pd.read_csv('data/Label.csv')
+        # dfLabel.columns = ['A', 'B','C','D','E','F','G','H','I','J','K','L','M','N']
+        
+        #dfLabel['CreatedTimestamp'] = pd.to_datetime(dfLabel['CreatedTimestamp'])
+        # dfLabel['DATUM'] = dfLabel['CreatedTimestamp'].dt.strftime('%m/%d/%y')
+        # dfLabel['TIME'] = dfLabel['CreatedTimestamp'].dt.strftime('%H:%M:%S')
+        # dfLabel['TIME'] = dfLabel['TIME'] + pd.Timedelta(hours=1)
+        # dfLabel['TIME'] = dfLabel['CreatedTimestamp'].dt.strftime('%H:%M:%S')
+        dfLabel = pd.merge(dfLabel, dfUser, left_on='CreatedBy', right_on='Name')
         return dfLabel
     
-    dfStammdaten = stammdatenAgg()
-    dfLabel = labelAgg()
-
     def bestellungenAgg(dfStammdaten, dflabel):
         #gibt die fertigen Bestellungen aus
         #berechnet die Picks pro Bestellung
@@ -86,5 +82,6 @@ class DB_DatenAggregation:
         df['Kalender Woche'] = df['B'].dt.strftime('%U')
         df['Monat'] = df['B'].dt.month
         return df
-    #print(dfstammdaten)
-
+    #print(dfstammdat
+dfLabel = DB_DatenAggregation.labelAgg()
+print(dfLabel)

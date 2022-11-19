@@ -2,10 +2,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from streamlit_option_menu import option_menu
-from streamlit import cache
-import Test.rerun 
 from Test.toFeather import *
-#from Data_Class.C_Daten_LT22 import *
+from data_Class.SQL import datenLadenMitarbeiter , datenSpeichernMitarbeiter 
+
 
 class Einstellungen:
 
@@ -20,7 +19,8 @@ class Einstellungen:
         menu_icon="cast", default_index=0, orientation="horizontal")
         return selected2            
     def mitarbeiterPflegen():
-        dfMitarbeiter = pd.read_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather') 
+        #dfMitarbeiter = pd.read_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather') 
+        dfMitarbeiter = datenLadenMitarbeiter()
         with st.expander("Mitarbeiter Anlegen"):
             with st.form(key='my_form', clear_on_submit=True):
                 col1, col2 = st.columns(2)
@@ -28,6 +28,8 @@ class Einstellungen:
                     #id = dfMitarbeiter.index.max() + 1       
                     name = st.text_input("Name",key='name')
                     oneid = st.text_input("One ID",key='oneId')
+                    status = st.radio("Status", ('aktiv', 'inaktiv'),key='status')
+
                 with col2:
                     funktion = st.selectbox('Funktion',["Operativ",'Administration','Management'],key='funktion')
                     firma = st.selectbox("Unternehmen", ['BAT', 'LOG-IN'], key='firma')
@@ -36,14 +38,17 @@ class Einstellungen:
                 speichern = st.form_submit_button("Speichern")  
                 if speichern:
                     #check user input  
+                    if aktiv == True:
+                        aktiv = 1
                     if name == "":
                         st.error("Bitte Name eingeben")
                     elif oneid == "":
                         st.error("Bitte One ID eingeben")
                     else:
                         oneid = int(oneid)
-                        dfMitarbeiter = dfMitarbeiter.append({'Name':name,'One ID':oneid,'Funktion':funktion,'Unternehmen':firma,'Fachbereich':fachbereich},ignore_index=True)
-                        dfMitarbeiter.to_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather')
+                        dfMitarbeiter = dfMitarbeiter.append({'Name':name,'One ID':oneid,'Funktion':funktion,'Unternehmen':firma,'Fachbereich':fachbereich,'Status':status},ignore_index=True)
+                        datenSpeichernMitarbeiter(dfMitarbeiter)
+                        #dfMitarbeiter.to_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather')
                         st.success("Mitarbeiter wurde angelegt")
 
         with st.expander("Mitarbeiter Löschen"):
@@ -69,32 +74,32 @@ class Einstellungen:
                     try:
                         dfcheck = df
                         dfcheck.columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC']
-                        df.to_feather('Data/temp/uploadlt22.feather')
                         #load file
                         df1 = pd.read_feather('Data/LT22.feather')
-                        df2 = pd.read_feather('Data/temp/uploadlt22.feather')
-                        df1.set_index('Transfer Order Number', inplace=True)
-                        df2.set_index('Transfer Order Number', inplace=True)
-                        df1 = pd.concat([df1[~df1.index.isin(df2.index)], df2],)
-                        df1.reset_index(inplace=True)
-                        st.dataframe(df1,use_container_width=True)
-                        #df1.to_feather('Data/LT22.feather')
-                        st.success("Daten wurden erfolgreich aktualisiert")
+                        st.dataframe(df1, use_container_width=True)
+                        
+                        # df1.set_index('Transfer Order Number', inplace=True)
+                        # df.set_index('Transfer Order Number', inplace=True)
+                        # df1 = pd.concat([df1[~df1.index.isin(df.index)], df],)
+                        # df1.reset_index(inplace=True)
+                        # st.dataframe(df1,use_container_width=True)
+                        # #df1.to_feather('Data/LT22.feather')
+                        # st.success("Daten wurden erfolgreich aktualisiert")
                     except:
                         st.error("Bitte die richtige Excel Datei auswählen")
                         st.stop()
                     #safeloce file
-                    df.to_feather('Data/temp/uploadlt22.feather')
+                    # df.to_feather('Data/temp/uploadlt22.feather')
                     #load file
-                    df1 = pd.read_feather('Data/LT22.feather')
-                    df2 = pd.read_feather('Data/temp/uploadlt22.feather')
-                    df1.set_index('Transfer Order Number', inplace=True)
-                    df2.set_index('Transfer Order Number', inplace=True)
-                    df1 = pd.concat([df1[~df1.index.isin(df2.index)], df2],)
-                    df1.reset_index(inplace=True)
-                    st.dataframe(df1,use_container_width=True)
-                    df1.to_feather('Data/LT22.feather')
-                    st.success("Daten wurden erfolgreich aktualisiert")
+                    # df1 = pd.read_feather('Data/LT22.feather')
+                    # df2 = pd.read_feather('Data/temp/uploadlt22.feather')
+                    # df1.set_index('Transfer Order Number', inplace=True)
+                    # df2.set_index('Transfer Order Number', inplace=True)
+                    # df1 = pd.concat([df1[~df1.index.isin(df2.index)], df2],)
+                    # df1.reset_index(inplace=True)
+                    # st.dataframe(df1,use_container_width=True)
+                    # df1.to_feather('Data/LT22.feather')
+                    # st.success("Daten wurden erfolgreich aktualisiert")
 
 def seiteLaden():
     selected2 = Einstellungen.menueLaden()

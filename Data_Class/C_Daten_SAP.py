@@ -42,20 +42,20 @@ class SapDatenAggregation:
 
         #def StammdatenErweitern(dfStammdaten):
         #Stamdaten erweitern 
-        print('Stammdaten erweitern')
-        for each in dfStammdaten.index:
-            if dfStammdaten.loc[each, 'A'] == 'CS':
-                dfStammdaten.loc[each, 'CS'] = dfStammdaten.loc[each, 'C'] / dfStammdaten.loc[each, 'D']
-            else:
-                dfStammdaten.loc[each, 'CS'] = 0        
-            if dfStammdaten.loc[each, 'A'] == 'OUT':
-                dfStammdaten.loc[each, 'OUT'] = dfStammdaten.loc[each, 'C'] / dfStammdaten.loc[each, 'D']
-            else:
-                dfStammdaten.loc[each, 'OUT'] = 0
-            if dfStammdaten.loc[each, 'A'] == 'D97':
-                dfStammdaten.loc[each, 'PAL'] = dfStammdaten.loc[each, 'C'] / dfStammdaten.loc[each, 'D']
-            else:
-                dfStammdaten.loc[each, 'PAL'] = 0
+        # print('Stammdaten erweitern')
+        # for each in dfStammdaten.index:
+        #     if dfStammdaten.loc[each, 'A'] == 'CS':
+        #         dfStammdaten.loc[each, 'CS'] = dfStammdaten.loc[each, 'C'] / dfStammdaten.loc[each, 'D']
+        #     else:
+        #         dfStammdaten.loc[each, 'CS'] = 0        
+        #     if dfStammdaten.loc[each, 'A'] == 'OUT':
+        #         dfStammdaten.loc[each, 'OUT'] = dfStammdaten.loc[each, 'C'] / dfStammdaten.loc[each, 'D']
+        #     else:
+        #         dfStammdaten.loc[each, 'OUT'] = 0
+        #     if dfStammdaten.loc[each, 'A'] == 'D97':
+        #         dfStammdaten.loc[each, 'PAL'] = dfStammdaten.loc[each, 'C'] / dfStammdaten.loc[each, 'D']
+        #     else:
+        #         dfStammdaten.loc[each, 'PAL'] = 0
 
     #####------------------LT22-Bearbeiten-----------------#####
         print('stammdaten merge')

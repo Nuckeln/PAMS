@@ -52,6 +52,48 @@ class AzureDbConnection:
         """Execute query."""
         self.conn.execute(query)
 
+def verbinder():
+    conn_settings = ConnectionSettings(
+    #server='batsql-pd-ne-cmes-dev-10.database.windows.net',
+    server='batsql-pd-ne-cmes-dev-10',
+    database='batsdb-pd-ne-dev-reporting_SuperDepot',
+    username='batedp-cmes-dev-reportinguser',
+    password='b2.5v^H!IKjetuXMVNvW')
+
+    db_conn = AzureDbConnection(conn_settings)
+    return db_conn
+
+def datenLadenMitarbeiter():
+    db_conn = verbinder()
+    db_conn.connect()
+    dfMitarbeiter = pd.read_sql('SELECT * FROM [Mitarbeiter]', db_conn.conn)
+    db_conn.dispose()
+    return dfMitarbeiter
+    
+def datenSpeichernMitarbeiter(dfMitarbeiter):
+    db_conn = verbinder()
+    db_conn.connect()
+    #save dfMitarbeiter to Azure SQL
+    dfMitarbeiter.to_sql('Mitarbeiter', db_conn.conn, if_exists='replace', index=False)
+    db_conn.dispose()
+def datenLadenFehlverladungen():
+    db_conn = verbinder()
+    db_conn.connect()
+    dfMitarbeiter = pd.read_sql('SELECT * FROM [issues]', db_conn.conn)
+    db_conn.dispose()
+    return dfMitarbeiter   
+def datenSpeichernFehlverladungen(df):
+    db_conn = verbinder()
+    db_conn.connect()
+    # change index to id 
+    df.to_sql('issues', db_conn.conn, if_exists='replace', index=False)
+    db_conn.dispose()
+
+def createnewTable(df, tableName):
+    db_conn = verbinder()
+    db_conn.connect()
+    df.to_sql(tableName, db_conn.conn, if_exists='replace', index=False)
+    db_conn.dispose()
 def datenLadenLabel():
     conn_settings = ConnectionSettings(
     #server='batsql-pd-ne-cmes-dev-10.database.windows.net',

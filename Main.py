@@ -11,6 +11,7 @@ from Seiten.P_Bewegungsdaten import *
 from Seiten.P_Auftragsübersicht import *
 from Seiten.P_Forecast import *
 from Seiten.P_Einstellungen import *
+from Seiten.P_Fehlverladungen import fehlverladungenPage
 
 # Zum Ausführen
 #MAC#    streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
@@ -47,7 +48,7 @@ def LadeLSDaten():
 # BAT LOGO 
 st.sidebar.image(img, width=300)
 with st.sidebar:
-    selected2 = option_menu('"Menu', ["Live Status","Auftragsübersicht","Lagerbewegungen",'Mitarbeiter','Forecast', 'Einstellungen'], 
+    selected2 = option_menu('"Menu', ["Live Status","Auftragsübersicht","Lagerbewegungen",'Fehlverladungen','Mitarbeiter','Forecast', 'Einstellungen'], 
         icons=['cloud-fog2', 'award', "list-task", 'back'], 
         menu_icon="cast", )
 #selected2
@@ -59,6 +60,7 @@ if authentication_status == True:
     # ----- gewählte Page Laden -----
     if selected2 == 'Live Status':
         st.markdown("Hier kommt der Live Status Screen")
+        
         dfDaten = LadeBewegungsdaten()
         
 
@@ -82,9 +84,10 @@ if authentication_status == True:
     if selected2 == 'Forecast':
         pageForecast = Forecast()
         pageForecast.LadeForecast()
-    if selected2 == 'Einstellungen':
-        
+    if selected2 == 'Einstellungen': 
         seiteLaden()
+    if selected2 == 'Fehlverladungen':
+        fehlverladungenPage()
 
         
 
