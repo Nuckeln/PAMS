@@ -1,9 +1,10 @@
 from distutils.log import info
 import datetime
 import pandas as pd
-from SQL import datenLadenStammdaten , datenLadenLabel
-from SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
+import numpy as np
+from data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder,createnewTable
 #from data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
+
 
 def test():
 
@@ -12,21 +13,32 @@ def test():
     dfLabel = sql_datenLadenLabel()
     dfStammdaten = sql_datenLadenStammdaten()
 
+def stammdatenBearbeiten(dfStammdaten):
+    dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]   
+    def f_CS(row):
+        try:
+            if row.UnitOfMeasure == 'CS':          
+                return row.NumeratorToBaseUnitOfMeasure / row.DenominatorToBaseUnitOfMeasure
+        except:
+            return np.nan
+    def f_PAL(row):
+        try:
+            if row.UnitOfMeasure == 'D97':
+                return row.NumeratorToBaseUnitOfMeasure / row.DenominatorToBaseUnitOfMeasure
+        except:
+            return np.nan
+    def f_OUT(row):
+        try:
+            if row.UnitOfMeasure == 'OUT':
+                return row.NumeratorToBaseUnitOfMeasure / row.DenominatorToBaseUnitOfMeasure
+        except:
+            return np.nan
+    dfStammdaten['OUT'] = dfStammdaten.apply(f_OUT,axis=1)
+    dfStammdaten['CS'] = dfStammdaten.apply(f_CS,axis=1)
+    dfStammdaten['PAL'] = dfStammdaten.apply(f_PAL,axis=1)
 
-    dfStammdaten['MaterialNumber'] = dfStammdaten['MaterialNumber'].str.replace('0000000000', '')
-    for each in dfStammdaten.index:
-        if dfStammdaten.loc[each, 'UnitOfMeasure'] == 'CS':
-            dfStammdaten.loc[each, 'CS'] = dfStammdaten.loc[each, 'NumeratorToBaseUnitOfMeasure'] / dfStammdaten.loc[each, 'DenominatorToBaseUnitOfMeasure']
-        else:
-            dfStammdaten.loc[each, 'CS'] = 0        
-        if dfStammdaten.loc[each, 'UnitOfMeasure'] == 'OUT':
-            dfStammdaten.loc[each, 'OUT'] = dfStammdaten.loc[each, 'NumeratorToBaseUnitOfMeasure'] / dfStammdaten.loc[each, 'DenominatorToBaseUnitOfMeasure']
-        else:
-            dfStammdaten.loc[each, 'OUT'] = 0
-        if dfStammdaten.loc[each, 'UnitOfMeasure'] == 'D97':
-            dfStammdaten.loc[each, 'PAL'] = dfStammdaten.loc[each, 'NumeratorToBaseUnitOfMeasure'] / dfStammdaten.loc[each, 'DenominatorToBaseUnitOfMeasure']
-        else:
-            dfStammdaten.loc[each, 'PAL'] = 0      
+    return dfStammdaten
+
 
 
     dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].astype(str)
@@ -61,10 +73,8 @@ def test():
                 dfOrderItems.loc[i,'Picks OUT'] = 0#(dfOrderItems.loc[i,'O'] - (dfOrderItems.loc[i,'Picks CS'] * dfOrderItems.loc[i,'CS'])) * dfOrderItems.loc[i,'OUT']
     # Picks Gesamt
     dfOrderItems['Picks Gesamt'] = dfOrderItems['Picks PAL'] + dfOrderItems['Picks CS'] + dfOrderItems['Picks OUT']
-
-    dfT = pd.merge(dfOrderItems, dfOrder, left_on='SapOrderNumber', right_on='SapOrderNumber', how='left')
-
-    return dfT
+    df = pd.merge(dfOrder, dfOrderItems, left_on='SapOrderNumber', right_on='SapOrderNumber', how='left')
+    return df
 
 # class DB_DatenAggregation:
 

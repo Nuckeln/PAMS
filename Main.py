@@ -13,7 +13,10 @@ from Seiten.P_Auftragsübersicht import *
 from Seiten.P_Forecast import *
 from Seiten.P_Einstellungen import *
 from Seiten.P_Fehlverladungen import fehlverladungenPage
-#from data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
+from data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
+from data_Class.DB_Daten_Agg import test
+
+from data_Class.wether.api import getWetterBayreuth
 
 # Zum Ausführen
 #MAC#    streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
@@ -40,11 +43,15 @@ def LadeBewegungsdaten():
     return dfDaten
 @st.cache(allow_output_mutation=True)
 def LadeLSDaten():
-
     dfLS = pd.read_excel('Data/df.xlsx')
     return dfLS
+@st.cache(allow_output_mutation=True)
+def labeOrderDaten():
+    df = test()
+    return df
+
 # ----- Config Main Menue -----
-# BAT LOGO 
+# BAT LOGO  
 st.sidebar.image(img, width=300)
 with st.sidebar:
     selected2 = option_menu('"Menu', ["Live Status","Auftragsübersicht","Lagerbewegungen",'Fehlverladungen','Mitarbeiter','Forecast', 'Einstellungen'], 
@@ -58,7 +65,8 @@ if authentication_status == True:
     #erfolgreich eingelogt dann Code ausführen!
     # ----- gewählte Page Laden -----
     if selected2 == 'Live Status':
-        liveStatusPage()
+        df = labeOrderDaten()
+        liveStatusPage(df)
     if selected2 == 'Mitarbeiter':
         dfDaten = LadeBewegungsdaten()
         Seite = Seite1()
