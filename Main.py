@@ -6,12 +6,14 @@ from PIL import Image # Bilder
 
 #Eigene Klassen
 from Seiten.P_Login import Login
+from Seiten.P_Live import liveStatusPage
 from Seiten.P_Mitarbeiterauswertung import *
 from Seiten.P_Bewegungsdaten import *
 from Seiten.P_Auftragsübersicht import *
 from Seiten.P_Forecast import *
 from Seiten.P_Einstellungen import *
 from Seiten.P_Fehlverladungen import fehlverladungenPage
+#from data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
 
 # Zum Ausführen
 #MAC#    streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
@@ -29,9 +31,7 @@ pages {visibility: hidden;}
 </style>
 
 """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
-
-
+st.markdown(hide_streamlit_style, unsafe_allow_html=True,) 
 img = Image.open('Data/img/logo.png', mode='r')
 # ----- Load aggregated data -----
 #@st.cache(allow_output_mutation=True)
@@ -43,7 +43,6 @@ def LadeLSDaten():
 
     dfLS = pd.read_excel('Data/df.xlsx')
     return dfLS
-
 # ----- Config Main Menue -----
 # BAT LOGO 
 st.sidebar.image(img, width=300)
@@ -59,16 +58,7 @@ if authentication_status == True:
     #erfolgreich eingelogt dann Code ausführen!
     # ----- gewählte Page Laden -----
     if selected2 == 'Live Status':
-        st.markdown("Hier kommt der Live Status Screen")
-        
-        dfDaten = LadeBewegungsdaten()
-        
-
-        st.dataframe(dfDaten)
-        fig = px.line(dfDaten, x="Pick Datum", y="Umlagerung")
-        st.plotly_chart(fig)
-
-
+        liveStatusPage()
     if selected2 == 'Mitarbeiter':
         dfDaten = LadeBewegungsdaten()
         Seite = Seite1()

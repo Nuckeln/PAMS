@@ -18,9 +18,34 @@ class Fehlverladungen:
         menu_icon="cast", default_index=0, orientation="horizontal")
         return selected2   
 
+    def filterFehlverladungen():
+        df = datenLadenFehlverladungen()
+        stati = df['Status'].unique()
+        bereiche = df['Bereich'].unique()
+        typ = df['Typ'].unique()
+        version = df['V'].unique()
+        col1, col2 = st.columns(2)
+        with col1:
+            selstati = st.multiselect('Status', stati, stati)
+        with col2:
+            selbereiche = st.multiselect('Bereich', bereiche, bereiche)
+        col3 , col4 = st.columns(2)
+        with col3:
+            seltyp = st.multiselect('Typ', typ, typ)
+        with col4:
+            selversion = st.multiselect('Version', version, version)
+        df = df[df['Status'].isin(selstati)]
+        df = df[df['Bereich'].isin(selbereiche)]
+        df = df[df['Typ'].isin(seltyp)]
+        df = df[df['V'].isin(selversion)]
+
+        
+        st.dataframe(df, use_container_width=True)
+
     def fehlverladungErfassen():
         
         with st.expander("Fehlverladung erfassen"):
+            version = 1
             with st.form(key='my_form', clear_on_submit=True):
                 col1, col2 = st.columns(2)
                 with col1:
@@ -30,7 +55,6 @@ class Fehlverladungen:
                     kurztext = st.text_input("Kurzbeschreibung",key='kurztext')   
                     gemledetvon = st.text_input("Gemeldet von",key='gemledetvon')
                     kunde = st.text_input("Kunde oder Endmarkt",key='kunde') 
-
                     verursacher = st.text_input("Verursacher",key='verursacher')
                     gesp = st.selectbox("Gespräch durchgeführt?", ['','N/A','Ja', 'Nein'],  key='gesp')
                 with col2:
@@ -72,7 +96,7 @@ class Fehlverladungen:
                                 st.write(uploadverpath)
                     
                     id = np.random.randint(10000,99999)
-                    dfnew = pd.DataFrame({'ID': [id], 'Bereich': [bereich], 'AD oder OP': [adop], 'Status': [status], 'Kurzbeschreibung': [kurztext], 'Gemeldet von': [gemledetvon], 'Kunde oder Endmarkt': [kunde], 'Verursacher': [verursacher], 'Gespräch durchgeführt?': [gesp], 'Verladedatum': [verladedatum], 'Meldedatum': [meldeDatum], 'Typ': [typ], 'Lieferschein': [leiferschein], 'PO': [po], 'Menge': [menge], 'Einheit': [einheit], 'Mail': [mailpath], 'Upload': [uploadverpath], 'Maßnahme': [maßnahme], 'Beschreibung': [beschreibung]})
+                    dfnew = pd.DataFrame({'ID': [id], 'Bereich': [bereich], 'AD oder OP': [adop], 'Status': [status], 'Kurzbeschreibung': [kurztext], 'Gemeldet von': [gemledetvon], 'Kunde oder Endmarkt': [kunde], 'Verursacher': [verursacher], 'Gespräch durchgeführt?': [gesp], 'Verladedatum': [verladedatum], 'Meldedatum': [meldeDatum], 'Typ': [typ], 'Lieferschein': [leiferschein], 'PO': [po], 'Menge': [menge], 'Einheit': [einheit], 'Mail': [mailpath], 'Upload': [uploadverpath], 'Maßnahme': [maßnahme], 'Beschreibung': [beschreibung] ,'V': [version]})
                     dfa = datenLadenFehlverladungen()
                     dfnew = pd.concat([dfa, dfnew], ignore_index=True)
                     datenSpeichernFehlverladungen(dfnew)
@@ -80,32 +104,18 @@ class Fehlverladungen:
         dfa = datenLadenFehlverladungen()
         st.dataframe(dfa)
 
-
     def fehlverladungBearbeiten():
         df = datenLadenFehlverladungen()
         df1 = df
         if "counter" not in st.session_state:
             st.session_state.counter = 0
-        
-        
-        dfbestand = df
         st.session_state.counter  =  st.selectbox('ID',df['ID'],key='id')
         df = df[df['ID'] == st.session_state.counter]
-        st.write("counter:", st.session_state.counter)
-        st.write(df['ID'].values[0])
-        st.dataframe(df)
-        #def form(df,dfbestand):
-        # Bearbeiten
-            #with st.form(key='my_form2', clear_on_submit=False):               
-                
         id = df['ID'].values[0]
         ktext = df['Kurzbeschreibung'].values[0]
         ls = df['Lieferschein'].values[0]
         pos = df['PO'].values[0]
         ber = df['Bereich'].values[0] 
-        #ber is index of ['Super-Depot', 'LOG-IN CW', 'LOG-IN C&F', 'LOG-IN Leaf']
-
-
         adop = df['AD oder OP'].values[0]
         sta = df['Status'].values[0]
         verladeda = df['Verladedatum'].values[0]
@@ -154,6 +164,8 @@ class Fehlverladungen:
         speichern = st.button("Speichern")
 
         if speichern:
+
+                    version = df['V'].values[0] +1
                     st.write("Fehlverladung wurde gespeichert")
                     if mail is not None:
                         mailpath1 = '/Users/martinwolf/Python/Superdepot Reporting/data/temp/' + mail.name
@@ -169,17 +181,35 @@ class Fehlverladungen:
                                 f.write(uploadAndere.getbuffer())
                                 uploadverpath = (str(uploadverpath1))
                                 st.write(uploadverpath)
-        dfnew = pd.DataFrame({'ID': [id], 'Bereich': [bereich], 'AD oder OP': [adop], 'Status': [status], 'Kurzbeschreibung': [kurztext], 'Gemeldet von': [gemledetvon], 'Kunde oder Endmarkt': [kunde], 'Verursacher': [verursacher], 'Gespräch durchgeführt?': [gesp], 'Verladedatum': [verladedatum], 'Meldedatum': [meldeDatum], 'Typ': [typ], 'Lieferschein': [leiferschein], 'PO': [po], 'Menge': [menge], 'Einheit': [einheit], 'Mail': [mailpath], 'Upload': [uploadverpath], 'Maßnahme': [maßnahme], 'Beschreibung': [beschreibung]})
-        st.dataframe(dfnew)
-        st.dataframe(df)
-        #kkk = pd.concat([df1, dfnew], axis=1)
-        #             # Ändern im Datenframe
-        #st.dataframe(kkk)
-        # if input:
+                    # add new row to df
+                    dfnew = pd.DataFrame({'ID': [id],
+                                            'Bereich': [bereich],
+                                            'AD oder OP': [adop],
+                                            'Status': [status],
+                                            'Kurzbeschreibung': [kurztext],
+                                            'Gemeldet von': [gemledetvon], 
+                                            'Kunde oder Endmarkt': [kunde], 
+                                            'Verursacher': [verursacher], 
+                                            'Gespräch durchgeführt?': [gesp], 
+                                            'Verladedatum': [verladedatum], 
+                                            'Meldedatum': [meldeDatum], 'Typ': [typ], 
+                                            'Lieferschein': [leiferschein], 
+                                            'PO': [po], 
+                                            'Menge': [menge], 
+                                            'Einheit': [einheit], 
+                                            'Mail': [mailpath], 
+                                            'Upload': [uploadverpath], 
+                                            'Maßnahme': [maßnahme], 
+                                            'Beschreibung': [beschreibung],
+                                            'V':[version]})
+                    # save to DB and update
+                    dfnew = pd.concat([df1, dfnew], ignore_index=True)
+                    datenSpeichernFehlverladungen(dfnew)
+                    
+        st.dataframe(df1)
 
-        #     form(dfbestand, df)
-        # st.dataframe(dfbestand.tail(10), use_container_width=True)
     def fehlverladungAnzeigen():
+        
         dfbestand = datenLadenFehlverladungen()
         selid = st.selectbox('ID',dfbestand['ID'])
         df = dfbestand[dfbestand['ID'] == selid]
@@ -198,6 +228,12 @@ class Fehlverladungen:
                 msg = extract_msg.Message(mail)
 # print sender name
                 st.write('Sender: {}'.format(msg.sender))
+# print subject
+                st.write('Subject: {}'.format(msg.subject))
+# print body
+                st.write('Body: {}'.format(msg.body))
+# print attachments
+
 
 
         st.dataframe(df, use_container_width=True)
@@ -210,6 +246,8 @@ def fehlverladungenPage():
         Fehlverladungen.fehlverladungBearbeiten()
     elif selected2 == 'Fehlverladung Anzeigen':
         Fehlverladungen.fehlverladungAnzeigen()
+    elif selected2 == 'Dashboard':
+        Fehlverladungen.filterFehlverladungen()
 
 
     

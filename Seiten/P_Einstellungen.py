@@ -13,11 +13,13 @@ class Einstellungen:
             st.session_state['key'] = 'value'
         if 'key' not in st.session_state:
             st.session_state.key = +1
+
     def menueLaden():
         selected2 = option_menu(None, ["Ich", "Mitarbeiter pflegen", "Daten Update"], 
         icons=['house', 'cloud-upload', "list-task"], 
         menu_icon="cast", default_index=0, orientation="horizontal")
         return selected2            
+
     def mitarbeiterPflegen():
         #dfMitarbeiter = pd.read_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather') 
         dfMitarbeiter = datenLadenMitarbeiter()
@@ -62,6 +64,7 @@ class Einstellungen:
                 
                     #st.experimental_rerun()
         st.dataframe(dfMitarbeiter, use_container_width=True)     
+
     def datenUpdate():
         st.markdown("Welche Daten möchtest du Updaten?")
 
@@ -72,17 +75,18 @@ class Einstellungen:
                     # To read file as dataframe:
                     df = pd.read_excel(uploaded_file)
                     try:
-                        dfcheck = df
-                        dfcheck.columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC']
+                        #dfcheck = df
+                        #dfcheck.columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC']
                         #load file
+
                         df1 = pd.read_feather('Data/LT22.feather')
                         st.dataframe(df1, use_container_width=True)
                         
-                        # df1.set_index('Transfer Order Number', inplace=True)
-                        # df.set_index('Transfer Order Number', inplace=True)
-                        # df1 = pd.concat([df1[~df1.index.isin(df.index)], df],)
-                        # df1.reset_index(inplace=True)
-                        # st.dataframe(df1,use_container_width=True)
+                        df1.set_index('Transfer Order Number', inplace=True)
+                        df.set_index('Transfer Order Number', inplace=True)
+                        df1 = pd.concat([df1[~df1.index.isin(df.index)], df],)
+                        df1.reset_index(inplace=True)
+                        st.dataframe(df1,use_container_width=True)
                         # #df1.to_feather('Data/LT22.feather')
                         # st.success("Daten wurden erfolgreich aktualisiert")
                     except:

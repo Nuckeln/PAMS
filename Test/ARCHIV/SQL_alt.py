@@ -52,9 +52,9 @@ class AzureDbConnection:
         """Execute query."""
         self.conn.execute(query)
 
-def verbinderTestServer():
-
+def verbinder():
     conn_settings = ConnectionSettings(
+    #server='batsql-pd-ne-cmes-dev-10.database.windows.net',
     server='batsql-pd-ne-cmes-dev-10',
     database='batsdb-pd-ne-dev-reporting_SuperDepot',
     username='batedp-cmes-dev-reportinguser',
@@ -63,34 +63,15 @@ def verbinderTestServer():
     db_conn = AzureDbConnection(conn_settings)
     return db_conn
 
-def verbinder():
-
-    conn_settings = ConnectionSettings(    
-    server = 'batsql-pp-ne-cmes-prod-10',
-    database= 'batsdb-pp-ne-prod-reporting_SuperDepot',
-    username='batedp-cmes-prod-reportinguser',
-    password='b2.5v^H!IKjetuXMVNvW')
-
-
-
-    db_conn = AzureDbConnection(conn_settings)
-    return db_conn
-
-def createnewTable(df, tableName):
-    db_conn = verbinder()
-    db_conn.connect()
-    df.to_sql(tableName, db_conn.conn, if_exists='replace', index=False)
-    db_conn.dispose()
-
-# Usereingaben/Interne Datenbanken
 def datenLadenMitarbeiter():
-    db_conn = verbinderTestServer()
+    db_conn = verbinder()
     db_conn.connect()
     dfMitarbeiter = pd.read_sql('SELECT * FROM [Mitarbeiter]', db_conn.conn)
     db_conn.dispose()
-    return dfMitarbeiter   
+    return dfMitarbeiter
+    
 def datenSpeichernMitarbeiter(dfMitarbeiter):
-    db_conn = verbinderTestServer()
+    db_conn = verbinder()
     db_conn.connect()
     #save dfMitarbeiter to Azure SQL
     dfMitarbeiter.to_sql('Mitarbeiter', db_conn.conn, if_exists='replace', index=False)
@@ -107,26 +88,47 @@ def datenSpeichernFehlverladungen(df):
     # change index to id 
     df.to_sql('issues', db_conn.conn, if_exists='replace', index=False)
     db_conn.dispose()
-# Externe Datenbanken
-def sql_datenLadenLabel():
+
+def createnewTable(df, tableName):
     db_conn = verbinder()
+    db_conn.connect()
+    df.to_sql(tableName, db_conn.conn, if_exists='replace', index=False)
+    db_conn.dispose()
+def datenLadenLabel():
+    conn_settings = ConnectionSettings(
+    #server='batsql-pd-ne-cmes-dev-10.database.windows.net',
+    server='batsql-pd-ne-cmes-dev-10',
+    database='batsdb-pd-ne-dev-reporting_SuperDepot',
+    username='batedp-cmes-dev-reportinguser',
+    password='b2.5v^H!IKjetuXMVNvW')
+
+    db_conn = AzureDbConnection(conn_settings)
     db_conn.connect()
     dfLabel = pd.read_sql('SELECT * FROM [business_depotDEBYKN-LabelPrintOrders]', db_conn.conn)
     return dfLabel
-def sql_datenLadenStammdaten():
-    db_conn = verbinder()
+
+def datenLadenStammdaten():
+    conn_settings = ConnectionSettings(
+    #server='batsql-pd-ne-cmes-dev-10.database.windows.net',
+    server='batsql-pd-ne-cmes-dev-10',
+    database='batsdb-pd-ne-dev-reporting_SuperDepot',
+    username='batedp-cmes-dev-reportinguser',
+    password='b2.5v^H!IKjetuXMVNvW')
+
+    db_conn = AzureDbConnection(conn_settings)
     db_conn.connect()
     dfStammdaten = pd.read_sql('SELECT * FROM [data_materialmaster-MaterialMasterUnitOfMeasures]', db_conn.conn)
     return dfStammdaten
-def sql_datenLadenOder():
-    db_conn = verbinder()
+
+def datenLadenAufträge():
+    conn_settings = ConnectionSettings(
+    #server='batsql-pd-ne-cmes-dev-10.database.windows.net',
+    server='batsql-pd-ne-cmes-dev-10',
+    database='batsdb-pd-ne-dev-reporting_SuperDepot',
+    username='batedp-cmes-dev-reportinguser',
+    password='b2.5v^H!IKjetuXMVNvW')
+
+    db_conn = AzureDbConnection(conn_settings)
     db_conn.connect()
-    df = pd.read_sql('SELECT * FROM [business_depotDEBYKN-DepotDEBYKNOrders]', db_conn.conn)
-    db_conn.dispose()
-    return df  
-def sql_datenLadenOderItems():
-    db_conn = verbinder()
-    db_conn.connect()
-    df = pd.read_sql('SELECT * FROM [business_depotDEBYKN-DepotDEBYKNOrderItems]', db_conn.conn)
-    db_conn.dispose()
-    return df  
+    dfAufträge = pd.read_sql('SELECT * FROM [business_depotDEBYKN-DepotDEBYKNOrders]', db_conn.conn)
+    return dfAufträge
