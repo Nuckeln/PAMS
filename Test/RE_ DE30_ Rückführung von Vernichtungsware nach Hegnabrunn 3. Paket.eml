@@ -1,0 +1,3089 @@
+Received: from PA4PR01MB10206.eurprd01.prod.exchangelabs.com
+ (2603:10a6:102:264::17) by AM7PR01MB6820.eurprd01.prod.exchangelabs.com with
+ HTTPS; Thu, 17 Nov 2022 14:27:02 +0000
+Received: from AM6PR01MB5704.eurprd01.prod.exchangelabs.com
+ (2603:10a6:20b:fc::13) by PA4PR01MB10206.eurprd01.prod.exchangelabs.com
+ (2603:10a6:102:264::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.19; Thu, 17 Nov
+ 2022 14:27:01 +0000
+Received: from AM6PR01MB5704.eurprd01.prod.exchangelabs.com
+ ([fe80::171c:a64:4545:3e20]) by AM6PR01MB5704.eurprd01.prod.exchangelabs.com
+ ([fe80::171c:a64:4545:3e20%6]) with mapi id 15.20.5813.017; Thu, 17 Nov 2022
+ 14:27:01 +0000
+From: "Uwe Opitz (External)" <uwe_opitz_External@bat.com>
+To: Christian Hammann <christian_hammann@bat.com>, DE_DV <DE_DV@bat.com>,
+	Superdepot_BY <Superdepot_BY@BAT.COM>, Domestic_BY <Domestic_BY@bat.com>,
+	"Stefan Braunersreuther (External)"
+	<stefan_braunersreuther_External@bat.com>, "Nico Hirschmann (External)"
+	<nico_hirschmann_External@bat.com>
+CC: Marco Ziel <Marco_Ziel@bat.com>, Robert Juhnke <Robert_Juhnke@bat.com>,
+	Petja Rose <Petja_Rose@bat.com>, Martin Wolf <martin_wolf@bat.com>, "Edith
+ Limmert (External)" <edith_limmert_External@bat.com>, Schadensmeldungen_BATBY
+	<Schadensmeldungen_BATBY@bat.com>
+Subject: RE: DE30: Rückführung von Vernichtungsware nach Hegnabrunn 3. Paket
+Thread-Topic: DE30: Rückführung von Vernichtungsware nach Hegnabrunn 3. Paket
+Thread-Index: Adj6dBxzVORNo50hS4+9fM99MHDjngAGnZcAAAB5AtA=
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date: Thu, 17 Nov 2022 14:27:01 +0000
+Message-ID:
+	<AM6PR01MB5704A447417669EC1523912BC0069@AM6PR01MB5704.eurprd01.prod.exchangelabs.com>
+References:
+	<AS4PR01MB93757CF65A5F2E74406CBE9CED069@AS4PR01MB9375.eurprd01.prod.exchangelabs.com>
+ <DB3PR0102MB351466A12F25D17B7ACA919F84069@DB3PR0102MB3514.eurprd01.prod.exchangelabs.com>
+In-Reply-To:
+	<DB3PR0102MB351466A12F25D17B7ACA919F84069@DB3PR0102MB3514.eurprd01.prod.exchangelabs.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-AuthMechanism: 04
+X-MS-Exchange-Organization-AuthSource:
+	AM6PR01MB5704.eurprd01.prod.exchangelabs.com
+X-Mentions:
+	stefan_braunersreuther_External@bat.com,nico_hirschmann_External@bat.com
+X-MS-Has-Attach: yes
+X-MS-Exchange-Organization-Network-Message-Id:
+	4c808f86-0188-493b-6054-08dac8a7cadb
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator:
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+x-ms-publictraffictype: Email
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bat.com;
+x-forefront-antispam-report:
+	CIP:255.255.255.255;CTRY:;LANG:de;SCL:-1;SRV:;IPV:NLI;SFV:SKI;H:AM6PR01MB5704.eurprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:;DIR:INB;
+x-ms-office365-filtering-correlation-id: 4c808f86-0188-493b-6054-08dac8a7cadb
+x-microsoft-antispam: BCL:0;
+x-ms-traffictypediagnostic: AM6PR01MB5704:EE_|PA4PR01MB10206:EE_
+x-ms-exchange-crosstenant-network-message-id:
+	4c808f86-0188-493b-6054-08dac8a7cadb
+x-ms-exchange-crosstenant-originalarrivaltime: 17 Nov 2022 14:27:01.4502 (UTC)
+x-ms-exchange-crosstenant-fromentityheader: Hosted
+x-ms-exchange-crosstenant-id: ff9c7474-421d-4957-8d47-c4b64dec87b5
+x-ms-exchange-transport-crosstenantheadersstamped: PA4PR01MB10206
+x-ms-exchange-crosstenant-mailboxtype: HOSTED
+x-ms-exchange-crosstenant-userprincipalname:
+	Ll/aFhFVZo+E4e2BIJ0Dw+A3WmRQVnYn+SYeCk+PgYnY0CEbtPF8idfx8bGLskGZQ1/vWM9cRDc3Z8XG0fro8Q==
+x-ms-exchange-transport-endtoendlatency: 00:00:01.2767651
+x-ms-exchange-processed-by-bccfoldering: 15.20.5813.020
+x-ms-exchange-crosstenant-authas: Internal
+x-ms-exchange-crosstenant-authsource:
+	AM6PR01MB5704.eurprd01.prod.exchangelabs.com
+X-Microsoft-Antispam-Mailbox-Delivery:
+	ucf:0;jmr:0;auth:0;dest:I;ENG:(910001)(944506478)(944626604)(920097)(425001)(930097);
+X-Microsoft-Antispam-Message-Info:
+	caAoI1CIiXijWpNMDWykuvNTszMVC17n48ffwuUU23p2hQ6cw7hDpHDV9NZxuR9zgJOEHj9CzKNNCuYwYV1mheVN5IFcuWRBE+wkxfrm7RjyikmeWzLxREQFjH8NX1BtcgNjaubeBrow+/LzIi66+8sC3k6UqAOCBAe3cS9wveoQIpq+xlAtGaEK7wv/m6bDQh50yknJf4WvXM7vn1Z7avIkO56pO6qFazVkUBswL4oL2A6N6u92BUgznK472lgtGVfVX1LTZX3meuXeunnBM2P0kPbibz9ZXGEI1xm08IFpl0FFUl4/TwOSqMP7+nvupa+Pr18froIcaJDKOBJ6U3TvXuwDSb3eua5Cs2SnQAyus0Eps/bXIFcALipvWvT6ssYdF/wvQz5T3STm7szqW328zhZLS68SdxLBL1qr4lf9HEliPzDwC3CltFoZQuKULAC2cNeubytxK3sCz2KhrQc0lUoegiHi6bOGPWRFINI5W/E5jnYleo2ThMp1p/MpQGc5usRb21vJqQxl2DFAluGbjCUrqqBSW6BrSjJt4LO8dXBniQSYh0odBJ/8c4H2WDibSpBgaNAJmX0aPnXaQt9YoU9O3VdnpaH5y+j02tCScc0hqphnPIkvkmCu7G0wpBQzAu2+9omj7AuE3NSBxYM80absctL7Id4vRuHyfyPR/8TMFFeOSUiYlHZRVMPFzNHHFHuF4+JDev1Iz14OzyC19LDhdfiO4ge+BF7Su4sO9cW90HnhJ9l4FPsPjhi4Bw9CX+xBCNFDOLEWIaHXyR7vgzZgj7hRD4vKLvFm+f0=
+Content-Type: multipart/related;
+	boundary="_007_AM6PR01MB5704A447417669EC1523912BC0069AM6PR01MB5704eurp_";
+	type="multipart/alternative"
+MIME-Version: 1.0
+
+--_007_AM6PR01MB5704A447417669EC1523912BC0069AM6PR01MB5704eurp_
+Content-Type: multipart/alternative;
+	boundary="_000_AM6PR01MB5704A447417669EC1523912BC0069AM6PR01MB5704eurp_"
+
+--_000_AM6PR01MB5704A447417669EC1523912BC0069AM6PR01MB5704eurp_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+Hallo,
+@Stefan Braunersreuther (External)<mailto:stefan_braunersreuther_External@b=
+at.com>
+@Nico Hirschmann (External)<mailto:nico_hirschmann_External@bat.com>
+
+
+
+
+
+
+
+
+Mit freundlichen Gr=FC=DFen / Best regards
+
+Uwe Opitz
+
+Shift Supervisior
+
+LOG-IN Logistikpark GmbH
+Neue Siedlung 27
+95339 Neuenmarkt
+
+Tel.:
+E-Mail:   uwe_opitz@bat.com
+[Login Logistikpark kleidddd]
+Rechtsform: GmbH
+Handelsregisternummer: HRB-Nr. B 1637
+Gerichtsstand: Amtsgericht Bayreuth
+Gesch=E4ftsf=FChrer: Robert Gammisch, Klaus Limmert,
+
+Diese E-Mail k=F6nnte vertrauliche und/oder rechtlich gesch=FCtzte Informat=
+ionen enthalten. Wenn Sie nicht der richtige Adressat sind oder diese E-Mai=
+l irrt=FCmlich erhalten haben, informieren Sie bitte sofort den Absender un=
+d vernichten Sie diese Mail. Das unerlaubte Kopieren sowie die unbefugte We=
+itergabe dieser Mail ist nicht gestattet.
+This e-mail may contain confidential and/or privileged information. If you =
+are not the intended recipient (or have received this e-mail in error) plea=
+se notify the sender immediately and destroy this e-mail. Any unauthorised =
+copying, disclosure or distribution of the material in this e-mail is stric=
+tly forbidden.
+ __________________________________________________________________
+Confidentiality Notice: The information in this document and attachments is=
+ confidential and
+may also be legally privileged. It is intended only for the use of the name=
+d recipient. Internet
+communications are not secure and therefore British American Tobacco does n=
+ot accept legal
+responsibility for the contents of this message. If you are not the intende=
+d recipient, please
+notify us immediately and then delete this document. Do not disclose the co=
+ntents of this
+document to any other person, nor take any copies. Violation of this notice=
+ may be unlawful.
+
+From: Christian Hammann <christian_hammann@bat.com>
+Sent: Donnerstag, 17. November 2022 15:15
+To: DE_DV <DE_DV@bat.com>; Superdepot_BY <Superdepot_BY@BAT.COM>; Domestic_=
+BY <Domestic_BY@bat.com>; Uwe Opitz (External) <uwe_opitz_External@bat.com>
+Cc: Marco Ziel <Marco_Ziel@bat.com>; Robert Juhnke <Robert_Juhnke@bat.com>;=
+ Petja Rose <Petja_Rose@bat.com>; Martin Wolf <martin_wolf@bat.com>; Edith =
+Limmert (External) <edith_limmert_External@bat.com>; Schadensmeldungen_BATB=
+Y <Schadensmeldungen_BATBY@bat.com>
+Subject: AW: DE30: R=FCckf=FChrung von Vernichtungsware nach Hegnabrunn 3. =
+Paket
+
+Hallo,
+
+@Domestic_BY<mailto:Domestic_BY@bat.com>
+@Uwe Opitz (External)<mailto:uwe_opitz_External@bat.com>
+
+Bitte =FCber den Artikel eine Schadensmeldung erstellen - Die Ware steht be=
+i euch auf Bruch.
+
+Viele Gr=FC=DFe
+
+Christian Hammann
+Customer Service Controller
+Tel.: +49 (0) 921 291 4263
+Weiherstra=DFe 26, 95448 Bayreuth
+www.bat.de<http://www.bat.de>
+
+[cid:image002.jpg@01D8FA99.06977880]
+
+Von: DE_DV <DE_DV@bat.com<mailto:DE_DV@bat.com>>
+Gesendet: Donnerstag, 17. November 2022 12:03
+An: Superdepot_BY <Superdepot_BY@BAT.COM<mailto:Superdepot_BY@BAT.COM>>; Ch=
+ristian Hammann <christian_hammann@bat.com<mailto:christian_hammann@bat.com=
+>>
+Cc: Marco Ziel <Marco_Ziel@bat.com<mailto:Marco_Ziel@bat.com>>; Robert Juhn=
+ke <Robert_Juhnke@bat.com<mailto:Robert_Juhnke@bat.com>>; Petja Rose <Petja=
+_Rose@bat.com<mailto:Petja_Rose@bat.com>>; Martin Wolf <martin_wolf@bat.com=
+<mailto:martin_wolf@bat.com>>; Edith Limmert (External) <edith_limmert_Exte=
+rnal@bat.com<mailto:edith_limmert_External@bat.com>>; Schadensmeldungen_BAT=
+BY <Schadensmeldungen_BATBY@bat.com<mailto:Schadensmeldungen_BATBY@bat.com>=
+>; DE_DV <DE_DV@bat.com<mailto:DE_DV@bat.com>>
+Betreff: DE30: R=FCckf=FChrung von Vernichtungsware nach Hegnabrunn 3. Pake=
+t
+
+Hallo zusammen,
+
+Bitte auch noch den folgenden Artikel nach Hegnabrunn der Vernichtung zuf=
+=FChren.
+
+Material
+Werk
+Lagerort
+Materialkurztext
+Basismengeneinheit
+Frei verwendbar
+Gesperrt
+10133501
+DE30
+A101
+LS Auth Red XXL 22 8,00 INS
+TS
+0
+4,4
+
+
+Mit freundlichen Gr=FC=DFen / Kind regards
+Gerd Enninga
+
+Distribution Head Office
+British American Tobacco (Germany) GmbH
+M: +49 (0) 162-2390737 Gerd Enninga
+M: +49 (0) 162-2431646 Ilona Stenzel
+M: +49 (0) 162-2395573 Andree Helm
+M: +49 (0) 162-2341535 Bettina Beukenberg
+
+E-Mail: DE_DV@bat.com<mailto:DE_DV@bat.com>
+[cid:image003.jpg@01D8FA99.06977880]
+
+Von: DE_DV <DE_DV@bat.com<mailto:DE_DV@bat.com>>
+Gesendet: Dienstag, 18. Oktober 2022 11:30
+An: Superdepot_BY <Superdepot_BY@BAT.COM<mailto:Superdepot_BY@BAT.COM>>; Ch=
+ristian Hammann <christian_hammann@bat.com<mailto:christian_hammann@bat.com=
+>>; Berlin (ber.customer.bat@kuehne-nagel.com<mailto:ber.customer.bat@kuehn=
+e-nagel.com>) <ber.customer.bat@kuehne-nagel.com<mailto:ber.customer.bat@ku=
+ehne-nagel.com>>
+Cc: Marco Ziel <Marco_Ziel@bat.com<mailto:Marco_Ziel@bat.com>>; Robert Juhn=
+ke <Robert_Juhnke@bat.com<mailto:Robert_Juhnke@bat.com>>; Petja Rose <Petja=
+_Rose@bat.com<mailto:Petja_Rose@bat.com>>; Martin Wolf <martin_wolf@bat.com=
+<mailto:martin_wolf@bat.com>>; Edith Limmert (External) <edith_limmert_Exte=
+rnal@bat.com<mailto:edith_limmert_External@bat.com>>; Schadensmeldungen_BAT=
+BY <Schadensmeldungen_BATBY@bat.com<mailto:Schadensmeldungen_BATBY@bat.com>=
+>; DE_DV <DE_DV@bat.com<mailto:DE_DV@bat.com>>
+Betreff: 2nd REMINDER: R=FCckf=FChrung von Vernichtungsware nach Hegnabrunn=
+ 3. Paket
+
+Hallo nach Berlin und Bayreuth,
+
+bitte auch diese Vernichtungsware zeitnah nach Hegnabrunn der Vernichtung z=
+uf=FChren.
+
+In Bayreuth m=FCssen noch 2 Artikel auf Lagerort A1R1 umgebucht werden.
+
+
+Plnt
+SLoc
+Material
+Material Description
+Unrestr.
+Blocked
+BUn
+DE30
+A1R1
+10133086
+LUCK RED 22/176 KRE SQ GEW INSIF
+105,072
+0
+TH
+DE30
+A101
+10133501
+LUCK STRRE 22/176 KRE SQ GEW INSIF
+0
+4,576
+TH
+DE30
+A1R1
+10133501
+LUCK STRRE 22/176 KRE SQ GEW INSIF
+1,584
+0
+TH
+DE30
+A101
+10133723
+PALL RED 31/248 KRE SQ GEW INSIF
+0
+0,248
+TH
+DE53
+A1R1
+10133086
+LUCK RED 22/176 KRE SQ GEW INSIF
+0,176
+0
+TH
+
+
+Mit freundlichen Gr=FC=DFen / Kind regards
+Gerd Enninga
+
+Distribution Head Office
+British American Tobacco (Germany) GmbH
+M: +49 (0) 162-2390737 Gerd Enninga
+M: +49 (0) 162-2431646 Ilona Stenzel
+M: +49 (0) 162-2395573 Andree Helm
+M: +49 (0) 162-2341535 Bettina Beukenberg
+
+E-Mail: DE_DV@bat.com<mailto:DE_DV@bat.com>
+[cid:image003.jpg@01D8FA99.06977880]
+
+Von: DE_DV <DE_DV@bat.com<mailto:DE_DV@bat.com>>
+Gesendet: Freitag, 30. September 2022 12:06
+An: Superdepot_BY <Superdepot_BY@BAT.COM<mailto:Superdepot_BY@BAT.COM>>; Ha=
+nnover (haj.customer.bat@kuehne-nagel.com<mailto:haj.customer.bat@kuehne-na=
+gel.com>) <haj.customer.bat@kuehne-nagel.com<mailto:haj.customer.bat@kuehne=
+-nagel.com>>; Christian Hammann <christian_hammann@bat.com<mailto:christian=
+_hammann@bat.com>>
+Cc: Marco Ziel <Marco_Ziel@bat.com<mailto:Marco_Ziel@bat.com>>; Robert Juhn=
+ke <Robert_Juhnke@bat.com<mailto:Robert_Juhnke@bat.com>>; Petja Rose <Petja=
+_Rose@bat.com<mailto:Petja_Rose@bat.com>>; Martin Wolf <martin_wolf@bat.com=
+<mailto:martin_wolf@bat.com>>; Edith Limmert (External) <edith_limmert_Exte=
+rnal@bat.com<mailto:edith_limmert_External@bat.com>>; Schadensmeldungen_BAT=
+BY <Schadensmeldungen_BATBY@bat.com<mailto:Schadensmeldungen_BATBY@bat.com>=
+>; DE_DV <DE_DV@bat.com<mailto:DE_DV@bat.com>>
+Betreff: REMINDER: R=FCckf=FChrung von Vernichtungsware nach Hegnabrunn 3. =
+Paket
+
+Hallo Hannover und Bayreuth,
+
+leider sind diese R=FCckf=FChrungen nach Hegnabrunn nach wie folgt nicht er=
+folgt.
+
+Bitte holen Sie dieses zeitnah nach.
+
+
+Mit freundlichen Gr=FC=DFen / Kind regards
+Gerd Enninga
+
+Distribution Head Office
+British American Tobacco (Germany) GmbH
+M: +49 (0) 162-2390737 Gerd Enninga
+M: +49 (0) 162-2431646 Ilona Stenzel
+M: +49 (0) 162-2395573 Andree Helm
+M: +49 (0) 162-2341535 Bettina Beukenberg
+
+E-Mail: DE_DV@bat.com<mailto:DE_DV@bat.com>
+[cid:image003.jpg@01D8FA99.06977880]
+
+Von: DE_DV <DE_DV@bat.com<mailto:DE_DV@bat.com>>
+Gesendet: Donnerstag, 15. September 2022 11:23
+An: Berlin (ber.customer.bat@kuehne-nagel.com<mailto:ber.customer.bat@kuehn=
+e-nagel.com>) <ber.customer.bat@kuehne-nagel.com<mailto:ber.customer.bat@ku=
+ehne-nagel.com>>; Hannover (haj.customer.bat@kuehne-nagel.com<mailto:haj.cu=
+stomer.bat@kuehne-nagel.com>) <haj.customer.bat@kuehne-nagel.com<mailto:haj=
+.customer.bat@kuehne-nagel.com>>
+Cc: Marco Ziel <Marco_Ziel@bat.com<mailto:Marco_Ziel@bat.com>>; Robert Juhn=
+ke <Robert_Juhnke@bat.com<mailto:Robert_Juhnke@bat.com>>; Petja Rose <Petja=
+_Rose@bat.com<mailto:Petja_Rose@bat.com>>; Martin Wolf <martin_wolf@bat.com=
+<mailto:martin_wolf@bat.com>>; Edith Limmert (External) <edith_limmert_Exte=
+rnal@bat.com<mailto:edith_limmert_External@bat.com>>; Schadensmeldungen_BAT=
+BY <Schadensmeldungen_BATBY@bat.com<mailto:Schadensmeldungen_BATBY@bat.com>=
+>; DE_DV <DE_DV@bat.com<mailto:DE_DV@bat.com>>
+Betreff: AW: R=FCckf=FChrung von Vernichtungsware nach Hegnabrunn 3. Paket
+
+Hallo zusammen,
+
+bitte diese R=FCckf=FChrung nicht vergessen und die betroffenen Artikel auf=
+ Lagerort A1R1/ DAM umbuchen.
+
+
+Material
+Description
+Plnt
+SLoc
+BUn
+Volume
+10133086
+LUCK RED 22/176 KRE SQ GEW INSIF
+DE30
+A101
+TH
+149,6
+10133501
+LUCK STRRE 22/176 KRE SQ GEW INSIF
+DE30
+A101
+TH
+1,232
+10133723
+PALL RED 31/248 KRE SQ GEW INSIF
+DE30
+A101
+TH
+0
+10133501
+LUCK STRRE 22/176 KRE SQ GEW INSIF
+DE55
+A101
+TH
+36,256
+10133728
+PALL BLUE 31/248 KRE SQ GEW INSIF
+DE55
+A101
+TH
+34,72
+
+
+Mit freundlichen Gr=FC=DFen / Kind regards
+Gerd Enninga
+
+Distribution Head Office
+British American Tobacco (Germany) GmbH
+M: +49 (0) 162-2390737 Gerd Enninga
+M: +49 (0) 162-2431646 Ilona Stenzel
+M: +49 (0) 162-2395573 Andree Helm
+M: +49 (0) 162-2341535 Bettina Beukenberg
+
+E-Mail: DE_DV@bat.com<mailto:DE_DV@bat.com>
+[cid:image003.jpg@01D8FA99.06977880]
+
+Von: DE_DV <DE_DV@bat.com<mailto:DE_DV@bat.com>>
+Gesendet: Montag, 5. September 2022 11:03
+An: Muenchen (muc.customer.bat@kuehne-nagel.com<mailto:muc.customer.bat@kue=
+hne-nagel.com>) <muc.customer.bat@kuehne-nagel.com<mailto:muc.customer.bat@=
+kuehne-nagel.com>>; Berlin (ber.customer.bat@kuehne-nagel.com<mailto:ber.cu=
+stomer.bat@kuehne-nagel.com>) <ber.customer.bat@kuehne-nagel.com<mailto:ber=
+.customer.bat@kuehne-nagel.com>>; Hamburg (ham.customer.bat@kuehne-nagel.co=
+m<mailto:ham.customer.bat@kuehne-nagel.com>) <ham.customer.bat@kuehne-nagel=
+.com<mailto:ham.customer.bat@kuehne-nagel.com>>; Hannover (haj.customer.bat=
+@kuehne-nagel.com<mailto:haj.customer.bat@kuehne-nagel.com>) <haj.customer.=
+bat@kuehne-nagel.com<mailto:haj.customer.bat@kuehne-nagel.com>>; kndui.cust=
+omer-bat <kndui.customer-bat@kuehne-nagel.com<mailto:kndui.customer-bat@kue=
+hne-nagel.com>>; Leipzig (lej.customer.bat@kuehne-nagel.com<mailto:lej.cust=
+omer.bat@kuehne-nagel.com>) <lej.customer.bat@kuehne-nagel.com<mailto:lej.c=
+ustomer.bat@kuehne-nagel.com>>; Mainz (mai.customer.bat@kuehne-nagel.com<ma=
+ilto:mai.customer.bat@kuehne-nagel.com>) <mai.customer.bat@kuehne-nagel.com=
+<mailto:mai.customer.bat@kuehne-nagel.com>>
+Cc: Marco Ziel <Marco_Ziel@bat.com<mailto:Marco_Ziel@bat.com>>; Patrick Hoc=
+hstrat <patrick_hochstrat1@bat.com<mailto:patrick_hochstrat1@bat.com>>; Rob=
+ert Juhnke <Robert_Juhnke@bat.com<mailto:Robert_Juhnke@bat.com>>; Petja Ros=
+e <Petja_Rose@bat.com<mailto:Petja_Rose@bat.com>>; Martin Wolf <martin_wolf=
+@bat.com<mailto:martin_wolf@bat.com>>; DE_DV <DE_DV@bat.com<mailto:DE_DV@ba=
+t.com>>; Edith Limmert (External) <edith_limmert_External@bat.com<mailto:ed=
+ith_limmert_External@bat.com>>; Schadensmeldungen_BATBY <Schadensmeldungen_=
+BATBY@bat.com<mailto:Schadensmeldungen_BATBY@bat.com>>
+Betreff: R=FCckf=FChrung von Vernichtungsware nach Hegnabrunn 3. Paket
+
+Hallo zusammen,
+
+hier ist das 3.Paket aus der Umstellung LEH-Varianten/ Formatchange: Bitte =
+auch diese unverk=E4uflichen Mengen wie unten angegeben zur=FCckf=FChren + =
+vernichten.
+
+Wichtig: Um unser Vernichtungslager in Hegnabrunn nicht zu sehr zu belasten=
+, ist mit Frau Limmert vereinbart, dass Mainz (Herr Flemming) mit Frau Limm=
+ert direkt miteinander den R=FCckf=FChrungstermin absprechen.
+
+Sollten die Mengen nicht 1:1 passen,  retournieren Sie bitte den kompletten=
+ Stock dieser SKUs. Aber teilen Sie uns ggf abweichende Mengen bitte mit.
+
+
+Materialkurztext
+Material
+GTIN Check
+DE52
+DE55
+DE58
+DE30
+GEB total
+th/GEB
+TH
+remark
+LS Auth Blue XXL 22 8,00
+10131004
+gleich
+952
+952
+#
+167,552
+1732 KSTKST DECA2E3I20  zur Vernichtung auf Anweisung von BAT TM/BMBAT =DCb=
+erlagerte Ware nicht verkaufsf=E4hig
+LS Auth Red XXL 22 8,00 INS
+10133501
+ungleich
+206
+1223
+7
+1436
+#
+252,736
+1732 KSTKST DECA2E3I20  zur Vernichtung auf Anweisung von BAT TM/BMBAT =DCb=
+erlagerte Ware nicht verkaufsf=E4hig
+LS Red XXL 22 8,00 INS
+10133086
+ungleich
+17
+180
+875
+1072
+#
+188,672
+1732 KSTKST DECA2E3I20  zur Vernichtung auf Anweisung von BAT TM/BMBAT =DCb=
+erlagerte Ware nicht verkaufsf=E4hig
+PM Red GIGA 31 10,00 INS
+10133723
+gleich
+783
+783
+#
+194,184
+1732 KSTKST DECA2E3I20  zur Vernichtung auf Anweisung von BAT TM/BMBAT =DCb=
+erlagerte Ware nicht verkaufsf=E4hig
+LS Red Super 36 12,00 INS
+10133125
+ungleich
+63
+63
+#
+11,340
+1732 KSTKST DECA2E3I20  zur Vernichtung auf Anweisung von BAT TM/BMBAT =DCb=
+erlagerte Ware nicht verkaufsf=E4hig
+PM Blue GIGA 31 10,00 INS
+10133728
+ungleich
+140
+469
+609
+#
+151,032
+1732 KSTKST DECA2E3I20  zur Vernichtung auf Anweisung von BAT TM/BMBAT =DCb=
+erlagerte Ware nicht verkaufsf=E4hig
+608,960
+
+
+
+
+Mit freundlichen Gr=FC=DFen / Kind regards
+Gerd Enninga
+
+Distribution Head Office
+British American Tobacco (Germany) GmbH
+M: +49 (0) 162-2390737 Gerd Enninga
+M: +49 (0) 162-2431646 Ilona Stenzel
+M: +49 (0) 162-2395573 Andree Helm
+M: +49 (0) 162-2341535 Bettina Beukenberg
+
+E-Mail: DE_DV@bat.com<mailto:DE_DV@bat.com>
+[cid:image003.jpg@01D8FA99.06977880]
+
+Von: Robert Juhnke <Robert_Juhnke@bat.com<mailto:Robert_Juhnke@bat.com>>
+Gesendet: Freitag, 2. September 2022 15:54
+An: Petja Rose <Petja_Rose@bat.com<mailto:Petja_Rose@bat.com>>; Martin Wolf=
+ <martin_wolf@bat.com<mailto:martin_wolf@bat.com>>; DE_DV <DE_DV@bat.com<ma=
+ilto:DE_DV@bat.com>>
+Cc: Marco Ziel <Marco_Ziel@bat.com<mailto:Marco_Ziel@bat.com>>; Patrick Hoc=
+hstrat <patrick_hochstrat1@bat.com<mailto:patrick_hochstrat1@bat.com>>
+Betreff: Vernichtung REWE-Umstellung
+
+
+Hi DV,
+
+@Martin Wolf<mailto:martin_wolf@bat.com> same same: bitte Info sobald versa=
+ndbereit! Danke!
+
+
+Beste Gr=FC=DFe,
+
+Robert Juhnke
+Distribution Manager
+T:  +49 1520 3476191
+F: +49 (0) 40 4151 3506
+Alsterufer 4, 20354 Hamburg
+www.bat.de<http://www.bat.de/>
+
+[cid:image004.jpg@01D8FA99.06977880]
+
+
+--_000_AM6PR01MB5704A447417669EC1523912BC0069AM6PR01MB5704eurp_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<meta name=3D"Generator" content=3D"Microsoft Word 15 (filtered medium)">
+<!--[if !mso]><style>v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style><![endif]--><style><!--
+/* Font Definitions */
+@font-face
+	{font-family:Helv;
+	panose-1:2 11 6 4 2 2 2 3 2 4;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:"Freestyle Script";
+	panose-1:3 8 4 2 3 2 5 11 4 4;}
+@font-face
+	{font-family:72;
+	panose-1:2 11 5 3 3 0 0 0 0 3;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:#0563C1;
+	text-decoration:underline;}
+span.EmailStyle21
+	{mso-style-type:personal-reply;
+	font-family:"Calibri",sans-serif;
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-size:10.0pt;}
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang=3D"DE" link=3D"#0563C1" vlink=3D"#954F72" style=3D"word-wrap:bre=
+ak-word">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US">Hallo,<o:=
+p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:red;mso-fareast-language:EN-US"=
+><a id=3D"OWAAM8F846A7594404785A220B48395F8B15D" href=3D"mailto:stefan_brau=
+nersreuther_External@bat.com"><span style=3D"font-family:&quot;Calibri&quot=
+;,sans-serif;color:red;text-decoration:none">@Stefan
+ Braunersreuther (External)</span></a><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:red;mso-fareast-language:EN-US"=
+><a id=3D"OWAAM18AA32ECE3DB4209B1743F4A84407C1E" href=3D"mailto:nico_hirsch=
+mann_External@bat.com"><span style=3D"font-family:&quot;Calibri&quot;,sans-=
+serif;color:red;text-decoration:none">@Nico Hirschmann
+ (External)</span></a><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<div>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Mit freundlichen Gr=FC=DFen / Best regards <o:p></o:=
+p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:28.0pt;font-family:&quot;Fr=
+eestyle Script&quot;">Uwe Opitz<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt">&nbsp;</span><o:p><=
+/o:p></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:12.0pt;font-=
+family:&quot;72&quot;,sans-serif;color:#242424;background:white">Shift Supe=
+rvisior</span><span lang=3D"EN-US" style=3D"font-size:12.0pt;font-family:&q=
+uot;72&quot;,sans-serif"><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:12.0pt">&nbs=
+p;</span><span lang=3D"EN-US"><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><b><span lang=3D"EN-US" style=3D"font-size:12.0pt">L=
+OG-IN Logistikpark GmbH</span></b><span lang=3D"EN-US"><o:p></o:p></span></=
+p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt">Neue Siedlung 27</s=
+pan><o:p></o:p></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt">95339 Neuenmarkt<o:=
+p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt">&nbsp;</span><o:p><=
+/o:p></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt">Tel.:&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp; </span><o:p></o:p></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt">E-Mail:&nbsp;&nbsp;=
+ <span style=3D"color:#4472C4">
+uwe_opitz@bat.com</span></span><span style=3D"color:#B4C6E7"><o:p></o:p></s=
+pan></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:10.0pt;font-family:&quot;He=
+lv&quot;,sans-serif;color:black"><img border=3D"0" width=3D"250" height=3D"=
+67" style=3D"width:2.6041in;height:.6979in" id=3D"Picture_x0020_8" src=3D"c=
+id:image001.png@01D8FA99.06977880" alt=3D"Login Logistikpark kleidddd"></sp=
+an><o:p></o:p></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:10.0pt;font-family:&quot;He=
+lv&quot;,sans-serif;color:black">Rechtsform: GmbH<br>
+Handelsregisternummer: HRB-Nr. B 1637<br>
+Gerichtsstand: Amtsgericht Bayreuth<br>
+Gesch=E4ftsf=FChrer: Robert Gammisch, Klaus Limmert</span><span style=3D"fo=
+nt-size:10.0pt;font-family:&quot;Helv&quot;,sans-serif">,<o:p></o:p></span>=
+</p>
+<p class=3D"MsoNormal"><span style=3D"font-size:10.0pt;font-family:&quot;He=
+lv&quot;,sans-serif"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#1F497D">Diese =
+E-Mail k=F6nnte vertrauliche und/oder rechtlich gesch=FCtzte Informationen =
+enthalten. Wenn Sie nicht der richtige Adressat sind oder diese E-Mail irrt=
+=FCmlich erhalten haben, informieren Sie bitte
+ sofort den Absender und vernichten Sie diese Mail. Das unerlaubte Kopieren=
+ sowie die unbefugte Weitergabe dieser Mail ist nicht gestattet.</span><o:p=
+></o:p></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:8.0pt;color:=
+#1F497D">This e-mail may contain confidential and/or privileged information=
+. If you are not the intended recipient (or have received this e-mail in er=
+ror) please notify the sender immediately
+ and destroy this e-mail. Any unauthorised copying, disclosure or distribut=
+ion of the material in this e-mail is strictly forbidden.</span><span lang=
+=3D"EN-US"><o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:12.0pt"><span lang=3D"EN-US">=
+&nbsp;</span><span lang=3D"EN-US" style=3D"font-size:10.0pt">______________=
+____________________________________________________<br>
+Confidentiality Notice: The information in this document and attachments is=
+ confidential and<br>
+may also be legally privileged. It is intended only for the use of the name=
+d recipient. Internet
+<br>
+communications are not secure and therefore British American Tobacco does n=
+ot accept legal
+<br>
+responsibility for the contents of this message. If you are not the intende=
+d recipient, please
+<br>
+notify us immediately and then delete this document. Do not disclose the co=
+ntents of this
+<br>
+document to any other person, nor take any copies. Violation of this notice=
+ may be unlawful.</span><o:p></o:p></p>
+</div>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<div>
+<div style=3D"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm =
+0cm 0cm">
+<p class=3D"MsoNormal"><b><span lang=3D"EN-US">From:</span></b><span lang=
+=3D"EN-US"> Christian Hammann &lt;christian_hammann@bat.com&gt;
+<br>
+<b>Sent:</b> Donnerstag, 17. November 2022 15:15<br>
+<b>To:</b> DE_DV &lt;DE_DV@bat.com&gt;; Superdepot_BY &lt;Superdepot_BY@BAT=
+.COM&gt;; Domestic_BY &lt;Domestic_BY@bat.com&gt;; Uwe Opitz (External) &lt=
+;uwe_opitz_External@bat.com&gt;<br>
+<b>Cc:</b> Marco Ziel &lt;Marco_Ziel@bat.com&gt;; Robert Juhnke &lt;Robert_=
+Juhnke@bat.com&gt;; Petja Rose &lt;Petja_Rose@bat.com&gt;; Martin Wolf &lt;=
+martin_wolf@bat.com&gt;; Edith Limmert (External) &lt;edith_limmert_Externa=
+l@bat.com&gt;; Schadensmeldungen_BATBY &lt;Schadensmeldungen_BATBY@bat.com&=
+gt;<br>
+<b>Subject:</b> AW: DE30: R=FCckf=FChrung von Vernichtungsware nach Hegnabr=
+unn 3. Paket<o:p></o:p></span></p>
+</div>
+</div>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US">Hallo,<o:=
+p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><a id=3D"=
+OWAAMF80F5817E15947FCB21D4094FF06F895" href=3D"mailto:Domestic_BY@bat.com">=
+<span style=3D"font-family:&quot;Calibri&quot;,sans-serif;text-decoration:n=
+one">@Domestic_BY</span></a><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><a id=3D"=
+OWAAMF3F279C9B6D6418B9DECECEE5F7A2F86" href=3D"mailto:uwe_opitz_External@ba=
+t.com"><span style=3D"font-family:&quot;Calibri&quot;,sans-serif;text-decor=
+ation:none">@Uwe Opitz (External)</span></a><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US">Bitte =FC=
+ber den Artikel eine Schadensmeldung erstellen &#8211; Die Ware steht bei e=
+uch auf Bruch.<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US">Viele Gr=
+=FC=DFe<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<div>
+<p class=3D"MsoNormal"><b><span lang=3D"EN-US" style=3D"color:#0E2B63">Chri=
+stian Hammann<o:p></o:p></span></b></p>
+<p class=3D"MsoNormal"><b><span lang=3D"EN-US" style=3D"font-size:9.0pt;col=
+or:#0E2B63">Customer Service Controller<o:p></o:p></span></b></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:7.0pt;color:=
+#0E2B63">Tel.: +49 (0) 921 291 4263<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:7.0pt;color:#0E2B63;backgro=
+und:white">Weiherstra=DFe 26, 95448 Bayreuth<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:7.0pt;color:#0E2B63"><a hre=
+f=3D"http://www.bat.de">www.bat.de</a><o:p></o:p></span></p>
+<p class=3D"MsoNormal">&nbsp;&nbsp; <span style=3D"font-size:7.0pt;color:#0=
+E2B63"><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><img border=3D"0" width=3D"165" height=3D"88" style=
+=3D"width:1.7187in;height:.9166in" id=3D"Picture_x0020_1" src=3D"cid:image0=
+02.jpg@01D8FA99.06977880"><span lang=3D"EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;
+</span><span lang=3D"EN-US" style=3D"font-size:12.0pt;font-family:&quot;Tim=
+es New Roman&quot;,serif"><o:p></o:p></span></p>
+</div>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<div>
+<div style=3D"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm =
+0cm 0cm">
+<p class=3D"MsoNormal"><b>Von:</b> DE_DV &lt;<a href=3D"mailto:DE_DV@bat.co=
+m">DE_DV@bat.com</a>&gt;
+<br>
+<b>Gesendet:</b> Donnerstag, 17. November 2022 12:03<br>
+<b>An:</b> Superdepot_BY &lt;<a href=3D"mailto:Superdepot_BY@BAT.COM">Super=
+depot_BY@BAT.COM</a>&gt;; Christian Hammann &lt;<a href=3D"mailto:christian=
+_hammann@bat.com">christian_hammann@bat.com</a>&gt;<br>
+<b>Cc:</b> Marco Ziel &lt;<a href=3D"mailto:Marco_Ziel@bat.com">Marco_Ziel@=
+bat.com</a>&gt;; Robert Juhnke &lt;<a href=3D"mailto:Robert_Juhnke@bat.com"=
+>Robert_Juhnke@bat.com</a>&gt;; Petja Rose &lt;<a href=3D"mailto:Petja_Rose=
+@bat.com">Petja_Rose@bat.com</a>&gt;; Martin Wolf &lt;<a href=3D"mailto:mar=
+tin_wolf@bat.com">martin_wolf@bat.com</a>&gt;;
+ Edith Limmert (External) &lt;<a href=3D"mailto:edith_limmert_External@bat.=
+com">edith_limmert_External@bat.com</a>&gt;; Schadensmeldungen_BATBY &lt;<a=
+ href=3D"mailto:Schadensmeldungen_BATBY@bat.com">Schadensmeldungen_BATBY@ba=
+t.com</a>&gt;; DE_DV &lt;<a href=3D"mailto:DE_DV@bat.com">DE_DV@bat.com</a>=
+&gt;<br>
+<b>Betreff:</b> DE30: R=FCckf=FChrung von Vernichtungsware nach Hegnabrunn =
+3. Paket<o:p></o:p></p>
+</div>
+</div>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US">Hallo zus=
+ammen,<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US">Bitte auc=
+h noch den folgenden Artikel nach Hegnabrunn der Vernichtung zuf=FChren.<o:=
+p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<table class=3D"MsoNormalTable" border=3D"0" cellspacing=3D"0" cellpadding=
+=3D"0" width=3D"761" style=3D"width:570.6pt;margin-left:-.15pt;border-colla=
+pse:collapse">
+<tbody>
+<tr style=3D"height:15.0pt">
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Material<o:p></o:p></spa=
+n></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Werk<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Lagerort<o:p></o:p></spa=
+n></p>
+</td>
+<td width=3D"240" nowrap=3D"" valign=3D"bottom" style=3D"width:180.0pt;bord=
+er:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;heig=
+ht:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Materialkurztext<o:p></o=
+:p></span></p>
+</td>
+<td width=3D"121" nowrap=3D"" valign=3D"bottom" style=3D"width:90.6pt;borde=
+r:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;heigh=
+t:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Basismengeneinheit<o:p><=
+/o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Frei verwendbar<o:p></o:=
+p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-left:none;background:yellow;padding:0cm 3.5p=
+t 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Gesperrt<o:p></o:p></spa=
+n></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-top:none;padding:0cm 3.5pt 0cm 3.5pt;height:=
+15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">10133501<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">DE30<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">A101<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"240" nowrap=3D"" valign=3D"bottom" style=3D"width:180.0pt;bord=
+er-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-ri=
+ght:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">LS Auth Red XXL 22 8,00 =
+INS<o:p></o:p></span></p>
+</td>
+<td width=3D"121" nowrap=3D"" valign=3D"bottom" style=3D"width:90.6pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">TS<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">0<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">4,4<o:p></o:p></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<div>
+<p class=3D"MsoNormal"><span style=3D"color:black">Mit freundlichen Gr=FC=
+=DFen / Kind regards<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black">Gerd Enninga<o:p></o:p><=
+/span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black"><o:p>&nbsp;</o:p></span>=
+</p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:black">Distribut=
+ion Head Office<br>
+British American Tobacco (Germany) GmbH<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2390737 Gerd Enninga
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2431646 Ilona Stenzel<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2395573 Andree Helm<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2341535 Bettina Beukenberg<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black"><br>
+E-Mail: <a href=3D"mailto:DE_DV@bat.com">DE_DV@bat.com</a></span><span styl=
+e=3D"font-size:8.0pt;color:#0E2B63"><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><img border=3D"0" width=3D"165"=
+ height=3D"88" style=3D"width:1.7187in;height:.9166in" id=3D"Picture_x0020_=
+2" src=3D"cid:image003.jpg@01D8FA99.06977880"></span><o:p></o:p></p>
+</div>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<div>
+<div style=3D"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm =
+0cm 0cm">
+<p class=3D"MsoNormal"><b>Von:</b> DE_DV &lt;<a href=3D"mailto:DE_DV@bat.co=
+m">DE_DV@bat.com</a>&gt;
+<br>
+<b>Gesendet:</b> Dienstag, 18. Oktober 2022 11:30<br>
+<b>An:</b> Superdepot_BY &lt;<a href=3D"mailto:Superdepot_BY@BAT.COM">Super=
+depot_BY@BAT.COM</a>&gt;; Christian Hammann &lt;<a href=3D"mailto:christian=
+_hammann@bat.com">christian_hammann@bat.com</a>&gt;; Berlin (<a href=3D"mai=
+lto:ber.customer.bat@kuehne-nagel.com">ber.customer.bat@kuehne-nagel.com</a=
+>)
+ &lt;<a href=3D"mailto:ber.customer.bat@kuehne-nagel.com">ber.customer.bat@=
+kuehne-nagel.com</a>&gt;<br>
+<b>Cc:</b> Marco Ziel &lt;<a href=3D"mailto:Marco_Ziel@bat.com">Marco_Ziel@=
+bat.com</a>&gt;; Robert Juhnke &lt;<a href=3D"mailto:Robert_Juhnke@bat.com"=
+>Robert_Juhnke@bat.com</a>&gt;; Petja Rose &lt;<a href=3D"mailto:Petja_Rose=
+@bat.com">Petja_Rose@bat.com</a>&gt;; Martin Wolf &lt;<a href=3D"mailto:mar=
+tin_wolf@bat.com">martin_wolf@bat.com</a>&gt;;
+ Edith Limmert (External) &lt;<a href=3D"mailto:edith_limmert_External@bat.=
+com">edith_limmert_External@bat.com</a>&gt;; Schadensmeldungen_BATBY &lt;<a=
+ href=3D"mailto:Schadensmeldungen_BATBY@bat.com">Schadensmeldungen_BATBY@ba=
+t.com</a>&gt;; DE_DV &lt;<a href=3D"mailto:DE_DV@bat.com">DE_DV@bat.com</a>=
+&gt;<br>
+<b>Betreff:</b> 2nd REMINDER: R=FCckf=FChrung von Vernichtungsware nach Heg=
+nabrunn 3. Paket<o:p></o:p></p>
+</div>
+</div>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US">Hallo nac=
+h Berlin und Bayreuth,<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US">bitte auc=
+h diese Vernichtungsware zeitnah nach Hegnabrunn der Vernichtung zuf=FChren=
+.<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US">In Bayreu=
+th m=FCssen noch 2 Artikel auf Lagerort A1R1 umgebucht werden.
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<table class=3D"MsoNormalTable" border=3D"0" cellspacing=3D"0" cellpadding=
+=3D"0" width=3D"719" style=3D"width:539.0pt;margin-left:-.15pt;border-colla=
+pse:collapse">
+<tbody>
+<tr style=3D"height:15.0pt">
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Plnt<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">SLoc<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Material<o:p></o:p></spa=
+n></p>
+</td>
+<td width=3D"239" nowrap=3D"" valign=3D"bottom" style=3D"width:179.0pt;bord=
+er:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;heig=
+ht:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Material Description<o:p=
+></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Unrestr.<o:p></o:p></spa=
+n></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Blocked<o:p></o:p></span=
+></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">BUn<o:p></o:p></span></p=
+>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-top:none;padding:0cm 3.5pt 0cm 3.5pt;height:=
+15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">DE30<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">A1R1<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">10133086<o:p></o:p></span></p>
+</td>
+<td width=3D"239" nowrap=3D"" valign=3D"bottom" style=3D"width:179.0pt;bord=
+er-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-ri=
+ght:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:black">LUCK RED =
+22/176 KRE SQ GEW INSIF<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">105,072<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">0<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">TH<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-top:none;padding:0cm 3.5pt 0cm 3.5pt;height:=
+15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">DE30<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">A101<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">10133501<o:p></o:p></span></p>
+</td>
+<td width=3D"239" nowrap=3D"" valign=3D"bottom" style=3D"width:179.0pt;bord=
+er-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-ri=
+ght:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">LUCK STRRE 22/176 KRE SQ=
+ GEW INSIF<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">0<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">4,576<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">TH<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-top:none;padding:0cm 3.5pt 0cm 3.5pt;height:=
+15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">DE30<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">A1R1<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">10133501<o:p></o:p></span></p>
+</td>
+<td width=3D"239" nowrap=3D"" valign=3D"bottom" style=3D"width:179.0pt;bord=
+er-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-ri=
+ght:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">LUCK STRRE 22/176 KRE SQ=
+ GEW INSIF<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">1,584<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">0<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">TH<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-top:none;padding:0cm 3.5pt 0cm 3.5pt;height:=
+15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">DE30<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">A101<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">10133723<o:p></o:p></span></p>
+</td>
+<td width=3D"239" nowrap=3D"" valign=3D"bottom" style=3D"width:179.0pt;bord=
+er-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-ri=
+ght:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:black">PALL RED =
+31/248 KRE SQ GEW INSIF<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">0<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">0,248<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">TH<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+:solid windowtext 1.0pt;border-top:none;padding:0cm 3.5pt 0cm 3.5pt;height:=
+15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">DE53<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">A1R1<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">10133086<o:p></o:p></span></p>
+</td>
+<td width=3D"239" nowrap=3D"" valign=3D"bottom" style=3D"width:179.0pt;bord=
+er-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-ri=
+ght:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:black">LUCK RED =
+22/176 KRE SQ GEW INSIF<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">0,176<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">0<o:p></o:p></span></p>
+</td>
+<td width=3D"80" nowrap=3D"" valign=3D"bottom" style=3D"width:60.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">TH<o:p></o:p></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<div>
+<p class=3D"MsoNormal"><span style=3D"color:black">Mit freundlichen Gr=FC=
+=DFen / Kind regards<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black">Gerd Enninga<o:p></o:p><=
+/span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black"><o:p>&nbsp;</o:p></span>=
+</p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:black">Distribut=
+ion Head Office<br>
+British American Tobacco (Germany) GmbH<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2390737 Gerd Enninga
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2431646 Ilona Stenzel<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2395573 Andree Helm<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2341535 Bettina Beukenberg<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black"><br>
+E-Mail: <a href=3D"mailto:DE_DV@bat.com">DE_DV@bat.com</a></span><span styl=
+e=3D"font-size:8.0pt;color:#0E2B63"><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><img border=3D"0" width=3D"165"=
+ height=3D"88" style=3D"width:1.7187in;height:.9166in" id=3D"Picture_x0020_=
+3" src=3D"cid:image003.jpg@01D8FA99.06977880"></span><o:p></o:p></p>
+</div>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<div>
+<div style=3D"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm =
+0cm 0cm">
+<p class=3D"MsoNormal"><b>Von:</b> DE_DV &lt;<a href=3D"mailto:DE_DV@bat.co=
+m">DE_DV@bat.com</a>&gt;
+<br>
+<b>Gesendet:</b> Freitag, 30. September 2022 12:06<br>
+<b>An:</b> Superdepot_BY &lt;<a href=3D"mailto:Superdepot_BY@BAT.COM">Super=
+depot_BY@BAT.COM</a>&gt;; Hannover (<a href=3D"mailto:haj.customer.bat@kueh=
+ne-nagel.com">haj.customer.bat@kuehne-nagel.com</a>) &lt;<a href=3D"mailto:=
+haj.customer.bat@kuehne-nagel.com">haj.customer.bat@kuehne-nagel.com</a>&gt=
+;;
+ Christian Hammann &lt;<a href=3D"mailto:christian_hammann@bat.com">christi=
+an_hammann@bat.com</a>&gt;<br>
+<b>Cc:</b> Marco Ziel &lt;<a href=3D"mailto:Marco_Ziel@bat.com">Marco_Ziel@=
+bat.com</a>&gt;; Robert Juhnke &lt;<a href=3D"mailto:Robert_Juhnke@bat.com"=
+>Robert_Juhnke@bat.com</a>&gt;; Petja Rose &lt;<a href=3D"mailto:Petja_Rose=
+@bat.com">Petja_Rose@bat.com</a>&gt;; Martin Wolf &lt;<a href=3D"mailto:mar=
+tin_wolf@bat.com">martin_wolf@bat.com</a>&gt;;
+ Edith Limmert (External) &lt;<a href=3D"mailto:edith_limmert_External@bat.=
+com">edith_limmert_External@bat.com</a>&gt;; Schadensmeldungen_BATBY &lt;<a=
+ href=3D"mailto:Schadensmeldungen_BATBY@bat.com">Schadensmeldungen_BATBY@ba=
+t.com</a>&gt;; DE_DV &lt;<a href=3D"mailto:DE_DV@bat.com">DE_DV@bat.com</a>=
+&gt;<br>
+<b>Betreff:</b> REMINDER: R=FCckf=FChrung von Vernichtungsware nach Hegnabr=
+unn 3. Paket<o:p></o:p></p>
+</div>
+</div>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US">Hallo Han=
+nover und Bayreuth,<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US">leider si=
+nd diese R=FCckf=FChrungen nach Hegnabrunn nach wie folgt nicht erfolgt.<o:=
+p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US">Bitte hol=
+en Sie dieses zeitnah nach.<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<div>
+<p class=3D"MsoNormal"><span style=3D"color:black">Mit freundlichen Gr=FC=
+=DFen / Kind regards<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black">Gerd Enninga<o:p></o:p><=
+/span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black"><o:p>&nbsp;</o:p></span>=
+</p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:black">Distribut=
+ion Head Office<br>
+British American Tobacco (Germany) GmbH<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2390737 Gerd Enninga
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2431646 Ilona Stenzel<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2395573 Andree Helm<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2341535 Bettina Beukenberg<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black"><br>
+E-Mail: <a href=3D"mailto:DE_DV@bat.com">DE_DV@bat.com</a></span><span styl=
+e=3D"font-size:8.0pt;color:#0E2B63"><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><img border=3D"0" width=3D"165"=
+ height=3D"88" style=3D"width:1.7187in;height:.9166in" id=3D"Bild_x0020_3" =
+src=3D"cid:image003.jpg@01D8FA99.06977880"></span><o:p></o:p></p>
+</div>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<div>
+<div style=3D"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm =
+0cm 0cm">
+<p class=3D"MsoNormal"><b>Von:</b> DE_DV &lt;<a href=3D"mailto:DE_DV@bat.co=
+m">DE_DV@bat.com</a>&gt;
+<br>
+<b>Gesendet:</b> Donnerstag, 15. September 2022 11:23<br>
+<b>An:</b> Berlin (<a href=3D"mailto:ber.customer.bat@kuehne-nagel.com">ber=
+.customer.bat@kuehne-nagel.com</a>) &lt;<a href=3D"mailto:ber.customer.bat@=
+kuehne-nagel.com">ber.customer.bat@kuehne-nagel.com</a>&gt;; Hannover (<a h=
+ref=3D"mailto:haj.customer.bat@kuehne-nagel.com">haj.customer.bat@kuehne-na=
+gel.com</a>)
+ &lt;<a href=3D"mailto:haj.customer.bat@kuehne-nagel.com">haj.customer.bat@=
+kuehne-nagel.com</a>&gt;<br>
+<b>Cc:</b> Marco Ziel &lt;<a href=3D"mailto:Marco_Ziel@bat.com">Marco_Ziel@=
+bat.com</a>&gt;; Robert Juhnke &lt;<a href=3D"mailto:Robert_Juhnke@bat.com"=
+>Robert_Juhnke@bat.com</a>&gt;; Petja Rose &lt;<a href=3D"mailto:Petja_Rose=
+@bat.com">Petja_Rose@bat.com</a>&gt;; Martin Wolf &lt;<a href=3D"mailto:mar=
+tin_wolf@bat.com">martin_wolf@bat.com</a>&gt;;
+ Edith Limmert (External) &lt;<a href=3D"mailto:edith_limmert_External@bat.=
+com">edith_limmert_External@bat.com</a>&gt;; Schadensmeldungen_BATBY &lt;<a=
+ href=3D"mailto:Schadensmeldungen_BATBY@bat.com">Schadensmeldungen_BATBY@ba=
+t.com</a>&gt;; DE_DV &lt;<a href=3D"mailto:DE_DV@bat.com">DE_DV@bat.com</a>=
+&gt;<br>
+<b>Betreff:</b> AW: R=FCckf=FChrung von Vernichtungsware nach Hegnabrunn 3.=
+ Paket<o:p></o:p></p>
+</div>
+</div>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US">Hallo zus=
+ammen,<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US">bitte die=
+se R=FCckf=FChrung nicht vergessen und die betroffenen Artikel auf Lagerort=
+ A1R1/ DAM umbuchen.<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<table class=3D"MsoNormalTable" border=3D"0" cellspacing=3D"0" cellpadding=
+=3D"0" width=3D"626" style=3D"width:469.8pt;margin-left:-.15pt;border-colla=
+pse:collapse">
+<tbody>
+<tr style=3D"height:15.0pt">
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.45pt;borde=
+r:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Material<o:p></o:p></spa=
+n></p>
+</td>
+<td width=3D"230" nowrap=3D"" valign=3D"bottom" style=3D"width:172.35pt;bor=
+der:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Description<o:p></o:p></=
+span></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Plnt<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">SLoc<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">BUn<o:p></o:p></span></p=
+>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+:solid windowtext 1.0pt;border-left:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">Volume<o:p></o:p></span>=
+</p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.45pt;borde=
+r:solid windowtext 1.0pt;border-top:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">10133086<o:p></o:p></span></p>
+</td>
+<td width=3D"230" nowrap=3D"" valign=3D"bottom" style=3D"width:172.35pt;bor=
+der-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-r=
+ight:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:black">LUCK RED =
+22/176 KRE SQ GEW INSIF<o:p></o:p></span></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">DE30<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">A101<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">TH<o:p></o:p></span></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">149,6<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.45pt;borde=
+r:solid windowtext 1.0pt;border-top:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">10133501<o:p></o:p></span></p>
+</td>
+<td width=3D"230" nowrap=3D"" valign=3D"bottom" style=3D"width:172.35pt;bor=
+der-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-r=
+ight:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">LUCK STRRE 22/176 KRE SQ=
+ GEW INSIF<o:p></o:p></span></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">DE30<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">A101<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">TH<o:p></o:p></span></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">1,232<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.45pt;borde=
+r:solid windowtext 1.0pt;border-top:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">10133723<o:p></o:p></span></p>
+</td>
+<td width=3D"230" nowrap=3D"" valign=3D"bottom" style=3D"width:172.35pt;bor=
+der-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-r=
+ight:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:black">PALL RED =
+31/248 KRE SQ GEW INSIF<o:p></o:p></span></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">DE30<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">A101<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">TH<o:p></o:p></span></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">0<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.45pt;borde=
+r:solid windowtext 1.0pt;border-top:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">10133501<o:p></o:p></span></p>
+</td>
+<td width=3D"230" nowrap=3D"" valign=3D"bottom" style=3D"width:172.35pt;bor=
+der-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-r=
+ight:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">LUCK STRRE 22/176 KRE SQ=
+ GEW INSIF<o:p></o:p></span></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">DE55<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">A101<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">TH<o:p></o:p></span></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">36,256<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.45pt;borde=
+r:solid windowtext 1.0pt;border-top:none;padding:0cm 3.5pt 0cm 3.5pt;height=
+:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">10133728<o:p></o:p></span></p>
+</td>
+<td width=3D"230" nowrap=3D"" valign=3D"bottom" style=3D"width:172.35pt;bor=
+der-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-r=
+ight:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:black">PALL BLUE=
+ 31/248 KRE SQ GEW INSIF<o:p></o:p></span></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">DE55<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">A101<o:p></o:p></span></=
+p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">TH<o:p></o:p></span></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.5pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"right" style=3D"text-align:right"><span sty=
+le=3D"color:black">34,72<o:p></o:p></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<div>
+<p class=3D"MsoNormal"><span style=3D"color:black">Mit freundlichen Gr=FC=
+=DFen / Kind regards<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black">Gerd Enninga<o:p></o:p><=
+/span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black"><o:p>&nbsp;</o:p></span>=
+</p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:black">Distribut=
+ion Head Office<br>
+British American Tobacco (Germany) GmbH<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2390737 Gerd Enninga
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2431646 Ilona Stenzel<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2395573 Andree Helm<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2341535 Bettina Beukenberg<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black"><br>
+E-Mail: <a href=3D"mailto:DE_DV@bat.com">DE_DV@bat.com</a></span><span styl=
+e=3D"font-size:8.0pt;color:#0E2B63"><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><img border=3D"0" width=3D"165"=
+ height=3D"88" style=3D"width:1.7187in;height:.9166in" id=3D"Bild_x0020_2" =
+src=3D"cid:image003.jpg@01D8FA99.06977880"></span><o:p></o:p></p>
+</div>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<div>
+<div style=3D"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm =
+0cm 0cm">
+<p class=3D"MsoNormal"><b>Von:</b> DE_DV &lt;<a href=3D"mailto:DE_DV@bat.co=
+m">DE_DV@bat.com</a>&gt;
+<br>
+<b>Gesendet:</b> Montag, 5. September 2022 11:03<br>
+<b>An:</b> Muenchen (<a href=3D"mailto:muc.customer.bat@kuehne-nagel.com">m=
+uc.customer.bat@kuehne-nagel.com</a>) &lt;<a href=3D"mailto:muc.customer.ba=
+t@kuehne-nagel.com">muc.customer.bat@kuehne-nagel.com</a>&gt;; Berlin (<a h=
+ref=3D"mailto:ber.customer.bat@kuehne-nagel.com">ber.customer.bat@kuehne-na=
+gel.com</a>)
+ &lt;<a href=3D"mailto:ber.customer.bat@kuehne-nagel.com">ber.customer.bat@=
+kuehne-nagel.com</a>&gt;; Hamburg (<a href=3D"mailto:ham.customer.bat@kuehn=
+e-nagel.com">ham.customer.bat@kuehne-nagel.com</a>) &lt;<a href=3D"mailto:h=
+am.customer.bat@kuehne-nagel.com">ham.customer.bat@kuehne-nagel.com</a>&gt;=
+;
+ Hannover (<a href=3D"mailto:haj.customer.bat@kuehne-nagel.com">haj.custome=
+r.bat@kuehne-nagel.com</a>) &lt;<a href=3D"mailto:haj.customer.bat@kuehne-n=
+agel.com">haj.customer.bat@kuehne-nagel.com</a>&gt;; kndui.customer-bat &lt=
+;<a href=3D"mailto:kndui.customer-bat@kuehne-nagel.com">kndui.customer-bat@=
+kuehne-nagel.com</a>&gt;;
+ Leipzig (<a href=3D"mailto:lej.customer.bat@kuehne-nagel.com">lej.customer=
+.bat@kuehne-nagel.com</a>) &lt;<a href=3D"mailto:lej.customer.bat@kuehne-na=
+gel.com">lej.customer.bat@kuehne-nagel.com</a>&gt;; Mainz (<a href=3D"mailt=
+o:mai.customer.bat@kuehne-nagel.com">mai.customer.bat@kuehne-nagel.com</a>)
+ &lt;<a href=3D"mailto:mai.customer.bat@kuehne-nagel.com">mai.customer.bat@=
+kuehne-nagel.com</a>&gt;<br>
+<b>Cc:</b> Marco Ziel &lt;<a href=3D"mailto:Marco_Ziel@bat.com">Marco_Ziel@=
+bat.com</a>&gt;; Patrick Hochstrat &lt;<a href=3D"mailto:patrick_hochstrat1=
+@bat.com">patrick_hochstrat1@bat.com</a>&gt;; Robert Juhnke &lt;<a href=3D"=
+mailto:Robert_Juhnke@bat.com">Robert_Juhnke@bat.com</a>&gt;;
+ Petja Rose &lt;<a href=3D"mailto:Petja_Rose@bat.com">Petja_Rose@bat.com</a=
+>&gt;; Martin Wolf &lt;<a href=3D"mailto:martin_wolf@bat.com">martin_wolf@b=
+at.com</a>&gt;; DE_DV &lt;<a href=3D"mailto:DE_DV@bat.com">DE_DV@bat.com</a=
+>&gt;; Edith Limmert (External) &lt;<a href=3D"mailto:edith_limmert_Externa=
+l@bat.com">edith_limmert_External@bat.com</a>&gt;;
+ Schadensmeldungen_BATBY &lt;<a href=3D"mailto:Schadensmeldungen_BATBY@bat.=
+com">Schadensmeldungen_BATBY@bat.com</a>&gt;<br>
+<b>Betreff:</b> R=FCckf=FChrung von Vernichtungsware nach Hegnabrunn 3. Pak=
+et<o:p></o:p></p>
+</div>
+</div>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Hallo zusammen,<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">hier ist das 3.Paket aus der Umstellung LEH-Variante=
+n/ Formatchange: Bitte auch diese unverk=E4uflichen Mengen wie unten angege=
+ben<span style=3D"color:black"> zur=FCckf=FChren + vernichten.</span><o:p><=
+/o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><span style=3D"background:silver;mso-highlight:silve=
+r">Wichtig:</span> Um unser Vernichtungslager in Hegnabrunn nicht zu sehr z=
+u belasten, ist mit Frau Limmert vereinbart, dass
+<span style=3D"background:silver;mso-highlight:silver">Mainz (Herr Flemming=
+)</span> mit Frau Limmert direkt miteinander den R=FCckf=FChrungstermin abs=
+prechen.<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Sollten die Mengen nicht 1:1 passen, &nbsp;retournie=
+ren Sie bitte den kompletten Stock dieser SKUs. Aber teilen Sie uns
+<span style=3D"color:black">ggf abweichende Mengen bitte mit.</span><o:p></=
+o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<table class=3D"MsoNormalTable" border=3D"0" cellspacing=3D"0" cellpadding=
+=3D"0" width=3D"1471" style=3D"width:1103.4pt;margin-left:-.15pt;border-col=
+lapse:collapse">
+<tbody>
+<tr style=3D"height:15.0pt">
+<td width=3D"209" nowrap=3D"" valign=3D"bottom" style=3D"width:157.0pt;bord=
+er:solid windowtext 1.0pt;background:#D9E1F2;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">Materialkurztext<o:p></o:p></span></b></p>
+</td>
+<td width=3D"74" nowrap=3D"" valign=3D"bottom" style=3D"width:55.45pt;borde=
+r:solid windowtext 1.0pt;border-left:none;background:#D9E1F2;padding:0cm 5.=
+4pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">Material<o:p></o:p></span></b></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.0pt;border=
+:solid windowtext 1.0pt;border-left:none;background:#D9E1F2;padding:0cm 5.4=
+pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">GTIN Check<o:p></o:p></span></b></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+:solid windowtext 1.0pt;border-left:none;background:#D9E1F2;padding:0cm 5.4=
+pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">DE52<o:p></o:p></span></b></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+:solid windowtext 1.0pt;border-left:none;background:#D9E1F2;padding:0cm 5.4=
+pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">DE55<o:p></o:p></span></b></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+:solid windowtext 1.0pt;border-left:none;background:#D9E1F2;padding:0cm 5.4=
+pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">DE58<o:p></o:p></span></b></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+:solid windowtext 1.0pt;border-left:none;background:#D9E1F2;padding:0cm 5.4=
+pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">DE30<o:p></o:p></span></b></p>
+</td>
+<td width=3D"68" nowrap=3D"" valign=3D"bottom" style=3D"width:51.0pt;border=
+:solid windowtext 1.0pt;border-left:none;background:#D9E1F2;padding:0cm 5.4=
+pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">GEB total<o:p></o:p></span></b></p>
+</td>
+<td width=3D"57" nowrap=3D"" valign=3D"bottom" style=3D"width:42.75pt;borde=
+r:solid windowtext 1.0pt;border-left:none;background:#D9E1F2;padding:0cm 5.=
+4pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><i><spa=
+n style=3D"color:#0070C0">th/GEB<o:p></o:p></span></i></p>
+</td>
+<td width=3D"81" nowrap=3D"" valign=3D"bottom" style=3D"width:61.0pt;border=
+:solid windowtext 1.0pt;border-left:none;background:#D9E1F2;padding:0cm 5.4=
+pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">TH<o:p></o:p></span></b></p>
+</td>
+<td width=3D"700" nowrap=3D"" valign=3D"bottom" style=3D"width:525.2pt;bord=
+er:solid windowtext 1.0pt;border-left:none;background:#D9E1F2;padding:0cm 5=
+.4pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">remark<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"209" nowrap=3D"" valign=3D"bottom" style=3D"width:157.0pt;bord=
+er:solid windowtext 1.0pt;border-top:none;background:#00B0F0;padding:0cm 5.=
+4pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">LS Auth Blue XXL 22 8,00</span><o:p></o:p></b></p>
+</td>
+<td width=3D"74" nowrap=3D"" valign=3D"bottom" style=3D"width:55.45pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">10131004</span><o:p></o:p></b></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">gleich</span><o:p></o:p></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">952</span><o:p></o:p></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"68" nowrap=3D"" valign=3D"bottom" style=3D"width:51.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">952</span><o:p></o:p></b></p>
+</td>
+<td width=3D"57" nowrap=3D"" valign=3D"bottom" style=3D"width:42.75pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><i><spa=
+n style=3D"color:black">#</span><o:p></o:p></i></p>
+</td>
+<td width=3D"81" nowrap=3D"" valign=3D"bottom" style=3D"width:61.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">167,552</span><o:p></o:p></b></p>
+</td>
+<td width=3D"700" nowrap=3D"" valign=3D"bottom" style=3D"width:525.2pt;bord=
+er-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-ri=
+ght:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;h=
+eight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">1732 KSTKST
+<b>DECA2E3I20</b>&nbsp; zur Vernichtung auf Anweisung von BAT TM/BMBAT =DCb=
+erlagerte Ware nicht verkaufsf=E4hig</span><o:p></o:p></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"209" nowrap=3D"" valign=3D"bottom" style=3D"width:157.0pt;bord=
+er:solid windowtext 1.0pt;border-top:none;background:#00B0F0;padding:0cm 5.=
+4pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">LS Auth Red XXL 22 8,00 INS</span><o:p></o:p></b></=
+p>
+</td>
+<td width=3D"74" nowrap=3D"" valign=3D"bottom" style=3D"width:55.45pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">10133501</span><o:p></o:p></b></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">ungleich</span><o:p></o:p></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">206</span><o:p></o:p></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">1223</span><o:p></o:p></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">7</span><o:p></o:p></p>
+</td>
+<td width=3D"68" nowrap=3D"" valign=3D"bottom" style=3D"width:51.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">1436</span><o:p></o:p></b></p>
+</td>
+<td width=3D"57" nowrap=3D"" valign=3D"bottom" style=3D"width:42.75pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><i><spa=
+n style=3D"color:black">#</span><o:p></o:p></i></p>
+</td>
+<td width=3D"81" nowrap=3D"" valign=3D"bottom" style=3D"width:61.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">252,736</span><o:p></o:p></b></p>
+</td>
+<td width=3D"700" nowrap=3D"" valign=3D"bottom" style=3D"width:525.2pt;bord=
+er-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-ri=
+ght:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;h=
+eight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">1732 KSTKST
+<b>DECA2E3I20</b>&nbsp; zur Vernichtung auf Anweisung von BAT TM/BMBAT =DCb=
+erlagerte Ware nicht verkaufsf=E4hig</span><o:p></o:p></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"209" nowrap=3D"" valign=3D"bottom" style=3D"width:157.0pt;bord=
+er:solid windowtext 1.0pt;border-top:none;background:#00B0F0;padding:0cm 5.=
+4pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">LS Red XXL 22 8,00 INS</span><o:p></o:p></b></p>
+</td>
+<td width=3D"74" nowrap=3D"" valign=3D"bottom" style=3D"width:55.45pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">10133086</span><o:p></o:p></b></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">ungleich</span><o:p></o:p></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">17</span><o:p></o:p></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">180</span><o:p></o:p></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">875</span><o:p></o:p></p>
+</td>
+<td width=3D"68" nowrap=3D"" valign=3D"bottom" style=3D"width:51.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">1072</span><o:p></o:p></b></p>
+</td>
+<td width=3D"57" nowrap=3D"" valign=3D"bottom" style=3D"width:42.75pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><i><spa=
+n style=3D"color:black">#</span><o:p></o:p></i></p>
+</td>
+<td width=3D"81" nowrap=3D"" valign=3D"bottom" style=3D"width:61.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">188,672</span><o:p></o:p></b></p>
+</td>
+<td width=3D"700" nowrap=3D"" valign=3D"bottom" style=3D"width:525.2pt;bord=
+er-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-ri=
+ght:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;h=
+eight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">1732 KSTKST
+<b>DECA2E3I20</b>&nbsp; zur Vernichtung auf Anweisung von BAT TM/BMBAT =DCb=
+erlagerte Ware nicht verkaufsf=E4hig</span><o:p></o:p></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"209" nowrap=3D"" valign=3D"bottom" style=3D"width:157.0pt;bord=
+er:solid windowtext 1.0pt;border-top:none;background:#00B0F0;padding:0cm 5.=
+4pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">PM Red GIGA 31 10,00 INS<o:p></o:p></span></b></p>
+</td>
+<td width=3D"74" nowrap=3D"" valign=3D"bottom" style=3D"width:55.45pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">10133723<o:p></o:p></span></b></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">gleich<o:p></o:p></span></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">783<o:p></o:p></span></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"68" nowrap=3D"" valign=3D"bottom" style=3D"width:51.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">783<o:p></o:p></span></b></p>
+</td>
+<td width=3D"57" nowrap=3D"" valign=3D"bottom" style=3D"width:42.75pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><i><spa=
+n style=3D"color:#0070C0">#<o:p></o:p></span></i></p>
+</td>
+<td width=3D"81" nowrap=3D"" valign=3D"bottom" style=3D"width:61.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">194,184<o:p></o:p></span></b></p>
+</td>
+<td width=3D"700" nowrap=3D"" valign=3D"bottom" style=3D"width:525.2pt;bord=
+er-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-ri=
+ght:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;h=
+eight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">1732 KSTKST
+<b>DECA2E3I20</b>&nbsp; zur Vernichtung auf Anweisung von BAT TM/BMBAT =DCb=
+erlagerte Ware nicht verkaufsf=E4hig</span><o:p></o:p></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"209" nowrap=3D"" valign=3D"bottom" style=3D"width:157.0pt;bord=
+er:solid windowtext 1.0pt;border-top:none;background:#00B0F0;padding:0cm 5.=
+4pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">LS Red Super 36 12,00 INS<o:p></o:p></span></b></p>
+</td>
+<td width=3D"74" nowrap=3D"" valign=3D"bottom" style=3D"width:55.45pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">10133125<o:p></o:p></span></b></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">ungleich<o:p></o:p></span></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">63<o:p></o:p></span></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"68" nowrap=3D"" valign=3D"bottom" style=3D"width:51.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">63<o:p></o:p></span></b></p>
+</td>
+<td width=3D"57" nowrap=3D"" valign=3D"bottom" style=3D"width:42.75pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><i><spa=
+n style=3D"color:#0070C0">#<o:p></o:p></span></i></p>
+</td>
+<td width=3D"81" nowrap=3D"" valign=3D"bottom" style=3D"width:61.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">11,340<o:p></o:p></span></b></p>
+</td>
+<td width=3D"700" nowrap=3D"" valign=3D"bottom" style=3D"width:525.2pt;bord=
+er-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-ri=
+ght:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;h=
+eight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">1732 KSTKST
+<b>DECA2E3I20</b>&nbsp; zur Vernichtung auf Anweisung von BAT TM/BMBAT =DCb=
+erlagerte Ware nicht verkaufsf=E4hig</span><o:p></o:p></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"209" nowrap=3D"" valign=3D"bottom" style=3D"width:157.0pt;bord=
+er:solid windowtext 1.0pt;border-top:none;background:#00B0F0;padding:0cm 5.=
+4pt 0cm 5.4pt;height:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">PM Blue GIGA 31 10,00 INS<o:p></o:p></span></b></p>
+</td>
+<td width=3D"74" nowrap=3D"" valign=3D"bottom" style=3D"width:55.45pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">10133728<o:p></o:p></span></b></p>
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">ungleich<o:p></o:p></span></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">140<o:p></o:p></span></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">469<o:p></o:p></span></p>
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"68" nowrap=3D"" valign=3D"bottom" style=3D"width:51.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">609<o:p></o:p></span></b></p>
+</td>
+<td width=3D"57" nowrap=3D"" valign=3D"bottom" style=3D"width:42.75pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><i><spa=
+n style=3D"color:#0070C0">#<o:p></o:p></span></i></p>
+</td>
+<td width=3D"81" nowrap=3D"" valign=3D"bottom" style=3D"width:61.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:black">151,032<o:p></o:p></span></b></p>
+</td>
+<td width=3D"700" nowrap=3D"" valign=3D"bottom" style=3D"width:525.2pt;bord=
+er-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-ri=
+ght:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;h=
+eight:15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">1732 KSTKST
+<b>DECA2E3I20</b>&nbsp; zur Vernichtung auf Anweisung von BAT TM/BMBAT =DCb=
+erlagerte Ware nicht verkaufsf=E4hig</span><o:p></o:p></p>
+</td>
+</tr>
+<tr style=3D"height:15.0pt">
+<td width=3D"209" nowrap=3D"" valign=3D"bottom" style=3D"width:157.0pt;bord=
+er:solid windowtext 1.0pt;border-top:none;background:#00B0F0;padding:0cm 5.=
+4pt 0cm 5.4pt;height:15.0pt">
+</td>
+<td width=3D"74" nowrap=3D"" valign=3D"bottom" style=3D"width:55.45pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+</td>
+<td width=3D"79" nowrap=3D"" valign=3D"bottom" style=3D"width:59.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"51" nowrap=3D"" valign=3D"bottom" style=3D"width:38.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"68" nowrap=3D"" valign=3D"bottom" style=3D"width:51.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;hei=
+ght:15.0pt">
+</td>
+<td width=3D"57" nowrap=3D"" valign=3D"bottom" style=3D"width:42.75pt;borde=
+r-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-rig=
+ht:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;he=
+ight:15.0pt">
+</td>
+<td width=3D"81" nowrap=3D"" valign=3D"bottom" style=3D"width:61.0pt;border=
+-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-righ=
+t:solid windowtext 1.0pt;background:red;padding:0cm 5.4pt 0cm 5.4pt;height:=
+15.0pt">
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><b><spa=
+n style=3D"color:white">608,960<o:p></o:p></span></b></p>
+</td>
+<td width=3D"700" nowrap=3D"" valign=3D"bottom" style=3D"width:525.2pt;bord=
+er-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-ri=
+ght:solid windowtext 1.0pt;background:#00B0F0;padding:0cm 5.4pt 0cm 5.4pt;h=
+eight:15.0pt">
+</td>
+</tr>
+</tbody>
+</table>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<div>
+<p class=3D"MsoNormal"><span style=3D"color:black">Mit freundlichen Gr=FC=
+=DFen / Kind regards<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black">Gerd Enninga<o:p></o:p><=
+/span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black"><o:p>&nbsp;</o:p></span>=
+</p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:black">Distribut=
+ion Head Office<br>
+British American Tobacco (Germany) GmbH<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2390737 Gerd Enninga
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2431646 Ilona Stenzel<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2395573 Andree Helm<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:8.0pt;color:#0E2B63">M: +49=
+ (0) 162-2341535 Bettina Beukenberg<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:black"><br>
+E-Mail: <a href=3D"mailto:DE_DV@bat.com">DE_DV@bat.com</a></span><span styl=
+e=3D"font-size:8.0pt;color:#0E2B63"><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><img border=3D"0" width=3D"165"=
+ height=3D"88" style=3D"width:1.7187in;height:.9166in" id=3D"Bild_x0020_1" =
+src=3D"cid:image003.jpg@01D8FA99.06977880"></span><o:p></o:p></p>
+</div>
+<p class=3D"MsoNormal"><span style=3D"mso-fareast-language:EN-US"><o:p>&nbs=
+p;</o:p></span></p>
+<div>
+<div style=3D"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm =
+0cm 0cm">
+<p class=3D"MsoNormal"><b>Von:</b> Robert Juhnke &lt;<a href=3D"mailto:Robe=
+rt_Juhnke@bat.com">Robert_Juhnke@bat.com</a>&gt;
+<br>
+<b>Gesendet:</b> Freitag, 2. September 2022 15:54<br>
+<b>An:</b> Petja Rose &lt;<a href=3D"mailto:Petja_Rose@bat.com">Petja_Rose@=
+bat.com</a>&gt;; Martin Wolf &lt;<a href=3D"mailto:martin_wolf@bat.com">mar=
+tin_wolf@bat.com</a>&gt;; DE_DV &lt;<a href=3D"mailto:DE_DV@bat.com">DE_DV@=
+bat.com</a>&gt;<br>
+<b>Cc:</b> Marco Ziel &lt;<a href=3D"mailto:Marco_Ziel@bat.com">Marco_Ziel@=
+bat.com</a>&gt;; Patrick Hochstrat &lt;<a href=3D"mailto:patrick_hochstrat1=
+@bat.com">patrick_hochstrat1@bat.com</a>&gt;<br>
+<b>Betreff:</b> Vernichtung REWE-Umstellung<o:p></o:p></p>
+</div>
+</div>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">Hi DV,<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><a id=3D"OWAAMCB05267C733D4C7481C414A0BA9B8637" href=
+=3D"mailto:martin_wolf@bat.com"><span style=3D"font-family:&quot;Calibri&qu=
+ot;,sans-serif;text-decoration:none">@Martin Wolf</span></a> same same: bit=
+te Info sobald versandbereit! Danke!<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal">Beste Gr=FC=DFe,<o:p></o:p></p>
+<p class=3D"MsoNormal"><b><span style=3D"color:#0E2B63"><o:p>&nbsp;</o:p></=
+span></b></p>
+<p class=3D"MsoNormal"><b><span style=3D"color:#0E2B63">Robert Juhnke</span=
+></b><span style=3D"color:#0E2B63"><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><b><span style=3D"font-size:9.0pt;color:#0E2B63">Dis=
+tribution Manager<o:p></o:p></span></b></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:7.0pt;color:#0E2B63">T:&nbs=
+p; +49 1520 3476191<br>
+F: +49 (0) 40 4151 3506<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:7.0pt;color:#0E2B63;backgro=
+und:white">Alsterufer 4, 20354 Hamburg<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:7.0pt;color:=
+#0E2B63"><a href=3D"http://www.bat.de/"><span style=3D"color:blue">www.bat.=
+de</span></a><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">&nbsp;&nbsp; </span><span lang=
+=3D"EN-US" style=3D"font-size:7.0pt;color:#0E2B63"><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><img border=3D"0" width=3D"165"=
+ height=3D"88" style=3D"width:1.7187in;height:.9166in" id=3D"Grafik_x0020_2=
+" src=3D"cid:image004.jpg@01D8FA99.06977880"></span><span lang=3D"EN-US">&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+</div>
+</body>
+</html>
+
+--_000_AM6PR01MB5704A447417669EC1523912BC0069AM6PR01MB5704eurp_--
+
+--_007_AM6PR01MB5704A447417669EC1523912BC0069AM6PR01MB5704eurp_
+Content-Type: image/png; name="image001.png"
+Content-Description: image001.png
+Content-Disposition: inline; filename="image001.png"; size=12620;
+	creation-date="Thu, 17 Nov 2022 14:27:00 GMT";
+	modification-date="Thu, 17 Nov 2022 14:27:03 GMT"
+Content-ID: <image001.png@01D8FA99.06977880>
+Content-Transfer-Encoding: base64
+
+iVBORw0KGgoAAAANSUhEUgAAAPoAAABDCAYAAAC1KRiAAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAu
+M4zml1AAAC+rSURBVHhe7V0FeBRX1343JCGBBAkOpVhwSxOsBYq7U1yKE6x40RSH0qLFHVq8FAoF
+ipRSPrRAcSsUt+IJEiUw/3tmk7DZzGo2kJ/mPM+wZHfm2txz77lH3qNTSEiipBFIGoH3egSc3uve
+JXUuaQSSRkAdAV1i2dHDI14iLDwSzs5OcHVxhotzsqRXlDQCSSPgoBFIWEYPCQRevACC/gWSewJp
+0wGeabm8uMQ0f/66/di15wwOnLuBf288gi5NChTIlh4tqxVHzao+KFk4h4O6+v4Uc+32I1y6+RBP
+goIREvYSIUHP4ZLSHZ6ebkiV0g25sqVDgTxZ4KzTvdNOh3HxvnjtHq7ceoxgtjPo6QvoIl9DWpUy
+rQecnXTIyXedLWNqtc1JlHAj4FhGV14D674Fzv0O3HgMRAQBr8L5+QxwTs7/c5f2zAMs+hW3g5Kh
+dttJOHPpDn9zBtxd+cnfRWXwMpILRCicXV0xvE89jOpRJ0FG4M6/gVi86U+WrcDJiClCw1+iqHcW
+tKhdMkHqtrXQc5fvoteEdXh04wEehUbgQUgYXpN58IpjToaCK8cwGcfPJRm8UrghE8fTJVUKdG1V
+AT1bfGprdfG6f+fBCxgzeyse3HqIhxzHoBdhbCffa0SEDLWeknOx5//dPdyQmm3/IE1KfFrNByO6
+1ERqT/d41e+IhzdsOYIRs7ZyX0r5ps2qDMypyQV2wOeV0L5lRc2qLrPfPYf/gEBKqMkM5xWfjQiL
+QJniuTF7VCu7mzlp8U6s2HAQKfh+Y8aTZUdGRCJ16hTYtaRvnLLjz+gRocDR3cDczsCpe4AszG7y
+IvWDopJ8cj4imNfKszj38kMUyd4EKJZPfeGm9h1VT3j9ASpXLorf1w6xe2BMPbj7yCVUaTpR3z6j
+F4JnIahTrwy2LO3j8HqtLTCUDLzv4N+o0WEa8ISS0Qfp9QwibVUvfbvlQ+WfaL3qa/4l/5dFQJ67
+9xjV2lbBd0OaoGC+bNZWb9N9D4NeYNjkn7Fo5ha2kYtOJkpuXHTUdnLnVqeBwRjH6IClndJ4aSsX
+d9x6hDQl8mLawEZo3+hjm9rgyJtnLt2F3kOX6fthqK+WPjx4ijGDP8NXfRtoVnmGi/LHzSYiOPwV
+F1+j2a2jWuyf29i0eQTqV/Gxq8k9R6/GnAXbyWupot+8nsm4qKakRPzi8NQ45cZPGffrIqB3OWBA
+XSCQTJ6f5QujcxEE3zXkmB198WcMXYxLboVQrBaZ1rcgdGaYPHpi6HJnxu5959Gk93y7BsXcQ26u
+yZAiPY8UGVJDZ3QhQxp4yIr5jujMxTso03gCarT4hkceT+gKZIeOYrmOUo8umRN0ZB5hHMO1VP1b
+Lvld7pPxzcqJ6psXv+0/j0I1R6BWt9kO79HiH/ehcK1RWLT8DyBfVuhyZYaOEkVMW6PaZVhxTFud
+2FZpL3d1nRffhU9uivjB6NBrHpr5z0Q4d6l3Qc5sE9zYBzeOofoZfXGh5XfOZnRIIh26y4Ic51mW
+IYtgwexo0XehuvfZQ86ygLpLuwzbpq/PzfXNsdiwbPsYPZKDP+ATYGIX4PZxQDYJ2cVNGeoovcM7
+I1ClI3r1m6UXOWUgrSFZTbmTrf/lMH7adsyaJ2y7R9ps3G799mi6P7bVYPPdy3icKFZjBE5fuw98
+mFFlmFi7ii0lshsU26j74OpLRtq++xRyluiLkxdv21KKyXtbDlmGzpy0D3mcQKY0+l07HhZbta0p
+KA7yzL7u91MoVGU4/rn5wCFttasQzblhV0lvHuIRK5Q80G3w0ngWZP3jVnKbQYFnDwDNswMnDnEn
+5Pciolui57yhyTBcuh+M39bvhY6KGFvUROq97snx/eo9lmr6f//7+Lm/okOPuWRKjpHs4GZ6FL1G
+GX6aGwCd7J5pPHAjJAIfNx6PHdzl40M+tUdizSq+k+zp9TuyicK02mnJeUMti6Lp1QdB6qL3PpHa
+Ny68C9cdwMG//nkrXbON0c/t505eDQihHO5lZfvkjXqwa8V9MXIWz28Z01j5oNFtFAV/O38L56/K
+GeD9pC0HziFgxEogc1r9Lm6KcbjrKTyPiR5Bzou4+0R/PXoKhd8pVGaa84PSUQEWRqZv3GUmrt6h
+0tQOKtfsG5y6cAu6LF6UGLQLUBk8kudU2e0fUyF7P4jtfESdAa0x/FsJDlV/N9VWKVcWpjCK7807
+TrejlYn3EVXy4eZVrfuct9JI6xn9j+VA5/IU0akwkaOrpSU5uvlyEPGkbJ+7GHYf4g7CXcoekokf
+Ti35o0Aql95DOnX+Juq3ngLkpKhu4lijMg41vrRVoQJ1Fx2blsOcb9tj19pB2L12MKaOaYPWjcqg
+VFauwsLwcpnYZnWcZCGsp+pnExAWKmcr66lZ/4U4cJQ7kSzaWvNApHdZiB4GITvfd02fXBj55Wf4
+fmZX7P85AKvn9cToQZ+hbsXiyEctMdgndUHQIjkGpE+FH3edwoSFO6xv5P+DO2XBDaGpdKJsgAlM
+1jG6DPawz/WiuijZbCVXDz6RGi+ecFXnTmI3sR0v5Xz/HlLHgOVQROFjwvatt0DcR51KRbFrUW/s
++Xk4Fo9tg+7NyqNK2UKoVLYg+rWphBVft8fhraOwbUEvVP24AEDzpak1WZcyOa5REug8cpXVI3qQ
+DL7uZ5ok0/FooVGwLCwKd+7kdHyaOqIlDm0Yhm3LB2BUt1r4vH4ZlC2ZjybLEhjhXwubZ3fDUbZ1
+yXjOrfuB+sVBg9R6eNwbPWtzvM7/Vnfybd0o75S6iHHUoF8hwyckWcd1XUtxoNkMbYWe5faFk8GV
+QKROn5pmFBMrt4VS1DnFXd2VmsX3jZbSJnp83zmuhWKuiEuKKD8pzSyc1Q1b5vdClU8KWhyCmhWK
+4relfbFobg8++wSKmNyMSb6i6L1y5mbc5lnYGipbZ6TaTjnvxylOJu69ILSoWwphx75Dvw7VkI3W
+DHOUioq3Ds3K4fE5irBy5KCdWZPZ+d4jWPain6gjShRkrUhrobEcx2AebQaMWZ2gvbLM6CvG0u73
+F88TdrZDagh5SPvoJfgWzgXYuyOLnZUKjFQe9jbEzva/hce6frWC2vUMqnZci3mc6HCy+8fB6Mzd
+21bq1KIClkzuyLN8EHf2uOWrdebNhgZdZlgseryIzi5RJiKju9WSnzxHvy41sJoLkq3kxbP4PzvH
+6o03r+MantShoe5i9LxtthadqO9XXSGoeN30435spodoQpF5RpfRXU6Np/lF2XzbpCdPKZL9fQVT
+hjenOe4Rz4226NyjiudKX53usMXzJ4zDR0INsKVy59AGHSmegOLVZkwyTHcDMYxibiUrdnFTdXVo
+/ilq1fDVO89oETXmZ68/xP6TV802d+XavTyXczJobWYh4chCd9apAXzHdpI3zaj92ldlO6moE4Wj
+KOoozivUSeARpUIq8W7TgSjS1Hneznrte8yOOWyqIhlP6mY69ltoX1OseMo8o0/nTsAxtltkj24A
+/SCwfDDyp3dD+c+4K9GLyhZS5xVdPlvxDPq+0R87TqhMrjVt1DNreg+MHdAo3t3+deEX6vlWS+kl
+zjcRfCc7dtAnwgSt2HgYF67Rni3OGkak6g8ePsXdvfQyjCdN6N8QuPkYOi5+uXlEqEg35HqVimH6
+uDY4u/9bKKHrzTqrxLP6d/a4jo4uj7igNaFPQkKQeUbfQZFSzGjxPY6Irf0SHTRObMPM8XSVDY8w
+a/4x7Ki6+997gvKlC6JdnRLc4S4nxDi8kzKv0bS1RxxXtPQOwvk8k66kJt1RNMS/tqrh1iT6l289
+egmvTTi7nGXQkSwUmvsYy2zfroqjmokNO8fgNyoT968bjD/WD8MvPAr0aVURhfNmdVgd76og1eNX
+FlytBnimoGPYn7h8xfEmZNOMvpPura8pUjpKQsnCng2qj+JZdNj+ExU6V/7l6kyGN1W+6mDF4aAi
+6aOPvLF7zZfAzAG041d8V+/I4fXeoaZZglQYkxt3l3z5Cp4U58r4eTus3orlqcSjpl3Tbk1z24n9
+F6gYimtqEy+uGRupaU8dVz8SXVbl8oUd1s5GlYujSqn8yCLK2/eIZDo70fFVJ0cP6pyMmV01q1I5
+6deSbs8OJtOMfoznMVVT4KAaReJz4cLxeVHUKJEF6zaMRh66TIJunuo5jDu3apqRT1nxxBGEUUAB
+vRtg76YAOP88mQExdNY/wWi394SuiPMPX7imyoJST9ViOZFbAlkcRJVL5UOhzBxzjTOuOskoOj7R
+OMdHUusf+s8dRhdrWDyozc/KwI/yDlyQHNTdRFiMAncGtUzsVRfOsqBqSE86hhs/u/EQM5YxAtSB
+pM3oYRTv7tAhwh6bubnGyYYQdA2omgpNSqXByV3jsPyHIUjjSTv7mZugvyOVdmTkKw/QsVMdHDkw
+A2MHNoTHjL7Ad9zRP+DzYoG6Z15p5MDxSdCi/nf8Cldw6pm15LhIBZns9SI00WoX6gJSpaHCREOr
+rU46BvHsPRbXJfOuLLqyEGitSHwuUwpX5BQnnSSyOALBz0NRoYQ32jYoTb0GFYzGG6m8B7oUB8z4
+BYI74CjSZvRb9GC7RFGNIeIOJ2F2T9pKy2aGR4+iaJP9EQL3fQklZB3CHq6A8nQNlCcrsbhLPpS8
+sIahrByJTd/po+KEIUSa+9XxkWwO76cVBW5h3LYah29EKt/zzWSn6O5oKuVHPABqyDUrZVv2nuBC
+bEQHjlMvQmcezRWJO3oK9bf/GtmvuLr36DmW0LHJjU5Hcnw1JvFReE6Qjv4OtK1rMzo13OBio4aY
+JgRJrZxvuHYW6FEZaFMU6FMByYfXAwZTYeTvB7Tnd9/2pI2X96UxaITMqTtkkPeAQl7wJUfFasfq
+TpRI5+ZmTcSQbQORg7ZoLdFdLYU7/gPxSTeiG+KbLtp2rblN7XhKOQ4kkdUj8CpKopo9mJgMjMHX
+XDLSpcZG6kV+//Nvq8s1d6M2o7/iLmqfA5v1jZLeic+8HEFf3KW4Tp3ASfr8nqVDxF2aecRzQlxu
+jUmOE8/tC8SwvnFv585gcQk2GbyiQ+4s4o7oWDJrgyZIQoiGMi7wGeMb6NKqSTzvf0DvOmtp+6G/
+GQjTFro8nW2/vPlMxtbw7z3P2uoS8D77lVfRjN2RDlA1yxXSA24YkVo63WPrdZjukD5ov70IntET
+ajfXarYwr2xewtxyya5tSk2oOuDYP8gOGTVHFSJegma6kszamH0b2mN25Lhrn5IYeCN6KAo6U22h
+9GELNp2bWBgkNp6+67ZfgjvI59ztC4yyYZje2q0bxL+B8QaalhCOVSg33O7iORlP0mYnFxMKonhW
+5pDHVUnA/vORQ9rgqEIEj0xLMSblM5JDzFoOJ3OcTpNe4exxxaiUAgRhCg6F4v5DIsJYS6o+LwoK
+S42Pt+VSYamc4uD7WVt3YrzPPbkrpk7uQCehh3FMzeqrSuWGeav/h3M0R8eHtBndiatuYuUlmXAa
+Cqz4DMK7ejY1HSRU0MQ4JHZGegvT28zRpKiOCya4nYo1D41YAi8JJTUVjERopHtEek0spNOVhy57
+B+iytbPu+qA9QTMaotfYhA0qMTc+vdpXQ3FxcQ7WVsyBi0GF5vGzrWszujPt3WIyTYzMLhBiXu+H
+v3tqcUDR2tGFDzn2z8XH28F0VDzxOHE0ieft9ILbZkTZMhKEkLu95vpAu7BiE64bOxe9qzu4b2px
+ztRrCE6e6A2suuTetEjzDvEBJYfBrK8YIxD4XDu8n3HrjxmivPBnojrZSdqMno5ubFl5Fno3uHzm
+uyJzv1glO7ubuB4rR9hfrWg+db/l2fdeAmCl3RYnHQEoNCaplKizpQvGXURrfEyFkVhitDidzz0I
+fUmMeeviF8IlgEfO/I85qRntpnk9J2CGva8qGiBTwDOtvGJQdW2q0+4WatZSztcbrdtUVKMM45BY
+YXJmxpdEH3rKY1JyAYC0sXptRs9KGOZcxAJPgCOiTWOpNRlF4V65XbyKSSwPVyieS2/T1pKkiXV/
+lQ4Tr7XiyO3sgJjO7slxQFPTz0a8CIdPwQ/jlK5q1aM8FuP8yDPzdTLtUcJKWUM5uNsO714bwzpX
+R0CnuNeorjXRvm5JdWGxcS5bU32ivmfFNx2QispGRUM3I4vWU86VYdM2Ib0oM20k0y6w2RhAkNh2
+dDmfi8JVEj68B1SA0MiyNGvGkdDbbCdDMh2F1irDtfPQRVwXm7iG7V7V+vIYkT9Xpjgj60YJIF9p
+otVogUKwrNfPg3FdItusoPxEtR1H5JnxQ5tirMY1khBT/brU4qLj+GOLFc1757d8rdrWTUg0jFuf
+Q+CNjf87bTMkm2lGb9iHc5A/J6ZllfiH8Kcr7HtC2bOmQ3qmTlIz0xiRCinFc/EqNZOMY+iX7QQQ
+ofigCVdF+3nhT4sQ2CMulr1gmLer6UuzJsEojdspf9M/e9rKPY5pJEt5ER/dRKzkFmp3LVyiM7DH
+XGvPM5aHqAez6jTmewBdZTXnBBXRh07fUHHmbSHTjJ6DlYkGNrHs6rLgyI5evrEt/UvU90q+sdI5
+uYMydY8mEeRhyqT1DulDBAOH1q3Zp7dhaxEnVpMKRegcpz2B/ZhYwVTkm2DPXfzzIvYwzPWdUwSB
+Te4+tukCw4Wf2WAiTOg+rhbbOpVvmvYY0UFIcggbyTSjS0HDfmKYaNSKaGPBDr9dNpNP6jPLRRmH
+F/0uC6xei+6+gpWm0Qh152WoZn0HQAJ71x2th5HWqEfw5NxoQqvOpJamqAbDUMszw4ik/YlD0vic
+GVC9FSMMHUAp4mE+nTg/AEund8GS7/ytupZO74pZS/qgTYN3l/7JeMgkm/DMBXT/5gLkKIHaPKOX
+rMngEw6AJGB4lyS9FUmmV/wRTN5lN7Tq7t2yAtNE0w3RlJ2aKCubd56MV9hi79GrcEs83sTxRYuo
+bS9GyeITUQ6aoa+/akFXZWrttfzz6TjzkhO0WMNx8R7iGXQQUdMh2VHSYFHmNfoEHRpbd7XnfT2J
+XFSKIcGJifwJtOEjob9aAUh2NNQ8o0uBbUfpte+OWlpsbaS8bfHKbNGXYaqW0U9tLd7k/dJfe2aa
+HQ2YPZooMoxB1sLSU5vAxHl9RqzAuNmMBbCROg1eBkkYKK6jmru5SA2EhF49q7vFkstSfM/smxuK
+1vlRniaG+5m/b8Pz44EWy9K64QZBRio0Go+lkv0lEWRUtasTDnpIQornjGTGVVNBLzbWY5nR/aoz
+kSIBHwTv4S1N/Fh9EGmiCO243afZ2LV43s6+upgK5Ihn0caPd25aFn48H5vC0lNBISh2fzX+R3jX
+GoW1v/5FAcB0ir5AJm74nhDSLn69sWQNd8fonGjGFcv7JHM161kHuRkDbQ0dXEFlKBldC6lV1WnR
+8eQFdyGdVwsMpn7hEs+a5ugCJY0d/zuLcq0nIWe+bthLgAs1qaRdCjJrevD/556PGVLc6XNGd/Id
+2acwfNNX69Mmd6cIf4Ya4Mx8+G3t7hJBJ5r25YyPz+H43fzgySuo1nEGQlR/69irmEJROgNBIXwJ
+w/wynqijgsMm6pMJI1uiBJFstejiP3dRuMZXeEXPNC3M9OhnVERUmp5KU8zOwXNx3nwfICuVdq9p
+GrtJxNjbV+7i5OV7uPA37dqEUJaMm6bel5SVk4x5/vfxcDcl1ms0dsikDfiGWPCmzvzyiGquYyIH
+r2xeKM2sMnkLfYhM9EDzotvvTSrLrtK3O5Q2/UNX7+PhHQIsSEhuKneT6Z1i+k+lWac6JbFoKrEH
+E5Dm/rAbPShF6TTAPxS2e8KAhhjai2HVGiR+6RXbTMajiFexsu6oY8J399OMrvis2kdWtf4V9Tep
+/foi2AolnCA1peP7fLQvrrus9YyucAcZ1gw4RC2wLP4Jzezi9ium2Z+JwpKVGt8EIHOMrk5W2TU1
+TF82N0WcXnjtXtYXlQjnZIr+OnMdJSsO1WdQ1UBbjZns8h9Riklih5dso4o4yO9k5xcpRCLEzCQ9
+VPtGc1oqPnfmt3H40IYw0+g21GEiyF+3HlHTMpnbfVXUWbk46WP0ELKoCry1tFf6KSmerRhU1dWW
+ob3jhzbHsO60tScgJRZGly6u3XEMLboz8SZTU5kbJ3OMbll0jx5MSeD+NbXwlXhuuJmAIyxFi4Y9
+nJ4x8/YkGJNb0wM1b3es3NiGebKt/78oltzcnDmvzQ93iaI5MWtmNzhJzjTB0TPRSNU0LLnPab+O
+CfmkMwWoOVczsFrKbMqdPAUXnq0rBtrF5NKsrXO6o149wiERodckwKe0U5hYbL7crWPCUiXTC/23
+Y3KoW3gZKpYgc+7piMYyi95jCc3k1syNt3mObV7DD5XKcIOIh3+B9Ywe3fuRzPbZM0CvIHO081K0
+qC7xxpvo6/pRBevG/D26q2erCjiyMQBOAkohPt8WXGCN/UHMDYUqoRCiKBPFwAPrh6Kc2MbjQQLD
+PKhPA31+N0H0NVOWLe1UixHmFqTUYLoIM7lEiZJ58eDgt+hJK8V/kXavGgRcJnKynZ23ndGlonZM
+07RgP6PIeG4W/DrRylsje2k1Up6T1osPu0KvrCb9gA20pbnH9dCys4/mH7O33QnSGH2hfkVz4NWt
+71GP+dOEMdXAj6jJb3O1Bqi6zi9folntkrh3djZ8CtAm7gD6ZmBjXDgxEyXEnVccVXgksCsTTzRz
+S3upzFNuPYIb9Q41CKT4++avcHTVl0jPfOlvnYznR8zfVkwcrVuseMxUHydRilLz6NkxCPYxulRU
+qCyw5BgwZKnexi3ArPIpymBLLYn2cpMFQiSDa7yq0kY77xSlBWr43xJFcscIFXA+CaBIwEvKDwuJ
+ILKzaU25Vpd/YXrhwxuGo27V4gDTKsvkV8LIBLLTsSzZ7VVobMNLvpPfJZ2R7LJX6fFERZ/kRDvO
+stZO6+Lw0S1AEMvDPw3FRjqeZJDY9dNXoTCFkiKJOiy1VfqhtpX9Ej/8E1eQO0cGzJnYHn+uHoTt
+3/eDwFS/bXolegVZcChRxJobImHwfb6i74EpesV3oM4ro2dVmzjngb3K3d7tq6BYEQYdPXqqXwxj
+zVmWTdE+hGOuRdYr4yyN9N9UzCzkbnyFXPuaSRWfR7l1ygomMSjRC4CI5xKYkpIIpynojtmsL1Cv
+t6XSE+T3s8we03P8OjU7iVMCmnP05QMzhjRFcfEus5NWbD6KKUt3Ipjwy495hg+OfE2dHCecampj
+BVTEuVKvkJrn97QMZXRnJtPpQ5qg4ltmlEgywYDpm/DH3nMIYfjqE7r4hpJxwoQ51EWe//DsLu62
+HgxQSk/LQBoi2zSv8REGtqsaxwJi53DF67Eftx3DWCZ09BIUIMONi8McSM1/Tzq0+DM/vRZd44Lc
+hU5K4eyvk+i2okjys4RxLCb1a4AKpfPb1b5DtBT1mbieRgpniVp4Uwb/G05lZXpq3bdwgzAmxzF6
+dMlhjDW+cJAgjwR4DOUhXvp5/yIVRbTLuRLUwJlmlA8Z8+xbg6I/AzqSyK4RuEzz1J2HQbjP2O4X
+NNnIYuJFP3YvOprkpdY+myTHSCR06foD3GeIrCDmhHGBiuCETEuFXGqP5MieMS0KMb9aEiXsCDie
+0RO2vUmlJ41A0gjYMQL2n9HtqCyxPSJADAXppJKmVD/sIgxxYiBdupb4sNpXCNUKHrGygb8Y5dle
+TAgiXQF/9B27JqaE/hN+hC5fV0xbRvfYREyL1x+ALkdHdB4ZfyRU6WYY/SJ+WLMXOWp+BZ13F5r/
+GtDM1xi6DzugVf/FWLHRfrgma4bx07ZToMvQGne1kGQ0CtjJ2HNd1s9RouW3Zos/xiSYukxtkLfm
+SM37/tOMLiPyjJjlT5kNNILn3URBT67gFnHdRKFjKz2jgqbzwCVo0C62QvMubdC4eAMPGA0VTeKm
+isBggsokNhih2L1Wz/XEUguiEiu+dI9KrAKVh6HdF/Nwc8dJuNJzsG6X6qgsJjvqNlbP2Iy23eag
+Sf9F8a3K5POPBcOdiDzWqoReikMUN6THgq1vjsTZgOXeNxFu+59mdBlsZ1d6ZtHBJJlWRFaCvW7T
+Bc9bMxkblvZlmiPbY47vU9O9/I9TcDXCPW9dzQfLNo5CX/q0R5OTwEmx3y4JgB3vyGFzEicjKhdd
+4xl38ICLRZaivXCDijIfAjsoymaE/zUNm+f2xO+0FijXFmP1lgDomHVmPXf83owrSAhy5ZhLf6z1
+5VedrKT/ZjwlpZ2qCzcVdGr5GvSfZvSY8bB980yIOaCW6d/8UzSqUtwuK0CmdJ5UcLlToR37team
+RrtdgzIoRc874z4noq6bHtN4NlIeb9J7gepuW7P6RzjBnOta1KJmCexeSAsQF8FlDAq6ejsBMgJJ
+Y3hZu6M7aqIlMbodIyn29y5jViF98V7wyNMF6UsPwLgF282WVLvnHHgU6gEPngsb9pmPlzwrTub5
+OG/9MXhm4NqYv/5YNKb4HWHgYx9CrLbxC3YgPYMbPHN3gnvhHuj97U8EeqT3XBQJuksZnv+e0H4b
+wt2vzhfz8UmUCL91/zmU/nwKpjJQwxKdZfSYT4tvkbvOKNyIEvV7TfwJ1brPpu9OKOas3QfPIj2Q
+ImdHFGZI6WmGpZqi9TuPoUC9MUiZuzNSMQVTtkpDMXz6L2oAjiFNWLgDZdtPx2sGEg2cthEps7dH
+yaZf4x5FUXM7mQ+xzgs0HI9f950z260/T13DPuotXBi4s2l2D7P3VqQHXmqaJYNpDjSEtGo+ZBlq
+0r9fIgOnMKVxBnkXfPfeVYbjAG3/0dRi4GK45e3K99QZrYYtR5hGEkWxRKX1TIl1O04gE+eOjGWh
+2iNx/IJp33JLa52l35MY3dLMN/pdUtm6FO2JRZz87kyEV7lSUSY9cMNXPefCLX83HD97I9YTx2j3
+1OXqiG2r9iJP3qwox1xbv/x6FK65OmPnvvO4vPkQXglmehRd2rwXP/92ApEGZ/S0RXoioP9CpOME
+rFC5OErQc24mFWtZqEzbHzXJAonnFkQoZ5WJKMXd/vsmLl7SZ/e4eOMR3WoP4+xp8UwyTcdOXUXR
+0gNxiuL/IOYFy0GoK6HtB87jd9rEP+u7kC6o36I8oYnr1SqBy3TEKV6wE2Yu3hmr0FCaz3Sc6E1q
+jsILnhkrVyyKshSXJf3yhOE/INMnsePVL5+4jIO7TqIplWFThv6AEHrA/fXTb7hy/R5t7XFzgwXR
+Nu/u2wenGK7b/JMCqE30G3P0B8dZHFWKfORtUQSWcoKOTcerUzNRLP8b6Ov1bN9uZr+t7j8LAztM
+RRZG5XkTrEJy3Jfz7YWDXEwy+fXB2p//RBn6Lbgyr/3qOVuQp+KQ2E2TACSGHFfrOgPNuJh+wIi+
+svSAvEBAD7+P+qDPuLVx/c34SHITInl04RnVrD9m2J1eVf9ZevD4qfLhp4MUFOqubN9/3uI4PAp8
+oWStNFRB5tbKwG9/UuRvocdPg5VxszYTj6mR4py/a0w5r+m65lm6P71l6ilrfj2qhIRGqL/duh+o
+FGs0XoF3FwXpWypBfD6a4Fxf8Sz7pRIapr936rJdCpI3VPqyvujv5PtxC7crcG2oeOb3j3n29D93
+FK/ygxX3wj3V7+jYoX7O/nGfgg/aKf7Dv4+513/ESgVZP1cmsByhK9fuKcjRXkHKz5Qtf5yONRa+
+LScpKNyds6iOcuTc9ZjfzrG+tMW/UMvZsvdszPcN/GeznCZKmy+XKE8M+nb0zDXFp/4YBdnaKcs2
+H465v1v/hfqxyNVJmbJ0l3Lq0h1l/qo96u/zftyrIF1LpeXgpTH3p/Dtw7ZUV1ZuOBirnab++LTD
+NAVpWyjTWLa95FVpmIJi7Cvfxbl/7irPXoQykvmV0m3kCgW5O7PtnZXC1QIUxt+rVTwKClbSlefc
+SvGZsn77sZhqfZpM0I9lxlbK7JV/KJGvX6m/EdpbAd8lMrRSLly6HXP/tt9P0kGihZKG867/1I1K
+l3Fr4lzdv16ntBq2TEH2DmqdWpS0o9uwo+/ccxp3mca2SLnCmPTlZ0gXBbToRW+k4T3ronrrCoik
+smcexVuhLbvP4Plfl1GubWU05w7oHqVg+4Chnac28JxooAWPaQansOG6vHnfWRU3LisvNwNQwH6t
+K2Lo5I74ZhSjCaMoFc/nCsOJJZZeKE72EY0FPy2jysQ9Nw/FUCdmcDlyaDLqcAeOReKAxZzePce0
+QclCOWJ+KuSdFcu+68rQUeb7Xr1X/T6U0klk4DPuUkUwtl9DpDXIgFKiSE5Uq1hMhZU+z0CYWCQW
+g+bl0F/cPCn5dI0KXonGtfeIipfX5eiAECod12wcg1aNrMN5O3GBdXFctBxzRAI6dOQSjnNHNryO
+8Ch0VwAfoknGgNrvL0e3VsvxZJSgKApb1y8NJ083ODNH2lLGyOfNoc9pn46uwKPpdixei9cN37OU
+ExSCes0roAe965JFec4JUOju7/vSozQMTQctiz02DDsO4jFmKo9rC2dtiXPN/W4TVq38Hx3QjLz4
+DEpJYnQbGH3TXoqAlIy/I+iAFjWrTqBHMtt6xg8LzaUNGO4uGNK2oub97oLRZiGRoriESrDIkJlb
+0JXnxCWEf77F0NAU7skx4Yt66E544Gji5qCuEpbOazEPcOE5QHE+QwWKl3kyYw1DZEsaKuyib5QC
+qTPoRHw1Y6ovyDicvL8c/lv173anwmvL2iHYv3UkchqkfQ56FozlW4/it6P0kmTYqosBNr++vQo+
+JECFJnGi377/FIUbMJiKFDCoMZo3YIislaTnJR2PxnFHRtxZPyndDn48CvhR9FY/yw5C6VK9MX1R
+7COJ+Ko3NgLQzEg0HE+6G3szVryk+KEbkKpw40IicNlviF9yYZzUj0CnRlTWhxhxDDc+S51KLKIJ
+NGtWL6ykNWb2DH/MMboWzOmBCSMYK3IvyGRwWRKjWzlZ5LajgtpCsIeShXNqPpVWUvrStfNJlDPE
+CfrSS54z9XsNquJDRhc7tpmIJjl/tuvfEK+5uyykMq1T7/nIVWEoPigzEFN++N2G1se+Va2SzLZi
+/Z90oSUAAHeexT/qd2Vjei2+9ES+SaaVyklu5iSP5CR7aaBku8CQSr9Wk+CRtwuSe3dFWp8++Lzr
+LJw8dlk16xl2WmU/mocKCfS1FjGZxba9Z3BelFVkqs1UYql+AFZS6cJkQHLdn+fiKrvciWxTqUsr
+NGUUXtMBjfD58OYoXo+ZYjJnQBpaMaJJ1X1wl3Y2QqhVmZnn7mT6NLGxWqSZmEPu4G3ZNJBrKIvB
+TSC9YuHn82YqBlNTomlV0w896F/f3ejqQsmmCXU3oKLQlDo/idGtnCxy2zPJP8YJaagRN3w8QiKe
+OCFk7xBK7kJbOMXoVyaccZ6FkMmtsN8vm9wJz68swIiA5mhYxQfZqOi5c/M+BhIGunyTCTb0wOBW
+mZPcpTNmSg3lwjxkyZ4OO5bvwdTvTSwevJ+ZnLVJFgLJcxb164Lvd6FQ3k44Tm/DIj550KS2Hzp2
+qIJTu8ejX3fa8hnVFce8JJKIKc5g+ZJv7OYfE1GfgS+nqKz0F1wEK6lZJR4XWOF8wbU3IoGW3r3g
+C/z4TXteHfD9mNbwr1OKzGaUCjq678ZjEPW31VKUWr/plV3F4jMGKOHt5jACpcTn4lBkZsNIYnQr
+J4vcVlhES4qRJy8anS+jygiXFZUmKF3UebIMcdJkNb56i9F8GrSX4ZyyQ1kja3sQv250jzr4mc4d
+h9cOxg/zeyEd4YD3k5nmM02PraTylESZUX8gtHxCe+5iaTBg1Co155shqU4r9K6LNAVJzTOzM3eo
+lNwdz1y+ix5EIkrumw+rZvrjANu6kqLm4q9aUov9AV6LBEPGDRcYLGuJu3cjiszZeY5dwDOyZD9d
+NWcrjmrs0FpF+haj5MRz9G2+h73H/rFY66vXb6wgFm+25waWH65xZEtG/4fwO4Gq5OBoSmJ0mfBc
+CQ0VXaYGuQNBG4TRO43S3k1mrCMYBxMVdmtZXi1iNJMJSlqlvlM3xinyX7GBkylAiCktcora6TPR
+Vq9L3gi7qASMpswUldsSxqltZe5UbPwDnvmEZEeUKDa9GGkFse8iLgpVYX7u8RRdwXN2c9qLY5HM
+Ek7CORppl6aLrzzHpHfjj+HEsNPjf9+huTASJWh+alm3VByPw+NiDuQ5/pkGZLTJFtNsFDMeNL1t
+nMMwTJo2axOAURIPWiJfiu79RNdBSaJ5r/nYc4R6AhP0kAvaiu0nVLDKMK1cc5Yqs/g7x5uutwE0
+vRnTuu3U7TwIRNOWb/QuFouz8ob/PKOrPJHMWV3ptxB2eD3FQsNrDeOS9/yl3wUaUQTNQfilG6ev
+Y8jX62INcb/JG3B8x3HaT9OhExMICOWngqsaX1oQbemt+y7AHp5Pg8lI86mVz1ZxsJoKN47tU0Rk
+PhutbW5Dzay4QAbM2hoLuIImKKyibVtAEMSTTkjceF14hVDDvI8Mdc4C1LI8YygtD+tdH6mo9PmL
+WuhBU35+0z9ZC8hgi6jxXROlaJQf97E/AybzPtr3m9ajuEvKJPoISgB/UdO818CRRH77tMN07Pvj
+jKqgtHoxkgc5IBLLHU0NmAeuZElvPKKCrkvAcqum+oSAZijzcQHcO3kNldpOQ98Ry/H95sM4zXH8
+h+mp1/9+Ep2GLmNAUQAO07oC6gU+/ihPTNlm104r11W1MOkGx2je3G1Yv/tUTPk7KZm1pq+EWFiG
+dKK23sH0n2Z0OfcEC2JIcAhGMJi/Hj3LmhD+OebqNAMtW0/GhG83qMOeiuLzwTWDkIoT+xsCKyTL
+64+UpfrDOb8/ptP0kZ1a15PbRsV6RTspapep5otVK/agEr24PAp1Rzc6XdSj40whmpEYTRP19qMe
+iwzFc3rKRfs+TGF2TU8uGId3nYAzveo86JHl4dMbPlWH4wEZbdLX7VFEEjWScpBJK+ajkweVOZ+y
+riJ0yhEKFwRWBkWEqXXpKVyQSLirCliBIR0nXh1XI0wauAjXDc1LXBHy0OmlZespcCvWC7Rls46x
+eH3rAeZN+BxlRDwm1SxbEA2oNAq/w2QMjccjJe9z8+sHpzydcOLQBXQWKYdtuU1I5Ji2iBjLtkQY
+OA5F/6Z+x/vFO9CQjogbK2G21nHx2cAF1hK5Ueo4SBSc/mNojmSfv1uwE+17zENxRnvlqzQMTTp9
+hyX0eAv7NxCF6fASdH4uasnZPopU70XG/Rujw4iX5AtKcSEakkW4HFNeyhi/CRx6QSQd0brXrl8G
+TRpPQHI6Q6Xw7Y0a9AQUaXD82NbwpUNUrP5zbJ7LPDVDartC9HNHi5KNIlkapPf1dxFzg/ny8jEn
+uN9HueHLFdzXN/ZVmN9X/Tg/SkUBKXrSfDaUkzWSZ+ssqd2RihrkkkSNaU679kYGSGQw1rBzK+hM
+E1hWMqMXc4N/ROXU+IAWGEG7ey+GikrShkF9G9LGrs+OefJOEKqXLYRa1LZHo8YO7VYLacnEKZ2S
+EfQ1OXJnSouKnxbGqsW9Ud/I3NOQx4vH3OVz0fsqOyGZ2tB3XiZauPh5kwmLRSHciHunK7XKdVmO
+d4432m4vWg0yMXWyBzXgVwgYUZUi/QLqAP6lx9+Z7aORt0A2RHDiZeez5djOpXN7oK7Yxg2oRe0S
+SEktfRqKvx404fnlzoiy5Yrg0E/DUJ82+vuPn8Irs5eKcZ+S+oznfAfuxKavT8bKYqSNDuMi8Jxj
+XIfj4Ss6DwMqyHfiwn5eJJZ94+q+FqepBJLUYJtH9a2PIK6k3jxeZGV9H/LTjwtkBZYxg4z2NQEv
+jY9ygYz08yYuXn1qtw39E2SzEBG/NL3kKnGsDEnMjU+dXNCAQUW5mR9AKIiRkmkoHf3CcUtNXYML
+dRVZ09I0R8QZscM35yJpSALS8YBiQNVPCqGKGVSaSC6It1mfvK+a9PMwpiTgCYvTw/wNsqIbB5FE
+P7Hr8EVsoo/1FE4cV41oNJ1nU9pZ0uH58e8Q7RBiqTkSvvq2I+38Wk7CcUoU+38bi7JcqGwhsUS4
+xrIj2/K09feKfsLaiDDjUgXLzxIUt/UtSZx3/qdFd0e8ElNMLmXnJpzTrCEzkLH8oFhHcVGAdRnO
+syV3WTlfW8vkUubbZvI3Y2TLQfTNU2+DyaU2e5lcP6bvPxu8/z10BDfbWUZuir9lWtbD05NXUaD2
+KIJCLEYPJj0s2WwiFi3YpipexgsueiInFQSDpjUbQWwTea/+W81LYvQEft+HiEc+hokO/mH45+Ll
+uzGX3mzH911ARZ6llUvzUVDw0BM5JVfTPBG1NZG3M6l5pkcg6Yz+lmfHE2ZfkUSDSZQ0Am9zBJIY
+/W2OdlJdSSPwjkbg/wD1fz8jmZcXLAAAAABJRU5ErkJggg==
+
+--_007_AM6PR01MB5704A447417669EC1523912BC0069AM6PR01MB5704eurp_
+Content-Type: image/jpeg; name="image002.jpg"
+Content-Description: image002.jpg
+Content-Disposition: inline; filename="image002.jpg"; size=18178;
+	creation-date="Thu, 17 Nov 2022 14:27:00 GMT";
+	modification-date="Thu, 17 Nov 2022 14:27:03 GMT"
+Content-ID: <image002.jpg@01D8FA99.06977880>
+Content-Transfer-Encoding: base64
+
+/9j/4AAQSkZJRgABAQEA3ADcAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYF
+BgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoK
+CgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCADLAX0DASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9/KKK
+KACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoooo
+AKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigA
+ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACi
+ijI9aACiuf8AiP8AFr4V/B3QP+Er+LvxM8P+FdLEgQ6l4k1qCxt9x6L5kzqufbNeat/wUo/4J0I2
+1/2+/gqCOCD8VNI4/wDJitYUK1RXhFv0TZMqlOOjaR7VRXK/Cv46fBL46aXca58EvjF4V8Y2VpKI
+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
+tc+GHj/RI9S0HxJo9zpetafIzKt1aXETRTREoQwDRuy5UgjPBBrYoqqmIrVZRcn8KSXSyW2357t6
+vUmNOnFNJbtt/M8R/wCCeH7KfxA/Yj/ZV8P/ALMHj346L8RF8KvPBoXiB9Bl0+ddPaQyRWsqyXlz
+vMJd40ZGjRYVhjEY8su+b4g/YX/t3/gpfof/AAUT/wCFo+V/YvwpfwX/AMIf/Ym7zt15cXP2v7X5
+w2/6/b5XlH7ud/OB9AUVTxWIdWdS+s730Wt9+ltfIXsafJGFtI2tv02KPijwv4b8b+GtQ8GeMvD9
+lq2katYy2eqaXqVqk9veW8qFJIZY3BWSN0YqysCGBIIINeJf8E/f+Cfvwu/4J0eB/G3wp+CutXs3
+hbxR8RLrxPo+l6hl5NFjnsrK3NiJmYtcIj2rMkj4fZIqOZGRpZPe6KmNetCjKkpe7K110dtipU6c
+qim1qtn6hXifwM/Y7PwX/bH+Of7Wh+Iv9pf8Lo/4Rn/in/7I8n+xv7I0+Sz/ANf5zfaPN37/APVx
+7Mbfnzur2yiphVqU4yjF6SVn5q6f5pP5DlCMpJvo7r7mvybCiiisygooooAKKKKACiiigAooooAK
+KKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoo
+ooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiii
+gD//2Q==
+
+--_007_AM6PR01MB5704A447417669EC1523912BC0069AM6PR01MB5704eurp_
+Content-Type: image/jpeg; name="image003.jpg"
+Content-Description: image003.jpg
+Content-Disposition: inline; filename="image003.jpg"; size=3241;
+	creation-date="Thu, 17 Nov 2022 14:27:00 GMT";
+	modification-date="Thu, 17 Nov 2022 14:27:03 GMT"
+Content-ID: <image003.jpg@01D8FA99.06977880>
+Content-Transfer-Encoding: base64
+
+/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIf
+IiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7
+Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABYAKUDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2aiii
+gAooooAKKKKACiiigAooooAKKKKACiikzQAtFJmori7trRPMuZ44U/vSOFH60ATUlYFz478L2hKz
+azb7uRhMt0+grKm+LPhGIf8AH5NIfRYGz+tUoSfQTaR2tFcbb/FbwjNgNfSwknH72Fhj3+ldLp2s
+adq9v9o068iuou7RNnH19KHGS3QJpl2ikoqRi0UUlAC0UlFAC0UlFAC0UlLQAUUlAoAWiikoAGJC
+kgZOOB61kXFz4hk3C00+yiwfla5uSc/gq/1rXoouBxl8fiQzlbVdDRc5DAufw5rB1DU/inaLum0m
+zuFAzmGJZMfhnNeoYHpRVqouyJcfM8ST4q+JNPnMN/plkXB5jkgaJh7Vr2vxM8Nav+58Q+H44g/D
+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
+2Q==
+
+--_007_AM6PR01MB5704A447417669EC1523912BC0069AM6PR01MB5704eurp_
+Content-Type: image/jpeg; name="image004.jpg"
+Content-Description: image004.jpg
+Content-Disposition: inline; filename="image004.jpg"; size=3332;
+	creation-date="Thu, 17 Nov 2022 14:27:01 GMT";
+	modification-date="Thu, 17 Nov 2022 14:27:03 GMT"
+Content-ID: <image004.jpg@01D8FA99.06977880>
+Content-Transfer-Encoding: base64
+
+/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIf
+IiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7
+Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABYAKUDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2aiii
+gAooooAKKKKACiiigAooooAKKKKACiiigAooqG4u7azTzLq4igT+9K4UfrQBNRXP3XjvwtaMVl1u
+23DIwhL9P90Gsub4s+EIgNt7NK391Ld8/qBVqEnsieZdztKK462+KvhGfG6+lgJOP3tu4/HIBrpd
+N1bT9Xt/tGnXkN1F3aJw2PY+n40nCUd0NST2LlFFFSMKKKKACiiigAooooAKKKKACiiigAooooAQ
+nAOBk+lZU9x4gfcLTT7GPH3Wubpjn8FQ+/etakpoDj74/Eln22q6Ai5yGBkJx6c1gX+p/FW0XdLp
+FlcKO8ESyY/Ddn9K9Poq1Ut0RDj5nia/FfxNYTmG/wBNsmcHmOW3aJgPTr/Ste0+J3hrWMQeIvD0
+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
+
+--_007_AM6PR01MB5704A447417669EC1523912BC0069AM6PR01MB5704eurp_--

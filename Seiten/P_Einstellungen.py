@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from streamlit_option_menu import option_menu
 from Test.toFeather import *
-from data_Class.SQL import datenLadenMitarbeiter , datenSpeichernMitarbeiter 
+from data_Class.SQL import datenLadenMitarbeiter , datenSpeichernMitarbeiter , createnewTable
 
 
 class Einstellungen:
@@ -19,6 +19,15 @@ class Einstellungen:
         icons=['house', 'cloud-upload', "list-task"], 
         menu_icon="cast", default_index=0, orientation="horizontal")
         return selected2            
+
+    def ich():
+        st.write("Ich")
+        fg = pd.read_excel('/Users/martinwolf/Python/Superdepot Reporting/data/fehlverladungen.xlsx')
+        st.dataframe(fg)
+        bnt = st.button("Fehlverladungen aktualisieren")
+        if bnt:
+            createnewTable(fg,'issues')
+
 
     def mitarbeiterPflegen():
         #dfMitarbeiter = pd.read_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather') 
@@ -111,6 +120,6 @@ def seiteLaden():
         Einstellungen.mitarbeiterPflegen()
     elif selected2 == "Daten Update":
         Einstellungen.datenUpdate()
-    else:
-        st.write("Hier kommt die Startseite rein")
+    elif selected2 == "Ich":
+        Einstellungen.ich()
 

@@ -3,17 +3,12 @@ import datetime
 import pandas as pd
 import numpy as np
 from data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder,createnewTable
-#from data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
 
 
-def test():
 
-    dfOrder = sql_datenLadenOder()
-    dfOrderItems = sql_datenLadenOderItems()
-    dfLabel = sql_datenLadenLabel()
+
+def stammdatenBearbeiten():
     dfStammdaten = sql_datenLadenStammdaten()
-
-def stammdatenBearbeiten(dfStammdaten):
     dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]   
     def f_CS(row):
         try:
@@ -39,7 +34,10 @@ def stammdatenBearbeiten(dfStammdaten):
 
     return dfStammdaten
 
-
+def orderDatenAgg():
+    dfStammdaten = stammdatenBearbeiten()
+    dfOrder = sql_datenLadenOder()
+    dfOrderItems = sql_datenLadenOderItems()
 
     dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].astype(str)
     dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].str.replace('0000000000', '')
@@ -74,7 +72,12 @@ def stammdatenBearbeiten(dfStammdaten):
     # Picks Gesamt
     dfOrderItems['Picks Gesamt'] = dfOrderItems['Picks PAL'] + dfOrderItems['Picks CS'] + dfOrderItems['Picks OUT']
     df = pd.merge(dfOrder, dfOrderItems, left_on='SapOrderNumber', right_on='SapOrderNumber', how='left')
+
     return df
+
+
+
+
 
 # class DB_DatenAggregation:
 

@@ -14,9 +14,9 @@ from Seiten.P_Forecast import *
 from Seiten.P_Einstellungen import *
 from Seiten.P_Fehlverladungen import fehlverladungenPage
 from data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
-from data_Class.DB_Daten_Agg import test
+from data_Class.DB_Daten_Agg import orderDatenAgg
 
-from data_Class.wether.api import getWetterBayreuth
+from data_Class.wetter.api import getWetterBayreuth
 
 # Zum Ausführen
 #MAC#    streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
@@ -47,44 +47,46 @@ def LadeLSDaten():
     return dfLS
 @st.cache(allow_output_mutation=True)
 def labeOrderDaten():
-    df = test()
+    df = orderDatenAgg()
     return df
 
 # ----- Config Main Menue -----
 # BAT LOGO  
 st.sidebar.image(img, width=300)
+
 with st.sidebar:
-    selected2 = option_menu('"Menu', ["Live Status","Auftragsübersicht","Lagerbewegungen",'Fehlverladungen','Mitarbeiter','Forecast', 'Einstellungen'], 
+    sel_main_m = option_menu('"Menu', ["Live Status","Auftragsübersicht","Lagerbewegungen",'Fehlverladungen','Mitarbeiter','Forecast', 'Einstellungen'], 
         icons=['cloud-fog2', 'award', "list-task", 'back'], 
         menu_icon="cast", )
-#selected2
+
+
 # ----- Login -----
 Login = Login()
 authentication_status = Login.Login()
 if authentication_status == True:
     #erfolgreich eingelogt dann Code ausführen!
     # ----- gewählte Page Laden -----
-    if selected2 == 'Live Status':
+    if sel_main_m == 'Live Status':
         df = labeOrderDaten()
         liveStatusPage(df)
-    if selected2 == 'Mitarbeiter':
+    if sel_main_m == 'Mitarbeiter':
         dfDaten = LadeBewegungsdaten()
         Seite = Seite1()
         Seite.Ladeseite(dfDaten)
-    if selected2 == 'Lagerbewegungen':
+    if sel_main_m == 'Lagerbewegungen':
         dfDaten = LadeBewegungsdaten()
         pageLager = Page_Bewegungsdaten()
         pageLager.GoGO(dfDaten)
-    if selected2 == 'Auftragsübersicht':
+    if sel_main_m == 'Auftragsübersicht':
         dfLS = LadeLSDaten()
         pageAuftrag = Page_Auftragsübersicht()
         pageAuftrag.Auftragsübersicht_Page(dfLS)
-    if selected2 == 'Forecast':
+    if sel_main_m == 'Forecast':
         pageForecast = Forecast()
         pageForecast.LadeForecast()
-    if selected2 == 'Einstellungen': 
+    if sel_main_m == 'Einstellungen': 
         seiteLaden()
-    if selected2 == 'Fehlverladungen':
+    if sel_main_m == 'Fehlverladungen':
         fehlverladungenPage()
 
         

@@ -3,7 +3,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu # pip install streamlit-option-menu # CSS Style für Main Menu # https://icons.getbootstrap.com
 import pandas as pd #Pip install pandas
 import plotly_express as px #pip install plotly_expression
-from Seiten.P_Einstellungen import *
+from P_Fehlverladungen import fehlverladungAnzeigen
 #Eigene Klassen
 
 
@@ -12,8 +12,8 @@ from Seiten.P_Einstellungen import *
 
 st.set_page_config(layout="wide", page_title="SuperDepot", page_icon=":bar_chart:")
 
-
-seiteLaden()
+fehlverladungAnzeigen()
+#fehlverladungErfassen()
 
 
 
