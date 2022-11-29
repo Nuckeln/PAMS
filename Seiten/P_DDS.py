@@ -9,15 +9,123 @@ from data_Class.SQL import datenLadenFehlverladungen , datenSpeichernFehlverladu
 import datetime
 import plotly.express as px
 
+class DDS:
+    day1 = datetime.date.today()
+    day2 = day1 - datetime.timedelta(days=30)
 
-def fehlverladungSQL():
-    df = datenLadenFehlverladungen()
+    def __init__(self,df):
+        self.df = df
+
+def ddsSQL():
+    df = pd.read_excel('data/dds.xlsx')
     return df
 def menueLaden():
-    selected2 = option_menu(None, ["Dashboard", "Fehlverladung Erfassen",'Fehlverladung Bearbeiten', "Fehlverladung Anzeigen"],
+    selected2 = option_menu(None, ["Dashboard", "DDS Tag Erfassen",'DDS Bearbeiten'],
     icons=['house', 'cloud-upload', "list-task"], 
     menu_icon="cast", default_index=0, orientation="horizontal")
     return selected2   
+
+
+
+def FilterNachDatum(day1, day2,df):
+    df['Date'] = df['Date'].dt.strftime('%m/%d/%y')
+    df['Date'] = df['Date'].astype('datetime64[ns]').dt.date
+
+    mask = (df['Date'] >= day1) & (df['Date'] <= day2)         
+    df = df.loc[mask]
+    return df
+
+def ddsDashboard(df):
+
+    col1, col2 = st.columns(2)
+    with col1:
+        startdate = st.date_input('Startdatum', DDS.day2)
+    with col2:
+        enddate = st.date_input('Enddatum', DDS.day1)
+    df = FilterNachDatum(startdate, enddate,df)
+
+    def fig_Bar_Chart(df, spaltenName):
+        a = df[spaltenName].mean()
+        df = df.groupby(['Date'])[spaltenName].mean().reset_index()
+        # add plotly bar chart with a as middelline 
+        fig = px.bar(df, x='Date', y=df[spaltenName], title=spaltenName)
+        fig.add_hline(y=a, line_dash="dash", line_color="red")
+        # if value of spaltenName is higher than a, color the bar in red
+        fig.update_traces(marker_color=np.where(df[spaltenName] > a, 'red', 'green'))
+        st.plotly_chart(fig, use_container_width=True)
+    
+    def userBauDirDiagramm(df):
+        userAuswahl = ['Amount of DNs',	'DESADV','Amount of picks',	'Amount of picks for next Day'	,'Volume available for next Day in %' ,'Amount transmissions w/o TPD' ,'Operational activities completed',]
+        spaltenName = st.selectbox('Spalte', userAuswahl)
+        fig_Bar_Chart(df, spaltenName)
+
+    userBauDirDiagramm(df)
+    st.dataframe(df)
+        
+    
+    
+
+
+
+
+    # #st.dataframe(df)
+    # #set index back to default
+    # df = df.reset_index()
+    # #get all columns
+    # columns = df.columns
+    # #get all columns without Date
+    # columns = columns[1:]
+    # #st.dataframe(columns)
+    # #create an empty list
+    # liste = []
+    # #add columns to liste
+    # for i in columns:
+    #     liste.append(i)
+    # #st.dataframe(liste)
+    # #get all columns without Date
+    # columns = columns[1:]
+    # #st.dataframe(columns)
+    # #create an empty list
+    # liste = []
+    # #add columns to liste
+    # for i in columns:
+    #     liste.append(i)
+    # #st.dataframe(liste)
+    # for i in liste:
+    #     st.bar_chart(df, x='Date', y=i, width=0, height=200, use_container_width=True,)
+    # st.dataframe(df)
+    
+    
+
+
+
+
+def ddsPage():
+    df = ddsSQL()
+    selMenue = menueLaden()
+    if selMenue == 'Dashboard':
+        ddsDashboard(df)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def filterFehlverladungen(df):        
         stati = df['Status'].unique()

@@ -9,6 +9,7 @@ from data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_daten
 
 def stammdatenBearbeiten():
     dfStammdaten = sql_datenLadenStammdaten()
+    dfStammdaten['MaterialNumber'] = dfStammdaten['MaterialNumber'].str.replace('0000000000', '')
     dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]   
     def f_CS(row):
         try:
@@ -38,7 +39,6 @@ def orderDatenAgg():
     dfStammdaten = stammdatenBearbeiten()
     dfOrder = sql_datenLadenOder()
     dfOrderItems = sql_datenLadenOderItems()
-
     dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].astype(str)
     dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].str.replace('0000000000', '')
     dfOrderItems = pd.merge(dfOrderItems, dfStammdaten[dfStammdaten['UnitOfMeasure'] == 'CS'][['MaterialNumber','CS']],left_on='MaterialNumber', right_on='MaterialNumber',how='left')
@@ -46,33 +46,33 @@ def orderDatenAgg():
     dfOrderItems = pd.merge(dfOrderItems, dfStammdaten[dfStammdaten['UnitOfMeasure'] == 'OUT'][['MaterialNumber','OUT']],left_on='MaterialNumber', right_on='MaterialNumber',how='left')
 
     dfOrderItems['O'] = dfOrderItems['Outers'] * dfOrderItems['OUT']
-    dfOrderItems['Picks PAL'] = dfOrderItems.O / dfOrderItems.PAL
-    dfOrderItems['Picks CS'] = dfOrderItems.O / dfOrderItems.CS
-    dfOrderItems['Picks OUT'] = dfOrderItems.O/ dfOrderItems.OUT
+    dfOrderItems['PicksPAL'] = dfOrderItems.O / dfOrderItems.PAL
+    dfOrderItems['PicksCS'] = dfOrderItems.CorrespondingCartons 
+    dfOrderItems['Picks OUT'] = dfOrderItems.CorrespondingOuters
     #Bereinige Berechnungen der Picks 
-    for i in range(0,len(dfOrderItems.index)):
-        #----PAL bereinigen
-            if (dfOrderItems.loc[i,'Picks PAL'] <1):
-                dfOrderItems.loc[i,'Picks PAL'] = 0
-        #----cs bereinigen
-            if (dfOrderItems.loc[i,'Picks CS'] <1):
-                dfOrderItems.loc[i,'Picks CS'] = 0 
-        #mögliche PAL picks abziehen
-            if (dfOrderItems.loc[i,'Picks PAL'] >=1):
-                dfOrderItems.loc[i,'Picks CS'] = (dfOrderItems.loc[i,'O'] - (dfOrderItems.loc[i,'Picks PAL'] * dfOrderItems.loc[i,'PAL'])) * dfOrderItems.loc[i,'CS']
-        #---OUT bereinigen
-            if (dfOrderItems.loc[i,'Picks OUT'] <1):
-                dfOrderItems.loc[i,'Picks OUT'] = 0
-        #mögliche PAL picks abziehen
-            if (dfOrderItems.loc[i,'Picks PAL'] >=1):
-                dfOrderItems.loc[i,'Picks OUT'] = (dfOrderItems.loc[i,'O'] - (dfOrderItems.loc[i,'Picks PAL'] * dfOrderItems.loc[i,'PAL'])) * dfOrderItems.loc[i,'OUT']
-        #mögliche CS picks abziehen
-            if (dfOrderItems.loc[i,'Picks CS'] >=1):
-                dfOrderItems.loc[i,'Picks OUT'] = 0#(dfOrderItems.loc[i,'O'] - (dfOrderItems.loc[i,'Picks CS'] * dfOrderItems.loc[i,'CS'])) * dfOrderItems.loc[i,'OUT']
-    # Picks Gesamt
+    dfOrderItems['PicksPAL'] = dfOrderItems['PicksPAL'].fillna(0) 
+    dfOrderItems['O'] = dfOrderItems.O.fillna(0) 
+    dfOrderItems['Picks OUT'] = dfOrderItems['Picks OUT'].fillna(0) 
+
+    # Pal kleiner als 1 bereinigen
+    def f_PAL(row):
+            if row.PicksPAL < 1:
+                return 0
+            else:
+                return row.PicksPAL
+
+    dfOrderItems['Picks PAL'] = dfOrderItems.apply(f_PAL,axis=1)
+
+    def f_OUT(row):
+            if row.PicksPAL >= 1:
+                return row.CorrespondingCartons  - ((row.PicksPAL * row.PAL) / row.CS)
+            else:
+                return row.CorrespondingCartons
+
+    dfOrderItems['Picks CS'] = dfOrderItems.apply(f_OUT,axis=1)
+
     dfOrderItems['Picks Gesamt'] = dfOrderItems['Picks PAL'] + dfOrderItems['Picks CS'] + dfOrderItems['Picks OUT']
     df = pd.merge(dfOrder, dfOrderItems, left_on='SapOrderNumber', right_on='SapOrderNumber', how='left')
-
     return df
 
 

@@ -13,6 +13,7 @@ from Seiten.P_Auftragsübersicht import *
 from Seiten.P_Forecast import *
 from Seiten.P_Einstellungen import *
 from Seiten.P_Fehlverladungen import fehlverladungenPage
+from Seiten.P_DDS import ddsPage
 from data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
 from data_Class.DB_Daten_Agg import orderDatenAgg
 
@@ -25,16 +26,16 @@ from data_Class.wetter.api import getWetterBayreuth
 # --- Set Global Page Configs ---
 st.set_page_config(layout="wide", page_title="SuperDepot", page_icon=":bar_chart:",initial_sidebar_state="expanded")
 
-hide_streamlit_style = """
-<style>
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-pages {visibility: hidden;}
+# hide_streamlit_style = """
+# <style>
+# #MainMenu {visibility: hidden;}
+# footer {visibility: hidden;}
+# pages {visibility: hidden;}
 
-</style>
+# </style>
 
-"""
-st.markdown(hide_streamlit_style, unsafe_allow_html=True,) 
+# """
+# st.markdown(hide_streamlit_style, unsafe_allow_html=True,) 
 img = Image.open('Data/img/logo.png', mode='r')
 # ----- Load aggregated data -----
 #@st.cache(allow_output_mutation=True)
@@ -55,7 +56,7 @@ def labeOrderDaten():
 st.sidebar.image(img, width=300)
 
 with st.sidebar:
-    sel_main_m = option_menu('"Menu', ["Live Status","Auftragsübersicht","Lagerbewegungen",'Fehlverladungen','Mitarbeiter','Forecast', 'Einstellungen'], 
+    sel_main_m = option_menu('"Menu', ["Live Status",'DDS','Fehlverladungen',"Auftragsübersicht","Lagerbewegungen",'Mitarbeiter','Forecast', 'Einstellungen'], 
         icons=['cloud-fog2', 'award', "list-task", 'back'], 
         menu_icon="cast", )
 
@@ -88,6 +89,8 @@ if authentication_status == True:
         seiteLaden()
     if sel_main_m == 'Fehlverladungen':
         fehlverladungenPage()
+    if sel_main_m == 'DDS':
+        ddsPage()
 
         
 

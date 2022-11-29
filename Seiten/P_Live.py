@@ -26,30 +26,44 @@ def wetter():
     st.write("Temperatur: ",temp)
     if clouds > 0:
         st.write("Wolken: ",clouds)
-def filterNachDatum(day1, day2,df):
-    # df['PlannedDate'] to date
-    df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
-    mask = (df['PlannedDate'] >= day1) & (df['PlannedDate'] <= day2)         
-    df = df.loc[mask]
-    return df
+# def filterNachDatum(day1, day2,df):
+#     # df['PlannedDate'] to date
+        
+    
+#     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
+#     df['Pick Datum'] = df['PlannedDate'].dt.strftime('%m/%d/%y')
+#     mask = (df['PlannedDate'] >= day1) & (df['PlannedDate'] <= day2)         
+#     df = df.loc[mask]
+#     return df
+
 
 def liveStatusPage(df):
 ###TODO: Wetter integrieren
+    
+
     col1, col2 = st.columns(2)
     with col1:
         st.header("Superdepot Live Status")
     with col2:
         wetter()
-    day1 = st.date_input('Start Date', value=pd.to_datetime('today'))
-    day2 = st.date_input('End Date', value=pd.to_datetime('today'))
+    ls = df['SapOrderNumber'].unique()
+
+    def FilterNachDatum(day1, day2,df):
+        df['Pick Datum'] = df['PlannedDate'].dt.strftime('%m/%d/%y')
+        df['Pick Datum'] = df['Pick Datum'].astype('datetime64[ns]').dt.date
+
+        mask = (df['Pick Datum'] >= day1) & (df['Pick Datum'] <= day2)         
+        df = df.loc[mask]
+        return df
 
 
-    df["Verladetag"] = pd.to_datetime(df["PlannedDate"]).dt.date
-    mask = (df['Verladetag'] >= day1) & (df['Verladetag'] <= day2)
-    df = df.loc[mask]
-    #dfapicksinPAL = dfa.groupby(['Lieferschein','Pick Datum'])['Picks PAL'].sum().reset_index()
-    a = df.groupby(['Verladetag'])['Picks Gesamt'].sum().reset_index()
-    st.write(a)
-    #df = fil   terNachDatum(day1, day2,df)
-    st.write(df)
-    
+    seldate = st.date_input('Datum', datetime.date(df['PlannedDate'].min().year,df['PlannedDate'].min().month,df['PlannedDate'].min().day))
+    seldate2 = st.date_input('Datum', datetime.date(df['PlannedDate'].max().year,df['PlannedDate'].max().month,df['PlannedDate'].max().day))
+
+
+    #
+    df = FilterNachDatum(seldate, seldate2,df)
+
+    #df = df[df['SapOrderNumber'].isin(selLs)]
+
+    st.dataframe(df)

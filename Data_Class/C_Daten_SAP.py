@@ -23,7 +23,7 @@ class SapDatenAggregation:
         dflt22['Pick Zeit'] = dflt22['K']
             
         dflt22['L'] = pd.to_datetime(dflt22['L'])
-        dflt22['Pick Datum'] = dflt22['L'].dt.strftime('%m/%d/%y')
+
 
         print('Daten geladen')
         
