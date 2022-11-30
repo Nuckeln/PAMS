@@ -7,13 +7,13 @@ from PIL import Image # Bilder
 #Eigene Klassen
 # from Seiten.P_Login import Login
 from Seiten.P_Live import liveStatusPage
-# from Seiten.P_Mitarbeiterauswertung import *
-# from Seiten.P_Bewegungsdaten import *
-# from Seiten.P_Auftragsübersicht import *
-# from Seiten.P_Forecast import *
-# from Seiten.P_Einstellungen import *
-# from Seiten.P_Fehlverladungen import fehlverladungenPage
-# from Seiten.P_DDS import ddsPage
+from Seiten.P_Mitarbeiterauswertung import *
+from Seiten.P_Bewegungsdaten import *
+from Seiten.P_Auftragsübersicht import *
+from Seiten.P_Forecast import *
+from Seiten.P_Einstellungen import *
+from Seiten.P_Fehlverladungen import fehlverladungenPage
+from Seiten.P_DDS import ddsPage
 from Data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
 from Data_Class.DB_Daten_Agg import orderDatenAgg
 
