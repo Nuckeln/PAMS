@@ -5,7 +5,7 @@ import pandas as pd # Dataframes
 from PIL import Image # Bilder
 
 #Eigene Klassen
-# from Seiten.P_Login import Login
+from Seiten.P_Login import Login
 from Seiten.P_Live import liveStatusPage
 from Seiten.P_Mitarbeiterauswertung import *
 from Seiten.P_Bewegungsdaten import *
@@ -46,7 +46,7 @@ pages {visibility: hidden;}
 # # def LadeLSDaten():
 # #     dfLS = pd.read_excel('Data/df.xlsx')
 # #     return dfLS
-# @st.cache(allow_output_mutation=True)
+@st.cache(allow_output_mutation=True)
 def labeOrderDaten():
     df = orderDatenAgg()
     return df
@@ -62,14 +62,14 @@ with st.sidebar:
 
 
 # ----- Login -----
-# Login = Login()
-# authentication_status = Login.Login()
-# if authentication_status == True:
-    #erfolgreich eingelogt dann Code ausführen!
+Login = Login()
+authentication_status = Login.Login()
+if authentication_status == True:
+    # erfolgreich eingelogt dann Code ausführen!
     # ----- gewählte Page Laden -----
-if sel_main_m == 'Live Status':
-    df = labeOrderDaten()
-    liveStatusPage(df)
+    if sel_main_m == 'Live Status':
+        df = labeOrderDaten()
+        liveStatusPage(df)
     # if sel_main_m == 'Mitarbeiter':
     #     dfDaten = LadeBewegungsdaten()
     #     Seite = Seite1()

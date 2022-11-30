@@ -27,4 +27,3 @@ class Login:
         if authentication_status == True:
             #erfolgreich geladen dann Code ausführen!
             return authentication_status
-    

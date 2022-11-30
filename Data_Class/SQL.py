@@ -83,6 +83,13 @@ def createnewTable(df, tableName):
     db_conn.dispose()
 
 # Usereingaben/Interne Datenbanken
+def datenLadenUser():
+    db_conn = verbinder()
+    db_conn.connect()
+    df= pd.read_sql('SELECT * FROM [user]', db_conn.conn)
+    db_conn.dispose()
+    return df
+
 def datenLadenMitarbeiter():
     db_conn = verbinderTestServer()
     db_conn.connect()
