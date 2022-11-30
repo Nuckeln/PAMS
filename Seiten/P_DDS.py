@@ -80,16 +80,7 @@ def ddsTagErfassen(df):
             date = st.date_input('Datum', DDS.day1)
         with col2:
             amountOfPicks = st.number_input('Anzahl Picks', min_value=0, max_value=1000, value=0, step=1)
-        col3, col4 = st.columns(2)
-        with col3:
-            amountOfPicksNextDay = st.number_input('Anzahl Picks für nächsten Tag', min_value=0, max_value=1000, value=0, step=1)
-        with col4:
-            amountOfPicksNextDayInPercent = st.number_input('Volumen für nächsten Tag in %', min_value=0, max_value=100, value=0, step=1)
-        col5, col6 = st.columns(2)
-        with col5:
-            amountOfDNs = st.number_input('Anzahl DNs', min_value=0, max_value=1000, value=0, step=1)
-        with col6:
-            amountOfTransmissionsWithoutTPD = st.number   
+
 
 
 
