@@ -4,4 +4,4 @@ primaryColor="#0e2b63"
 secondaryBackgroundColor="#f7f9f9"
 
 [server]
-port = 80
+port = 8000
