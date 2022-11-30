@@ -14,10 +14,10 @@ from Seiten.P_Forecast import *
 from Seiten.P_Einstellungen import *
 from Seiten.P_Fehlverladungen import fehlverladungenPage
 from Seiten.P_DDS import ddsPage
-from data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
-from data_Class.DB_Daten_Agg import orderDatenAgg
+from Data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
+from Data_Class.DB_Daten_Agg import orderDatenAgg
 
-from data_Class.wetter.api import getWetterBayreuth
+from Data_Class.wetter.api import getWetterBayreuth
 
 # Zum Ausführen
 #MAC#    streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
