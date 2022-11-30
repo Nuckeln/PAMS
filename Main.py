@@ -57,7 +57,7 @@ st.sidebar.image(img, width=300)
 
 with st.sidebar:
     sel_main_m = option_menu('"Menu', ["Live Status",'DDS','Fehlverladungen',"Auftragsübersicht","Lagerbewegungen",'Mitarbeiter','Forecast', 'Einstellungen'], 
-        icons=['cloud-fog2', 'award', "list-task", 'back'], 
+        icons=[''], 
         menu_icon="cast", )
 
 

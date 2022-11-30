@@ -21,11 +21,21 @@ def wetter():
     wind_degree = df.loc[0,'Wind Degree']
     clouds = df.loc[0,'Clouds']
     weather = df.loc[0,'Weather']
+    #temp to int
+    temp = int(temp)
+    st.write(f"Temperatur: {temp}" + "°C")
+    if weather == "Clouds":
+        st.write("Wolkig")
+    elif weather == "Rain":
+        st.write("Regen")
+    elif weather == "Clear":
+        st.write("Klar")
+    elif weather == "Snow":
+        st.write("Schnee")
+    else:
+        st.write("Sonstiges")
 
-    st.write("Wetter")
-    st.write("Temperatur: ",temp)
-    if clouds > 0:
-        st.write("Wolken: ",clouds)
+
 # def filterNachDatum(day1, day2,df):
 #     # df['PlannedDate'] to date
         

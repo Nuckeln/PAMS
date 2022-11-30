@@ -52,6 +52,10 @@ def ddsDashboard(df):
         fig.add_hline(y=a, line_dash="dash", line_color="red")
         # if value of spaltenName is higher than a, color the bar in red
         fig.update_traces(marker_color=np.where(df[spaltenName] > a, 'red', 'green'))
+        # add total value of spaltenName to each bar
+        fig.update_traces(texttemplate='%{text:.2s}', text=df[spaltenName])
+        fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
+
         st.plotly_chart(fig, use_container_width=True)
     
     def userBauDirDiagramm(df):
@@ -59,10 +63,33 @@ def ddsDashboard(df):
         spaltenName = st.selectbox('Spalte', userAuswahl)
         fig_Bar_Chart(df, spaltenName)
 
+    col3, col4 = st.columns(2)
+    with col3:
+        fig_Bar_Chart(df, 'Amount of picks')
+    with col4:
+        fig_Bar_Chart(df, 'Amount of picks for next Day')
+
     userBauDirDiagramm(df)
     st.dataframe(df)
         
-    
+def ddsTagErfassen(df):
+
+    with st.form(key='my_form'):
+        col1, col2 = st.columns(2)
+        with col1:
+            date = st.date_input('Datum', DDS.day1)
+        with col2:
+            amountOfPicks = st.number_input('Anzahl Picks', min_value=0, max_value=1000, value=0, step=1)
+        col3, col4 = st.columns(2)
+        with col3:
+            amountOfPicksNextDay = st.number_input('Anzahl Picks für nächsten Tag', min_value=0, max_value=1000, value=0, step=1)
+        with col4:
+            amountOfPicksNextDayInPercent = st.number_input('Volumen für nächsten Tag in %', min_value=0, max_value=100, value=0, step=1)
+        col5, col6 = st.columns(2)
+        with col5:
+            amountOfDNs = st.number_input('Anzahl DNs', min_value=0, max_value=1000, value=0, step=1)
+        with col6:
+            amountOfTransmissionsWithoutTPD = st.number   
 
 
 
@@ -71,6 +98,8 @@ def ddsPage():
     selMenue = menueLaden()
     if selMenue == 'Dashboard':
         ddsDashboard(df)
+    elif selMenue == 'DDS Tag Erfassen':
+        ddsTagErfassen(df)
 
 
 
