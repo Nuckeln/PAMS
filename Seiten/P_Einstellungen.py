@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from streamlit_option_menu import option_menu
 from Test.toFeather import *
-from data_Class.SQL import datenLadenMitarbeiter , datenSpeichernMitarbeiter , createnewTable
+from Data_Class.SQL import datenLadenMitarbeiter , datenSpeichernMitarbeiter , createnewTable
 
 
 class Einstellungen:
