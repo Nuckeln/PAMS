@@ -5,7 +5,7 @@ import numpy as np
 import extract_msg
 from streamlit_option_menu import option_menu
 import os
-from data_Class.SQL import datenLadenFehlverladungen , datenSpeichernFehlverladungen
+from Data_Class.SQL import datenLadenFehlverladungen , datenSpeichernFehlverladungen
 import datetime
 import plotly.express as px
 
