@@ -5,7 +5,7 @@ import pandas as pd # Dataframes
 from PIL import Image # Bilder
 
 #Eigene Klassen
-from Seiten.P_Login import Login
+from Seiten.P_UserLogin import Login
 from Seiten.P_Live import liveStatusPage
 from Seiten.P_Mitarbeiterauswertung import *
 from Seiten.P_Bewegungsdaten import *
@@ -35,8 +35,8 @@ pages {visibility: hidden;}
 </style>
 
 # """
-# st.markdown(hide_streamlit_style, unsafe_allow_html=True,) 
-# #img = Image.open('Data/img/logo.png', mode='r')
+st.markdown(hide_streamlit_style, unsafe_allow_html=True,) 
+img = Image.open('Data/img/logo.png', mode='r')
 # # ----- Load aggregated data -----
 # #@st.cache(allow_output_mutation=True)
 # # def LadeBewegungsdaten():
@@ -53,10 +53,10 @@ def labeOrderDaten():
 
 # ----- Config Main Menue -----
 # BAT LOGO  
-#st.sidebar.image(img, width=300)
+st.sidebar.image(img, width=300)
 
 with st.sidebar:
-    sel_main_m = option_menu('"Menu', ["Live Status",'DDS','Fehlverladungen',"Auftragsübersicht","Lagerbewegungen",'Mitarbeiter','Forecast', 'Einstellungen'], 
+    sel_main_m = option_menu('"Menu', ["Live Status",'DDS','Fehlverladungen'], 
         icons=[''], 
         menu_icon="cast", )
 
@@ -87,10 +87,10 @@ if authentication_status == True:
     #     pageForecast.LadeForecast()
     # if sel_main_m == 'Einstellungen': 
     #     seiteLaden()
-    # if sel_main_m == 'Fehlverladungen':
-    #     fehlverladungenPage()
-    # if sel_main_m == 'DDS':
-    #     ddsPage()
+    if sel_main_m == 'Fehlverladungen':
+        fehlverladungenPage()
+    if sel_main_m == 'DDS':
+        ddsPage()
 
         
 

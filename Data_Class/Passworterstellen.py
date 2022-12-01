@@ -2,18 +2,15 @@ import streamlit as st
 import streamlit_authenticator as stauth
 import pickle
 from pathlib import Path
-import pandas as pd
-from SQL import createnewTable
 
-names =  ["Martin", "admin", "Norbert"]
-usernames = ["martin", "admin", "norbert"]
-password = ["hannah", "admin", "schlangenleder"]
+names =  ["Martin", "admin", "Norbert", 'MichaelK']
+usernames = ["martin", "admin", "norbert", "michaelk"]
+password = ["hannah", "Merle25-", "schlangenleder","unterfluhrschleppkettenfördersystem"]
+
 hasched_passwords = stauth.Hasher(password).generate()
+file_path = Path(__file__).parent / "passwords.pk1"
 
-#create df
-df = pd.DataFrame()
-df['name'] = names
-df['username'] = usernames
-df['password'] = hasched_passwords
+with file_path.open("wb") as file:
+    pickle.dump(hasched_passwords, file)
 
-createnewTable(df, 'user')
+

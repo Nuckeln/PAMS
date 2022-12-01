@@ -22,11 +22,7 @@ class Einstellungen:
 
     def ich():
         st.write("Ich")
-        fg = pd.read_excel('/Users/martinwolf/Python/Superdepot Reporting/data/fehlverladungen.xlsx')
-        st.dataframe(fg)
-        bnt = st.button("Fehlverladungen aktualisieren")
-        if bnt:
-            createnewTable(fg,'issues')
+
 
 
     def mitarbeiterPflegen():

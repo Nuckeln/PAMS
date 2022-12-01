@@ -35,21 +35,10 @@ def wetter():
     else:
         st.write("Sonstiges")
 
-
-# def filterNachDatum(day1, day2,df):
-#     # df['PlannedDate'] to date
-        
-    
-#     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
-#     df['Pick Datum'] = df['PlannedDate'].dt.strftime('%m/%d/%y')
-#     mask = (df['PlannedDate'] >= day1) & (df['PlannedDate'] <= day2)         
-#     df = df.loc[mask]
-#     return df
-
-
 def liveStatusPage(df):
 ###TODO: Wetter integrieren
     
+
 
     col1, col2 = st.columns(2)
     with col1:
@@ -65,14 +54,11 @@ def liveStatusPage(df):
         mask = (df['Pick Datum'] >= day1) & (df['Pick Datum'] <= day2)         
         df = df.loc[mask]
         return df
+    seldate = st.date_input('Datum', datetime.date(2022, 11, 1))
+    df = FilterNachDatum(seldate, seldate,df)
+    df.groupby('Pick Datum')['SapOrderNumber'].count()
 
 
-    seldate = st.date_input('Datum', datetime.date(df['PlannedDate'].min().year,df['PlannedDate'].min().month,df['PlannedDate'].min().day))
-    seldate2 = st.date_input('Datum', datetime.date(df['PlannedDate'].max().year,df['PlannedDate'].max().month,df['PlannedDate'].max().day))
-
-
-    #
-    df = FilterNachDatum(seldate, seldate2,df)
 
     #df = df[df['SapOrderNumber'].isin(selLs)]
 
