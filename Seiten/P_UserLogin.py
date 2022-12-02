@@ -21,7 +21,7 @@ class Login:
             user_dict = {"name": name, "password": pwd}
             credentials["usernames"].update({uname: user_dict})
                 
-        authenticator = stauth.Authenticate(credentials, "cokkie_name", "random_key", cookie_expiry_days=30)
+        authenticator = stauth.Authenticate(credentials, "cokkie_name", "random_key", cookie_expiry_days=1)
 
         name, authentication_status, usernames= authenticator.login("Login", 'main')
         if authentication_status == False:
