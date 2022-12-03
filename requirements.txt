@@ -11,6 +11,6 @@ pyodbc==4.0.34
 requests==2.28.1
 SQLAlchemy==1.4.43
 streamlit==1.13.0
-streamlit_authenticator==0.1.5
+streamlit_authenticator==0.2.1
 streamlit_option_menu==0.3.2
 watchdog==2.1.9
