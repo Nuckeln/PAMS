@@ -90,6 +90,10 @@ def datenLadenUser():
     db_conn.dispose()
     return df
 
+
+
+
+
 def datenLadenMitarbeiter():
     db_conn = verbinderTestServer()
     db_conn.connect()
@@ -135,5 +139,19 @@ def sql_datenLadenOderItems():
     db_conn = verbinder()
     db_conn.connect()
     df = pd.read_sql('SELECT * FROM [business_depotDEBYKN-DepotDEBYKNOrderItems]', db_conn.conn)
+    db_conn.dispose()
+    return df  
+
+def sql_datenLadenKunden():
+    db_conn = verbinder()
+    db_conn.connect()
+    df = pd.read_sql('SELECT * FROM [business_depotDEBYKN-DepotOrderDESADVMappings]', db_conn.conn)
+    db_conn.dispose()
+    return df  
+
+def sql_datenLadenDDS():
+    db_conn = verbinder()
+    db_conn.connect()
+    df = pd.read_sql('SELECT * FROM [dds]', db_conn.conn)
     db_conn.dispose()
     return df  

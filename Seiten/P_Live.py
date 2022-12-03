@@ -7,13 +7,11 @@ from Data_Class.DB_Daten_Agg import orderDatenAgg
 from Data_Class.wetter.api import getWetterBayreuth
 
 class LIVE:
-    # day1 = datetime.date.today()
-    # day2 = day1 - datetime.timedelta(days=30)
+    heute  = datetime.date.today()
+    morgen =heute + datetime.timedelta(days=1)
 
     def __init__(self,df):
         self.df = df
-
-
 
 
 def sessionstate():
@@ -47,20 +45,22 @@ def wetter():
 
 def liveStatusPage(df,dfL):
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.title("Superdepot Live Status")
-    with col2:
-        wetter()
+    def headerAndWetter():
+        col1, col2 = st.columns(2)
+        with col1:
+            st.title("Superdepot Live Status")
+        with col2:
+            wetter()
 
     def FilterNachDatum(day1, day2,df):
-        df['Pick Datum'] = df['PlannedDate'].dt.strftime('%m/%d/%y')
-        df['Pick Datum'] = df['Pick Datum'].astype('datetime64[ns]').dt.date
+        df['PlannedDate'] = df['PlannedDate'].dt.strftime('%m/%d/%y')
+        df['PlannedDate'] = df['PlannedDate'].astype('datetime64[ns]').dt.date
         #filter nach Datum
-        df = df[(df['Pick Datum'] >= day1) & (df['Pick Datum'] <= day2)]
-        #mask = (df['Pick Datum'] >= day1) & (df['Pick Datum'] <= day2)         
+        df = df[(df['PlannedDate'] >= day1) & (df['PlannedDate'] <= day2)]
+        #mask = (df['PlannedDate'] >= day1) & (df['PlannedDate'] <= day2)         
         #df = df.loc[mask]
         return df
+
     def FilterNachDatumLabel(day1, day2,df):
         # df['DATUM'] = df['DATUM'].dt.strftime('%m/%d/%y')
         # df['DATUM'] = df['DATUM'].astype('datetime64[ns]').dt.date
@@ -70,18 +70,10 @@ def liveStatusPage(df,dfL):
 
         return df
 
-
-
-    seldate = st.date_input('Datum')
-    if seldate:
-        df = FilterNachDatum(seldate,seldate,df)
-        dfL = FilterNachDatumLabel(seldate,seldate,dfL)
-
-
     def columnsKennzahlen(df,dfL):
-        dfapicksDepot = df.groupby(['Pick Datum','DeliveryDepot'],dropna =False)['Picks Gesamt'].sum().reset_index()
-        dfapicksOffen = df.groupby(['Pick Datum','AllSSCCLabelsPrinted'],dropna =False)['Picks Gesamt'].sum().reset_index()
-        # dfapicksGeliefert = df.groupby(['Pick Datum','DeliveryDepot'],dropna =False)['Picks Geliefert'].sum().reset_index()
+        dfapicksDepot = df.groupby(['PlannedDate','DeliveryDepot'],dropna =False)['Picks Gesamt'].sum().reset_index()
+        dfapicksOffen = df.groupby(['PlannedDate','AllSSCCLabelsPrinted'],dropna =False)['Picks Gesamt'].sum().reset_index()
+        # dfapicksGeliefert = df.groupby(['PlannedDate','DeliveryDepot'],dropna =False)['Picks Geliefert'].sum().reset_index()
         
 
 
@@ -105,6 +97,14 @@ def liveStatusPage(df,dfL):
         with col3:
             st.subheader("Fertig")
         st.dataframe(dfapicksOffen)
+    
+    
+       
+    
+    # if seldate:
+    #     df = FilterNachDatum(seldate,seldate,df)
+    #     dfL = FilterNachDatumLabel(seldate,seldate,dfL)
+    headerAndWetter()
     columnsKennzahlen(df,dfL)
     st.dataframe(df)
 

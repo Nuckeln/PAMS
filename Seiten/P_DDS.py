@@ -5,7 +5,7 @@ import numpy as np
 import extract_msg
 from streamlit_option_menu import option_menu
 import os
-from Data_Class.SQL import datenLadenFehlverladungen , datenSpeichernFehlverladungen
+from Data_Class.SQL import datenLadenFehlverladungen , datenSpeichernFehlverladungen, sql_datenLadenDDS
 import datetime
 import plotly.express as px
 
@@ -17,7 +17,7 @@ class DDS:
         self.df = df
 
 def ddsSQL():
-    df = pd.read_excel('data/dds.xlsx')
+    df = sql_datenLadenDDS()
     return df
 def menueLaden():
     selected2 = option_menu(None, ["Dashboard", "DDS Tag Erfassen",'DDS Bearbeiten'],
