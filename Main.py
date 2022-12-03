@@ -50,6 +50,15 @@ img = Image.open('Data/img/logo.png', mode='r')
 def labeOrderDaten():
     df = orderDatenAgg()
     return df
+@st.cache(allow_output_mutation=True)
+def ladeLabelDaten():
+    df = sql_datenLadenLabel()
+    df['CreatedTimestamp'] = pd.to_datetime(df['CreatedTimestamp'])
+    df['DATUM'] = df['CreatedTimestamp'].dt.strftime('%m/%d/%y')
+    df['TIME'] = df['CreatedTimestamp'].dt.strftime('%H:%M:%S')
+    df['TIME'] = df['TIME'] + pd.Timedelta(hours=1)
+    df['TIME'] = df['CreatedTimestamp'].dt.strftime('%H:%M:%S')
+    return df
 
 # ----- Config Main Menue -----
 # BAT LOGO  
@@ -69,7 +78,9 @@ if authentication_status == True:
     # ----- gewählte Page Laden -----
     if sel_main_m == 'Live Status':
         df = labeOrderDaten()
-        liveStatusPage(df)
+        dfLabel = ladeLabelDaten()
+        liveStatusPage(df,dfLabel)
+        
     # if sel_main_m == 'Mitarbeiter':
     #     dfDaten = LadeBewegungsdaten()
     #     Seite = Seite1()

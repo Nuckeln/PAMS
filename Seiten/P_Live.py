@@ -7,8 +7,8 @@ from Data_Class.DB_Daten_Agg import orderDatenAgg
 from Data_Class.wetter.api import getWetterBayreuth
 
 class LIVE:
-    day1 = datetime.date.today()
-    day2 = day1 - datetime.timedelta(days=30)
+    # day1 = datetime.date.today()
+    # day2 = day1 - datetime.timedelta(days=30)
 
     def __init__(self,df):
         self.df = df
@@ -45,34 +45,44 @@ def wetter():
     else:
         st.write("Sonstiges")
 
-def liveStatusPage(df):
-###TODO: Wetter integrieren
-    
-
+def liveStatusPage(df,dfL):
 
     col1, col2 = st.columns(2)
     with col1:
         st.title("Superdepot Live Status")
     with col2:
         wetter()
-    ls = df['SapOrderNumber'].unique()
 
     def FilterNachDatum(day1, day2,df):
         df['Pick Datum'] = df['PlannedDate'].dt.strftime('%m/%d/%y')
         df['Pick Datum'] = df['Pick Datum'].astype('datetime64[ns]').dt.date
-        mask = (df['Pick Datum'] >= day1) & (df['Pick Datum'] <= day2)         
-        df = df.loc[mask]
+        #filter nach Datum
+        df = df[(df['Pick Datum'] >= day1) & (df['Pick Datum'] <= day2)]
+        #mask = (df['Pick Datum'] >= day1) & (df['Pick Datum'] <= day2)         
+        #df = df.loc[mask]
         return df
-    seldate = st.date_input('Datum', LIVE.day1)
+    def FilterNachDatumLabel(day1, day2,df):
+        # df['DATUM'] = df['DATUM'].dt.strftime('%m/%d/%y')
+        # df['DATUM'] = df['DATUM'].astype('datetime64[ns]').dt.date
+        #filter nach Datum
+        df = df[(df['DATUM'] >= day1) & (df['DATUM'] <= day2)]
+
+
+        return df
+
+
+
+    seldate = st.date_input('Datum')
     if seldate:
         df = FilterNachDatum(seldate,seldate,df)
-    st.dataframe(df)    
+        dfL = FilterNachDatumLabel(seldate,seldate,dfL)
 
-    def columnsKennzahlen(df):
+
+    def columnsKennzahlen(df,dfL):
         dfapicksDepot = df.groupby(['Pick Datum','DeliveryDepot'],dropna =False)['Picks Gesamt'].sum().reset_index()
-        # dfapicksOffen = df.groupby(['Pick Datum','DeliveryDepot'],dropna =False)['Picks Offen'].sum().reset_index()
+        dfapicksOffen = df.groupby(['Pick Datum','AllSSCCLabelsPrinted'],dropna =False)['Picks Gesamt'].sum().reset_index()
         # dfapicksGeliefert = df.groupby(['Pick Datum','DeliveryDepot'],dropna =False)['Picks Geliefert'].sum().reset_index()
-
+        
 
 
         col1, col2, col3 = st.columns(3)
@@ -94,9 +104,11 @@ def liveStatusPage(df):
             
         with col3:
             st.subheader("Fertig")
-
-    columnsKennzahlen(df)
+        st.dataframe(dfapicksOffen)
+    columnsKennzahlen(df,dfL)
     st.dataframe(df)
+
+    st.dataframe(dfL)
 
     #df = df[df['SapOrderNumber'].isin(selLs)]
 
