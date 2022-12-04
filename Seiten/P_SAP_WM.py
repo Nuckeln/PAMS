@@ -41,7 +41,7 @@ class SAPWM:
             uploaded_file = st.file_uploader("Bitte die Stellplatzdaten hochladen", type="xlsx")
             if uploaded_file is not None:
                 #save file to data/MLGT.xlsx overwrite existing file
-                with open("data/MLGT.xlsx", "wb") as f:
+                with open("Data/MLGT.xlsx", "wb") as f:
                     f.write(uploaded_file.getbuffer())
                 st.success("File uploaded successfully")
     def datenLadenBIN():
