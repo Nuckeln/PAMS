@@ -3,9 +3,9 @@ import streamlit_authenticator as stauth
 import pickle
 from pathlib import Path
 
-names =  ["Martin", "admin", "Norbert", 'MichaelK']
-usernames = ["martin", "admin", "norbert", "michaelk"]
-password = ["hannah", "Merle25-", "schlangenleder","unterfluhrschleppkettenfördersystem"]
+names =  ["Martin", "admin", "Norbert", 'MichaelK','Markus']
+usernames = ["martin", "admin", "norbert", "michaelk", "markus"]
+password = ["hannah", "Merle25-", "schlangenleder","unterfluhrschleppkettenfördersystem",'Bayern1']
 
 hasched_passwords = stauth.Hasher(password).generate()
 file_path = Path(__file__).parent / "passwords.pk1"

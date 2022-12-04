@@ -63,7 +63,7 @@ class SAPWM:
         heuteMinus7Tage = SAPWM.heute - datetime.timedelta(days=7)
         dfBedarfSKU = SAPWM.FilterNachDatum(heuteMinus7Tage,SAPWM.heute,dfOrders)
         dfBedarfSKU = dfBedarfSKU.groupby(['MaterialNumber']).sum().reset_index()
-        dfBedarfSKU['GesamtBedarfSKU'] = dfBedarfSKU['PicksCS']
+        dfBedarfSKU['GesamtBedarfSKU'] = dfBedarfSKU['Picks CS']
         dfBedarfSKU = dfBedarfSKU[['MaterialNumber','GesamtBedarfSKU']]
         #--- Stellplatzdaten mit Bedarf zusammenführen-----
         dfOrders = dfOrders.merge(dfBedarfSKU, how='left', left_on='MaterialNumber', right_on='MaterialNumber')
@@ -71,21 +71,21 @@ class SAPWM:
         dfOrders = dfOrders.fillna(0)
         dfOrders['GesamtBedarfSKU'] = dfOrders['GesamtBedarfSKU'].astype(int)
         #------drop unnötige Spalten -----
-        dfOrders = dfOrders[['MaterialNumber','GesamtBedarfSKU','PlannedDate' ,'PicksCS','LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM']]
+        dfOrders = dfOrders[['MaterialNumber','GesamtBedarfSKU','PlannedDate' ,'Picks CS','LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM']]
         dfOrders['LGPLA'] = dfOrders['LGPLA'].astype(str)
-        dfOrders = dfOrders.rename(columns={'PicksCS': 'BedarfCsTag'})
+        dfOrders = dfOrders.rename(columns={'Picks CS': 'BedarfCsTag'})
         dfOrders = dfOrders.groupby(['MaterialNumber','GesamtBedarfSKU','PlannedDate' ,'LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM'])['BedarfCsTag'].sum().reset_index()
-        #dfa.groupby(['Lieferschein','Pick Datum'])['Picks CS'].sum().reset_index()
+        dfOrders = dfOrders[['MaterialNumber','GesamtBedarfSKU','BedarfCsTag','PlannedDate' ,'LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM']]
+        dfOrders = dfOrders[dfOrders.LGTYP != 'TN1']
         
-        #dfOrders = dfOrders.sort_values(by=['MaterialNumber','PlannedDate'], ascending=[True, True])
-
+        
         seldate = st.date_input('Datum')
         if seldate:
             dfOrders = SAPWM.FilterNachDatum(seldate,seldate,dfOrders)
             #dfCS = dfCS.groupby(['MaterialNumber','LGPLA'],dropna =False)['Picks CS'].sum().reset_index()
 
         st.dataframe(dfOrders)
-
+        
 
     def sap_wm_page(dfOrders):
         selected2 = SAPWM.menueLaden()

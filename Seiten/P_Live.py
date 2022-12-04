@@ -82,6 +82,8 @@ def liveStatusPage(df,dfL):
             #dfapicksDepot = df.groupby(['DeliveryDepot'],dropna =False)['Picks Gesamt'].sum().reset_index()
             pickges = dfapicksDepot['Picks Gesamt'].sum()
             st.write(f"Gesamtvolumen:  {pickges}")
+            picks = df['Picks CS'].sum()
+            st.write(f"CS:  {picks}")
             #---##---#
             dfapicksDepotKNSTR = dfapicksDepot.loc[dfapicksDepot['DeliveryDepot']=='KNSTR']
             picksStr = dfapicksDepotKNSTR['Picks Gesamt'].sum()
