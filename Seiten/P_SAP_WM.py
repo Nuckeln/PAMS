@@ -45,7 +45,7 @@ class SAPWM:
                     f.write(uploaded_file.getbuffer())
                 st.success("File uploaded successfully")
     def datenLadenBIN():
-        df = pd.read_excel("data/MLGT.xlsx",header=3) 
+        df = pd.read_excel("Data/MLGT.xlsx",header=3) 
         return df
     def datenLadenOders():
         dfOrders = orderDatenAgg()
