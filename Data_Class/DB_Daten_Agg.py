@@ -2,8 +2,8 @@ from distutils.log import info
 import datetime
 import pandas as pd
 import numpy as np
-from Data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder,createnewTable,sql_datenLadenKunden
-
+from Data_Class.SQL import  sql_datenLadenStammdaten,sql_datenLadenKunden,sql_datenLadenOderItems,sql_datenLadenLabel
+from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 
 
 
@@ -36,10 +36,16 @@ def stammdatenBearbeiten():
     return dfStammdaten
 
 def orderDatenAgg():
+    heute  = datetime.date.today()
+    day2 = heute - datetime.timedelta(days=90)
+    dfOrder = SQL.sql_datenLadenDatum(day2,heute,SQL.tabelle_DepotDEBYKNOrders,SQL.datumSpalteLSüber)
+
+    #dfOrder = sql_datenLadenDatum(day2,heute,'business_depotDEBYKN-DepotDEBYKNOrders')
     dfStammdaten = stammdatenBearbeiten()
-    dfOrder = sql_datenLadenOder()
     dfOrderItems = sql_datenLadenOderItems()
     dfKunden = sql_datenLadenKunden()
+    dfLabel = sql_datenLadenLabel()
+
     dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].astype(str)
     dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].str.replace('0000000000', '')
     dfOrderItems = pd.merge(dfOrderItems, dfStammdaten[dfStammdaten['UnitOfMeasure'] == 'CS'][['MaterialNumber','CS']],left_on='MaterialNumber', right_on='MaterialNumber',how='left')
@@ -75,6 +81,32 @@ def orderDatenAgg():
     dfOrderItems['Picks Gesamt'] = dfOrderItems['Picks PAL'] + dfOrderItems['Picks CS'] + dfOrderItems['Picks OUT']
     df = pd.merge(dfOrder, dfOrderItems, left_on='SapOrderNumber', right_on='SapOrderNumber', how='left')
     df = pd.merge(df, dfKunden, left_on='PartnerNo', right_on='PartnerNo', how='left')
+    # count in dfLabel sum of Status "printed" by SapOrderNumber
+    dfLabel = dfLabel[dfLabel['Status'] == 'printed']
+    dfLabel = dfLabel.groupby(['SapOrderNumber']).size().reset_index(name='LabelCount')
+    df['PicksGesamt'] = df['Picks Gesamt']
+
+    def f_Fertig(row):
+        try:
+            if row.AllSSCCLabelsPrinted == 1:
+                return row.PicksGesamt
+        except:
+            return np.nan
+    df['PicksFertig'] = df.apply(f_Fertig,axis=1)
+    def f_Offen(row):
+        try:
+            if row.AllSSCCLabelsPrinted == 0:
+                return row.PicksGesamt
+        except:
+            return np.nan
+    df['PicksOffen'] = df.apply(f_Fertig,axis=1)
+
+    #drop row frow df if isReturnDelivery = 1
+    df = df[df['IsReturnDelivery'] == 0]
+    
+
+
+    #df = pd.merge(df, dfLabel, left_on='SapOrderNumber', right_on='SapOrderNumber', how='left')
 
     return df
 

@@ -7,6 +7,7 @@ from PIL import Image # Bilder
 #Eigene Klassen
 from Seiten.P_UserLogin import Login
 from Seiten.P_Live import liveStatusPage
+from Seiten.P_SAP_WM import SAPWM
 from Seiten.P_Mitarbeiterauswertung import *
 from Seiten.P_Bewegungsdaten import *
 from Seiten.P_Auftragsübersicht import *
@@ -27,15 +28,55 @@ from Data_Class.wetter.api import getWetterBayreuth
 st.set_page_config(layout="wide", page_title="SuperDepot", page_icon=":bar_chart:",initial_sidebar_state="expanded")
 
 hide_streamlit_style = """
-<style>
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-pages {visibility: hidden;}
+                <style>
+                div[data-testid="stToolbar"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                div[data-testid="stDecoration"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                div[data-testid="stStatusWidget"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                #MainMenu {
+                visibility: hidden;
+                height: 0%;
+                }
+                header {
+                visibility: hidden;
+                height: 0%;
+                }
+                footer {
+                visibility: hidden;
+                height: 0%;
+                }
+                </style>
+                """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+st.markdown("""
+        <style>
+               .css-18e3th9 {
+                    padding-top: 0rem;
+                    padding-bottom: 10rem;
+                    padding-left: 5rem;
+                    padding-right: 5rem;
+                }
+               .css-1d391kg {
+                    padding-top: 3.5rem;
+                    padding-right: 1rem;
+                    padding-bottom: 3.5rem;
+                    padding-left: 1rem;
+                }
+        </style>
+        """, unsafe_allow_html=True)
 
-</style>
 
-# """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True,) 
 img = Image.open('Data/img/logo.png', mode='r')
 # # ----- Load aggregated data -----
 # #@st.cache(allow_output_mutation=True)
@@ -65,7 +106,7 @@ def ladeLabelDaten():
 st.sidebar.image(img, width=300)
 
 with st.sidebar:
-    sel_main_m = option_menu('"Menu', ["Live Status",'DDS','Fehlverladungen'], 
+    sel_main_m = option_menu('"Menu', ["Live Status",'DDS','Fehlverladungen','SAP WM Daten'], 
         icons=[''], 
         menu_icon="cast", )
 
@@ -102,6 +143,10 @@ if authentication_status == True:
         fehlverladungenPage()
     if sel_main_m == 'DDS':
         ddsPage()
+    if sel_main_m == 'SAP WM Daten':
+        df = labeOrderDaten()
+        SAPWM.sap_wm_page(dfOrders=df)
+
 
         
 

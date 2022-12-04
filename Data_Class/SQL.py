@@ -52,6 +52,45 @@ class AzureDbConnection:
         """Execute query."""
         self.conn.execute(query)
 
+class SQL_TabellenLadenBearbeiten:
+    '''Ermöglicht die Auswahl von Spalten aus bestimmten Tabellen
+    sowie Datumsbereich
+    und gibt diese als DataFrame zurück'''
+    tabelle_DepotDEBYKNOrders = 'business_depotDEBYKN-DepotDEBYKNOrders'
+    datumSpalteLSüber = 'CreatedTimeStamp'
+    tabelle_DepotDEBYKNOrderItems = 'business_depotDEBYKN-DepotDEBYKNOrderItems'
+
+
+    def verbinder():
+
+        conn_settings = ConnectionSettings(    
+        server = 'batsql-pp-ne-cmes-prod-10',
+        database= 'batsdb-pp-ne-prod-reporting_SuperDepot',
+        username='batedp-cmes-prod-reportinguser',
+        password='b2.5v^H!IKjetuXMVNvW')
+        db_conn = AzureDbConnection(conn_settings)
+        return db_conn
+    
+    def sql_datenLadenDatum(day1, day2, tabellenName,datumsSpalte):
+        '''erwartet zwei Datumsangaben im Format 'YYYY-MM-DD' 
+        und den Tabellennamen als String  
+        day 1 Startwert z.B 2020-01-01   
+        day 2 Endwert z.B 2020-01-31,   
+        vorhandene Tabellen sind:,
+        'dds',
+        'business_depotDEBYKN-LabelPrintOrders',
+        'business_depotDEBYKN-DepotDEBYKNOrderItems', 
+        'business_depotDEBYKN-DepotDEBYKNOrders',
+        'data_materialmaster-MaterialMasterUnitOfMeasures'''
+        
+        sqlQuery = f"SELECT * FROM [{tabellenName}] WHERE [{datumsSpalte}] BETWEEN '{day1}' AND '{day2}'"
+        db_conn = verbinder()
+        db_conn.connect()
+        df = pd.read_sql(sqlQuery, db_conn.conn)
+        db_conn.dispose()
+        return df
+
+
 def verbinderTestServer():
 
     conn_settings = ConnectionSettings(
@@ -70,9 +109,6 @@ def verbinder():
     database= 'batsdb-pp-ne-prod-reporting_SuperDepot',
     username='batedp-cmes-prod-reportinguser',
     password='b2.5v^H!IKjetuXMVNvW')
-
-
-
     db_conn = AzureDbConnection(conn_settings)
     return db_conn
 
@@ -89,10 +125,6 @@ def datenLadenUser():
     df= pd.read_sql('SELECT * FROM [user]', db_conn.conn)
     db_conn.dispose()
     return df
-
-
-
-
 
 def datenLadenMitarbeiter():
     db_conn = verbinderTestServer()
