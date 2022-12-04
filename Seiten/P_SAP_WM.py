@@ -7,6 +7,7 @@ from Data_Class.DB_Daten_Agg import orderDatenAgg
 import plotly_express as px
 from streamlit_option_menu import option_menu
 from Data_Class.DB_Daten_Agg import orderDatenAgg
+from Data_Class.SQL import createnewTable, sql_datenLadenMLGT
 
 class SAPWM:
     
@@ -40,12 +41,14 @@ class SAPWM:
         with st.expander('Stellplatzdaten Updaten', expanded=False):
             uploaded_file = st.file_uploader("Bitte die Stellplatzdaten hochladen", type="xlsx")
             if uploaded_file is not None:
-                #save file to data/MLGT.xlsx overwrite existing file
-                with open("Data/MLGT.xlsx", "wb") as f:
-                    f.write(uploaded_file.getbuffer())
+                df = pd.read_excel(uploaded_file,header=3)
+                createnewTable(df,'MLGT_Stellplatz')
                 st.success("File uploaded successfully")
+                st.balloons()
+                st.experimental_rerun()
     def datenLadenBIN():
-        df = pd.read_excel("Data/MLGT.xlsx",header=3) 
+        #df = pd.read_excel("Data/MLGT.xlsx",header=3) 
+        df = sql_datenLadenMLGT()
         return df
     def datenLadenOders():
         dfOrders = orderDatenAgg()

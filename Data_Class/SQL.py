@@ -126,6 +126,13 @@ def datenLadenUser():
     db_conn.dispose()
     return df
 
+def sql_datenLadenMLGT():
+    db_conn = verbinder()
+    db_conn.connect()
+    df= pd.read_sql('SELECT * FROM [MLGT_Stellplatz]', db_conn.conn)
+    db_conn.dispose()
+    return df
+
 def datenLadenMitarbeiter():
     db_conn = verbinderTestServer()
     db_conn.connect()
