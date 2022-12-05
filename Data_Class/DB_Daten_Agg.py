@@ -2,7 +2,7 @@ from distutils.log import info
 import datetime
 import pandas as pd
 import numpy as np
-from Data_Class.SQL import  sql_datenLadenStammdaten,sql_datenLadenKunden,sql_datenLadenOderItems,sql_datenLadenLabel
+from Data_Class.SQL import  sql_datenLadenStammdaten,sql_datenLadenKunden,sql_datenLadenOderItems,sql_datenLadenLabel,sql_datenLadenOder
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 
 
@@ -38,8 +38,8 @@ def stammdatenBearbeiten():
 def orderDatenAgg():
     heute  = datetime.date.today()
     day2 = heute - datetime.timedelta(days=90)
-    dfOrder = SQL.sql_datenLadenDatum(day2,heute,SQL.tabelle_DepotDEBYKNOrders,SQL.datumSpalteLSüber)
-
+    #dfOrder = SQL.sql_datenLadenDatum(day2,heute,SQL.tabelle_DepotDEBYKNOrders,SQL.datumSpalteLSüber)
+    dfOrder = sql_datenLadenOder()
     #dfOrder = sql_datenLadenDatum(day2,heute,'business_depotDEBYKN-DepotDEBYKNOrders')
     dfStammdaten = stammdatenBearbeiten()
     dfOrderItems = sql_datenLadenOderItems()
