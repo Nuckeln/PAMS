@@ -99,7 +99,7 @@ def orderDatenAgg():
                 return row.PicksGesamt
         except:
             return np.nan
-    df['PicksOffen'] = df.apply(f_Fertig,axis=1)
+    df['PicksOffen'] = df.apply(f_Offen,axis=1)
 
     #drop row frow df if isReturnDelivery = 1
     df = df[df['IsReturnDelivery'] == 0]

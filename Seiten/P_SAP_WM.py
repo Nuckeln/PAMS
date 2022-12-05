@@ -51,10 +51,6 @@ class SAPWM:
         #df = pd.read_excel("Data/MLGT.xlsx",header=3) 
         df = sql_datenLadenMLGT()
         return df
-
-    # def datenLadenOders():
-    #     dfOrders = orderDatenAgg()
-    #     return dfOrders
          
     def pageStellplatzverwaltung(dfOrders):
         SAPWM.datenUpload()

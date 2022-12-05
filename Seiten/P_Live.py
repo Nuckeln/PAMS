@@ -82,8 +82,6 @@ def liveStatusPage(df,dfL):
             #dfapicksDepot = df.groupby(['DeliveryDepot'],dropna =False)['Picks Gesamt'].sum().reset_index()
             pickges = dfapicksDepot['Picks Gesamt'].sum()
             st.write(f"Gesamtvolumen:  {pickges}")
-            picks = df['Picks CS'].sum()
-            st.write(f"CS:  {picks}")
             #---##---#
             dfapicksDepotKNSTR = dfapicksDepot.loc[dfapicksDepot['DeliveryDepot']=='KNSTR']
             picksStr = dfapicksDepotKNSTR['Picks Gesamt'].sum()
@@ -131,17 +129,16 @@ def liveStatusPage(df,dfL):
 
         st.plotly_chart(fig, use_container_width=True)
     
-    def fig_Bar_Chart2(df, spaltenName):
-        a = df[spaltenName].mean()
-        df = df.groupby(['DATUM'])[spaltenName].mean().reset_index()
+    def fig_Bar_Chart2(df):
+        df = df.groupby(['PlannedDate'])['PicksGesamt', 'PicksOffen', 'PicksFertig'].mean().reset_index()
         # add plotly bar chart with a as middelline 
-        fig = px.bar(df, x='DATUM', y=df[spaltenName], title=spaltenName)
-        fig.add_hline(y=a, line_dash="dash", line_color="red")
-        # if value of spaltenName is higher than a, color the bar in red
-        fig.update_traces(marker_color=np.where(df[spaltenName] > a, 'red', 'green'))
-        # add total value of spaltenName to each bar
-        fig.update_traces(texttemplate='%{text:.2s}', text=df[spaltenName])
-        fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
+        fig = px.bar(df, x='PlannedDate', y=['PicksGesamt', 'PicksOffen', 'PicksFertig']) 
+        # fig.add_hline(y=a, line_dash="dash", line_color="red")
+        # # if value of spaltenName is higher than a, color the bar in red
+        # fig.update_traces(marker_color=np.where(df[spaltenName] > a, 'red', 'green'))
+        # # add total value of spaltenName to each bar
+        # fig.update_traces(texttemplate='%{text:.2s}', text=df[spaltenName])
+        # fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -169,6 +166,7 @@ def liveStatusPage(df,dfL):
         #dfL = FilterNachDatumLabel(seldate,seldate,dfL)
 
     columnsKennzahlen(df,dfL,dfapicksDepot=dfapicksDepot,dfapicksOffen=dfapicksOffen,dfapicksFertig=dfapicksFertig)
+    fig_Bar_Chart2(df)
     st.dataframe(df)
     #fig_Bar_Chart(df,'Picks Gesamt')
     kundenPicks(df,dfL)
