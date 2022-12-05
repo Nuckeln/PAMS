@@ -46,15 +46,16 @@ class SAPWM:
                 st.success("File uploaded successfully")
                 st.balloons()
                 st.experimental_rerun()
+
     def datenLadenBIN():
         #df = pd.read_excel("Data/MLGT.xlsx",header=3) 
         df = sql_datenLadenMLGT()
         return df
-    def datenLadenOders():
-        dfOrders = orderDatenAgg()
-        return dfOrders
-        
-    
+
+    # def datenLadenOders():
+    #     dfOrders = orderDatenAgg()
+    #     return dfOrders
+         
     def pageStellplatzverwaltung(dfOrders):
         SAPWM.datenUpload()
         #----- Lade Stellplatzdaten -----
@@ -74,11 +75,11 @@ class SAPWM:
         dfOrders = dfOrders.fillna(0)
         dfOrders['GesamtBedarfSKU'] = dfOrders['GesamtBedarfSKU'].astype(int)
         #------drop unnötige Spalten -----
-        dfOrders = dfOrders[['MaterialNumber','GesamtBedarfSKU','PlannedDate' ,'Picks CS','LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM']]
+        dfOrders = dfOrders[['MaterialNumber','SapOrderNumber','GesamtBedarfSKU','PlannedDate' ,'Picks CS','LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM']]
         dfOrders['LGPLA'] = dfOrders['LGPLA'].astype(str)
         dfOrders = dfOrders.rename(columns={'Picks CS': 'BedarfCsTag'})
-        dfOrders = dfOrders.groupby(['MaterialNumber','GesamtBedarfSKU','PlannedDate' ,'LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM'])['BedarfCsTag'].sum().reset_index()
-        dfOrders = dfOrders[['MaterialNumber','GesamtBedarfSKU','BedarfCsTag','PlannedDate' ,'LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM']]
+        dfOrders = dfOrders.groupby(['MaterialNumber','SapOrderNumber','GesamtBedarfSKU','PlannedDate' ,'LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM'])['BedarfCsTag'].sum().reset_index()
+        dfOrders = dfOrders[['MaterialNumber','SapOrderNumber','GesamtBedarfSKU','BedarfCsTag','PlannedDate' ,'LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM']]
         dfOrders = dfOrders[dfOrders.LGTYP != 'TN1']
         
         
@@ -87,8 +88,7 @@ class SAPWM:
             dfOrders = SAPWM.FilterNachDatum(seldate,seldate,dfOrders)
             #dfCS = dfCS.groupby(['MaterialNumber','LGPLA'],dropna =False)['Picks CS'].sum().reset_index()
 
-        st.dataframe(dfOrders)
-        
+        st.dataframe(dfOrders)      
 
     def sap_wm_page(dfOrders):
         selected2 = SAPWM.menueLaden()
