@@ -56,6 +56,7 @@ class SQL_TabellenLadenBearbeiten:
     '''Ermöglicht die Auswahl von Spalten aus bestimmten Tabellen
     sowie Datumsbereich
     und gibt diese als DataFrame zurück'''
+    
     tabelle_DepotDEBYKNOrders = 'business_depotDEBYKN-DepotDEBYKNOrders'
     datumSpalteLSüber = 'CreatedTimeStamp'
     tabelle_DepotDEBYKNOrderItems = 'business_depotDEBYKN-DepotDEBYKNOrderItems'

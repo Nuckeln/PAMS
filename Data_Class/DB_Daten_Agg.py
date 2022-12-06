@@ -104,6 +104,9 @@ def orderDatenAgg():
     df['PicksOffen'] = df.apply(f_Offen,axis=1)
 
     #drop row frow df if isReturnDelivery = 1
+    # convert  IDocNumberDESADV to string
+    df['IDocNumberDESADV'] = df['IDocNumberDESADV'].astype(str)
+    
     df = df[df['IsReturnDelivery'] == 0]
     df = df.fillna(0)
     

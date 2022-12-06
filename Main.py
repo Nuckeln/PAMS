@@ -92,14 +92,14 @@ def labeOrderDaten():
     df = orderDatenAgg()
     return df
 #@st.cache(allow_output_mutation=True)
-def ladeLabelDaten():
-    df = sql_datenLadenLabel()
-    df['CreatedTimestamp'] = pd.to_datetime(df['CreatedTimestamp'])
-    df['DATUM'] = df['CreatedTimestamp'].dt.strftime('%m/%d/%y')
-    df['TIME'] = df['CreatedTimestamp'].dt.strftime('%H:%M:%S')
-    df['TIME'] = df['TIME'] + pd.Timedelta(hours=1)
-    df['TIME'] = df['CreatedTimestamp'].dt.strftime('%H:%M:%S')
-    return df
+# def ladeLabelDaten():
+#     df = sql_datenLadenLabel()
+#     df['CreatedTimestamp'] = pd.to_datetime(df['CreatedTimestamp'])
+#     df['DATUM'] = df['CreatedTimestamp'].dt.strftime('%m/%d/%y')
+#     df['TIME'] = df['CreatedTimestamp'].dt.strftime('%H:%M:%S')
+#     df['TIME'] = df['TIME'] + pd.Timedelta(hours=1)
+#     df['TIME'] = df['CreatedTimestamp'].dt.strftime('%H:%M:%S')
+#     return df
 
 # ----- Config Main Menue -----
 # BAT LOGO  
