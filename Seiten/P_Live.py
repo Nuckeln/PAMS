@@ -46,7 +46,7 @@ class LIVE:
         else:
             st.write("Sonstiges")
 
-def liveStatusPage(df,dfL):
+def liveStatusPage(df):
 
     ## Filter für Live AllSSCCLabelsPrinted Func ###
     def FilterNachDatum(day1, day2,df):
