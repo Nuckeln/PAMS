@@ -95,12 +95,12 @@ def liveStatusPage(df,dfL):
             pickOffenges = dfapicksOffen['Picks Gesamt'].sum()
             st.write(f"Gesamtvolumen:  {pickOffenges}")
             #---##---#
-            dfapicksOffen = dfapicksOffen.loc[dfapicksOffen['DeliveryDepot']=='KNSTR']
-            picksoffenStr = dfapicksOffen['Picks Gesamt'].sum()
+            dfapicksOffn = dfapicksOffn.loc[dfapicksOffn['DeliveryDepot']=='KNSTR']
+            picksoffenStr = dfapicksOffn['Picks Gesamt'].sum()
             st.write(f"Stuttgart:  {picksoffenStr}")
             #---##---#
-            dfapicksOffen = dfapicksOffen.loc[dfapicksOffen['DeliveryDepot']=='KNLEJ']
-            picksoffenLej = dfapicksOffen['Picks Gesamt'].sum()
+            dfapicksOffe = dfapicksOffe.loc[dfapicksOffe['DeliveryDepot']=='KNLEJ']
+            picksoffenLej = dfapicksOffe['Picks Gesamt'].sum()
             st.write(f"Leipzig:  {picksoffenLej}")            
         with col3:
             st.subheader("Fertig")
