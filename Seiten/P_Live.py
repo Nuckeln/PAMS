@@ -191,7 +191,7 @@ def liveStatusPage(df,dfL):
 
     pd.set_option("display.precision", 2)
     columnsKennzahlen(df)
-    figPickStatus(df)
+    figPickStatusNachDepot(df)
 
     st.dataframe(df)
 
