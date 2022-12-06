@@ -106,7 +106,7 @@ def orderDatenAgg():
     #drop row frow df if isReturnDelivery = 1
     # convert  IDocNumberDESADV to string
     df['IDocNumberDESADV'] = df['IDocNumberDESADV'].astype(str)
-    df['SAP'] = df['SAP'].astype(str)
+  
     df = df[df['IsReturnDelivery'] == 0]
     df = df.fillna(0)
     
