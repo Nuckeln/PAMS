@@ -5,7 +5,9 @@ import numpy as np
 from Data_Class.SQL import  sql_datenLadenStammdaten,sql_datenLadenKunden,sql_datenLadenOderItems,sql_datenLadenLabel, sql_datenLadenMaster_CS_OUT,datenSpeichern_CS_OUT_STammdaten
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 
-def orderDatenAgg():
+
+
+def stammdatenBearbeiten():
     dfStammdaten = sql_datenLadenMaster_CS_OUT()
 
     dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]
@@ -33,8 +35,10 @@ def orderDatenAgg():
     dfStammdaten['CS'] = dfStammdaten.apply(f_CS,axis=1)
     dfStammdaten['PAL'] = dfStammdaten.apply(f_PAL,axis=1)
     #dfStammdaten.to_sql('CS_OUT_PAL_MaterialMasterUnitOfMeasures', SQL.db_conn.conn, if_exists='replace', index=False)
+    datenSpeichern_CS_OUT_STammdaten(dfStammdaten)
+    return dfStammdaten
 
-
+def orderDatenAgg():
     heute  = datetime.date.today()
     # heute plus 3 Tage
     morgen =heute + datetime.timedelta(days=3)
@@ -42,7 +46,7 @@ def orderDatenAgg():
     dfOrder = SQL.sql_datenLadenDatum(day2,morgen,SQL.tabelle_DepotDEBYKNOrders,SQL.datumSpalteLSüber)
     #dfOrder = sql_datenLadenOder()
     #dfOrder = sql_datenLadenDatum(day2,heute,'business_depotDEBYKN-DepotDEBYKNOrders')
-
+    dfStammdaten = stammdatenBearbeiten()
     dfOrderItems = sql_datenLadenOderItems()
     dfKunden = sql_datenLadenKunden()
     dfLabel = sql_datenLadenLabel()
@@ -105,13 +109,37 @@ def orderDatenAgg():
     #drop row frow df if isReturnDelivery = 1
     # convert  IDocNumberDESADV to string
     df['IDocNumberDESADV'] = df['IDocNumberDESADV'].astype(str)
-
+  
     df = df[df['IsReturnDelivery'] == 0]
     df = df.fillna(0)
     #df[QuantityCheckTimestamp to string
     df['QuantityCheckTimestamp'] = df['QuantityCheckTimestamp'].astype(str)
     df['Source'] = df['Source'].astype(str)
-    df['UnloadingListIdentifier'] = df['UnloadingListIdentifier'].astype(str)
-
 
     return df
+
+
+
+
+
+# class DB_DatenAggregation:
+
+
+#     def labelAgg():
+#         #TODO: Label aus DB laden übernehmen
+#         # gibt nur Label aus die von angelegten Mitarbeitern bearbeitet wurden
+#         dfUser = pd.read_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather')
+#         dfLabel = datenLadenLabel()
+        
+        
+#         # #dfLabel = pd.read_csv('data/Label.csv')
+#         # dfLabel.columns = ['A', 'B','C','D','E','F','G','H','I','J','K','L','M','N']
+        
+#         #dfLabel['CreatedTimestamp'] = pd.to_datetime(dfLabel['CreatedTimestamp'])
+#         # dfLabel['DATUM'] = dfLabel['CreatedTimestamp'].dt.strftime('%m/%d/%y')
+#         # dfLabel['TIME'] = dfLabel['CreatedTimestamp'].dt.strftime('%H:%M:%S')
+#         # dfLabel['TIME'] = dfLabel['TIME'] + pd.Timedelta(hours=1)
+#         # dfLabel['TIME'] = dfLabel['CreatedTimestamp'].dt.strftime('%H:%M:%S')
+#         dfLabel = pd.merge(dfLabel, dfUser, left_on='CreatedBy', right_on='Name')
+#         return dfLabel
+    

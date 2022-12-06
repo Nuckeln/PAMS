@@ -13,7 +13,7 @@ class SAPWM:
     
     heute  = datetime.date.today()
     morgen =heute + datetime.timedelta(days=1)
-    def __init__(self,df):
+    def __init__(self):
         self.df = df
 
     def sessionstate():
@@ -21,7 +21,12 @@ class SAPWM:
             st.session_state['key'] = 'value'
         if 'key' not in st.session_state:
             st.session_state.key = +1
+    @st.experimental_memo
+    def labeOrderDaten():
+        df = orderDatenAgg()
+        return df
     
+
     def menueLaden():
         selected2 = option_menu(None, ["Stellplatzverwaltung", "Zugriffe SN/TN "],
         icons=['house', 'cloud-upload', "list-task"], 
@@ -86,7 +91,8 @@ class SAPWM:
 
         st.dataframe(dfOrders)      
 
-    def sap_wm_page(dfOrders):
+    def sap_wm_page():
+        dfOrders = SAPWM.labeOrderDaten()
         selected2 = SAPWM.menueLaden()
         if selected2 == "Stellplatzverwaltung":
             SAPWM.pageStellplatzverwaltung(dfOrders)

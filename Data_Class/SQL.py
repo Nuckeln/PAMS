@@ -159,6 +159,12 @@ def datenSpeichernFehlverladungen(df):
     # change index to id 
     df.to_sql('issues', db_conn.conn, if_exists='replace', index=False)
     db_conn.dispose()
+def datenSpeichern_CS_OUT_STammdaten(df):
+    db_conn = verbinder()
+    db_conn.connect()
+    #save dfMitarbeiter to Azure SQL
+    df.to_sql('Mitarbeiter', db_conn.conn, if_exists='replace', index=False)
+    db_conn.dispose()
 # Externe Datenbanken
 def sql_datenLadenLabel():
     db_conn = verbinder()
@@ -170,6 +176,12 @@ def sql_datenLadenStammdaten():
     db_conn.connect()
     dfStammdaten = pd.read_sql('SELECT * FROM [data_materialmaster-MaterialMasterUnitOfMeasures]', db_conn.conn)
     return dfStammdaten
+def sql_datenLadenMaster_CS_OUT():
+    db_conn = verbinder()
+    db_conn.connect()
+    #load  only from dbo.MaterialMasterUnitOfMeasures if is in 'UnitOfMeasureId' == CS, OUT, D97
+    df = pd.read_sql('SELECT * FROM [data_materialmaster-MaterialMasterUnitOfMeasures] WHERE [UnitOfMeasure] IN (\'CS\', \'OUT\', \'D97\')', db_conn.conn)
+    return df
 def sql_datenLadenOder():
     db_conn = verbinder()
     db_conn.connect()

@@ -6,13 +6,16 @@ import datetime
 from Data_Class.DB_Daten_Agg import orderDatenAgg
 from Data_Class.wetter.api import getWetterBayreuth
 import plotly_express as px
-from Data_Class.DB_Daten_Agg import orderDatenAgg
+#from streamlit import caching
+#caching.clear_cache()
+
 
 
 class LIVE:
     
     heute  = datetime.date.today()
     morgen =heute + datetime.timedelta(days=1)
+
     def __init__(self,df):
         self.df = df
 
@@ -46,7 +49,7 @@ class LIVE:
         else:
             st.write("Sonstiges")
 
-def liveStatusPage(df):
+def liveStatusPage():
 
     ## Filter für Live AllSSCCLabelsPrinted Func ###
     def FilterNachDatum(day1, day2,df):
@@ -72,11 +75,10 @@ def liveStatusPage(df):
         colhead1, colhead2 ,colhead3, = st.columns(3)
         with colhead1:
             st.title("Live Status")
-        with colhead2:
-            
+        with colhead2:         
             a = st.button("Reload")
             if a : 
-                df = orderDatenAgg()
+                labeOrderDaten.clear()
         with colhead3:
             LIVE.wetter()
 
@@ -180,8 +182,12 @@ def liveStatusPage(df):
         spaltenName = st.selectbox('Spalte', userAuswahl)
         fig_Bar_Chart(df, spaltenName)     
     
-
-    
+    @st.experimental_memo
+    def labeOrderDaten():
+        df = orderDatenAgg()
+        return df
+    df = labeOrderDaten()
+   
     headerAndWetter()
 
     seldate= st.date_input('Datum')

@@ -58,7 +58,7 @@ hide_streamlit_style = """
                 }
                 </style>
                 """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+#st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 st.markdown("""
         <style>
                .css-18e3th9 {
@@ -87,10 +87,10 @@ img = Image.open('Data/img/logo.png', mode='r')
 # # def LadeLSDaten():
 # #     dfLS = pd.read_excel('Data/df.xlsx')
 # #     return dfLS
-#@st.cache(allow_output_mutation=True)
-def labeOrderDaten():
-    df = orderDatenAgg()
-    return df
+# @st.cache(allow_output_mutation=True)
+# def labeOrderDaten():
+#     df = orderDatenAgg()
+#     return df
 #@st.cache(allow_output_mutation=True)
 # def ladeLabelDaten():
 #     df = sql_datenLadenLabel()
@@ -118,9 +118,9 @@ if authentication_status == True:
     # erfolgreich eingelogt dann Code ausführen!
     # ----- gewählte Page Laden -----
     if sel_main_m == 'Live Status':
-        df = labeOrderDaten()
+        #df = labeOrderDaten()
         
-        liveStatusPage(df)
+        liveStatusPage()
         
     # if sel_main_m == 'Mitarbeiter':
     #     dfDaten = LadeBewegungsdaten()
@@ -144,8 +144,8 @@ if authentication_status == True:
     if sel_main_m == 'DDS':
         ddsPage()
     if sel_main_m == 'SAP WM Daten':
-        df = labeOrderDaten()
-        SAPWM.sap_wm_page(dfOrders=df)
+        
+        SAPWM.sap_wm_page()
 
 
         
