@@ -37,9 +37,11 @@ def stammdatenBearbeiten():
 
 def orderDatenAgg():
     heute  = datetime.date.today()
+    # heute plus 3 Tage
+    heute + datetime.timedelta(days=4)
     day2 = heute - datetime.timedelta(days=90)
-    #dfOrder = SQL.sql_datenLadenDatum(day2,heute,SQL.tabelle_DepotDEBYKNOrders,SQL.datumSpalteLSüber)
-    dfOrder = sql_datenLadenOder()
+    dfOrder = SQL.sql_datenLadenDatum(day2,heute,SQL.tabelle_DepotDEBYKNOrders,SQL.datumSpalteLSüber)
+    #dfOrder = sql_datenLadenOder()
     #dfOrder = sql_datenLadenDatum(day2,heute,'business_depotDEBYKN-DepotDEBYKNOrders')
     dfStammdaten = stammdatenBearbeiten()
     dfOrderItems = sql_datenLadenOderItems()
