@@ -101,7 +101,6 @@ def liveStatusPage(df):
             #---Lieferscheine---#            
             lieferscheine = df['SapOrderNumber'].nunique()
             st.write(f"Lieferscheine:  {lieferscheine}")
-
         with col2:
             st.subheader("Noch zu Picken")
             #---PicksOffen---#
@@ -161,13 +160,6 @@ def liveStatusPage(df):
         )
         st.plotly_chart(fig, use_container_width=True)
         
-        # fig = px.pie(df, names='PicksOffen', title='PickStatus')
-        # st.plotly_chart(fig)
-
-    
-
-
-
 
     def fig_Bar_Chart(df, spaltenName):
         a = df[spaltenName].mean()
