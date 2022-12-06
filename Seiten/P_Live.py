@@ -140,6 +140,28 @@ def liveStatusPage(df,dfL):
             lieferscheineFertig = lieferscheineFertig['SapOrderNumber'].nunique()
             st.write(f"Lieferscheine:  {lieferscheineFertig}")
 
+    def figPickStatusNachDepot(df):
+        df = df.groupby(['DeliveryDepot','AllSSCCLabelsPrinted']).agg({'Picks Gesamt':'sum'}).reset_index()
+        df['AllSSCCLabelsPrinted'] = df['AllSSCCLabelsPrinted'].replace({0:'Offen',1:'Fertig'})
+        fig = px.bar(df, x="DeliveryDepot", y="Picks Gesamt", color="AllSSCCLabelsPrinted", barmode="group")
+        fig.update_layout(
+            title="Picks Status nach Depot",
+            xaxis_title="Depot",
+            yaxis_title="Picks Gesamt",
+            font=dict(
+                family="Courier New, monospace",
+                size=18,
+                color="#7f7f7f"
+            )
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # fig = px.pie(df, names='PicksOffen', title='PickStatus')
+        # st.plotly_chart(fig)
+
+
+
+
     def fig_Bar_Chart(df, spaltenName):
         a = df[spaltenName].mean()
         df = df.groupby(['PlannedDate'])[spaltenName].mean().reset_index()
@@ -158,10 +180,7 @@ def liveStatusPage(df,dfL):
         spaltenName = st.selectbox('Spalte', userAuswahl)
         fig_Bar_Chart(df, spaltenName)     
     
-    def kundenPicks(df,dfL):
-        #dfKunden = df.groupby(['PartnerName', 'SapOrderNumber'],dropna =False)['Picks Gesamt'].sum().reset_index()
-        #st.dataframe(dfKunden)
-        return 
+
     
     headerAndWetter()
 
@@ -169,20 +188,13 @@ def liveStatusPage(df,dfL):
     if seldate:
         df = FilterNachDatum(seldate,seldate,df)
         df = df.fillna(0)
-        # dfapicksDepot = df.groupby(['PlannedDate','DeliveryDepot','Picks Gesamt'],dropna =False).sum().reset_index()
-        # dfOffen = df[df['AllSSCCLabelsPrinted'] == 0]
-        # dfapicksOffen = dfOffen.groupby(['PlannedDate','DeliveryDepot'],dropna =False)['Picks Gesamt'].sum().reset_index()
-        # dfaFertig = df[df['AllSSCCLabelsPrinted'] == 1]
-        # dfapicksFertig = dfaFertig.groupby(['PlannedDate','DeliveryDepot'],dropna =False)['Picks Gesamt'].sum().reset_index()
-        #dfL = FilterNachDatumLabel(seldate,seldate,dfL)
 
     pd.set_option("display.precision", 2)
     columnsKennzahlen(df)
+    figPickStatus(df)
 
     st.dataframe(df)
-    #fig_Bar_Chart(df,'Picks Gesamt')
-    kundenPicks(df,dfL)
 
 
-    #df = df[df['SapOrderNumber'].isin(selLs)]
+
 
