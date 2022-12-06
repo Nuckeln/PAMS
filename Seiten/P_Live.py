@@ -69,7 +69,7 @@ def liveStatusPage(df,dfL):
     def headerAndWetter():
         colhead1, colhead2 ,colhead3, = st.columns(3)
         with colhead1:
-            st.title("Live AllSSCCLabelsPrinted")
+            st.title("Live Status")
         with colhead2:
             st.header("")
         with colhead3:
@@ -93,6 +93,10 @@ def liveStatusPage(df,dfL):
             picksLEJ = picksLEJ['Picks Gesamt'].sum()
             picksLEJ = int(picksLEJ)
             st.write(f"Leipzig:  {picksLEJ}")
+            #---Lieferscheine---#            
+            lieferscheine = df['SapOrderNumber'].nunique()
+            st.write(f"Lieferscheine:  {lieferscheine}")
+
         with col2:
             st.subheader("Noch zu Picken")
             #---PicksOffen---#
@@ -110,6 +114,10 @@ def liveStatusPage(df,dfL):
             picksoffenLEJ = picksoffenLEJ['Picks Gesamt'].sum()
             picksoffenLEJ = int(picksoffenLEJ)
             st.write(f"Leipzig:  {picksoffenLEJ}")
+            #---LieferscheineOffen---#
+            lieferscheineOffen = df.loc[df['AllSSCCLabelsPrinted']==0]
+            lieferscheineOffen = lieferscheineOffen['SapOrderNumber'].nunique()
+            st.write(f"Lieferscheine:  {lieferscheineOffen}")
         with col3:
             st.subheader("Fertig")
             #---PicksFertig---#
@@ -127,7 +135,10 @@ def liveStatusPage(df,dfL):
             picksFertigLEJ = picksFertigLEJ['Picks Gesamt'].sum()
             picksFertigLEJ = int(picksFertigLEJ)
             st.write(f"Leipzig:  {picksFertigLEJ}")
-
+            #---LieferscheineFertig---#
+            lieferscheineFertig = df.loc[df['AllSSCCLabelsPrinted']==1]
+            lieferscheineFertig = lieferscheineFertig['SapOrderNumber'].nunique()
+            st.write(f"Lieferscheine:  {lieferscheineFertig}")
 
     def fig_Bar_Chart(df, spaltenName):
         a = df[spaltenName].mean()
