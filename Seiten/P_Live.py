@@ -46,7 +46,7 @@ class LIVE:
 
 def liveStatusPage(df,dfL):
 
-    ## Filter für Live Status Func ###
+    ## Filter für Live AllSSCCLabelsPrinted Func ###
     def FilterNachDatum(day1, day2,df):
         #df['PlannedDate'] = df['PlannedDate'].dt.strftime('%m/%d/%y')
         df['PlannedDate'] = df['PlannedDate'].astype('datetime64[ns]').dt.date
@@ -69,51 +69,65 @@ def liveStatusPage(df,dfL):
     def headerAndWetter():
         colhead1, colhead2 ,colhead3, = st.columns(3)
         with colhead1:
-            st.title("Live Status")
+            st.title("Live AllSSCCLabelsPrinted")
         with colhead2:
             st.header("")
         with colhead3:
             LIVE.wetter()
 
-    def columnsKennzahlen(df,dfL,dfapicksDepot,dfapicksOffen,dfapicksFertig):
+    def columnsKennzahlen(df):
         col1, col2, col3 = st.columns(3)
         with col1:
+            #---GesamtPicks---#
             st.subheader("Gesamt Picks Tag")
-            #dfapicksDepot = df.groupby(['DeliveryDepot'],dropna =False)['Picks Gesamt'].sum().reset_index()
-            pickges = dfapicksDepot['Picks Gesamt'].sum()
+            pickges = df['Picks Gesamt'].sum()
+            pickges = int(pickges)
             st.write(f"Gesamtvolumen:  {pickges}")
-            #---##---#
-            dfapicksDepotKNSTR = dfapicksDepot.loc[dfapicksDepot['DeliveryDepot']=='KNSTR']
-            picksStr = dfapicksDepotKNSTR['Picks Gesamt'].sum()
-            st.write(f"Stuttgart:  {picksStr}")
-            #---##---#
-            dfapicksDepotKNLEJ = dfapicksDepot.loc[dfapicksDepot['DeliveryDepot']=='KNLEJ']
-            picksLej = dfapicksDepotKNLEJ['Picks Gesamt'].sum()
-            st.write(f"Leipzig:  {picksLej}")
+            #---PicksSTR---#
+            picksSTR = df.loc[df['DeliveryDepot']=='KNSTR']
+            picksSTR = picksSTR['Picks Gesamt'].sum()
+            picksSTR = int(picksSTR)
+            st.write(f"Stuttgart:  {picksSTR}")
+            #---PicksLEJ---#
+            picksLEJ = df.loc[df['DeliveryDepot']=='KNLEJ']
+            picksLEJ = picksLEJ['Picks Gesamt'].sum()
+            picksLEJ = int(picksLEJ)
+            st.write(f"Leipzig:  {picksLEJ}")
         with col2:
             st.subheader("Noch zu Picken")
-            pickOffenges = dfapicksOffen['Picks Gesamt'].sum()
+            #---PicksOffen---#
+            pickOffenges = df.loc[df['AllSSCCLabelsPrinted']==0]
+            pickOffenges = pickOffenges['Picks Gesamt'].sum()
+            pickOffenges = int(pickOffenges)
             st.write(f"Gesamtvolumen:  {pickOffenges}")
-            #---##---#
-            dfapicksOffn = dfapicksOffn.loc[dfapicksOffn['DeliveryDepot']=='KNSTR']
-            picksoffenStr = dfapicksOffn['Picks Gesamt'].sum()
-            st.write(f"Stuttgart:  {picksoffenStr}")
-            #---##---#
-            dfapicksOffe = dfapicksOffe.loc[dfapicksOffe['DeliveryDepot']=='KNLEJ']
-            picksoffenLej = dfapicksOffe['Picks Gesamt'].sum()
-            st.write(f"Leipzig:  {picksoffenLej}")            
+            #---PicksOffenSTR---#
+            picksoffenSTR = df.loc[(df['AllSSCCLabelsPrinted']==0) & (df['DeliveryDepot']=='KNSTR')]
+            picksoffenSTR = picksoffenSTR['Picks Gesamt'].sum()
+            picksoffenSTR = int(picksoffenSTR)
+            st.write(f"Stuttgart:  {picksoffenSTR}")
+            #---PicksOffenLEJ---#
+            picksoffenLEJ = df.loc[(df['AllSSCCLabelsPrinted']==0) & (df['DeliveryDepot']=='KNLEJ')]
+            picksoffenLEJ = picksoffenLEJ['Picks Gesamt'].sum()
+            picksoffenLEJ = int(picksoffenLEJ)
+            st.write(f"Leipzig:  {picksoffenLEJ}")
         with col3:
             st.subheader("Fertig")
-            pickFertigges = dfapicksFertig['Picks Gesamt'].sum()
+            #---PicksFertig---#
+            pickFertigges = df.loc[df['AllSSCCLabelsPrinted']==1]
+            pickFertigges = pickFertigges['Picks Gesamt'].sum()
+            pickFertigges = int(pickFertigges)
             st.write(f"Gesamtvolumen:  {pickFertigges}")
-            #---##---#
-            dfapicks = dfapicksFertig.loc[dfapicksFertig['DeliveryDepot']=='KNSTR']
-            picksFertigStr = dfapicks['Picks Gesamt'].sum()
-            st.write(f"Stuttgart:  {picksFertigStr}")
-            #---##---#
-            dfapicksh = dfapicksFertig.loc[dfapicksFertig['DeliveryDepot']=='KNLEJ']
-            picksFertigLej = dfapicksh['Picks Gesamt'].sum()
-            st.write(f"Leipzig:  {picksFertigLej}")
+            #---PicksFertigSTR---#
+            picksFertigSTR = df.loc[(df['AllSSCCLabelsPrinted']==1) & (df['DeliveryDepot']=='KNSTR')]
+            picksFertigSTR = picksFertigSTR['Picks Gesamt'].sum()
+            picksFertigSTR = int(picksFertigSTR)
+            st.write(f"Stuttgart:  {picksFertigSTR}")
+            #---PicksFertigLEJ---#
+            picksFertigLEJ = df.loc[(df['AllSSCCLabelsPrinted']==1) & (df['DeliveryDepot']=='KNLEJ')]
+            picksFertigLEJ = picksFertigLEJ['Picks Gesamt'].sum()
+            picksFertigLEJ = int(picksFertigLEJ)
+            st.write(f"Leipzig:  {picksFertigLEJ}")
+
 
     def fig_Bar_Chart(df, spaltenName):
         a = df[spaltenName].mean()
@@ -128,20 +142,6 @@ def liveStatusPage(df,dfL):
         fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
 
         st.plotly_chart(fig, use_container_width=True)
-    
-    def fig_Bar_Chart2(df):
-        df = df.groupby(['PlannedDate'])['PicksGesamt', 'PicksOffen', 'PicksFertig'].mean().reset_index()
-        # add plotly bar chart with a as middelline 
-        fig = px.bar(df, x='PlannedDate', y=['PicksGesamt', 'PicksOffen', 'PicksFertig']) 
-        # fig.add_hline(y=a, line_dash="dash", line_color="red")
-        # # if value of spaltenName is higher than a, color the bar in red
-        # fig.update_traces(marker_color=np.where(df[spaltenName] > a, 'red', 'green'))
-        # # add total value of spaltenName to each bar
-        # fig.update_traces(texttemplate='%{text:.2s}', text=df[spaltenName])
-        # fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
-
-        st.plotly_chart(fig, use_container_width=True)
-
     def userBauDirDiagramm(df):
         userAuswahl = ['Amount of DNs',	'DESADV','Amount of picks',	'Amount of picks for next Day'	,'Volume available for next Day in %' ,'Amount transmissions w/o TPD' ,'Operational activities completed',]
         spaltenName = st.selectbox('Spalte', userAuswahl)
@@ -158,15 +158,16 @@ def liveStatusPage(df,dfL):
     if seldate:
         df = FilterNachDatum(seldate,seldate,df)
         df = df.fillna(0)
-        dfapicksDepot = df.groupby(['PlannedDate','DeliveryDepot'],dropna =False)['Picks Gesamt'].sum().reset_index()
-        dfOffen = df[df['AllSSCCLabelsPrinted'] == 0]
-        dfapicksOffen = dfOffen.groupby(['PlannedDate','DeliveryDepot'],dropna =False)['Picks Gesamt'].sum().reset_index()
-        dfaFertig = df[df['AllSSCCLabelsPrinted'] == 1]
-        dfapicksFertig = dfaFertig.groupby(['PlannedDate','DeliveryDepot'],dropna =False)['Picks Gesamt'].sum().reset_index()
+        # dfapicksDepot = df.groupby(['PlannedDate','DeliveryDepot','Picks Gesamt'],dropna =False).sum().reset_index()
+        # dfOffen = df[df['AllSSCCLabelsPrinted'] == 0]
+        # dfapicksOffen = dfOffen.groupby(['PlannedDate','DeliveryDepot'],dropna =False)['Picks Gesamt'].sum().reset_index()
+        # dfaFertig = df[df['AllSSCCLabelsPrinted'] == 1]
+        # dfapicksFertig = dfaFertig.groupby(['PlannedDate','DeliveryDepot'],dropna =False)['Picks Gesamt'].sum().reset_index()
         #dfL = FilterNachDatumLabel(seldate,seldate,dfL)
 
-    columnsKennzahlen(df,dfL,dfapicksDepot=dfapicksDepot,dfapicksOffen=dfapicksOffen,dfapicksFertig=dfapicksFertig)
-    fig_Bar_Chart2(df)
+    pd.set_option("display.precision", 2)
+    columnsKennzahlen(df)
+
     st.dataframe(df)
     #fig_Bar_Chart(df,'Picks Gesamt')
     kundenPicks(df,dfL)

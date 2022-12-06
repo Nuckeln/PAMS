@@ -103,6 +103,7 @@ def orderDatenAgg():
 
     #drop row frow df if isReturnDelivery = 1
     df = df[df['IsReturnDelivery'] == 0]
+    df = df.fillna(0)
     
 
 
