@@ -87,11 +87,11 @@ img = Image.open('Data/img/logo.png', mode='r')
 # # def LadeLSDaten():
 # #     dfLS = pd.read_excel('Data/df.xlsx')
 # #     return dfLS
-@st.cache(allow_output_mutation=True)
+#@st.cache(allow_output_mutation=True)
 def labeOrderDaten():
     df = orderDatenAgg()
     return df
-@st.cache(allow_output_mutation=True)
+#@st.cache(allow_output_mutation=True)
 def ladeLabelDaten():
     df = sql_datenLadenLabel()
     df['CreatedTimestamp'] = pd.to_datetime(df['CreatedTimestamp'])

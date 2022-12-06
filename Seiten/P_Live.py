@@ -6,6 +6,8 @@ import datetime
 from Data_Class.DB_Daten_Agg import orderDatenAgg
 from Data_Class.wetter.api import getWetterBayreuth
 import plotly_express as px
+from Data_Class.DB_Daten_Agg import orderDatenAgg
+
 
 class LIVE:
     
@@ -71,7 +73,10 @@ def liveStatusPage(df,dfL):
         with colhead1:
             st.title("Live Status")
         with colhead2:
-            st.header("")
+            
+            a = st.button("Reload")
+            if a : 
+                df = orderDatenAgg()
         with colhead3:
             LIVE.wetter()
 
@@ -159,6 +164,8 @@ def liveStatusPage(df,dfL):
         # fig = px.pie(df, names='PicksOffen', title='PickStatus')
         # st.plotly_chart(fig)
 
+    
+
 
 
 
@@ -175,6 +182,7 @@ def liveStatusPage(df,dfL):
         fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
 
         st.plotly_chart(fig, use_container_width=True)
+    
     def userBauDirDiagramm(df):
         userAuswahl = ['Amount of DNs',	'DESADV','Amount of picks',	'Amount of picks for next Day'	,'Volume available for next Day in %' ,'Amount transmissions w/o TPD' ,'Operational activities completed',]
         spaltenName = st.selectbox('Spalte', userAuswahl)
@@ -192,6 +200,7 @@ def liveStatusPage(df,dfL):
     pd.set_option("display.precision", 2)
     columnsKennzahlen(df)
     figPickStatusNachDepot(df)
+
 
     st.dataframe(df)
 
