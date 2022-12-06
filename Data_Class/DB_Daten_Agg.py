@@ -109,10 +109,9 @@ def orderDatenAgg():
   
     df = df[df['IsReturnDelivery'] == 0]
     df = df.fillna(0)
-    
-
-
-    #df = pd.merge(df, dfLabel, left_on='SapOrderNumber', right_on='SapOrderNumber', how='left')
+    #df[QuantityCheckTimestamp to string
+    df['QuantityCheckTimestamp'] = df['QuantityCheckTimestamp'].astype(str)
+    df['Source'] = df['Source'].astype(str)
 
     return df
 
