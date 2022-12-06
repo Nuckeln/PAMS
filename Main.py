@@ -119,8 +119,8 @@ if authentication_status == True:
     # ----- gewählte Page Laden -----
     if sel_main_m == 'Live Status':
         df = labeOrderDaten()
-        dfLabel = ladeLabelDaten()
-        liveStatusPage(df,dfLabel)
+        
+        liveStatusPage(df)
         
     # if sel_main_m == 'Mitarbeiter':
     #     dfDaten = LadeBewegungsdaten()
