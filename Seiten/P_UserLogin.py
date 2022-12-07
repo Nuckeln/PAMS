@@ -32,6 +32,12 @@ class Login:
             #erfolgreich geladen dann Code ausführen!
             return authentication_status
 
+        def newUser(self):
+            try:
+                if authenticator.register_user('Register user', preauthorization=False):
+                    st.success('User registered successfully')
+            except Exception as e:
+                st.error(e)
 
         # output==>
         #{'usernames': {'user1': {'name': 'name1', 'password': 'pwd1'}, 'user2': {'name': 'name2', 'password': 'pwd2'}}}

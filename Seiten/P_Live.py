@@ -51,7 +51,7 @@ class LIVE:
 
 def liveStatusPage():
 
-    @st.experimental_memo
+    #@st.experimental_memo
     def labeOrderDaten():
         df = orderDatenAgg()
         return df
@@ -170,15 +170,18 @@ def liveStatusPage():
             title="Picks Status nach Depot",
             xaxis_title="Depot",
             yaxis_title="Picks Gesamt",
-            font=dict(
-                family="Courier New, monospace",
-                size=18,
-                color="#7f7f7f"
+            
+        #     font=dict(
+        #         family="Courier New, monospace",
+        #         size=18,
+        #         color="#7f7f7f"
             )
-        )
+        fig.update_traces(texttemplate='%{text:.2s}', text=df['Picks Gesamt'])
+        fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
+
+        
         st.plotly_chart(fig, use_container_width=True)
         
-
     def fig_Bar_Chart(df, spaltenName):
         a = df[spaltenName].mean()
         df = df.groupby(['PlannedDate'])[spaltenName].mean().reset_index()
@@ -197,7 +200,31 @@ def liveStatusPage():
         userAuswahl = ['Amount of DNs',	'DESADV','Amount of picks',	'Amount of picks for next Day'	,'Volume available for next Day in %' ,'Amount transmissions w/o TPD' ,'Operational activities completed',]
         spaltenName = st.selectbox('Spalte', userAuswahl)
         fig_Bar_Chart(df, spaltenName)     
+
     
+    def figPicksKunde(df):
+        df = df.groupby(['PartnerName','SapOrderNumber',"AllSSCCLabelsPrinted"]).agg({'Picks Gesamt':'sum'}).reset_index()
+        #sort by picks and second by 
+        df = df.sort_values(by=['Picks Gesamt','AllSSCCLabelsPrinted'], ascending=False)
+        figTagKunden = px.bar(df, x="PartnerName", y="Picks Gesamt",  title="Kundenverteilung",hover_data=['Picks Gesamt','SapOrderNumber'],color='Picks Gesamt')
+        figTagKunden.update_traces(marker_color=np.where(df['AllSSCCLabelsPrinted'] == 1, 'green', 'red'))
+        figTagKunden.update_traces(texttemplate='%{text:.2s}', text=df['Picks Gesamt'])
+        figTagKunden.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
+        st.plotly_chart(figTagKunden,use_container_width=True)         
+
+    def figPicksBy_SAP_Order_CS_PAL(df):
+        df= df.groupby(['SapOrderNumber','PartnerName'])['Picks CS','Picks PAL','Picks OUT'].sum().reset_index()
+        #sort by Picks CS+ PAL + OUT 
+        df['Picks Gesamt'] = df['Picks CS'] + df['Picks PAL'] + df['Picks OUT']
+        df = df.sort_values(by=['Picks Gesamt'], ascending=False)
+        figPicksBySAPOrder = px.bar(df, x="SapOrderNumber", y=['Picks CS','Picks PAL','Picks OUT'], title="Picks SAP Order in CS/PAL/OUT")
+        figPicksBySAPOrder.update_layout(showlegend=False)
+        st.plotly_chart(figPicksBySAPOrder,use_container_width=True)
+    
+
+
+
+    #######------------------Main------------------########
 
    
     headerAndWetter()
@@ -209,11 +236,23 @@ def liveStatusPage():
 
     pd.set_option("display.precision", 2)
     columnsKennzahlen(df)
-    figPickStatusNachDepot(df)
 
+    figPickStatusNachDepot(df)  
+    figPicksBy_SAP_Order_CS_PAL(df)
+    figPicksKunde(df)
 
     st.dataframe(df)
 
 
+        # # df = df.groupby(['PartnerName','SapOrderNumber',"AllSSCCLabelsPrinted",'PicksCS','PicksPAL', 'Picks OUT']).agg({'Picks Gesamt':'sum'}).reset_index()
+        # # #sort by picks and second by 
+        # # df = df.sort_values(by=['Picks Gesamt','AllSSCCLabelsPrinted'], ascending=False)
+        # # figTagKunden = px.bar(df, x="PartnerName", y="Picks Gesamt",  title="Kundenverteilung",hover_data=['Picks Gesamt','SapOrderNumber'],color='Picks Gesamt')
+        # # figTagKunden.update_traces(marker_color=np.where(df['AllSSCCLabelsPrinted'] == 1, 'green', 'red'))
 
+
+
+
+        # st.plotly_chart(figTagKunden,use_container_width=True)         
+        # st.dataframe(df)
 

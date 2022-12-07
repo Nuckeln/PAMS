@@ -80,6 +80,8 @@ def orderDatenAgg():
     dfOrderItems['Picks CS'] = dfOrderItems.apply(f_OUT,axis=1)
 
     dfOrderItems['Picks Gesamt'] = dfOrderItems['Picks PAL'] + dfOrderItems['Picks CS'] + dfOrderItems['Picks OUT']
+    #dfKunden PartnerNo to string
+    dfKunden['PartnerNo'] = dfKunden['PartnerNo'].astype(str)
     df = pd.merge(dfOrder, dfOrderItems, left_on='SapOrderNumber', right_on='SapOrderNumber', how='left')
     df = pd.merge(df, dfKunden, left_on='PartnerNo', right_on='PartnerNo', how='left')
     # count in dfLabel sum of Status "printed" by SapOrderNumber

@@ -106,7 +106,7 @@ img = Image.open('Data/img/logo.png', mode='r')
 st.sidebar.image(img, width=300)
 
 with st.sidebar:
-    sel_main_m = option_menu('"Menu', ["Live Status",'DDS','Fehlverladungen','SAP WM Daten'], 
+    sel_main_m = option_menu('"Menu', ["Live Status",'DDS','Fehlverladungen','SAP WM Daten','Lagerbewegungen','Auftragsübersicht','Mitarbeiter','Forecast'], 
         icons=[''], 
         menu_icon="cast", )
 
@@ -121,6 +121,7 @@ if authentication_status == True:
         #df = labeOrderDaten()
         
         liveStatusPage()
+        
         
     # if sel_main_m == 'Mitarbeiter':
     #     dfDaten = LadeBewegungsdaten()
@@ -137,8 +138,8 @@ if authentication_status == True:
     # if sel_main_m == 'Forecast':
     #     pageForecast = Forecast()
     #     pageForecast.LadeForecast()
-    # if sel_main_m == 'Einstellungen': 
-    #     seiteLaden()
+    if sel_main_m == 'Einstellungen': 
+        seiteLaden()
     if sel_main_m == 'Fehlverladungen':
         fehlverladungenPage()
     if sel_main_m == 'DDS':

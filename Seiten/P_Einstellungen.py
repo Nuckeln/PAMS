@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np
 from streamlit_option_menu import option_menu
 from Test.toFeather import *
-from Data_Class.SQL import datenLadenMitarbeiter , datenSpeichernMitarbeiter , createnewTable
-
+from Data_Class.SQL import datenLadenMitarbeiter , datenSpeichernMitarbeiter , createnewTable, datenLadenUser, updateUser
+import streamlit_authenticator as stauth
 
 class Einstellungen:
 
@@ -23,7 +23,22 @@ class Einstellungen:
     def ich():
         st.write("Ich")
 
-
+        with st.form("User Anlegen"):
+            df=datenLadenUser()
+            neuname = st.text_input("name",key='name')
+            neuuser = st.text_input("user",key='user')
+            neupassword = st.text_input("password",key='password')
+            # funktion = st.selectbox("Funktion",["Operativ",'Administration','Management'],key='funktion')
+            # rechte = st.selectbox("Rechte", ['1', '2','3','4','5'], key='rechte')
+            
+            X = st.form_submit_button("Speichern")
+            if X:
+                hasched_passwords = stauth.Hasher(neupassword).generate()
+                #df = df.append({'name':name,'username':user,'password':hasched_passwords,'funktion':funktion,'rechte':rechte},ignore_index=True)
+                df = df.append({'name':neuname,'username':neuuser,'password':hasched_passwords},ignore_index=True)
+                updateUser(df)
+                st.success("User erfolgreich angelegt")
+        st.dataframe(df) 
 
     def mitarbeiterPflegen():
         #dfMitarbeiter = pd.read_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather') 

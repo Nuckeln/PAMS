@@ -127,6 +127,11 @@ def datenLadenUser():
     df= pd.read_sql('SELECT * FROM [user]', db_conn.conn)
     db_conn.dispose()
     return df
+def updateUser(df):
+    db_conn = verbinder()
+    db_conn.connect()
+    df.to_sql('user', db_conn.conn, if_exists='replace', index=False)
+    db_conn.dispose()
 
 def sql_datenLadenMLGT():
     db_conn = verbinder()
@@ -198,7 +203,7 @@ def sql_datenLadenOderItems():
 def sql_datenLadenKunden():
     db_conn = verbinder()
     db_conn.connect()
-    df = pd.read_sql('SELECT * FROM [business_depotDEBYKN-DepotOrderDESADVMappings]', db_conn.conn)
+    df = pd.read_sql('SELECT * FROM [Kunden_mit_Packinfos]', db_conn.conn)
     db_conn.dispose()
     return df  
 
