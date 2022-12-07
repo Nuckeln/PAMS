@@ -51,6 +51,21 @@ class LIVE:
 
 def liveStatusPage():
 
+    @st.experimental_memo
+    def labeOrderDaten():
+        df = orderDatenAgg()
+        return df
+
+
+    def labeOrderDaten2():
+        df = orderDatenAgg()
+        return df
+
+    df = labeOrderDaten()    
+
+    df = labeOrderDaten()
+
+
     ## Filter für Live AllSSCCLabelsPrinted Func ###
     def FilterNachDatum(day1, day2,df):
         #df['PlannedDate'] = df['PlannedDate'].dt.strftime('%m/%d/%y')
@@ -78,7 +93,8 @@ def liveStatusPage():
         with colhead2:         
             a = st.button("Reload")
             if a : 
-                labeOrderDaten.clear()
+                st.experimental_memo.clear()
+                df = labeOrderDaten2()
         with colhead3:
             LIVE.wetter()
 
@@ -182,11 +198,7 @@ def liveStatusPage():
         spaltenName = st.selectbox('Spalte', userAuswahl)
         fig_Bar_Chart(df, spaltenName)     
     
-    @st.experimental_memo
-    def labeOrderDaten():
-        df = orderDatenAgg()
-        return df
-    df = labeOrderDaten()
+
    
     headerAndWetter()
 
