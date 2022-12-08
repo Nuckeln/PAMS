@@ -38,6 +38,3 @@ class Login:
                     st.success('User registered successfully')
             except Exception as e:
                 st.error(e)
-
-        # output==>
-        #{'usernames': {'user1': {'name': 'name1', 'password': 'pwd1'}, 'user2': {'name': 'name2', 'password': 'pwd2'}}}

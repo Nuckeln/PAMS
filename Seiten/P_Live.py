@@ -56,13 +56,6 @@ def liveStatusPage():
         df = orderDatenAgg()
         return df
 
-
-    def labeOrderDaten2():
-        df = orderDatenAgg()
-        return df
-
-    df = labeOrderDaten()    
-
     df = labeOrderDaten()
 
 
