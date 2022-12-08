@@ -75,11 +75,7 @@ def liveStatusPage():
         colhead1, colhead2 ,colhead3, = st.columns(3)
         with colhead1:
             st.title("Live Status")
-        with colhead2:         
-            a = st.button("Reload")
-            if a : 
-                st.experimental_memo.clear()
-                df = labeOrderDaten2()
+        
         with colhead3:
             LIVE.wetter()
 
