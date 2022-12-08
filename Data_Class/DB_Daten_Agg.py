@@ -38,7 +38,7 @@ def orderDatenAgg():
     heute  = datetime.date.today()
     # heute plus 3 Tage
     morgen =heute + datetime.timedelta(days=3)
-    day2 = heute - datetime.timedelta(days=90)
+    day2 = heute - datetime.timedelta(days=10)
     dfOrder = SQL.sql_datenLadenDatum(day2,morgen,SQL.tabelle_DepotDEBYKNOrders,SQL.datumSpalteLSüber)
     #dfOrder = sql_datenLadenOder()
     #dfOrder = sql_datenLadenDatum(day2,heute,'business_depotDEBYKN-DepotDEBYKNOrders')
