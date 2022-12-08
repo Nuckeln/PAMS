@@ -14,7 +14,7 @@ import plotly_express as px
 class LIVE:
     
     heute  = datetime.date.today()
-    morgen =heute + datetime.timedelta(days=1)
+    morgen =heute + datetime.timedelta(days=3)
 
     def __init__(self,df):
         self.df = df
@@ -50,14 +50,6 @@ class LIVE:
             st.write("Sonstiges")
 
 def liveStatusPage():
-
-    #@st.experimental_memo
-    def labeOrderDaten():
-        df = orderDatenAgg()
-        return df
-
-    df = labeOrderDaten()
-
 
     ## Filter für Live AllSSCCLabelsPrinted Func ###
     def FilterNachDatum(day1, day2,df):
@@ -155,6 +147,26 @@ def liveStatusPage():
             lieferscheineFertig = lieferscheineFertig['SapOrderNumber'].nunique()
             st.write(f"Lieferscheine:  {lieferscheineFertig}")
 
+    ## Plotly Func ###
+    def userBauDirDiagramm(df):
+        userAuswahl = ['Amount of DNs',	'DESADV','Amount of picks',	'Amount of picks for next Day'	,'Volume available for next Day in %' ,'Amount transmissions w/o TPD' ,'Operational activities completed',]
+        spaltenName = st.selectbox('Spalte', userAuswahl)
+        fig_Bar_Chart(df, spaltenName)     
+
+    def fig_Bar_Chart(df, spaltenName):
+        a = df[spaltenName].mean()
+        df = df.groupby(['PlannedDate'])[spaltenName].mean().reset_index()
+        # add plotly bar chart with a as middelline 
+        fig = px.bar(df, x='PlannedDate', y=df[spaltenName], title=spaltenName)
+        fig.add_hline(y=a, line_dash="dash", line_color="red")
+        # if value of spaltenName is higher than a, color the bar in red
+        fig.update_traces(marker_color=np.where(df[spaltenName] > a, 'red', 'green'))
+        # add total value of spaltenName to each bar
+        fig.update_traces(texttemplate='%{text:.2s}', text=df[spaltenName])
+        fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
+
+        st.plotly_chart(fig, use_container_width=True)
+   
     def figPickStatusNachDepot(df):
         df = df.groupby(['DeliveryDepot','AllSSCCLabelsPrinted']).agg({'Picks Gesamt':'sum'}).reset_index()
         df['AllSSCCLabelsPrinted'] = df['AllSSCCLabelsPrinted'].replace({0:'Offen',1:'Fertig'})
@@ -173,28 +185,8 @@ def liveStatusPage():
         fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
 
         
-        st.plotly_chart(fig, use_container_width=True)
-        
-    def fig_Bar_Chart(df, spaltenName):
-        a = df[spaltenName].mean()
-        df = df.groupby(['PlannedDate'])[spaltenName].mean().reset_index()
-        # add plotly bar chart with a as middelline 
-        fig = px.bar(df, x='PlannedDate', y=df[spaltenName], title=spaltenName)
-        fig.add_hline(y=a, line_dash="dash", line_color="red")
-        # if value of spaltenName is higher than a, color the bar in red
-        fig.update_traces(marker_color=np.where(df[spaltenName] > a, 'red', 'green'))
-        # add total value of spaltenName to each bar
-        fig.update_traces(texttemplate='%{text:.2s}', text=df[spaltenName])
-        fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
-
-        st.plotly_chart(fig, use_container_width=True)
-    
-    def userBauDirDiagramm(df):
-        userAuswahl = ['Amount of DNs',	'DESADV','Amount of picks',	'Amount of picks for next Day'	,'Volume available for next Day in %' ,'Amount transmissions w/o TPD' ,'Operational activities completed',]
-        spaltenName = st.selectbox('Spalte', userAuswahl)
-        fig_Bar_Chart(df, spaltenName)     
-
-    
+        st.plotly_chart(fig, use_container_width=True)        
+ 
     def figPicksKunde(df):
         df = df.groupby(['PartnerName','SapOrderNumber',"AllSSCCLabelsPrinted"]).agg({'Picks Gesamt':'sum'}).reset_index()
         #sort by picks and second by 
@@ -215,11 +207,10 @@ def liveStatusPage():
         st.plotly_chart(figPicksBySAPOrder,use_container_width=True)
     
 
-
-
     #######------------------Main------------------########
+    ##TODO Funktion orderDatenAgg() Datum 
+    df = orderDatenAgg()
 
-   
     headerAndWetter()
 
     seldate= st.date_input('Datum')
@@ -236,16 +227,4 @@ def liveStatusPage():
 
     st.dataframe(df)
 
-
-        # # df = df.groupby(['PartnerName','SapOrderNumber',"AllSSCCLabelsPrinted",'PicksCS','PicksPAL', 'Picks OUT']).agg({'Picks Gesamt':'sum'}).reset_index()
-        # # #sort by picks and second by 
-        # # df = df.sort_values(by=['Picks Gesamt','AllSSCCLabelsPrinted'], ascending=False)
-        # # figTagKunden = px.bar(df, x="PartnerName", y="Picks Gesamt",  title="Kundenverteilung",hover_data=['Picks Gesamt','SapOrderNumber'],color='Picks Gesamt')
-        # # figTagKunden.update_traces(marker_color=np.where(df['AllSSCCLabelsPrinted'] == 1, 'green', 'red'))
-
-
-
-
-        # st.plotly_chart(figTagKunden,use_container_width=True)         
-        # st.dataframe(df)
 
