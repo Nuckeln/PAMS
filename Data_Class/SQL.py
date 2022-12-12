@@ -59,7 +59,11 @@ class SQL_TabellenLadenBearbeiten:
     
     tabelle_DepotDEBYKNOrders = 'business_depotDEBYKN-DepotDEBYKNOrders'
     datumSpalteLSüber = 'CreatedTimeStamp'
+    '''Wann wurde der Lieferschein von HH übergeben'''
+    datumplannedDate = 'PlannedDate'
+    '''Wann sollte der Lieferschein verladen werden zum Depot werden'''
     tabelle_DepotDEBYKNOrderItems = 'business_depotDEBYKN-DepotDEBYKNOrderItems'
+    tabelleSSCCLabel = 'business_depotDEBYKN-DepotOrderDEBYKN_SSCCs'
 
 
     def verbinder():
@@ -84,14 +88,30 @@ class SQL_TabellenLadenBearbeiten:
         'business_depotDEBYKN-DepotDEBYKNOrders',
         'data_materialmaster-MaterialMasterUnitOfMeasures'''
         
-        sqlQuery = f"SELECT * FROM [{tabellenName}] WHERE [{datumsSpalte}] BETWEEN '{day1}' AND '{day2}'"
+        sqlQuery = f"SELECT * FROM [{tabellenName}] WHERE {datumsSpalte} BETWEEN '{day1}' AND '{day2}'"
         db_conn = verbinder()
         db_conn.connect()
         df = pd.read_sql(sqlQuery, db_conn.conn)
         db_conn.dispose()
         return df
 
-    
+    def sql_Stammdaten():
+        db_conn = verbinder()
+        db_conn.connect()
+        df = pd.read_sql('SELECT [UnitOfMeasure],[MaterialNumber], [NumeratorToBaseUnitOfMeasure], [DenominatorToBaseUnitOfMeasure] FROM [data_materialmaster-MaterialMasterUnitOfMeasures] WHERE [UnitOfMeasure] IN (\'CS\', \'OUT\', \'D97\')', db_conn.conn)
+        db_conn.dispose()
+        return df
+
+    def sql_datenLadenItems(orders):
+        # order is a list of numbers from dataframe now we need to get the items from the SapOrderNumber
+        
+        db_conn = verbinder()
+        db_conn.connect()
+        df = pd.read_sql(f"SELECT * FROM [business_depotDEBYKN-DepotDEBYKNOrderItems] WHERE [SapOrderNumber] IN {(orders)}", db_conn.conn)
+        db_conn.dispose()
+        return df
+
+
 
 def verbinderTestServer():
 
@@ -184,7 +204,7 @@ def sql_datenLadenStammdaten():
 def sql_datenLadenMaster_CS_OUT():
     db_conn = verbinder()
     db_conn.connect()
-    #load  only from dbo.MaterialMasterUnitOfMeasures if is in 'UnitOfMeasureId' == CS, OUT, D97
+    #load  only from dbo.MaterialMasterUnitOfMeasures if is in 'UnitOfMeasureId' == CS, OUT, D97 and load only Columns [UnitOfMeasure],[MaterialNumber],[SnapshotId],[NumeratorToBaseUnitOfMeasure],[DenominatorToBaseUnitOfMeasure]
     df = pd.read_sql('SELECT * FROM [data_materialmaster-MaterialMasterUnitOfMeasures] WHERE [UnitOfMeasure] IN (\'CS\', \'OUT\', \'D97\')', db_conn.conn)
     return df
 def sql_datenLadenOder():

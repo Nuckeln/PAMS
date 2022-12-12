@@ -2,118 +2,176 @@ from distutils.log import info
 import datetime
 import pandas as pd
 import numpy as np
-from Data_Class.SQL import  sql_datenLadenStammdaten,sql_datenLadenKunden,sql_datenLadenOderItems,sql_datenLadenLabel, sql_datenLadenMaster_CS_OUT,datenSpeichern_CS_OUT_STammdaten
+from Data_Class.SQL import  sql_datenLadenStammdaten,sql_datenLadenKunden, sql_datenLadenMaster_CS_OUT,sql_datenLadenOderItems
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 
-def orderDatenAgg():
-    dfStammdaten = sql_datenLadenMaster_CS_OUT()
+class DatenAgregieren():
+    '''Klasse zum Agregieren von Daten aus der Datenbank
+    Datum eingrenzen? 
+    '''
+    def __init__(self):
+        self.heute
 
-    dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]
-    dfStammdaten['MaterialNumber'] = dfStammdaten['MaterialNumber'].str.replace('0000000000', '')
-    dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]   
-    def f_CS(row):
-        try:
-            if row.UnitOfMeasure == 'CS':          
-                return row.NumeratorToBaseUnitOfMeasure / row.DenominatorToBaseUnitOfMeasure
-        except:
-            return np.nan
-    def f_PAL(row):
-        try:
-            if row.UnitOfMeasure == 'D97':
-                return row.NumeratorToBaseUnitOfMeasure / row.DenominatorToBaseUnitOfMeasure
-        except:
-            return np.nan
-    def f_OUT(row):
-        try:
-            if row.UnitOfMeasure == 'OUT':
-                return row.NumeratorToBaseUnitOfMeasure / row.DenominatorToBaseUnitOfMeasure
-        except:
-            return np.nan
-    dfStammdaten['OUT'] = dfStammdaten.apply(f_OUT,axis=1)
-    dfStammdaten['CS'] = dfStammdaten.apply(f_CS,axis=1)
-    dfStammdaten['PAL'] = dfStammdaten.apply(f_PAL,axis=1)
-    #dfStammdaten.to_sql('CS_OUT_PAL_MaterialMasterUnitOfMeasures', SQL.db_conn.conn, if_exists='replace', index=False)
-
-
-    heute  = datetime.date.today()
+    heute = datetime.date.today()
+    #heute = heute- datetime.timedelta(days=3)
     # heute plus 3 Tage
-    morgen =heute + datetime.timedelta(days=3)
+    morgen = heute + datetime.timedelta(days=3)
+    # heute minus 10 Tage
     day2 = heute - datetime.timedelta(days=10)
-    dfOrder = SQL.sql_datenLadenDatum(day2,morgen,SQL.tabelle_DepotDEBYKNOrders,SQL.datumSpalteLSüber)
-    #dfOrder = sql_datenLadenOder()
-    #dfOrder = sql_datenLadenDatum(day2,heute,'business_depotDEBYKN-DepotDEBYKNOrders')
+    # heute minus 3 Tage
+    vorgestern = heute - datetime.timedelta(days=90)
 
-    dfOrderItems = sql_datenLadenOderItems()
-    dfKunden = sql_datenLadenKunden()
-    dfLabel = sql_datenLadenLabel()
+    def orderDatenLines():
 
-    dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].astype(str)
-    dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].str.replace('0000000000', '')
-    dfOrderItems = pd.merge(dfOrderItems, dfStammdaten[dfStammdaten['UnitOfMeasure'] == 'CS'][['MaterialNumber','CS']],left_on='MaterialNumber', right_on='MaterialNumber',how='left')
-    dfOrderItems = pd.merge(dfOrderItems, dfStammdaten[dfStammdaten['UnitOfMeasure'] == 'D97'][['MaterialNumber','PAL']],left_on='MaterialNumber', right_on='MaterialNumber',how='left')
-    dfOrderItems = pd.merge(dfOrderItems, dfStammdaten[dfStammdaten['UnitOfMeasure'] == 'OUT'][['MaterialNumber','OUT']],left_on='MaterialNumber', right_on='MaterialNumber',how='left')
+        ##------------------ Stammdaten Laden und berechnen ------------------##
+        dfStammdaten = sql_datenLadenMaster_CS_OUT()
+        dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]
+        dfStammdaten['MaterialNumber'] = dfStammdaten['MaterialNumber'].str.replace('0000000000', '')
+        dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]   
+        def f_CS(row):
+            try:
+                if row.UnitOfMeasure == 'CS':          
+                    return row.NumeratorToBaseUnitOfMeasure / row.DenominatorToBaseUnitOfMeasure
+            except:
+                return np.nan
+        def f_PAL(row):
+            try:
+                if row.UnitOfMeasure == 'D97':
+                    return row.NumeratorToBaseUnitOfMeasure / row.DenominatorToBaseUnitOfMeasure
+            except:
+                return np.nan
+        def f_OUT(row):
+            try:
+                if row.UnitOfMeasure == 'OUT':
+                    return row.NumeratorToBaseUnitOfMeasure / row.DenominatorToBaseUnitOfMeasure
+            except:
+                return np.nan
+        dfStammdaten['OUT'] = dfStammdaten.apply(f_OUT,axis=1)
+        dfStammdaten['CS'] = dfStammdaten.apply(f_CS,axis=1)
+        dfStammdaten['PAL'] = dfStammdaten.apply(f_PAL,axis=1)
 
-    dfOrderItems['O'] = dfOrderItems['Outers'] * dfOrderItems['OUT']
-    dfOrderItems['PicksPAL'] = dfOrderItems.O / dfOrderItems.PAL
-    dfOrderItems['PicksCS'] = dfOrderItems.CorrespondingCartons 
-    dfOrderItems['Picks OUT'] = dfOrderItems.CorrespondingOuters
-    #Bereinige Berechnungen der Picks 
-    dfOrderItems['PicksPAL'] = dfOrderItems['PicksPAL'].fillna(0) 
-    dfOrderItems['O'] = dfOrderItems.O.fillna(0) 
-    dfOrderItems['Picks OUT'] = dfOrderItems['Picks OUT'].fillna(0) 
+        ##------------------ Order Date von DB Laden ------------------##
+        dfOrder = SQL.sql_datenLadenDatum(DatenAgregieren.heute,DatenAgregieren.heute,SQL.tabelle_DepotDEBYKNOrders,SQL.datumplannedDate)
+        ##------------------ Order Items von DB Laden ------------------##
+        dfOrderItems = sql_datenLadenOderItems()
+        ##------------------ Kunden von DB Laden ------------------##
+        dfKunden = sql_datenLadenKunden()
+        ##------------------ Merge Items und Stammdaten ------------------##
+        dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].astype(str)
+        dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].str.replace('0000000000', '')
+        dfOrderItems = pd.merge(dfOrderItems, dfStammdaten[dfStammdaten['UnitOfMeasure'] == 'CS'][['MaterialNumber','CS']],left_on='MaterialNumber', right_on='MaterialNumber',how='left')
+        dfOrderItems = pd.merge(dfOrderItems, dfStammdaten[dfStammdaten['UnitOfMeasure'] == 'D97'][['MaterialNumber','PAL']],left_on='MaterialNumber', right_on='MaterialNumber',how='left')
+        dfOrderItems = pd.merge(dfOrderItems, dfStammdaten[dfStammdaten['UnitOfMeasure'] == 'OUT'][['MaterialNumber','OUT']],left_on='MaterialNumber', right_on='MaterialNumber',how='left')
 
-    # Pal kleiner als 1 bereinigen
-    def f_PAL(row):
-            if row.PicksPAL < 1:
-                return 0
-            else:
-                return row.PicksPAL
+        dfOrderItems['O'] = dfOrderItems['Outers'] * dfOrderItems['OUT']
+        dfOrderItems['PicksPAL'] = dfOrderItems.O / dfOrderItems.PAL
+        dfOrderItems['PicksCS'] = dfOrderItems.CorrespondingCartons 
+        dfOrderItems['Picks OUT'] = dfOrderItems.CorrespondingOuters
+        #Bereinige Berechnungen der Picks 
+        dfOrderItems['PicksPAL'] = dfOrderItems['PicksPAL'].fillna(0) 
+        dfOrderItems['O'] = dfOrderItems.O.fillna(0) 
+        dfOrderItems['Picks OUT'] = dfOrderItems['Picks OUT'].fillna(0) 
 
-    dfOrderItems['Picks PAL'] = dfOrderItems.apply(f_PAL,axis=1)
+        # Pal kleiner als 1 bereinigen
+        def f_PAL(row):
+                if row.PicksPAL < 1:
+                    return 0
+                else:
+                    return row.PicksPAL
 
-    def f_OUT(row):
-            if row.PicksPAL >= 1:
-                return row.CorrespondingCartons  - ((row.PicksPAL * row.PAL) / row.CS)
-            else:
-                return row.CorrespondingCartons
+        dfOrderItems['Picks PAL'] = dfOrderItems.apply(f_PAL,axis=1)
 
-    dfOrderItems['Picks CS'] = dfOrderItems.apply(f_OUT,axis=1)
+        def f_OUT(row):
+                if row.PicksPAL >= 1:
+                    return row.CorrespondingCartons  - ((row.PicksPAL * row.PAL) / row.CS)
+                else:
+                    return row.CorrespondingCartons
 
-    dfOrderItems['Picks Gesamt'] = dfOrderItems['Picks PAL'] + dfOrderItems['Picks CS'] + dfOrderItems['Picks OUT']
-    #dfKunden PartnerNo to string
-    dfKunden['PartnerNo'] = dfKunden['PartnerNo'].astype(str)
-    df = pd.merge(dfOrder, dfOrderItems, left_on='SapOrderNumber', right_on='SapOrderNumber', how='left')
-    df = pd.merge(df, dfKunden, left_on='PartnerNo', right_on='PartnerNo', how='left')
-    # count in dfLabel sum of Status "printed" by SapOrderNumber
-    dfLabel = dfLabel[dfLabel['Status'] == 'printed']
-    dfLabel = dfLabel.groupby(['SapOrderNumber']).size().reset_index(name='LabelCount')
-    df['PicksGesamt'] = df['Picks Gesamt']
+        dfOrderItems['Picks CS'] = dfOrderItems.apply(f_OUT,axis=1)
 
-    def f_Fertig(row):
-        try:
-            if row.AllSSCCLabelsPrinted == 1:
-                return row.PicksGesamt
-        except:
-            return np.nan
-    df['PicksFertig'] = df.apply(f_Fertig,axis=1)
-    def f_Offen(row):
-        try:
-            if row.AllSSCCLabelsPrinted == 0:
-                return row.PicksGesamt
-        except:
-            return np.nan
-    df['PicksOffen'] = df.apply(f_Offen,axis=1)
+        dfOrderItems['Picks Gesamt'] = dfOrderItems['Picks PAL'] + dfOrderItems['Picks CS'] + dfOrderItems['Picks OUT']
+        #dfKunden PartnerNo to string
+        dfKunden['PartnerNo'] = dfKunden['PartnerNo'].astype(str)
 
-    #drop row frow df if isReturnDelivery = 1
-    # convert  IDocNumberDESADV to string
-    df['IDocNumberDESADV'] = df['IDocNumberDESADV'].astype(str)
+        # applying merge
 
-    df = df[df['IsReturnDelivery'] == 0]
-    df = df.fillna(0)
-    #df[QuantityCheckTimestamp to string
-    df['QuantityCheckTimestamp'] = df['QuantityCheckTimestamp'].astype(str)
-    df['Source'] = df['Source'].astype(str)
-    df['UnloadingListIdentifier'] = df['UnloadingListIdentifier'].astype(str)
+        df = pd.merge(dfOrder, dfOrderItems, left_on='SapOrderNumber', right_on='SapOrderNumber', how='left')
+        df = pd.merge(df, dfKunden[['PartnerNo', 'PartnerName']], on='PartnerNo', how='left')
 
 
-    return df
+        df['PicksGesamt'] = df['Picks Gesamt']
+
+        def f_Fertig(row):
+            try:
+                if row.AllSSCCLabelsPrinted == 1:
+                    return row.PicksGesamt
+            except:
+                return np.nan
+        df['PicksFertig'] = df.apply(f_Fertig,axis=1)
+        def f_Offen(row):
+            try:
+                if row.AllSSCCLabelsPrinted == 0:
+                    return row.PicksGesamt
+            except:
+                return np.nan
+        df['PicksOffen'] = df.apply(f_Offen,axis=1)
+
+        #drop row frow df if isReturnDelivery = 1
+        # convert  IDocNumberDESADV to string
+        df['IDocNumberDESADV'] = df['IDocNumberDESADV'].astype(str)
+
+        df = df[df['IsReturnDelivery'] == 0]
+        df = df.fillna(0)
+        #df[QuantityCheckTimestamp to string
+        df['QuantityCheckTimestamp'] = df['QuantityCheckTimestamp'].astype(str)
+        df['Source'] = df['Source'].astype(str)
+        df['UnloadingListIdentifier'] = df['UnloadingListIdentifier'].astype(str)
+        #NiceLabelTransmissionState_TimeStamp to string
+        df['NiceLabelTransmissionState_TimeStamp'] = df['NiceLabelTransmissionState_TimeStamp'].astype(str)
+
+        #createnewTable(df,'tabelle_OrdersBerechnet')
+
+
+        return df
+
+    def oderDaten(df):
+        #df = DatenAgregieren.orderDatenLines()
+        dfLabel = SQL.sql_datenLadenDatum(DatenAgregieren.vorgestern, DatenAgregieren.morgen ,SQL.tabelleSSCCLabel,'CreatedTimestamp')       
+        df1 = df
+            
+        df = df.groupby(['PlannedDate','PartnerName','SapOrderNumber',"AllSSCCLabelsPrinted",'DeliveryDepot']).agg({'Picks Gesamt':'sum'}).reset_index()
+        # add column with CreatedTimestamp from df1 to df by first hit of SapOrderNumber
+        df['Lieferschein erhalten'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['CreatedTimestamp'].iloc[0])
+        df['Fertiggestellt'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['QuantityCheckTimestamp'].iloc[0])
+        df['Truck Kennzeichen'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['UnloadingListIdentifier'].iloc[0])
+        # sum for each in df.SapOrderNumber of df1'Picks CS'  with same SapOrderNumber
+        df['Picks Karton'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['Picks CS'].sum())
+        df['Picks Paletten'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['Picks PAL'].sum())
+        df['Picks Stangen'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['Picks OUT'].sum())
+        # sum for each in df.SapOrderNumber of df1'offen Picks CS'  with same SapOrderNumber and AllSSCCLabelsPrinted = 0
+        df['Picks Karton offen'] = df['SapOrderNumber'].apply(lambda x: df1.loc[(df1['SapOrderNumber'] == x) & (df1['AllSSCCLabelsPrinted'] == 0)]['Picks CS'].sum())
+        df['Picks Paletten offen'] = df['SapOrderNumber'].apply(lambda x: df1.loc[(df1['SapOrderNumber'] == x) & (df1['AllSSCCLabelsPrinted'] == 0)]['Picks PAL'].sum())
+        df['Picks Stangen offen'] = df['SapOrderNumber'].apply(lambda x: df1.loc[(df1['SapOrderNumber'] == x) & (df1['AllSSCCLabelsPrinted'] == 0)]['Picks OUT'].sum())
+        df['Picks Karton fertig'] = df['SapOrderNumber'].apply(lambda x: df1.loc[(df1['SapOrderNumber'] == x) & (df1['AllSSCCLabelsPrinted'] == 1)]['Picks CS'].sum())
+        df['Picks Paletten fertig'] = df['SapOrderNumber'].apply(lambda x: df1.loc[(df1['SapOrderNumber'] == x) & (df1['AllSSCCLabelsPrinted'] == 1)]['Picks PAL'].sum())
+        df['Picks Stangen fertig'] = df['SapOrderNumber'].apply(lambda x: df1.loc[(df1['SapOrderNumber'] == x) & (df1['AllSSCCLabelsPrinted'] == 1)]['Picks OUT'].sum())
+
+
+
+        #df PartnerName, SapOrderNumber, AllSSCCLabelsPrinted, Picks Gesamt to str
+        df['PartnerName'] = df['PartnerName'].astype(str)
+        df['SapOrderNumber'] = df['SapOrderNumber'].astype(str)
+        #df['AllSSCCLabelsPrinted'] = df['AllSSCCLabelsPrinted'].astype(str)
+        #df['Picks Gesamt'] to int
+        df['Picks Gesamt'] = df['Picks Gesamt'].astype(int)
+        # count for each in df.SapOrderNumber how many D97 entrys are in dfLabel.UnitOfMeasure with same SapOrderNumber and ParentID = null
+        df['Fertige Paletten'] = df['SapOrderNumber'].apply(lambda x: dfLabel[(dfLabel['UnitOfMeasure'] == 'D97') & (dfLabel['ParentID'].isnull())].loc[dfLabel['SapOrderNumber'] == x].shape[0])
+        #df['Paletten Label'] = df['SapOrderNumber'].apply(lambda x: dfLabel[dfLabel['UnitOfMeasure'] == 'D97'].loc[dfLabel['SapOrderNumber'] == x].shape[0])
+        
+        return df
+
+
+    def orderDatenGo():
+        df = DatenAgregieren.orderDatenLines()
+        df = DatenAgregieren.oderDaten(df)
+        return df

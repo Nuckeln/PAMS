@@ -2,10 +2,16 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import datetime
+import st_aggrid as ag
+
 #from Data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
-from Data_Class.DB_Daten_Agg import orderDatenAgg
+from Data_Class.DB_Daten_Agg import DatenAgregieren as DA
 from Data_Class.wetter.api import getWetterBayreuth
+from Data_Class.SQL import SQL_TabellenLadenBearbeiten
 import plotly_express as px
+import plotly.graph_objects as go
+
+
 #from streamlit import caching
 #caching.clear_cache()
 
@@ -15,10 +21,12 @@ class LIVE:
     
     heute  = datetime.date.today()
     morgen =heute + datetime.timedelta(days=3)
+    vorgestern = heute - datetime.timedelta(days=3)
 
     def __init__(self,df):
         self.df = df
 
+    ## Function to reload the page all 2 min 
 
     def sessionstate():
         if 'key' not in st.session_state:
@@ -48,8 +56,9 @@ class LIVE:
             st.write("Schnee")
         else:
             st.write("Sonstiges")
-
-def liveStatusPage():
+    def reload():
+        if st.button("Reload"):
+            st.experimental_memo.clear()
 
     ## Filter für Live AllSSCCLabelsPrinted Func ###
     def FilterNachDatum(day1, day2,df):
@@ -60,25 +69,7 @@ def liveStatusPage():
         #mask = (df['PlannedDate'] >= day1) & (df['PlannedDate'] <= day2)         
         #df = df.loc[mask]
         return df
-
-    def FilterNachDatumLabel(day1, day2,df):
-        # df['DATUM'] = df['DATUM'].dt.strftime('%m/%d/%y')
-        # df['DATUM'] = df['DATUM'].astype('datetime64[ns]').dt.date
-        #filter nach Datum
-        df = df[(df['DATUM'] >= day1) & (df['DATUM'] <= day2)]
-
-
-        return df
-
-    ## Page Layout Func ### 
-    def headerAndWetter():
-        colhead1, colhead2 ,colhead3, = st.columns(3)
-        with colhead1:
-            st.title("Live Status")
-        
-        with colhead3:
-            LIVE.wetter()
-
+     
     def columnsKennzahlen(df):
         col1, col2, col3 = st.columns(3)
         with col1:
@@ -101,49 +92,24 @@ def liveStatusPage():
             lieferscheine = df['SapOrderNumber'].nunique()
             st.write(f"Lieferscheine:  {lieferscheine}")
         with col2:
-            st.subheader("Noch zu Picken")
-            #---PicksOffen---#
-            pickOffenges = df.loc[df['AllSSCCLabelsPrinted']==0]
-            pickOffenges = pickOffenges['Picks Gesamt'].sum()
-            pickOffenges = int(pickOffenges)
-            st.write(f"Gesamtvolumen:  {pickOffenges}")
-            #---PicksOffenSTR---#
-            picksoffenSTR = df.loc[(df['AllSSCCLabelsPrinted']==0) & (df['DeliveryDepot']=='KNSTR')]
-            picksoffenSTR = picksoffenSTR['Picks Gesamt'].sum()
-            picksoffenSTR = int(picksoffenSTR)
-            st.write(f"Stuttgart:  {picksoffenSTR}")
-            #---PicksOffenLEJ---#
-            picksoffenLEJ = df.loc[(df['AllSSCCLabelsPrinted']==0) & (df['DeliveryDepot']=='KNLEJ')]
-            picksoffenLEJ = picksoffenLEJ['Picks Gesamt'].sum()
-            picksoffenLEJ = int(picksoffenLEJ)
-            st.write(f"Leipzig:  {picksoffenLEJ}")
-            #---LieferscheineOffen---#
-            lieferscheineOffen = df.loc[df['AllSSCCLabelsPrinted']==0]
-            lieferscheineOffen = lieferscheineOffen['SapOrderNumber'].nunique()
-            st.write(f"Lieferscheine:  {lieferscheineOffen}")
+            st.subheader("Offen")
+            df1 = df[df['AllSSCCLabelsPrinted']==0]
+            st.write(f"Offene Picks: {df1['Picks Gesamt'].sum()}")
+            st.write(f'Offen Leipzig: {df1.loc[df1["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()}')
+            st.write(f'Offen Stuttgart: {df1.loc[df1["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()}')
+            st.write(f"Offene Lieferscheine: {df1['SapOrderNumber'].nunique()}")
+
         with col3:
             st.subheader("Fertig")
-            #---PicksFertig---#
-            pickFertigges = df.loc[df['AllSSCCLabelsPrinted']==1]
-            pickFertigges = pickFertigges['Picks Gesamt'].sum()
-            pickFertigges = int(pickFertigges)
-            st.write(f"Gesamtvolumen:  {pickFertigges}")
-            #---PicksFertigSTR---#
-            picksFertigSTR = df.loc[(df['AllSSCCLabelsPrinted']==1) & (df['DeliveryDepot']=='KNSTR')]
-            picksFertigSTR = picksFertigSTR['Picks Gesamt'].sum()
-            picksFertigSTR = int(picksFertigSTR)
-            st.write(f"Stuttgart:  {picksFertigSTR}")
-            #---PicksFertigLEJ---#
-            picksFertigLEJ = df.loc[(df['AllSSCCLabelsPrinted']==1) & (df['DeliveryDepot']=='KNLEJ')]
-            picksFertigLEJ = picksFertigLEJ['Picks Gesamt'].sum()
-            picksFertigLEJ = int(picksFertigLEJ)
-            st.write(f"Leipzig:  {picksFertigLEJ}")
-            #---LieferscheineFertig---#
-            lieferscheineFertig = df.loc[df['AllSSCCLabelsPrinted']==1]
-            lieferscheineFertig = lieferscheineFertig['SapOrderNumber'].nunique()
-            st.write(f"Lieferscheine:  {lieferscheineFertig}")
+            df2 = df[df['AllSSCCLabelsPrinted']==1]
+            st.write(f"Fertige Picks: {df2['Picks Gesamt'].sum()}")
+            st.write(f'Fertig Leipzig: {df2.loc[df2["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()}')
+            st.write(f'Fertig Stuttgart: {df2.loc[df2["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()}')
+            st.write(f"Fertige Lieferscheine: {df2['SapOrderNumber'].nunique()}")
 
     ## Plotly Func ###
+
+    ## Plotly Flexibles Bar Chart ###
     def userBauDirDiagramm(df):
         userAuswahl = ['Amount of DNs',	'DESADV','Amount of picks',	'Amount of picks for next Day'	,'Volume available for next Day in %' ,'Amount transmissions w/o TPD' ,'Operational activities completed',]
         spaltenName = st.selectbox('Spalte', userAuswahl)
@@ -163,6 +129,7 @@ def liveStatusPage():
 
         st.plotly_chart(fig, use_container_width=True)
    
+    ## Plotly Charts ###
     def figPickStatusNachDepot(df):
         df = df.groupby(['DeliveryDepot','AllSSCCLabelsPrinted']).agg({'Picks Gesamt':'sum'}).reset_index()
         df['AllSSCCLabelsPrinted'] = df['AllSSCCLabelsPrinted'].replace({0:'Offen',1:'Fertig'})
@@ -179,48 +146,138 @@ def liveStatusPage():
             )
         fig.update_traces(texttemplate='%{text:.2s}', text=df['Picks Gesamt'])
         fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
+        st.plotly_chart(fig, use_container_width=True)
 
-        
-        st.plotly_chart(fig, use_container_width=True)        
- 
+    def figPicksDepot_open_close_in_CS_OUT_PAL(df):
+        depota = st.multiselect('DeliveryDepot', ['KNSTR','KNLEJ'],['KNSTR','KNLEJ'])
+        df = df[df['DeliveryDepot'].isin(depota)]
+
+
+   #function to create a bar chart to visualize the sum of columns df['Picks Karton offen'] df['Picks Paletten offen']  df['Picks Stangen offen'] df['Picks Karton fertig'] df['Picks Paletten fertig'] df['Picks Stangen fertig'] for each depot
+        df = df.groupby(['DeliveryDepot']).agg({'Picks Karton offen':'sum','Picks Paletten offen':'sum','Picks Stangen offen':'sum','Picks Karton fertig':'sum','Picks Paletten fertig':'sum','Picks Stangen fertig':'sum'}).reset_index()
+        fig = go.Figure(data=[
+            go.Bar(name='Picks Karton offen', x=df['DeliveryDepot'], y=df['Picks Karton offen'],constraintext='inside',text='Picks Karton offen',textangle=-90),
+            go.Bar(name='Picks Paletten offen', x=df['DeliveryDepot'], y=df['Picks Paletten offen'],constraintext='inside',text='Picks Paletten offen',textangle=-90),
+            go.Bar(name='Picks Stangen offen', x=df['DeliveryDepot'], y=df['Picks Stangen offen'], constraintext='inside',text='Picks Stangen offen',textangle=-90),
+            go.Bar(name='Picks Karton fertig', x=df['DeliveryDepot'], y=df['Picks Karton fertig'],constraintext='inside',text='Picks Karton fertig',textangle=-90),
+            go.Bar(name='Picks Paletten fertig', x=df['DeliveryDepot'], y=df['Picks Paletten fertig'],constraintext='inside',text='Picks Paletten fertig',textangle=-90),
+            go.Bar(name='Picks Stangen fertig', x=df['DeliveryDepot'], y=df['Picks Stangen fertig'],constraintext='inside',text='Picks Stangen fertig',textangle=-90)       
+        ])
+
+        # update bar color of Picks Stangen offen to #7030A0
+        fig.update_traces(marker_color=['#7030A0','#7030A0','#7030A0','#002060','#002060','#002060'],selector=dict(name='Picks Stangen offen'))
+
+        # Change the bar mode
+        fig.update_layout(barmode='group')
+        # add total value of for each bar in the bar chart
+        # it dosn't works with the update_layout
+
+
+
+        fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
+
+
+        fig.update_layout(title_text='Depotverteilung')
+        st.plotly_chart(fig, use_container_width=True)
+
     def figPicksKunde(df):
-        df = df.groupby(['PartnerName','SapOrderNumber',"AllSSCCLabelsPrinted"]).agg({'Picks Gesamt':'sum'}).reset_index()
+
+
+        df = df.groupby(['PartnerName','SapOrderNumber',"AllSSCCLabelsPrinted",'DeliveryDepot']).agg({'Picks Gesamt':'sum'}).reset_index()
+        depoth = st.multiselect('Depot', ['KNSTR','KNLEJ'],['KNSTR','KNLEJ'])
+        df = df[df['DeliveryDepot'].isin(depoth)]
         #sort by picks and second by 
         df = df.sort_values(by=['Picks Gesamt','AllSSCCLabelsPrinted'], ascending=False)
         figTagKunden = px.bar(df, x="PartnerName", y="Picks Gesamt",  title="Kundenverteilung",hover_data=['Picks Gesamt','SapOrderNumber'],color='Picks Gesamt')
         figTagKunden.update_traces(marker_color=np.where(df['AllSSCCLabelsPrinted'] == 1, 'green', 'red'))
         figTagKunden.update_traces(texttemplate='%{text:.2s}', text=df['Picks Gesamt'])
         figTagKunden.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
-        st.plotly_chart(figTagKunden,use_container_width=True)         
+        st.plotly_chart(figTagKunden,use_container_width=True)      
 
     def figPicksBy_SAP_Order_CS_PAL(df):
-        df= df.groupby(['SapOrderNumber','PartnerName'])['Picks CS','Picks PAL','Picks OUT'].sum().reset_index()
+        
+        sel = st.multiselect('Depot  ', ['KNSTR','KNLEJ'],['KNSTR','KNLEJ'])
+        df = df[df['DeliveryDepot'].isin(sel)]
+        df= df.groupby(['SapOrderNumber','PartnerName'])['Picks Karton','Picks Paletten','Picks Stangen'].sum().reset_index()
         #sort by Picks CS+ PAL + OUT 
-        df['Picks Gesamt'] = df['Picks CS'] + df['Picks PAL'] + df['Picks OUT']
+        df['Picks Gesamt'] = df['Picks Karton'] + df['Picks Paletten'] + df['Picks Stangen']
         df = df.sort_values(by=['Picks Gesamt'], ascending=False)
-        figPicksBySAPOrder = px.bar(df, x="SapOrderNumber", y=['Picks CS','Picks PAL','Picks OUT'], title="Picks SAP Order in CS/PAL/OUT")
+        figPicksBySAPOrder = px.bar(df, x="SapOrderNumber", y=['Picks Karton','Picks Paletten','Picks Stangen'], title="Picks SAP Order in CS/PAL/OUT")
         figPicksBySAPOrder.update_layout(showlegend=False)
         st.plotly_chart(figPicksBySAPOrder,use_container_width=True)
     
+    def figVerfügbaresVolumenZeit(df):
+        #create a area chart to visualiz sum of df['Picks Gesamt'] by df[Lieferschein erhalten] and df[Fertiggestellt]
+        df = df.groupby(['Lieferschein erhalten','Fertiggestellt']).agg({'Picks Gesamt':'sum'}).reset_index()
+
+        figVerfügbaresVolumenZeit = px.area(df, x="Lieferschein erhalten", y="Picks Gesamt", color='Fertiggestellt', title="Verfügbares Volumen in Zeit")
+        figVerfügbaresVolumenZeit.update_layout(showlegend=False)
+        st.plotly_chart(figVerfügbaresVolumenZeit,use_container_width=True)
+
+
+
+
+   ## AG-Grid Func ###
+
+    def tabelleAnzeigen(df):
+        #new df with only the columns we need 'PlannedDate' ,'SapOrderNumber','PartnerName']#'Fertiggestellt','Picks Gesamt','Picks Karton','Picks Paletten','Picks Stangen','Lieferschein erhalten','Fertiggestellt'
+        dfAG = df[['PlannedDate' ,'SapOrderNumber','PartnerName','Fertiggestellt','Fertige Paletten','Picks Gesamt','Lieferschein erhalten']]
+
+
+        ag.AgGrid(dfAG)
+    
+    def downLoadTagesReport(df):
+    
+        @st.experimental_memo
+        def convert_df(df):
+            return df.to_csv(index=False).encode('utf-8')
+        csv = convert_df(df)
+        # LIVE.heute to string
+        tagimfilename= LIVE.heute.strftime("%d.%m.%Y")
+
+        st.download_button(
+        "Download Tagesreport als csv",
+        csv,
+        tagimfilename + "_Tagesreport.csv",
+        "text/csv",
+        key='download-csv'
+            )
+
 
     #######------------------Main------------------########
+
+    def PageTagesReport():
     ##TODO Funktion orderDatenAgg() Datum 
-    df = orderDatenAgg()
+        #st.markdown('<meta http-equiv="refresh" content="120">', unsafe_allow_html=True)
+        
+        def loadDF():
+            dfOr = DA.orderDatenGo()
+            dfOr = dfOr.reset_index(drop=True)
+            return dfOr
 
-    headerAndWetter()
+        dfOr = loadDF()
+        pd.set_option("display.precision", 2)
+        
+        colhead1, colhead2 ,colhead3, = st.columns(3)
+        with colhead1:
+            st.title("Live Status")
+        with colhead2:
+            LIVE.reload()
+            LIVE.downLoadTagesReport(dfOr)
+        with colhead3:
+            LIVE.wetter()
 
-    seldate= st.date_input('Datum')
-    if seldate:
-        df = FilterNachDatum(seldate,seldate,df)
-        df = df.fillna(0)
+        
 
-    pd.set_option("display.precision", 2)
-    columnsKennzahlen(df)
-
-    figPickStatusNachDepot(df)  
-    figPicksBy_SAP_Order_CS_PAL(df)
-    figPicksKunde(df)
-
-    st.dataframe(df)
+        LIVE.columnsKennzahlen(dfOr)
+        LIVE.figPickStatusNachDepot(dfOr)
+        LIVE.figPicksDepot_open_close_in_CS_OUT_PAL(dfOr)
+        LIVE.figPicksKunde(dfOr)
+        LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr)
+        LIVE.figVerfügbaresVolumenZeit(dfOr)
+        
+        
+        LIVE.tabelleAnzeigen(dfOr)
+        
 
 

@@ -3,18 +3,19 @@ import pandas as pd
 import numpy as np
 import datetime
 #from Data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
-from Data_Class.DB_Daten_Agg import orderDatenAgg
+#from Data_Class.DB_Daten_Agg import orderDatenAgg
 import plotly_express as px
 from streamlit_option_menu import option_menu
-from Data_Class.DB_Daten_Agg import orderDatenAgg
+from Data_Class.DB_Daten_Agg import DatenAgregieren as DA
 from Data_Class.SQL import createnewTable, sql_datenLadenMLGT
 
 class SAPWM:
     
     heute  = datetime.date.today()
     morgen =heute + datetime.timedelta(days=1)
+
     def __init__(self):
-        self.df = df
+        self.df = DA.orderDatenLines()
 
     def sessionstate():
         if 'key' not in st.session_state:
@@ -23,7 +24,7 @@ class SAPWM:
             st.session_state.key = +1
     @st.experimental_memo
     def labeOrderDaten():
-        df = orderDatenAgg()
+        df  = DA.orderDatenLines()
         return df
     
 

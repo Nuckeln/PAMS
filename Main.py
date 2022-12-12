@@ -6,7 +6,7 @@ from PIL import Image # Bilder
 
 #Eigene Klassen
 from Seiten.P_UserLogin import Login
-from Seiten.P_Live import liveStatusPage
+from Seiten.P_Live import LIVE
 from Seiten.P_SAP_WM import SAPWM
 from Seiten.P_Mitarbeiterauswertung import *
 from Seiten.P_Bewegungsdaten import *
@@ -15,17 +15,16 @@ from Seiten.P_Forecast import *
 from Seiten.P_Einstellungen import *
 from Seiten.P_Fehlverladungen import fehlverladungenPage
 from Seiten.P_DDS import ddsPage
-from Data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
-from Data_Class.DB_Daten_Agg import orderDatenAgg
+from Seiten.P_Infocenter import Infocenter
+#from Data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
 
-from Data_Class.wetter.api import getWetterBayreuth
 
 # Zum Ausführen
 #MAC#    streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
 #WIN#    streamlit run "
 
 # --- Set Global Page Configs ---
-st.set_page_config(layout="wide", page_title="SuperDepot", page_icon=":bar_chart:",initial_sidebar_state="expanded")
+st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="expanded")
 
 hide_streamlit_style = """
                 <style>
@@ -77,36 +76,15 @@ st.markdown("""
         """, unsafe_allow_html=True)
 
 
-img = Image.open('Data/img/logo.png', mode='r')
-# # ----- Load aggregated data -----
-# #@st.cache(allow_output_mutation=True)
-# # def LadeBewegungsdaten():
-# #     dfDaten = pd.read_feather('Data/Bewegungsdaten.feather')
-# #     return dfDaten
-# @st.cache(allow_output_mutation=True)
-# # def LadeLSDaten():
-# #     dfLS = pd.read_excel('Data/df.xlsx')
-# #     return dfLS
-# @st.cache(allow_output_mutation=True)
-# def labeOrderDaten():
-#     df = orderDatenAgg()
-#     return df
-#@st.cache(allow_output_mutation=True)
-# def ladeLabelDaten():
-#     df = sql_datenLadenLabel()
-#     df['CreatedTimestamp'] = pd.to_datetime(df['CreatedTimestamp'])
-#     df['DATUM'] = df['CreatedTimestamp'].dt.strftime('%m/%d/%y')
-#     df['TIME'] = df['CreatedTimestamp'].dt.strftime('%H:%M:%S')
-#     df['TIME'] = df['TIME'] + pd.Timedelta(hours=1)
-#     df['TIME'] = df['CreatedTimestamp'].dt.strftime('%H:%M:%S')
-#     return df
+#img = Image.open('Data/img/logo.png', mode='r')
+
 
 # ----- Config Main Menue -----
 # BAT LOGO  
-st.sidebar.image(img, width=300)
-
+#st.sidebar.image(img, width=300)
 with st.sidebar:
-    sel_main_m = option_menu('"Menu', ["Live Status",'DDS','Fehlverladungen','SAP WM Daten','Lagerbewegungen','Auftragsübersicht','Mitarbeiter','Forecast'], 
+    #st.write('Hallo ' + Login.user + '!')'DDS','Fehlverladungen','SAP WM Daten','Forecast','Infocenter'
+    sel_main_m = option_menu('"Menu', ["Live Status",'SAP WM Daten'], 
         icons=[''], 
         menu_icon="cast", )
 
@@ -118,26 +96,7 @@ if authentication_status == True:
     # erfolgreich eingelogt dann Code ausführen!
     # ----- gewählte Page Laden -----
     if sel_main_m == 'Live Status':
-        #df = labeOrderDaten()
-        
-        liveStatusPage()
-        
-        
-    # if sel_main_m == 'Mitarbeiter':
-    #     dfDaten = LadeBewegungsdaten()
-    #     Seite = Seite1()
-    #     Seite.Ladeseite(dfDaten)
-    # if sel_main_m == 'Lagerbewegungen':
-    #     dfDaten = LadeBewegungsdaten()
-    #     pageLager = Page_Bewegungsdaten()
-    #     pageLager.GoGO(dfDaten)
-    # if sel_main_m == 'Auftragsübersicht':
-    #     # dfLS = LadeLSDaten()
-    #     # pageAuftrag = Page_Auftragsübersicht()
-    #     pageAuftrag.Auftragsübersicht_Page(dfLS)
-    # if sel_main_m == 'Forecast':
-    #     pageForecast = Forecast()
-    #     pageForecast.LadeForecast()
+        LIVE.PageTagesReport()
     if sel_main_m == 'Einstellungen': 
         seiteLaden()
     if sel_main_m == 'Fehlverladungen':
@@ -145,8 +104,9 @@ if authentication_status == True:
     if sel_main_m == 'DDS':
         ddsPage()
     if sel_main_m == 'SAP WM Daten':
-        
         SAPWM.sap_wm_page()
+    if sel_main_m == 'Infocenter':
+        Infocenter.page()
 
 
         
