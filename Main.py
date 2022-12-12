@@ -11,7 +11,7 @@ from Seiten.P_SAP_WM import SAPWM
 from Seiten.P_Mitarbeiterauswertung import *
 from Seiten.P_Bewegungsdaten import *
 from Seiten.P_Auftragsübersicht import *
-from Seiten.P_Forecast import *
+#from Seiten.P_Forecast import *
 from Seiten.P_Einstellungen import *
 from Seiten.P_Fehlverladungen import fehlverladungenPage
 from Seiten.P_DDS import ddsPage
