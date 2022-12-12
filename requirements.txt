@@ -15,8 +15,7 @@ SQLAlchemy==1.4.43
 streamlit==1.13.0
 streamlit_authenticator==0.2.1
 streamlit_option_menu==0.3.2
-tensorflow==2.11.0
-tensorflow_macos==2.10.0
+
 watchdog==2.1.9
 openpyxl==3.0.10
 streamlit-aggrid==0.3.3
