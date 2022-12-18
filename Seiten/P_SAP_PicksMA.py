@@ -1,0 +1,139 @@
+
+from itertools import count
+import datetime
+from folium import Tooltip
+import plotly.graph_objects as go
+import plotly.express as px
+import pandas as pd
+import numpy as np
+import streamlit as st
+from streamlit_option_menu import option_menu
+from Data_Class.DB_Daten_SAP import DatenAgregieren as DA 
+
+#' Murmade'
+
+
+class PicksMA:
+        def menueLaden():
+            selected2 = option_menu(None, ["Tag Auswerten", "Zeitraum Auswerten"], 
+            icons=['house', 'cloud-upload', "list-task"], 
+            menu_icon="cast", default_index=0, orientation="horizontal")
+            return selected2
+        @st.cache(allow_output_mutation=True)
+        def load_data():
+            df = pd.read_excel('lt22.xlsx')
+            df = DA.sapLt22DatenBerechnen(df)
+            return df
+
+        def TagAuswerten(df):
+            df['Pick Datum']= pd.to_datetime(df['Pick Datum']).dt.date
+
+            def hardfactsGesamt(df):
+
+                aktivenutzer = df['MitarbeiterCreateTO'].nunique()
+                #anzahllieferscheine = df['V'].nunique()
+                #--2---#
+                pickscs= int(df["Picks CS"].sum())
+                picksout= int(df["Picks OUT"].sum())
+                pickspal= int(df["PICKS PAL"].sum())
+                
+                # Columns Darstellung
+                left_column, middle_column, right_column = st.columns(3)
+                with left_column:
+                    st.write(f"Aktive Kommissionier: {aktivenutzer}")
+                    st.write("Stundeneinsatz")
+                    st.write("Durchschnittliche Picks/h")
+                    
+                with middle_column:
+                    st.write(f"Stangen: {picksout:,}")
+                    st.write(f"Kartons Gesamt: {pickscs:,}")
+                    st.write(f"Paletten Gesamt: {pickspal:,}")
+                with right_column:
+                    st.write(f"GesamtPicks: {pickscs + picksout + pickspal:,}")
+                    st.write(f"Picks/h: {((pickscs + picksout + pickspal) * aktivenutzer)/ 7.5:,}")
+
+                
+
+            def mitarbeiterHardfacts(df):
+                df = df.groupby(['Name']).agg({'Picks CS': 'sum', 'Picks OUT': 'sum', 'PICKS PAL': 'sum','DestBin': 'nunique'})
+                df = df.rename(columns={'DestBin': 'Lieferscheine'})
+                df = df.reset_index()
+                df['GesamtPicks'] = df['Picks CS'] + df['Picks OUT'] + df['PICKS PAL']
+                df = df.sort_values(by='GesamtPicks', ascending=False)
+                st.dataframe(df, use_container_width=True)
+                # create a figure
+
+            def figPicksMitarbeiter(df):
+                df = df.groupby(['Name']).agg({'Picks CS': 'sum', 'Picks OUT': 'sum', 'PICKS PAL': 'sum','DestBin': 'nunique'})
+                df = df.rename(columns={'DestBin': 'Lieferscheine'})
+                df = df.reset_index()
+                df['GesamtPicks'] = df['Picks CS'] + df['Picks OUT'] + df['PICKS PAL']
+                df = df.sort_values(by='GesamtPicks', ascending=False)
+
+                fig = go.Figure()
+
+                # Balken hinzufügen und Labels hinzufügen
+                fig.add_trace(go.Bar(x=df['Name'], y=df['Picks CS'], name='Picks CS', text=df['Picks CS'], textposition='inside'))
+                fig.add_trace(go.Bar(x=df['Name'], y=df['Picks OUT'], name='Picks OUT', text=df['Picks OUT'], textposition='inside'))
+                fig.add_trace(go.Bar(x=df['Name'], y=df['PICKS PAL'], name='PICKS PAL', text=df['PICKS PAL'], textposition='inside'))
+                
+                # Layout aktualisieren, um die Balken zu stapeln
+                fig.update_layout(barmode='stack')
+                # Linie hinzufügen
+                fig.add_trace(go.Scatter(x=df['Name'], y=df['Lieferscheine'], name='Lieferscheine', mode='lines+markers', line=dict(color='black', width=2)))
+                # add a line with value from Lieferscheine
+                fig.add_hline(y=df['Lieferscheine'].mean(), line_dash="dash", line_width=2, line_color="gray")
+                # add a line with value from Lieferscheine
+                st.plotly_chart(fig, use_container_width=True)
+
+            def figPicksMitarbeiterLine(dfAll):
+                dfapicks = dfAll.groupby(['Name','Pick Datum'],dropna =False)['PICKS'].sum().reset_index()
+
+                c =np.array(dfapicks['Name'].unique())        
+                fig2 = px.line(dfapicks, x="Pick Datum", y=['PICKS'],color='Name') #color='Name',hover_data=['V','Picks OUT','Picks CS','PICKS PAL'],color_continuous_scale=px.colors.sequential.RdBu)
+                fig2.update_layout(barmode='stack')
+                st.plotly_chart(fig2,use_container_width=True)
+                
+            def figVerfügbareTo(dfNurDate):
+                dfNurDate = dfNurDate.groupby(['PickDatum']).agg({'Picks CS': 'sum', 'Picks OUT': 'sum', 'PICKS PAL': 'sum','DestBin': 'nunique'})
+
+
+
+
+            def page(df):
+
+                
+                sel_date = st.date_input("Datum auswählen", datetime.date(2022, 12, 1))
+                df = df[df['Pick Datum'] == sel_date]     
+                dfNurDate = df          
+                hardfactsGesamt(df)
+                sel_mitarbeiter = st.multiselect("Mitarbeiter auswählen",df['Name'].unique(),default=df['Name'].unique())
+                df = df[df['Name'].isin(sel_mitarbeiter)]
+
+                sel_timefeq = st.selectbox("Zeitfrequenzen anpassen",["5min","15min","30min","60min"],index=3)
+                df['Pick Zeit'] = df['Pick Zeit'].dt.round(sel_timefeq)
+                mitarbeiterHardfacts(df)
+                figPicksMitarbeiter(df)
+                figPicksMitarbeiterLine(df)
+                
+                st.dataframe(df)
+                #mitarbeiterHardfacts(df)
+                
+
+
+               
+            page(df)
+
+
+class LoadPageSapPicksMA:    
+
+    def mitarbeiterPage():
+        
+        selected2 = PicksMA.menueLaden()
+        if selected2 == "Tag Auswerten":
+            df = PicksMA.load_data()    
+            PicksMA.TagAuswerten(df)
+
+                
+            
+            

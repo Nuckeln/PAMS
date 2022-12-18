@@ -12,6 +12,7 @@ import plotly_express as px
 import plotly.graph_objects as go
 
 
+
 #from streamlit import caching
 #caching.clear_cache()
 
@@ -138,15 +139,16 @@ class LIVE:
             title="Picks Status nach Depot",
             xaxis_title="Depot",
             yaxis_title="Picks Gesamt",
-            
-        #     font=dict(
-        #         family="Courier New, monospace",
-        #         size=18,
-        #         color="#7f7f7f"
-            )
-        fig.update_traces(texttemplate='%{text:.2s}', text=df['Picks Gesamt'])
-        fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
+            font=dict(
+                family="Montserrat, sans-serif",
+                size=18,
+                color="#7f7f7f"),
+            showlegend=True)
+        fig.update_traces(hovertemplate='Depot: %{x}<br>Picks Gesamt: %{y:.2f}')
+        fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
         st.plotly_chart(fig, use_container_width=True)
+
+
 
     def figPicksDepot_open_close_in_CS_OUT_PAL(df):
         depota = st.multiselect('DeliveryDepot', ['KNSTR','KNLEJ'],['KNSTR','KNLEJ'])
@@ -169,11 +171,6 @@ class LIVE:
 
         # Change the bar mode
         fig.update_layout(barmode='group')
-        # add total value of for each bar in the bar chart
-        # it dosn't works with the update_layout
-
-
-
         fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
 
 
@@ -183,13 +180,13 @@ class LIVE:
     def figPicksKunde(df):
 
 
-        df = df.groupby(['PartnerName','SapOrderNumber',"AllSSCCLabelsPrinted",'DeliveryDepot']).agg({'Picks Gesamt':'sum'}).reset_index()
+        df = df.groupby(['PartnerName','SapOrderNumber',"AllSSCCLabelsPrinted",'DeliveryDepot','Fertiggestellt']).agg({'Picks Gesamt':'sum'}).reset_index()
         depoth = st.multiselect('Depot', ['KNSTR','KNLEJ'],['KNSTR','KNLEJ'])
         df = df[df['DeliveryDepot'].isin(depoth)]
         #sort by picks and second by 
         df = df.sort_values(by=['Picks Gesamt','AllSSCCLabelsPrinted'], ascending=False)
-        figTagKunden = px.bar(df, x="PartnerName", y="Picks Gesamt",  title="Kundenverteilung",hover_data=['Picks Gesamt','SapOrderNumber'],color='Picks Gesamt')
-        figTagKunden.update_traces(marker_color=np.where(df['AllSSCCLabelsPrinted'] == 1, 'green', 'red'))
+        figTagKunden = px.bar(df, x="PartnerName", y="Picks Gesamt",  title="Kundenverteilung",hover_data=['Picks Gesamt','SapOrderNumber','Fertiggestellt'],color='Picks Gesamt')
+        figTagKunden.update_traces(marker_color=np.where(df['AllSSCCLabelsPrinted'] == 1, '#4FAF46', '#E72482'))
         figTagKunden.update_traces(texttemplate='%{text:.2s}', text=df['Picks Gesamt'])
         figTagKunden.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
         st.plotly_chart(figTagKunden,use_container_width=True)      
@@ -205,30 +202,146 @@ class LIVE:
         figPicksBySAPOrder = px.bar(df, x="SapOrderNumber", y=['Picks Karton','Picks Paletten','Picks Stangen'], title="Picks SAP Order in CS/PAL/OUT")
         figPicksBySAPOrder.update_layout(showlegend=False)
         st.plotly_chart(figPicksBySAPOrder,use_container_width=True)
-    
-    def figVerfügbaresVolumenZeit(df):
-        #create a area chart to visualiz sum of df['Picks Gesamt'] by df[Lieferschein erhalten] and df[Fertiggestellt]
-        df = df.groupby(['Lieferschein erhalten','Fertiggestellt']).agg({'Picks Gesamt':'sum'}).reset_index()
+    def tester(df): 
+        col1, col2 = st.columns(2)
+        with col1:
+            sel_deadStr = st.text_input('Deadline Lej', '14:00:00')
+        with col2:
+            sel_deadLej = st.text_input('Deadline Str', '16:00:00')
+        #add deadlines to df by DeliveryDepot
+        df['Deadline'] = np.where(df['DeliveryDepot'] == 'KNLEJ', sel_deadStr, sel_deadLej)
+        df['PlannedDate'] = df['PlannedDate'] + pd.to_timedelta(df['Deadline'])
+        #convert to datetime
+        df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
+        # filter by fertiggestellt = '0'
+        dfOffen = df[df['Fertiggestellt'] == '0']
+        dfFertig = df[df['Fertiggestellt'] != '0']
+        dfFertig.Fertiggestellt = pd.to_datetime(dfFertig.Fertiggestellt)
 
-        figVerfügbaresVolumenZeit = px.area(df, x="Lieferschein erhalten", y="Picks Gesamt", color='Fertiggestellt', title="Verfügbares Volumen in Zeit")
-        figVerfügbaresVolumenZeit.update_layout(showlegend=False)
-        st.plotly_chart(figVerfügbaresVolumenZeit,use_container_width=True)
+        dfFertig['InTime'] = (dfFertig['Fertiggestellt'] < dfFertig['PlannedDate']).astype(int)
+        #add to df.InTime = 1 if fertiggestellt < planneddate
+        dfOffen['InTime'] = (dfOffen['Fertiggestellt'] < dfOffen['PlannedDate']).astype(int)
+        #group by DeliveryDepot and count InTime
+        dfFertig = dfFertig.groupby(['DeliveryDepot'])['InTime'].sum().reset_index()
+        dfOffen = dfOffen.groupby(['DeliveryDepot'])['InTime'].sum().reset_index()
+        #merge dfFertig und dfOffen
+        df = dfFertig.merge(dfOffen, on='DeliveryDepot')
+        #add column InTime
+        df['InTime'] = df['InTime_x'] + df['InTime_y']
+        #add column Offen
+        df['Offen'] = df['Picks Gesamt'] - df['InTime']
+        #add column InTime % 
+        df['InTime %'] = df['InTime'] / df['Picks Gesamt']
+        #add column Offen % 
+        df['Offen %'] = df['Offen'] / df['Picks Gesamt']
+        #add column Offen % 
+        df['Fertig %'] = df['InTime'] / df['Picks Gesamt']
+        #remove columns
+        df = df.drop(columns=['InTime_x','InTime_y'])
+        #rename columns
+        df = df.rename(columns={'DeliveryDepot':'Depot','Picks Gesamt':'Picks Gesamt','InTime':'InTime','Offen':'Offen','InTime %':'InTime %','Offen %':'Offen %','Fertig %':'Fertig %'})
+        #sort by InTime %
+        df = df.sort_values(by=['InTime %'], ascending=False)
+        #add columns to df
+        df['InTime %'] = df['InTime %'].apply(lambda x: "{:.2%}".format(x))
+        df['Offen %'] = df['Offen %'].apply(lambda x: "{:.2%}".format(x))
+        df['Fertig %'] = df['Fertig %'].apply(lambda x: "{:.2%}".format(x))
+        st.dataframe(df)
+
+#Dieser Code gibt folgenden fehler aus AttributeError: 'Series' object has no attribute 'hour'
+    def figUebermitteltInDeadline(df):
+       # Kannst du mir ein Plotly chart geben welches eine Zeitachse hat und darauf die Lieferschiene ausgibt und anzeigt ob inTime oder nicht 
+
+        col1, col2 = st.columns(2)
+        with col1:
+            sel_deadStr = st.text_input('Deadline Lej', '14:00:00')
+        with col2:
+            sel_deadLej = st.text_input('Deadline Str', '16:00:00')
+        #add deadlines to df by DeliveryDepot
+        df['Deadline'] = np.where(df['DeliveryDepot'] == 'KNLEJ', sel_deadStr, sel_deadLej)
+        df['PlannedDate'] = df['PlannedDate'] + pd.to_timedelta(df['Deadline'])
+        #convert to datetime
+        df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
+        # filter by fertiggestellt = '0'
+        dfOffen = df[df['Fertiggestellt'] == '0']
+        dfFertig = df[df['Fertiggestellt'] != '0']
+        dfFertig.Fertiggestellt = pd.to_datetime(dfFertig.Fertiggestellt)
+        #chek if is inTime
+        dfFertig['InTime'] = (dfFertig['Fertiggestellt'] < dfFertig['PlannedDate']).astype(int)
+        #round to hour
+        dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'].dt.round('H')
+        #group by 'df = df.groupby(['PartnerName','Fertiggestellt',SapOrderNumber',"InTime",'DeliveryDepot']).agg({'Picks Gesamt':'sum'}).reset_index()
+        dfFertig = dfFertig.groupby(['PlannedDate','PartnerName','Fertiggestellt','SapOrderNumber','DeliveryDepot','InTime']).agg({'Picks Gesamt':'sum'}).reset_index()
+        #Create Plotly Chart
+        fig = px.bar(dfFertig, x="Fertiggestellt", y="Picks Gesamt", color="InTime", hover_data=['PartnerName','SapOrderNumber','DeliveryDepot'])
+        #if in Time 1 set to green else to red
+        fig.update_traces(marker_color=['#4FAF46' if x == 1 else '#E72482' for x in dfFertig['InTime']])
+        fig.data[0].text = dfFertig['PartnerName'] + '<br>' + dfFertig['Picks Gesamt'].astype(str)
+        # Date PartnerName to text
+
+        st.plotly_chart(fig, use_container_width=True,height=800)
+        st.dataframe(dfOffen)
+        st.dataframe(dfFertig)
 
 
+    def new_figUebermitteltInDeadline(df):
+       # Kannst du mir ein Plotly chart geben welches eine Zeitachse hat und darauf die Lieferschiene ausgibt und anzeigt ob inTime oder nicht 
 
+            col1, col2 = st.columns(2)
+            with col1:
+                sel_deadStr = st.text_input('Deadline Lej', '14:00:00')
+            with col2:
+                sel_deadLej = st.text_input('Deadline Str', '16:00:00')
+            #add deadlines to df by DeliveryDepot
+            df['Deadline'] = np.where(df['DeliveryDepot'] == 'KNLEJ', sel_deadStr, sel_deadLej)
+            df['PlannedDate'] = df['PlannedDate'] + pd.to_timedelta(df['Deadline'])
+            #convert to datetime
+            df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
+            # filter by fertiggestellt = '0'
+            dfOffen = df[df['Fertiggestellt'] == '0']
+            dfFertig = df[df['Fertiggestellt'] != '0']
+            dfFertig.Fertiggestellt = pd.to_datetime(dfFertig.Fertiggestellt)
+            #chek if is inTime
+            dfFertig['InTime'] = (dfFertig['Fertiggestellt'] < dfFertig['PlannedDate']).astype(int)
+            #group by 'df = df.groupby(['PartnerName','Fertiggestellt',SapOrderNumber',"InTime",'DeliveryDepot']).agg({'Picks Gesamt':'sum'}).reset_index()
+            dfFertig = dfFertig.groupby(['PlannedDate','PartnerName','Fertiggestellt','SapOrderNumber','DeliveryDepot','InTime']).agg({'Picks Gesamt':'sum'}).reset_index()
+    # create a column with the deadline status
+            dfFertig['Deadline Status'] = np.where(dfFertig['Fertiggestellt'] <= dfFertig['PlannedDate'], 'On Time', 'Late')
 
-   ## AG-Grid Func ###
+            # create the data for the chart
+            data = [
+                go.Bar(
+                    x = dfFertig['PlannedDate'],
+                    y = dfFertig['Picks Gesamt'],
+                    text = dfFertig['Deadline Status'],
+                    marker = dict(
+                        color = np.where(dfFertig['Deadline Status'] == 'On Time', 'green', 'red')
+                    )
+                )
+            ]
+
+            # create the layout for the chart
+            layout = go.Layout(
+                xaxis = dict(title = 'Planned Date'),
+                yaxis = dict(title = 'Picks Gesamt'),
+                title = 'Delivery Chain'
+            )
+
+            # create the figure and plot the chart
+            fig = go.Figure(data = data, layout = layout)
+            st.plotly_chart(fig)
+    ## AG-Grid Func ###
 
     def tabelleAnzeigen(df):
         #new df with only the columns we need 'PlannedDate' ,'SapOrderNumber','PartnerName']#'Fertiggestellt','Picks Gesamt','Picks Karton','Picks Paletten','Picks Stangen','Lieferschein erhalten','Fertiggestellt'
-        dfAG = df[['PlannedDate' ,'SapOrderNumber','PartnerName','Fertiggestellt','Fertige Paletten','Picks Gesamt','Lieferschein erhalten']]
+        dfAG = df[['PlannedDate','DeliveryDepot' ,'SapOrderNumber','PartnerName','Fertiggestellt','Fertige Paletten','Picks Gesamt','Lieferschein erhalten']]
 
 
         ag.AgGrid(dfAG)
     
     def downLoadTagesReport(df):
     
-        @st.experimental_memo
+        
         def convert_df(df):
             return df.to_csv(index=False).encode('utf-8')
         csv = convert_df(df)
@@ -249,18 +362,22 @@ class LIVE:
     def PageTagesReport():
     ##TODO Funktion orderDatenAgg() Datum 
         #st.markdown('<meta http-equiv="refresh" content="120">', unsafe_allow_html=True)
-        
-        def loadDF():
-            dfOr = DA.orderDatenGo()
+        @st.experimental_memo
+        def loadDF(day1=LIVE.heute, day2=LIVE.heute):
+            dfOr = DA.orderDatenGo(day1=day1, day2=day2)
             dfOr = dfOr.reset_index(drop=True)
             return dfOr
 
-        dfOr = loadDF()
+        
         pd.set_option("display.precision", 2)
         
+        st.header('Tagesreport')
         colhead1, colhead2 ,colhead3, = st.columns(3)
         with colhead1:
-            st.title("Live Status")
+            sel_date = st.date_input('Datum', LIVE.heute)
+            day1 = sel_date
+            day2 = sel_date
+            dfOr = loadDF(sel_date,sel_date)
         with colhead2:
             LIVE.reload()
             LIVE.downLoadTagesReport(dfOr)
@@ -270,11 +387,14 @@ class LIVE:
         
 
         LIVE.columnsKennzahlen(dfOr)
-        LIVE.figPickStatusNachDepot(dfOr)
-        LIVE.figPicksDepot_open_close_in_CS_OUT_PAL(dfOr)
+        #LIVE.new_figUebermitteltInDeadline(dfOr)
         LIVE.figPicksKunde(dfOr)
-        LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr)
-        LIVE.figVerfügbaresVolumenZeit(dfOr)
+        LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr)      
+        LIVE.figUebermitteltInDeadline(dfOr)
+        #LIVE.figPickStatusNachDepot(dfOr)
+        #LIVE.figPicksDepot_open_close_in_CS_OUT_PAL(dfOr)
+
+
         
         
         LIVE.tabelleAnzeigen(dfOr)

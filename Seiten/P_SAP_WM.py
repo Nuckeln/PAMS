@@ -22,6 +22,7 @@ class SAPWM:
             st.session_state['key'] = 'value'
         if 'key' not in st.session_state:
             st.session_state.key = +1
+            
     @st.experimental_memo
     def labeOrderDaten():
         df  = DA.orderDatenLines()

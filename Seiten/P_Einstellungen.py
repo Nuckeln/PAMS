@@ -2,11 +2,22 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from streamlit_option_menu import option_menu
+from Seiten.P_UserLogin import Login
 
-from Data_Class.SQL import datenLadenMitarbeiter , datenSpeichernMitarbeiter , createnewTable, datenLadenUser, updateUser
+from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 import streamlit_authenticator as stauth
 
 class Einstellungen:
+    def __init__(self):
+        self.seiteEinstellungen()
+        self.menueLaden()
+        self.admin()
+        self.passwortÄndern()
+        self.eingelogterUser()
+        self.userLöschen()
+        self.UserAnlegen()
+        self.authentication_status = Login.Login(self=Login)
+        
 
     def seiteEinstellungen():
         if 'key' not in st.session_state:
@@ -15,34 +26,81 @@ class Einstellungen:
             st.session_state.key = +1
 
     def menueLaden():
-        selected2 = option_menu(None, ["Ich", "Mitarbeiter pflegen", "Daten Update"], 
-        icons=['house', 'cloud-upload', "list-task"], 
-        menu_icon="cast", default_index=0, orientation="horizontal")
-        return selected2            
+        if st.session_state.rechte == 1:
+            selected2 = option_menu(None, ['Ich',"Administration", "Mitarbeiter pflegen", "Daten Update"], 
+            icons=['house', 'cloud-upload', "list-task"], 
+            menu_icon="cast", default_index=0, orientation="horizontal")
+            st.session_state.rechte
+            return selected2
+        else:
+            selected2 = option_menu(None, ['Ich'], 
+            icons=['house', 'cloud-upload', "list-task"], 
+            menu_icon="cast", default_index=0, orientation="horizontal")
+            return selected2            
+
+    def admin():
+        def userLöschen(df):
+
+                with st.form("User Löschen"):
+                    df=SQL.sql_datenTabelleLaden(SQL.tabelleUser)
+                    sel_user = st.selectbox("User",df['username'])
+                    X = st.form_submit_button("Löschen")
+                    if X:
+                        df = df[df['username'] != sel_user]
+                        SQL.sql_updateTabelle(SQL.tabelleUser,df)
+                        st.success("User erfolgreich gelöscht")
+                        st.experimental_rerun()
+                    
+        def UserAnlegen(df):            
+            with st.form("User Anlegen"):
+                neuname = st.text_input("name (Anzeigename)",key='name_anlegen')
+                neuuser = st.text_input("user (login Name)",key='user_anlegen')
+                neupassword = st.text_input("password",key='password_anlegen')
+                funktion = st.selectbox("Funktion",["Operativ",'Administration','Management','admin'],key='funktion_anlegen')
+                rechte = st.selectbox("Rechte", ['1', '2','3','4','5'], key='rechte_anlegen')
+                rechte = int(rechte)
+                X = st.form_submit_button("Speichern")
+                if X:
+                    pw = stauth.Hasher(neupassword)._hash(neupassword)
+                    df = df.append({'name':neuname,'username':neuuser,'password':pw,'function':funktion,'rechte':rechte},ignore_index=True)
+                    SQL.sql_updateTabelle(SQL.tabelleUser,df)
+                    st.success("User erfolgreich angelegt")
+                    st.experimental_rerun()
+
+        def eingelogterUser():
+            st.write("Eingelogter User")
+            st.write(st.session_state.user)
+            st.write(st.session_state.name)
+        def page():
+            df=SQL.sql_datenTabelleLaden(SQL.tabelleUser)            
+            userLöschen(df)    
+            UserAnlegen(df)
+            eingelogterUser()
+            st.dataframe(df)
+            
+        page()      
 
     def ich():
-        st.write("Ich")
-
-        with st.form("User Anlegen"):
-            df=datenLadenUser()
-            neuname = st.text_input("name",key='name')
-            neuuser = st.text_input("user",key='user')
-            neupassword = st.text_input("password",key='password')
-            # funktion = st.selectbox("Funktion",["Operativ",'Administration','Management'],key='funktion')
-            # rechte = st.selectbox("Rechte", ['1', '2','3','4','5'], key='rechte')
-            
-            X = st.form_submit_button("Speichern")
+        st.write("Hallo ")
+        st.write(st.session_state.name)
+        
+        with st.form("Passwort ändern"):
+            neupassword = st.text_input("neues password",key='password_anlegen_neu')
+            X = st.form_submit_button("änderung speichern")
             if X:
-                hasched_passwords = stauth.Hasher(neupassword).generate()
-                #df = df.append({'name':name,'username':user,'password':hasched_passwords,'funktion':funktion,'rechte':rechte},ignore_index=True)
-                df = df.append({'name':neuname,'username':neuuser,'password':hasched_passwords},ignore_index=True)
-                updateUser(df)
-                st.success("User erfolgreich angelegt")
-        st.dataframe(df) 
-
+                pw = stauth.Hasher(neupassword)._hash(neupassword)
+                df = SQL.sql_datenTabelleLaden(SQL.tabelleUser)
+                df.loc[df['username'] == st.session_state.user, 'password'] = pw
+                SQL.sql_updateTabelle(SQL.tabelleUser,df)
+                st.success("Passwort erfolgreich geändert")
+                st.experimental_rerun()
+      
+  
     def mitarbeiterPflegen():
         #dfMitarbeiter = pd.read_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather') 
-        dfMitarbeiter = datenLadenMitarbeiter()
+        dfMitarbeiter = SQL.sql_datenTabelleLaden(SQL.tabellemitarbeiter)
+        #set index 1 to len(dfMitarbeiter)
+        dfMitarbeiter.index = np.arange(1, len(dfMitarbeiter) + 1)
         with st.expander("Mitarbeiter Anlegen"):
             with st.form(key='my_form', clear_on_submit=True):
                 col1, col2 = st.columns(2)
@@ -69,7 +127,7 @@ class Einstellungen:
                     else:
                         oneid = int(oneid)
                         dfMitarbeiter = dfMitarbeiter.append({'Name':name,'One ID':oneid,'Funktion':funktion,'Unternehmen':firma,'Fachbereich':fachbereich,'Status':status},ignore_index=True)
-                        datenSpeichernMitarbeiter(dfMitarbeiter)
+                        SQL.sql_updateTabelle( tabellenName=SQL.tabellemitarbeiter ,df=dfMitarbeiter)
                         #dfMitarbeiter.to_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather')
                         st.success("Mitarbeiter wurde angelegt")
 
@@ -90,47 +148,16 @@ class Einstellungen:
 
         ##TODO Bild von SAP Layout einstellungen und Prozess
         with st.expander('Bewegungsdaten LT22', expanded=False):
-                uploaded_file = st.file_uploader("Choose a file")
-                if uploaded_file is not None:
-                    # To read file as dataframe:
-                    df = pd.read_excel(uploaded_file)
-                    try:
-                        #dfcheck = df
-                        #dfcheck.columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC']
-                        #load file
+            st.write('Funktion wird gerade geupdated und ist in Kürze verfügbar')
 
-                        df1 = pd.read_feather('Data/LT22.feather')
-                        st.dataframe(df1, use_container_width=True)
-                        
-                        df1.set_index('Transfer Order Number', inplace=True)
-                        df.set_index('Transfer Order Number', inplace=True)
-                        df1 = pd.concat([df1[~df1.index.isin(df.index)], df],)
-                        df1.reset_index(inplace=True)
-                        st.dataframe(df1,use_container_width=True)
-                        # #df1.to_feather('Data/LT22.feather')
-                        # st.success("Daten wurden erfolgreich aktualisiert")
-                    except:
-                        st.error("Bitte die richtige Excel Datei auswählen")
-                        st.stop()
-                    #safeloce file
-                    # df.to_feather('Data/temp/uploadlt22.feather')
-                    #load file
-                    # df1 = pd.read_feather('Data/LT22.feather')
-                    # df2 = pd.read_feather('Data/temp/uploadlt22.feather')
-                    # df1.set_index('Transfer Order Number', inplace=True)
-                    # df2.set_index('Transfer Order Number', inplace=True)
-                    # df1 = pd.concat([df1[~df1.index.isin(df2.index)], df2],)
-                    # df1.reset_index(inplace=True)
-                    # st.dataframe(df1,use_container_width=True)
-                    # df1.to_feather('Data/LT22.feather')
-                    # st.success("Daten wurden erfolgreich aktualisiert")
-
-def seiteLaden():
-    selected2 = Einstellungen.menueLaden()
-    if selected2 == "Mitarbeiter pflegen":
-        Einstellungen.mitarbeiterPflegen()
-    elif selected2 == "Daten Update":
-        Einstellungen.datenUpdate()
-    elif selected2 == "Ich":
-        Einstellungen.ich()
+    def page():
+        selected2 = Einstellungen.menueLaden()
+        if selected2 == "Ich":
+            Einstellungen.ich()
+        if selected2 == "Mitarbeiter pflegen":
+            Einstellungen.mitarbeiterPflegen()
+        elif selected2 == "Daten Update":
+            Einstellungen.datenUpdate()
+        elif selected2 == "Administration":
+            Einstellungen.admin()
 

@@ -1,41 +1,59 @@
 import streamlit as st
 import streamlit_authenticator as stauth
-import pickle
 from pathlib import Path
 import pandas as pd
-import yaml
-from yaml import SafeLoader
 from Data_Class.SQL import datenLadenUser
 
 class Login:
-        
+    def __init__(self):
+        self.usernames = []
+        self.names = []
+        self.passwords = []
+        self.funktionen = []
+        self.rechte = []
+
+        self.credentials = {}
+        self.authenticator = None
+        st.session_state = None
+        st.session_state.rechte = None
+
 
     def Login(self):
+        # Initialize the 'rechte' attribute of session_state.
+        st.session_state.rechte = None
+
         df = datenLadenUser()
-        usernames = df['username'].tolist()
-        names = df['name'].tolist()
-        passwords = df['password'].tolist()
+        self.usernames = df['username'].tolist()
+        self.names = df['name'].tolist()
+        self.passwords = df['password'].tolist()
+        self.funktionen = df['function'].tolist()
+        self.rechte = df['rechte'].tolist()
+        self.credentials = {"usernames":{}}
 
-        credentials = {"usernames":{}}
-                
-        for uname,name,pwd in zip(usernames,names,passwords):
-            user_dict = {"name": name, "password": pwd}
-            credentials["usernames"].update({uname: user_dict})
-                
-        authenticator = stauth.Authenticate(credentials, "cokkie_name", "random_key", cookie_expiry_days=1)
+        # Extract the values from the DataFrame and add them to the 'credentials' dictionary.
+        for uname,name,pwd,funktion,rechte in zip(self.usernames,self.names,self.passwords,self.funktionen,self.rechte):
+            user_dict = {"name": name, "password": pwd, "function": funktion, "rechte": rechte}
+            self.credentials["usernames"].update({uname: user_dict})
 
-        name, authentication_status, usernames= authenticator.login("Login", 'main')
-        if authentication_status == False:
-            st.error("Login fehlgeschlagen")
-        if authentication_status == None:
-            st.info("Bitte loggen Sie sich ein")
+        self.authenticator = stauth.Authenticate(self.credentials, "cokkie_name", "random_key",
+                                            cookie_expiry_days=1)
+        name, authentication_status, usernames= self.authenticator.login("Login", 'main')
         if authentication_status == True:
-            #erfolgreich geladen dann Code ausführen!
-            return authentication_status
+            st.session_state.user = name
+            st.session_state.rechte = df.loc[df['name'] == name, 'rechte'].iloc[0]
+        if authentication_status == False:
+            st.error("Login fehlgeschlagen!")
 
-        def newUser(self):
-            try:
-                if authenticator.register_user('Register user', preauthorization=False):
-                    st.success('User registered successfully')
-            except Exception as e:
-                st.error(e)
+        return authentication_status
+    
+    def Logout(self):
+        if st.button('Logout', key='logout_button'):
+            self.authenticator.logout('Logout')
+            if st.session_state.user is None:
+                st.success("Logout successful!", key='logout_success')
+            else:
+                st.error("Logout failed!", key='logout_error')
+
+
+
+        

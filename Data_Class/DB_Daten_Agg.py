@@ -13,6 +13,7 @@ class DatenAgregieren():
         self.heute
 
     heute = datetime.date.today()
+    heute = heute - datetime.timedelta(days=2)
     #heute = heute- datetime.timedelta(days=3)
     # heute plus 3 Tage
     morgen = heute + datetime.timedelta(days=3)
@@ -21,7 +22,7 @@ class DatenAgregieren():
     # heute minus 3 Tage
     vorgestern = heute - datetime.timedelta(days=90)
 
-    def orderDatenLines():
+    def orderDatenLines(date1, date2):
 
         ##------------------ Stammdaten Laden und berechnen ------------------##
         dfStammdaten = sql_datenLadenMaster_CS_OUT()
@@ -51,7 +52,7 @@ class DatenAgregieren():
         dfStammdaten['PAL'] = dfStammdaten.apply(f_PAL,axis=1)
 
         ##------------------ Order Date von DB Laden ------------------##
-        dfOrder = SQL.sql_datenLadenDatum(DatenAgregieren.heute,DatenAgregieren.heute,SQL.tabelle_DepotDEBYKNOrders,SQL.datumplannedDate)
+        dfOrder = SQL.sql_datenLadenDatum(date1,date2,SQL.tabelle_DepotDEBYKNOrders,SQL.datumplannedDate)
         ##------------------ Order Items von DB Laden ------------------##
         dfOrderItems = sql_datenLadenOderItems()
         ##------------------ Kunden von DB Laden ------------------##
@@ -171,7 +172,7 @@ class DatenAgregieren():
         return df
 
 
-    def orderDatenGo():
-        df = DatenAgregieren.orderDatenLines()
+    def orderDatenGo(day1,day2):
+        df = DatenAgregieren.orderDatenLines(date1=day1,date2=day2)
         df = DatenAgregieren.oderDaten(df)
         return df

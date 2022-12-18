@@ -64,6 +64,12 @@ class SQL_TabellenLadenBearbeiten:
     '''Wann sollte der Lieferschein verladen werden zum Depot werden'''
     tabelle_DepotDEBYKNOrderItems = 'business_depotDEBYKN-DepotDEBYKNOrderItems'
     tabelleSSCCLabel = 'business_depotDEBYKN-DepotOrderDEBYKN_SSCCs'
+    ## Tabelle mit den SSCC Labeln
+    tabelleUser = 'user' # Tabelle mit den Usern Passwörtern etc.
+    tabellemitarbeiter = 'Mitarbeiter' # Tabelle mit den Mitarbeitern
+    tabelleSAP_lt22 = 'upload_SAP_lt22' # Tabelle mit den SAP lt22
+
+    
 
 
     def verbinder():
@@ -75,7 +81,17 @@ class SQL_TabellenLadenBearbeiten:
         password='b2.5v^H!IKjetuXMVNvW')
         db_conn = AzureDbConnection(conn_settings)
         return db_conn
+
+    ### Tabellen erstellen
+    def sql_createTable(tabellenName, df):
+        '''erwartet den Tabellennamen als String und ein DataFrame'''
+        db_conn = verbinder()
+        db_conn.connect()
+        df.to_sql(tabellenName, db_conn.conn, if_exists='replace')
+        db_conn.dispose()
+        return print(f'Tabelle {tabellenName} wurde erstellt')
     
+    ### TABELLEN LADEN
     def sql_datenLadenDatum(day1, day2, tabellenName,datumsSpalte):
         '''erwartet zwei Datumsangaben im Format 'YYYY-MM-DD' 
         und den Tabellennamen als String  
@@ -95,6 +111,14 @@ class SQL_TabellenLadenBearbeiten:
         db_conn.dispose()
         return df
 
+    def sql_datenTabelleLaden(tabellenName):
+        '''erwartet den Tabellennamen als String'''
+        db_conn = verbinder()
+        db_conn.connect()
+        df = pd.read_sql(f"SELECT * FROM [{tabellenName}]", db_conn.conn)
+        db_conn.dispose()
+        return df
+
     def sql_Stammdaten():
         db_conn = verbinder()
         db_conn.connect()
@@ -110,8 +134,33 @@ class SQL_TabellenLadenBearbeiten:
         df = pd.read_sql(f"SELECT * FROM [business_depotDEBYKN-DepotDEBYKNOrderItems] WHERE [SapOrderNumber] IN {(orders)}", db_conn.conn)
         db_conn.dispose()
         return df
+    ### Update von Tabellen
 
+    def sql_updateTabelle(tabellenName, df):
+        '''erwartet den Tabellennamen als String und ein DataFrame'''
+        db_conn = verbinder()
+        db_conn.connect()
+        df.to_sql(tabellenName, db_conn.conn, if_exists='replace', index=False)
+        db_conn.dispose()
+        return 'Tabelle wurde erfolgreich aktualisiert'
 
+    ##löschen von einträgen in Tabelle
+    def sql_deleteEintrag(tabellenName, eintrag):
+        '''erwartet den Tabellennamen als String und ein DataFrame'''
+        db_conn = verbinder()
+        db_conn.connect()
+        db_conn.conn.execute(f"DELETE FROM [{tabellenName}] WHERE [Index] = {eintrag}")
+        db_conn.dispose()
+        return 'Eintrag wurde erfolgreich gelöscht'
+    
+    ##Löschen einer Tabelle
+    def sql_deleteTabelle(tabellenName):
+        '''erwartet den Tabellennamen als String'''
+        db_conn = verbinder()
+        db_conn.connect()
+        db_conn.conn.execute(f"DROP TABLE [{tabellenName}]")
+        db_conn.dispose()
+        return 'Tabelle wurde erfolgreich gelöscht'
 
 def verbinderTestServer():
 
