@@ -25,7 +25,7 @@ class SAPWM:
             
     @st.experimental_memo
     def labeOrderDaten():
-        df  = DA.orderDatenLines()
+        df  = DA.orderDatenLines(SAPWM.heute,SAPWM.morgen)
         return df
     
 

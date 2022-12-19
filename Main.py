@@ -112,11 +112,11 @@ authentication_status = Login.Login(self=Login)
 
 with st.sidebar:
     try:      
-        sel_main_m = option_menu('Menu', berechtigung(), 
+        sel_main_m = option_menu('PAMS', berechtigung(), 
             icons=[''], 
             menu_icon="cast", )
     except:
-        sel_main_m = option_menu('Menu', ['Home'], 
+        sel_main_m = option_menu('PAMS', ['Home'], 
             icons=[''], 
             menu_icon="cast", )
 
@@ -128,13 +128,11 @@ if authentication_status == True:
         st.write('Hallo ' '!')
         st.write(st.session_state['user'])
         st.write()
-        st.text('Willkommen in PAMS Report-Tool BETA Version')
-        st.text('Zur Zeit sind aktualisiert sich das tool jede Stunde')
+        st.text('Willkommen in der PAMS BETA Version')
+        st.text('Zur Zeit aktualisiert sich das tool jede Stunde')
         st.text('Bei Fragen oder Problemen bitte an Martin Wolf wenden')
         st.text('Viel Spaß beim Auswerten')
         a = st.session_state.user       
-        b = st.session_state.rechte 
-        st.write(b)
         Login.authenticator.logout('Logout')
         if st.session_state.user is None:
             st.success("Logout successful!")
@@ -151,7 +149,6 @@ if authentication_status == True:
         ddsPage()
     if sel_main_m == 'SAP Mitarbeiter':
         LoadPageSapPicksMA.mitarbeiterPage()
-
     if sel_main_m == 'SAP WM Daten':
         SAPWM.sap_wm_page()
     if sel_main_m == 'Infocenter':

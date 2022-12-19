@@ -114,8 +114,7 @@ class PicksMA:
                 df['Pick Zeit'] = df['Pick Zeit'].dt.round(sel_timefeq)
                 mitarbeiterHardfacts(df)
                 figPicksMitarbeiter(df)
-                figPicksMitarbeiterLine(df)
-                
+                #figPicksMitarbeiterLine(df)
                 st.dataframe(df)
                 #mitarbeiterHardfacts(df)
                 

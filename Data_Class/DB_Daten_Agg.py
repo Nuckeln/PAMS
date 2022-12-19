@@ -23,7 +23,8 @@ class DatenAgregieren():
     vorgestern = heute - datetime.timedelta(days=90)
 
     def orderDatenLines(date1, date2):
-
+        '''Lädt die Daten aus der Datenbank und berechnet die Werte
+        erwartet 2 Datumsangaben'''
         ##------------------ Stammdaten Laden und berechnen ------------------##
         dfStammdaten = sql_datenLadenMaster_CS_OUT()
         dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]

@@ -278,10 +278,7 @@ class LIVE:
         fig.update_traces(marker_color=['#4FAF46' if x == 1 else '#E72482' for x in dfFertig['InTime']])
         fig.data[0].text = dfFertig['PartnerName'] + '<br>' + dfFertig['Picks Gesamt'].astype(str)
         # Date PartnerName to text
-
         st.plotly_chart(fig, use_container_width=True,height=800)
-        st.dataframe(dfOffen)
-        st.dataframe(dfFertig)
 
 
     def new_figUebermitteltInDeadline(df):
