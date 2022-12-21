@@ -299,12 +299,21 @@ class LIVE:
         
         #LIVE.new_figUebermitteltInDeadline(dfOr)
         with st.expander('Kundenübersicht, grün = Fertig, rot = Offen', expanded=True):
-            LIVE.figPicksKunde(dfOr)
+            try:
+                LIVE.figPicksKunde(dfOr)
+            except:
+                st.write('Keine Daten vorhanden')
         with st.expander('Lieferscheine nach Volumen in Stangen, Karton, Paletten', expanded=True):
-            LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr) 
+            try:
+                LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr) 
+            except:
+                st.write('Keine Daten vorhanden')
         with st.expander('Deadline eingehalten? Grün = Ja, Rot = Nein', expanded=True):     
-            LIVE.figUebermitteltInDeadline(dfOr)
+            try:    
+                LIVE.figUebermitteltInDeadline(dfOr)
         #LIVE.figPickStatusNachDepot(dfOr)
+            except:
+                st.write('Keine Daten vorhanden, schreibweise beachtet?')
         #LIVE.figPicksDepot_open_close_in_CS_OUT_PAL(dfOr)
 
 
