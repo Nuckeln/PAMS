@@ -28,6 +28,12 @@ class LIVE:
         self.df = df
 
     ## Function to reload the page all 2 min 
+    @st.experimental_memo
+    def loadDF(day1=heute, day2=heute):
+        st.spinner(text="dauert a weng..is noch beta...")
+        dfOr = DA.orderDatenGo(day1=day1, day2=day2)
+        dfOr = dfOr.reset_index(drop=True)
+        return dfOr
 
     def sessionstate():
         if 'key' not in st.session_state:
@@ -59,6 +65,7 @@ class LIVE:
             st.write("Sonstiges")
     def reload():
         if st.button("Reload"):
+            LIVE.loadDF(day1=LIVE.heute, day2=LIVE.heute)
             st.experimental_memo.clear()
 
     ## Filter für Live AllSSCCLabelsPrinted Func ###
@@ -75,23 +82,23 @@ class LIVE:
         col1, col2, col3 = st.columns(3)
         with col1:
             #---GesamtPicks---#
-            st.subheader("Gesamt Picks Tag")
+            st.subheader("Gesamt")
             pickges = df['Picks Gesamt'].sum()
             pickges = int(pickges)
-            st.write(f"Gesamtvolumen:  {pickges}")
+            st.write(f"Gesamt Picks:  {pickges}")
             #---PicksSTR---#
             picksSTR = df.loc[df['DeliveryDepot']=='KNSTR']
             picksSTR = picksSTR['Picks Gesamt'].sum()
             picksSTR = int(picksSTR)
-            st.write(f"Stuttgart:  {picksSTR}")
+            st.write(f"Gesamt Stuttgart:  {picksSTR}")
             #---PicksLEJ---#
             picksLEJ = df.loc[df['DeliveryDepot']=='KNLEJ']
             picksLEJ = picksLEJ['Picks Gesamt'].sum()
             picksLEJ = int(picksLEJ)
-            st.write(f"Leipzig:  {picksLEJ}")
+            st.write(f"Gesamt Leipzig:  {picksLEJ}")
             #---Lieferscheine---#            
             lieferscheine = df['SapOrderNumber'].nunique()
-            st.write(f"Lieferscheine:  {lieferscheine}")
+            st.write(f"Gesamt Lieferscheine:  {lieferscheine}")
         with col2:
             st.subheader("Offen")
             df1 = df[df['AllSSCCLabelsPrinted']==0]
@@ -148,35 +155,6 @@ class LIVE:
         fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
         st.plotly_chart(fig, use_container_width=True)
 
-
-
-    def figPicksDepot_open_close_in_CS_OUT_PAL(df):
-        depota = st.multiselect('DeliveryDepot', ['KNSTR','KNLEJ'],['KNSTR','KNLEJ'])
-        df = df[df['DeliveryDepot'].isin(depota)]
-
-
-   #function to create a bar chart to visualize the sum of columns df['Picks Karton offen'] df['Picks Paletten offen']  df['Picks Stangen offen'] df['Picks Karton fertig'] df['Picks Paletten fertig'] df['Picks Stangen fertig'] for each depot
-        df = df.groupby(['DeliveryDepot']).agg({'Picks Karton offen':'sum','Picks Paletten offen':'sum','Picks Stangen offen':'sum','Picks Karton fertig':'sum','Picks Paletten fertig':'sum','Picks Stangen fertig':'sum'}).reset_index()
-        fig = go.Figure(data=[
-            go.Bar(name='Picks Karton offen', x=df['DeliveryDepot'], y=df['Picks Karton offen'],constraintext='inside',text='Picks Karton offen',textangle=-90),
-            go.Bar(name='Picks Paletten offen', x=df['DeliveryDepot'], y=df['Picks Paletten offen'],constraintext='inside',text='Picks Paletten offen',textangle=-90),
-            go.Bar(name='Picks Stangen offen', x=df['DeliveryDepot'], y=df['Picks Stangen offen'], constraintext='inside',text='Picks Stangen offen',textangle=-90),
-            go.Bar(name='Picks Karton fertig', x=df['DeliveryDepot'], y=df['Picks Karton fertig'],constraintext='inside',text='Picks Karton fertig',textangle=-90),
-            go.Bar(name='Picks Paletten fertig', x=df['DeliveryDepot'], y=df['Picks Paletten fertig'],constraintext='inside',text='Picks Paletten fertig',textangle=-90),
-            go.Bar(name='Picks Stangen fertig', x=df['DeliveryDepot'], y=df['Picks Stangen fertig'],constraintext='inside',text='Picks Stangen fertig',textangle=-90)       
-        ])
-
-        # update bar color of Picks Stangen offen to #7030A0
-        fig.update_traces(marker_color=['#7030A0','#7030A0','#7030A0','#002060','#002060','#002060'],selector=dict(name='Picks Stangen offen'))
-
-        # Change the bar mode
-        fig.update_layout(barmode='group')
-        fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
-
-
-        fig.update_layout(title_text='Depotverteilung')
-        st.plotly_chart(fig, use_container_width=True)
-
     def figPicksKunde(df):
 
 
@@ -189,6 +167,10 @@ class LIVE:
         figTagKunden.update_traces(marker_color=np.where(df['AllSSCCLabelsPrinted'] == 1, '#4FAF46', '#E72482'))
         figTagKunden.update_traces(texttemplate='%{text:.2s}', text=df['Picks Gesamt'])
         figTagKunden.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
+        figTagKunden.update_layout(title_text='')
+        figTagKunden.update_xaxes(title_text='')
+        figTagKunden.update_yaxes(title_text='')
+        figTagKunden.layout.xaxis.tickangle = 70
         st.plotly_chart(figTagKunden,use_container_width=True)      
 
     def figPicksBy_SAP_Order_CS_PAL(df):
@@ -200,58 +182,21 @@ class LIVE:
         df['Picks Gesamt'] = df['Picks Karton'] + df['Picks Paletten'] + df['Picks Stangen']
         df = df.sort_values(by=['Picks Gesamt'], ascending=False)
         figPicksBySAPOrder = px.bar(df, x="SapOrderNumber", y=['Picks Karton','Picks Paletten','Picks Stangen'], title="Picks SAP Order in CS/PAL/OUT")
+        # change color Picks Karton = #0F2B63 Picks Paletten = #4FAF46 Picks Stangen = #E72482
+        figPicksBySAPOrder.update_traces(marker_color='#0F2B63', selector=dict(name='Picks Karton'))
+        figPicksBySAPOrder.update_traces(marker_color='#4FAF46', selector=dict(name='Picks Paletten'))
+        figPicksBySAPOrder.update_traces(marker_color='#E72482', selector=dict(name='Picks Stangen'))
         figPicksBySAPOrder.update_layout(showlegend=False)
+        figPicksBySAPOrder.update_layout(title_text='')
+        figPicksBySAPOrder.update_xaxes(title_text='')
+        figPicksBySAPOrder.update_yaxes(title_text='')
+        figPicksBySAPOrder.layout.xaxis.tickangle = 70
         st.plotly_chart(figPicksBySAPOrder,use_container_width=True)
-    def tester(df): 
-        col1, col2 = st.columns(2)
-        with col1:
-            sel_deadStr = st.text_input('Deadline Lej', '14:00:00')
-        with col2:
-            sel_deadLej = st.text_input('Deadline Str', '16:00:00')
-        #add deadlines to df by DeliveryDepot
-        df['Deadline'] = np.where(df['DeliveryDepot'] == 'KNLEJ', sel_deadStr, sel_deadLej)
-        df['PlannedDate'] = df['PlannedDate'] + pd.to_timedelta(df['Deadline'])
-        #convert to datetime
-        df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
-        # filter by fertiggestellt = '0'
-        dfOffen = df[df['Fertiggestellt'] == '0']
-        dfFertig = df[df['Fertiggestellt'] != '0']
-        dfFertig.Fertiggestellt = pd.to_datetime(dfFertig.Fertiggestellt)
 
-        dfFertig['InTime'] = (dfFertig['Fertiggestellt'] < dfFertig['PlannedDate']).astype(int)
-        #add to df.InTime = 1 if fertiggestellt < planneddate
-        dfOffen['InTime'] = (dfOffen['Fertiggestellt'] < dfOffen['PlannedDate']).astype(int)
-        #group by DeliveryDepot and count InTime
-        dfFertig = dfFertig.groupby(['DeliveryDepot'])['InTime'].sum().reset_index()
-        dfOffen = dfOffen.groupby(['DeliveryDepot'])['InTime'].sum().reset_index()
-        #merge dfFertig und dfOffen
-        df = dfFertig.merge(dfOffen, on='DeliveryDepot')
-        #add column InTime
-        df['InTime'] = df['InTime_x'] + df['InTime_y']
-        #add column Offen
-        df['Offen'] = df['Picks Gesamt'] - df['InTime']
-        #add column InTime % 
-        df['InTime %'] = df['InTime'] / df['Picks Gesamt']
-        #add column Offen % 
-        df['Offen %'] = df['Offen'] / df['Picks Gesamt']
-        #add column Offen % 
-        df['Fertig %'] = df['InTime'] / df['Picks Gesamt']
-        #remove columns
-        df = df.drop(columns=['InTime_x','InTime_y'])
-        #rename columns
-        df = df.rename(columns={'DeliveryDepot':'Depot','Picks Gesamt':'Picks Gesamt','InTime':'InTime','Offen':'Offen','InTime %':'InTime %','Offen %':'Offen %','Fertig %':'Fertig %'})
-        #sort by InTime %
-        df = df.sort_values(by=['InTime %'], ascending=False)
-        #add columns to df
-        df['InTime %'] = df['InTime %'].apply(lambda x: "{:.2%}".format(x))
-        df['Offen %'] = df['Offen %'].apply(lambda x: "{:.2%}".format(x))
-        df['Fertig %'] = df['Fertig %'].apply(lambda x: "{:.2%}".format(x))
-        st.dataframe(df)
 
-#Dieser Code gibt folgenden fehler aus AttributeError: 'Series' object has no attribute 'hour'
     def figUebermitteltInDeadline(df):
        # Kannst du mir ein Plotly chart geben welches eine Zeitachse hat und darauf die Lieferschiene ausgibt und anzeigt ob inTime oder nicht 
-
+        
         col1, col2 = st.columns(2)
         with col1:
             sel_deadStr = st.text_input('Deadline Lej', '14:00:00')
@@ -268,66 +213,33 @@ class LIVE:
         dfFertig.Fertiggestellt = pd.to_datetime(dfFertig.Fertiggestellt)
         #chek if is inTime
         dfFertig['InTime'] = (dfFertig['Fertiggestellt'] < dfFertig['PlannedDate']).astype(int)
+        dfFertig['Fertig um'] = dfFertig['Fertiggestellt']
+        dfFertig['Fertig um'] = dfFertig['Fertig um'].dt.strftime('%d.%m.%Y %H:%M')
         #round to hour
         dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'].dt.round('H')
-        #group by 'df = df.groupby(['PartnerName','Fertiggestellt',SapOrderNumber',"InTime",'DeliveryDepot']).agg({'Picks Gesamt':'sum'}).reset_index()
-        dfFertig = dfFertig.groupby(['PlannedDate','PartnerName','Fertiggestellt','SapOrderNumber','DeliveryDepot','InTime']).agg({'Picks Gesamt':'sum'}).reset_index()
+        #change format to day as text and hour
+        dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'].dt.strftime('%d.%m.%Y %H:%M')
+        #group by
+        dfFertig = dfFertig.groupby(['PlannedDate','PartnerName','Fertiggestellt','SapOrderNumber','DeliveryDepot','InTime','Fertig um']).agg({'Picks Gesamt':'sum'}).reset_index()
+        #sort by Fertiggestellt
+        dfFertig = dfFertig.sort_values(by=['Fertiggestellt'], ascending=True)
         #Create Plotly Chart
-        fig = px.bar(dfFertig, x="Fertiggestellt", y="Picks Gesamt", color="InTime", hover_data=['PartnerName','SapOrderNumber','DeliveryDepot'])
+        fig = px.bar(dfFertig, x='Fertiggestellt', y="Picks Gesamt", color="InTime", hover_data=['PartnerName','Fertig um','SapOrderNumber','DeliveryDepot'])
         #if in Time 1 set to green else to red
         fig.update_traces(marker_color=['#4FAF46' if x == 1 else '#E72482' for x in dfFertig['InTime']])
         fig.data[0].text = dfFertig['PartnerName'] + '<br>' + dfFertig['Picks Gesamt'].astype(str)
+        fig.layout.xaxis.type = 'category'
+        # x aaxis text horizontal
+        fig.layout.xaxis.tickangle = 70
+        # remove xaxis and yaxis title
+        fig.update_xaxes(title_text='')
+        fig.update_yaxes(title_text='')
+        fig.update_layout(legend_title_text='InTime')
+         
         # Date PartnerName to text
         st.plotly_chart(fig, use_container_width=True,height=800)
 
-
-    def new_figUebermitteltInDeadline(df):
-       # Kannst du mir ein Plotly chart geben welches eine Zeitachse hat und darauf die Lieferschiene ausgibt und anzeigt ob inTime oder nicht 
-
-            col1, col2 = st.columns(2)
-            with col1:
-                sel_deadStr = st.text_input('Deadline Lej', '14:00:00')
-            with col2:
-                sel_deadLej = st.text_input('Deadline Str', '16:00:00')
-            #add deadlines to df by DeliveryDepot
-            df['Deadline'] = np.where(df['DeliveryDepot'] == 'KNLEJ', sel_deadStr, sel_deadLej)
-            df['PlannedDate'] = df['PlannedDate'] + pd.to_timedelta(df['Deadline'])
-            #convert to datetime
-            df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
-            # filter by fertiggestellt = '0'
-            dfOffen = df[df['Fertiggestellt'] == '0']
-            dfFertig = df[df['Fertiggestellt'] != '0']
-            dfFertig.Fertiggestellt = pd.to_datetime(dfFertig.Fertiggestellt)
-            #chek if is inTime
-            dfFertig['InTime'] = (dfFertig['Fertiggestellt'] < dfFertig['PlannedDate']).astype(int)
-            #group by 'df = df.groupby(['PartnerName','Fertiggestellt',SapOrderNumber',"InTime",'DeliveryDepot']).agg({'Picks Gesamt':'sum'}).reset_index()
-            dfFertig = dfFertig.groupby(['PlannedDate','PartnerName','Fertiggestellt','SapOrderNumber','DeliveryDepot','InTime']).agg({'Picks Gesamt':'sum'}).reset_index()
-    # create a column with the deadline status
-            dfFertig['Deadline Status'] = np.where(dfFertig['Fertiggestellt'] <= dfFertig['PlannedDate'], 'On Time', 'Late')
-
-            # create the data for the chart
-            data = [
-                go.Bar(
-                    x = dfFertig['PlannedDate'],
-                    y = dfFertig['Picks Gesamt'],
-                    text = dfFertig['Deadline Status'],
-                    marker = dict(
-                        color = np.where(dfFertig['Deadline Status'] == 'On Time', 'green', 'red')
-                    )
-                )
-            ]
-
-            # create the layout for the chart
-            layout = go.Layout(
-                xaxis = dict(title = 'Planned Date'),
-                yaxis = dict(title = 'Picks Gesamt'),
-                title = 'Delivery Chain'
-            )
-
-            # create the figure and plot the chart
-            fig = go.Figure(data = data, layout = layout)
-            st.plotly_chart(fig)
-    ## AG-Grid Func ###
+   ## AG-Grid Func ###
 
     def tabelleAnzeigen(df):
         #new df with only the columns we need 'PlannedDate' ,'SapOrderNumber','PartnerName']#'Fertiggestellt','Picks Gesamt','Picks Karton','Picks Paletten','Picks Stangen','Lieferschein erhalten','Fertiggestellt'
@@ -358,23 +270,22 @@ class LIVE:
 
     def PageTagesReport():
     ##TODO Funktion orderDatenAgg() Datum 
-        #st.markdown('<meta http-equiv="refresh" content="120">', unsafe_allow_html=True)
-        @st.experimental_memo
-        def loadDF(day1=LIVE.heute, day2=LIVE.heute):
-            dfOr = DA.orderDatenGo(day1=day1, day2=day2)
-            dfOr = dfOr.reset_index(drop=True)
-            return dfOr
+        # #st.markdown('<meta http-equiv="refresh" content="120">', unsafe_allow_html=True)
+        # @st.experimental_memo
+        # def loadDF(day1=LIVE.heute, day2=LIVE.heute):
+        #     dfOr = DA.orderDatenGo(day1=day1, day2=day2)
+        #     dfOr = dfOr.reset_index(drop=True)
+        #     return dfOr
 
         
         pd.set_option("display.precision", 2)
-        
-        st.header('Tagesreport')
+
         colhead1, colhead2 ,colhead3, = st.columns(3)
         with colhead1:
             sel_date = st.date_input('Datum', LIVE.heute)
             day1 = sel_date
             day2 = sel_date
-            dfOr = loadDF(sel_date,sel_date)
+            dfOr = LIVE.loadDF(sel_date,sel_date)
         with colhead2:
             LIVE.reload()
             LIVE.downLoadTagesReport(dfOr)
@@ -382,12 +293,17 @@ class LIVE:
             LIVE.wetter()
 
         
-
+        
         LIVE.columnsKennzahlen(dfOr)
+
+        
         #LIVE.new_figUebermitteltInDeadline(dfOr)
-        LIVE.figPicksKunde(dfOr)
-        LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr)      
-        LIVE.figUebermitteltInDeadline(dfOr)
+        with st.expander('Kundenübersicht, grün = Fertig, rot = Offen', expanded=True):
+            LIVE.figPicksKunde(dfOr)
+        with st.expander('Lieferscheine nach Volumen in Stangen, Karton, Paletten', expanded=True):
+            LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr) 
+        with st.expander('Deadline eingehalten? Grün = Ja, Rot = Nein', expanded=True):     
+            LIVE.figUebermitteltInDeadline(dfOr)
         #LIVE.figPickStatusNachDepot(dfOr)
         #LIVE.figPicksDepot_open_close_in_CS_OUT_PAL(dfOr)
 

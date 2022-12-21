@@ -26,6 +26,11 @@ st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar
 # Session State also supports the attribute based syntax
 hide_streamlit_style = """
                 <style>
+                @import url('https://fonts.googleapis.com/css?family=Montserrat');
+                html, body, [class*="css"]  {
+                font-family: 'Montserrat';
+                }
+                
                 div[data-testid="stToolbar"] {
                 visibility: hidden;
                 height: 0%;
@@ -55,7 +60,6 @@ hide_streamlit_style = """
                 }
                 </style>
                 """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 st.markdown("""
         <style>
                .css-18e3th9 {
@@ -72,19 +76,20 @@ st.markdown("""
                 }
         </style>
         """, unsafe_allow_html=True)
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 
-
-#img = Image.open('Data/img/logo.png', mode='r')
+img = Image.open('Data/img/img_bat_logo_blau.png', mode='r')
 # ----- Config Main Menue -----
 # BAT LOGO  
 
 def berechtigung():
+
     # Berechtigungen für die Seiten
     try :
-        st.session_state.rechte
+        a = st.session_state.rechte
     except:
-        st.session_state.rechte = 0
+        a = st.session_state.rechte = 0
     # Berechtigungen für die Seiten
     if st.session_state.rechte == 1:
         #admin Vollzugriff
@@ -110,11 +115,34 @@ def berechtigung():
 
 authentication_status = Login.Login(self=Login)
 
-with st.sidebar:
-    try:      
+with st.sidebar: 
+    a = ("""
+        <style>
+               .css-18e3th9 {
+                    padding-top: 0rem;
+                    padding-bottom: 10rem;
+                    padding-left: 5rem;
+                    padding-right: 5rem;
+                }
+               .css-1d391kg {
+                    padding-top: 0rem;
+                    padding-right: 1rem;
+                    padding-bottom: 3.5rem;
+                    padding-left: 1rem;
+                }
+        </style>
+        """) 
+
+    st.markdown(a, unsafe_allow_html=True)  
+    try:
+        st.image(img)
+    except:
+        st.text('Bild nicht gefunden')
+    try:     
         sel_main_m = option_menu('PAMS', berechtigung(), 
             icons=[''], 
-            menu_icon="cast", )
+            menu_icon='kanban-fill',
+            styles={'container':{'font':'arial'}},)
     except:
         sel_main_m = option_menu('PAMS', ['Home'], 
             icons=[''], 
