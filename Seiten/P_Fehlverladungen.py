@@ -30,7 +30,6 @@ def filterFehlverladungen(df):
         col1, col2 = st.columns(2)
         with col1:
             selstati = st.multiselect('Status', stati, stati)
-            monat = st.multiselect('Monat', ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'], ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'])
         with col2:
             selbereiche = st.multiselect('Bereich', bereiche, bereiche)
         col3 , col4 = st.columns(2)
@@ -42,8 +41,19 @@ def filterFehlverladungen(df):
         df = df[df['Bereich'].isin(selbereiche)]
         df = df[df['Typ'].isin(seltyp)]
         df = df[df['V'].isin(selversion)]
-        df = df[df['VerladeMonat'].isin(monat)]
+
+        day1 = datetime.date.today()
+        day2 = day1 - datetime.timedelta(days=30)
+
+        end_date = datetime.date.today()
+        start_date = df['Verladedatum'].min()
         
+        # slide Date
+        format = "DD.MM.YYYY"
+        sel_dateRange = st.slider('Select date', min_value=start_date, value=(start_date, end_date), max_value=end_date, format=format)
+        
+        df = df[(df['Verladedatum'] >= sel_dateRange[0]) & (df['Verladedatum'] <= sel_dateRange[1])]
+            
         return df
 
 def fehlverladungErfassen(df):
@@ -298,56 +308,24 @@ def fehlverladungAnzeigen(df):
     fehlverladungImDetail(selid)
 
 def fehlverladungDashboard(df):
-    day1 = datetime.date.today()
-    day2 = day1 - datetime.timedelta(days=30)
-
-
 
     def fig_Bar_Chart(df):
         
-        # goub by verladetag and count
         dfIssueDay = df.groupby(['Verladedatum'])['Typ'].count().reset_index()
-        # create a dataframe with all days in the range
-        # dfalldays = pd.DataFrame({'Verladedatum': pd.date_range(start='2022-01-01', end='2023-12-31')})
-        # # set index
-        # dfalldays = dfalldays.set_index(np.arange(1000,1000+len(dfalldays)))
-        # # convert to date
-        # dfalldays['Verladedatum'] = dfalldays['Verladedatum'].dt.date
-        # # add values from df to dfalldays
-        # dfalldays = dfalldays.merge(dfIssueDay, how='left', left_on='Verladedatum', right_on='Verladedatum')
-        #create plot
         fig = px.line(dfIssueDay, x="Verladedatum", y="Typ", title="Fehlverladungen pro Tag")
         
 
 
         st.plotly_chart(fig, use_container_width=True)
 
-    # def fig_anzahlFehlverladungen(df,day1,day2):
-    #     dfIssueDay = df.groupby(['Verladedatum'])['Typ'].count().reset_index()
-    #     dfalldays = pd.DataFrame({'Verladedatum': pd.date_range(start='2022-01-01', end='2023-12-31')})
-    #     dfalldays = dfalldays.set_index(np.arange(1000,1000+len(dfalldays)))
-    #     dfalldays['Verladedatum'] = dfalldays['Verladedatum'].dt.date
-    #     # add values from df to dfalldays
-    #     dfalldays = dfalldays.merge(dfIssueDay, how='left', left_on='Verladedatum', right_on='Verladedatum')
-    #     #count values by day in df
-    #     dfalldays = dfalldays.groupby(['Verladedatum']).count()
-    #     today = datetime.date.today()
-    #     today_minus_30 = today - datetime.timedelta(days=30)
 
-    #     dfalldays = dfalldays.loc[today_minus_30:today]
-    #     st.bar_chart(dfalldays, y='Typ', width=0, height=200, use_container_width=True,)
-        
-    
-    #show fig_anzahlFehlverladungen
-
-    fig_Bar_Chart(df)
+    #fig_Bar_Chart(df)
     
     st.dataframe(df)
 
 
 def fehlverladungenPage():
     df = datenLadenFehlverladungen()
-
     selected2 = menueLaden()
     if selected2 == 'Fehlverladung Erfassen':
         fehlverladungErfassen(df)

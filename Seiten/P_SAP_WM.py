@@ -12,7 +12,7 @@ from Data_Class.SQL import createnewTable, sql_datenLadenMLGT
 class SAPWM:
     
     heute  = datetime.date.today()
-    morgen =heute + datetime.timedelta(days=1)
+    morgen =heute + datetime.timedelta(days=4)
 
     def __init__(self):
         self.df = DA.orderDatenLines()
@@ -23,7 +23,7 @@ class SAPWM:
         if 'key' not in st.session_state:
             st.session_state.key = +1
             
-    @st.experimental_memo
+    #@st.experimental_memo
     def labeOrderDaten():
         df  = DA.orderDatenLines(SAPWM.heute,SAPWM.morgen)
         return df

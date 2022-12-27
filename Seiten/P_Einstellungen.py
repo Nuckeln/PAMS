@@ -4,6 +4,7 @@ import numpy as np
 from streamlit_option_menu import option_menu
 from Seiten.P_UserLogin import Login
 
+from Data_Class.DB_Daten_SAP import DatenAgregieren as DA
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 import streamlit_authenticator as stauth
 
@@ -148,7 +149,17 @@ class Einstellungen:
 
         ##TODO Bild von SAP Layout einstellungen und Prozess
         with st.expander('Bewegungsdaten LT22', expanded=False):
-            st.write('Funktion wird gerade geupdated und ist in Kürze verfügbar')
+            sel_upload = st.file_uploader("LT22 Update", type=["xlsx"]
+            ,key='LT22')
+            st.write('Lade deine Datei hoch und klicke auf "Daten Update"')
+            if st.button("Daten Update"):
+                st.write("Daten werden geupdated")
+                if sel_upload is not None:
+                    df = pd.read_excel(sel_upload)
+                    DA.sapLt22DatenBerechnen(df)
+
+
+                #TODO Daten werde
 
     def page():
         selected2 = Einstellungen.menueLaden()

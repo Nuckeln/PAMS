@@ -11,7 +11,7 @@ class DatenAgregieren():
 
     
     def sapLt22DatenBerechnen(dflt22):
-        #dflt22 = pd.read_excel('lt22.xlsx')
+        #dflt22 = pd.read_excel('Data/upload/lt22.xlsx')
         dfStammdaten = SQL.sql_Stammdaten()
         dfOrders = SQL.sql_datenTabelleLaden(SQL.tabelle_DepotDEBYKNOrders)
         dfMitarbeiter = SQL.sql_datenTabelleLaden(SQL.tabellemitarbeiter)
@@ -93,5 +93,8 @@ class DatenAgregieren():
         dflt22['LieferscheinErhalten'] = dfOrders['SapOrderNumber'].apply(lambda x: dfOrders.loc[dfOrders['SapOrderNumber'] == x]['CreatedTimestamp'].iloc[0])
         dflt22['PartnerNo'] = dfOrders['SapOrderNumber'].apply(lambda x: dfOrders.loc[dfOrders['SapOrderNumber'] == x]['PartnerNo'].iloc[0])
         dflt22['SuperDepot'] = dflt22['DestBin'].isin(dfOrders['SapOrderNumber'])
+        # save to parquet
+        dflt22.to_parquet('Data/upload/lt22.parquet')
+
         #PartnerNo
         return dflt22

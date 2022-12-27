@@ -21,11 +21,11 @@ class PicksMA:
             return selected2
         @st.cache(allow_output_mutation=True)
         def load_data():
-            df = pd.read_excel('lt22.xlsx')
-            df = DA.sapLt22DatenBerechnen(df)
+            df = pd.read_parquet('Data/upload/lt22.parquet')
             return df
 
         def TagAuswerten(df):
+
             df['Pick Datum']= pd.to_datetime(df['Pick Datum']).dt.date
 
             def hardfactsGesamt(df):
@@ -52,8 +52,6 @@ class PicksMA:
                     st.write(f"GesamtPicks: {pickscs + picksout + pickspal:,}")
                     st.write(f"Picks/h: {((pickscs + picksout + pickspal) * aktivenutzer)/ 7.5:,}")
 
-                
-
             def mitarbeiterHardfacts(df):
                 df = df.groupby(['Name']).agg({'Picks CS': 'sum', 'Picks OUT': 'sum', 'PICKS PAL': 'sum','DestBin': 'nunique'})
                 df = df.rename(columns={'DestBin': 'Lieferscheine'})
@@ -61,7 +59,6 @@ class PicksMA:
                 df['GesamtPicks'] = df['Picks CS'] + df['Picks OUT'] + df['PICKS PAL']
                 df = df.sort_values(by='GesamtPicks', ascending=False)
                 st.dataframe(df, use_container_width=True)
-                # create a figure
 
             def figPicksMitarbeiter(df):
                 df = df.groupby(['Name']).agg({'Picks CS': 'sum', 'Picks OUT': 'sum', 'PICKS PAL': 'sum','DestBin': 'nunique'})
@@ -101,10 +98,25 @@ class PicksMA:
 
 
             def page(df):
-
-                
-                sel_date = st.date_input("Datum auswählen", datetime.date(2022, 12, 1))
-                df = df[df['Pick Datum'] == sel_date]     
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    sel_date = st.date_input("Datum auswählen", datetime.date(2022, 12, 1))
+                    df = df[df['Pick Datum'] == sel_date]     
+                with col2:
+                #first and last date from df 
+                    first_date = df['Pick Datum'].min()
+                    last_date = df['Pick Datum'].max()
+                    st.write(f"Vorhandender Datenzeitraum vom:")
+                    st.write(f' {first_date} bis: {last_date}')
+                with col3:
+                    sel_fachbereich = st.radio("Fachbereich",["Superdepot","CW","C&F"],index=0)
+                    if sel_fachbereich == "Superdepot":
+                        df = df[df['SuperDepot'] == 1]
+                    # elif sel_fachbereich == "CW":
+                    #     df = df[df['Fachbereich'] == "CW"]
+                    # elif sel_fachbereich == "C&F":
+                    #     df = df[df['Fachbereich'] == "C&F"]
+                st.write(" ")
                 dfNurDate = df          
                 hardfactsGesamt(df)
                 sel_mitarbeiter = st.multiselect("Mitarbeiter auswählen",df['Name'].unique(),default=df['Name'].unique())
@@ -116,9 +128,6 @@ class PicksMA:
                 figPicksMitarbeiter(df)
                 #figPicksMitarbeiterLine(df)
                 st.dataframe(df)
-                #mitarbeiterHardfacts(df)
-                
-
 
                
             page(df)
