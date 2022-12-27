@@ -19,7 +19,7 @@ class PicksMA:
             icons=['house', 'cloud-upload', "list-task"], 
             menu_icon="cast", default_index=0, orientation="horizontal")
             return selected2
-        @st.cache(allow_output_mutation=True)
+        #@st.cache(allow_output_mutation=True)
         def load_data():
             df = pd.read_parquet('Data/upload/lt22.parquet')
             return df
