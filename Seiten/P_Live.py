@@ -24,10 +24,6 @@ class LIVE:
     morgen =heute + datetime.timedelta(days=3)
     vorgestern = heute - datetime.timedelta(days=3)
 
-    def __init__(self,df):
-        self.df = df
-
-    ## Function to reload the page all 2 min 
     @st.experimental_memo
     def loadDF(day1=heute, day2=heute):
         st.spinner(text="dauert a weng..is noch beta...")
@@ -65,7 +61,6 @@ class LIVE:
             st.write("Sonstiges")
     def reload():
         if st.button("Reload"):
-            LIVE.loadDF(day1=LIVE.heute, day2=LIVE.heute)
             st.experimental_memo.clear()
 
     ## Filter für Live AllSSCCLabelsPrinted Func ###
@@ -269,15 +264,7 @@ class LIVE:
     #######------------------Main------------------########
 
     def PageTagesReport():
-    ##TODO Funktion orderDatenAgg() Datum 
-        # #st.markdown('<meta http-equiv="refresh" content="120">', unsafe_allow_html=True)
-        # @st.experimental_memo
-        # def loadDF(day1=LIVE.heute, day2=LIVE.heute):
-        #     dfOr = DA.orderDatenGo(day1=day1, day2=day2)
-        #     dfOr = dfOr.reset_index(drop=True)
-        #     return dfOr
 
-        
         pd.set_option("display.precision", 2)
 
         colhead1, colhead2 ,colhead3, = st.columns(3)
@@ -292,12 +279,8 @@ class LIVE:
         with colhead3:
             LIVE.wetter()
 
-        
-        
         LIVE.columnsKennzahlen(dfOr)
 
-        
-        #LIVE.new_figUebermitteltInDeadline(dfOr)
         with st.expander('Kundenübersicht, grün = Fertig, rot = Offen', expanded=True):
             try:
                 LIVE.figPicksKunde(dfOr)
@@ -311,14 +294,10 @@ class LIVE:
         with st.expander('Deadline eingehalten? Grün = Ja, Rot = Nein', expanded=True):     
             try:    
                 LIVE.figUebermitteltInDeadline(dfOr)
-        #LIVE.figPickStatusNachDepot(dfOr)
             except:
                 st.write('Keine Daten vorhanden, schreibweise beachtet?')
-        #LIVE.figPicksDepot_open_close_in_CS_OUT_PAL(dfOr)
 
 
-        
-        
         LIVE.tabelleAnzeigen(dfOr)
         
 

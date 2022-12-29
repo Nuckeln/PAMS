@@ -14,12 +14,13 @@ from Seiten.P_Fehlverladungen import fehlverladungenPage
 from Seiten.P_DDS import ddsPage
 from Seiten.P_Infocenter import Infocenter
 from Seiten.P_SAP_PicksMA import LoadPageSapPicksMA
-
-
+import datetime
+from Data_Class.DB_Daten_Agg import DatenAgregieren as DA
 
 # Zum Ausführen
 #MAC#    streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
 #WIN#    streamlit run "
+
 
 # --- Set Global Page Configs ---
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="expanded")
@@ -62,13 +63,13 @@ hide_streamlit_style = """
                 """
 st.markdown("""
         <style>
-               .css-18e3th9 {
+            .css-18e3th9 {
                     padding-top: 0rem;
                     padding-bottom: 10rem;
                     padding-left: 5rem;
                     padding-right: 5rem;
                 }
-               .css-1d391kg {
+            .css-1d391kg {
                     padding-top: 3.5rem;
                     padding-right: 1rem;
                     padding-bottom: 3.5rem;
@@ -77,6 +78,7 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+st.spinner(text='Lade Daten...')
 
 
 img = Image.open('Data/img/img_bat_logo_blau.png', mode='r')
@@ -118,13 +120,13 @@ authentication_status = Login.Login(self=Login)
 with st.sidebar: 
     a = ("""
         <style>
-               .css-18e3th9 {
+            .css-18e3th9 {
                     padding-top: 0rem;
                     padding-bottom: 10rem;
                     padding-left: 5rem;
                     padding-right: 5rem;
                 }
-               .css-1d391kg {
+            .css-1d391kg {
                     padding-top: 0rem;
                     padding-right: 1rem;
                     padding-bottom: 3.5rem;
@@ -181,9 +183,6 @@ if authentication_status == True:
         SAPWM.sap_wm_page()
     if sel_main_m == 'Infocenter':
         Infocenter.page()
-
-
-        
 
 
 
