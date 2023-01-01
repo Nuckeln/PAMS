@@ -161,7 +161,7 @@ if authentication_status == True:
         st.text('Willkommen in der PAMS BETA Version')
         st.text('Zur Zeit aktualisiert sich das tool jede Stunde')
         st.text('Bei Fragen oder Problemen bitte an Martin Wolf wenden')
-        st.text('Viel Spaß beim Auswerten')
+        st.text('Viel Spaß beim Auswerten.')
         a = st.session_state.user       
         Login.authenticator.logout('Logout')
         if st.session_state.user is None:
