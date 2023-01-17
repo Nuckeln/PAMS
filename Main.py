@@ -19,12 +19,9 @@ from Data_Class.DB_Daten_Agg import DatenAgregieren as DA
 
 # Zum Ausführen
 #MAC#    streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
-#WIN#    streamlit run "
-
 
 # --- Set Global Page Configs ---
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="expanded")
-# Session State also supports the attribute based syntax
 hide_streamlit_style = """
                 <style>
                 @import url('https://fonts.googleapis.com/css?family=Montserrat');
@@ -82,9 +79,8 @@ st.spinner(text='Lade Daten...')
 
 
 img = Image.open('Data/img/img_bat_logo_blau.png', mode='r')
-# ----- Config Main Menue -----
-# BAT LOGO  
 
+# ----- Config Main Menue -----
 def berechtigung():
 
     # Berechtigungen für die Seiten

@@ -9,29 +9,13 @@ from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 import streamlit_authenticator as stauth
 
 class Einstellungen:
-    def __init__(self):
-        self.seiteEinstellungen()
-        self.menueLaden()
-        self.admin()
-        self.passwortÄndern()
-        self.eingelogterUser()
-        self.userLöschen()
-        self.UserAnlegen()
-        self.authentication_status = Login.Login(self=Login)
-        
 
-    def seiteEinstellungen():
-        if 'key' not in st.session_state:
-            st.session_state['key'] = 'value'
-        if 'key' not in st.session_state:
-            st.session_state.key = +1
 
     def menueLaden():
         if st.session_state.rechte == 1:
             selected2 = option_menu(None, ['Ich',"Administration", "Mitarbeiter pflegen", "Daten Update"], 
             icons=['house', 'cloud-upload', "list-task"], 
             menu_icon="cast", default_index=0, orientation="horizontal")
-            st.session_state.rechte
             return selected2
         else:
             selected2 = option_menu(None, ['Ich'], 
@@ -96,53 +80,45 @@ class Einstellungen:
                 st.success("Passwort erfolgreich geändert")
                 st.experimental_rerun()
       
-  
     def mitarbeiterPflegen():
-        #dfMitarbeiter = pd.read_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather') 
-        dfMitarbeiter = SQL.sql_datenTabelleLaden(SQL.tabellemitarbeiter)
-        #set index 1 to len(dfMitarbeiter)
-        dfMitarbeiter.index = np.arange(1, len(dfMitarbeiter) + 1)
+        df = SQL.sql_datenTabelleLaden(SQL.tabellemitarbeiter)
         with st.expander("Mitarbeiter Anlegen"):
-            with st.form(key='my_form', clear_on_submit=True):
+            with st.form(key='mitarbeiter_anlegen', clear_on_submit=True):
                 col1, col2 = st.columns(2)
                 with col1:
-                    #id = dfMitarbeiter.index.max() + 1       
+                    #id = df.index.max() + 1       
                     name = st.text_input("Name",key='name')
                     oneid = st.text_input("One ID",key='oneId')
                     status = st.radio("Status", ('aktiv', 'inaktiv'),key='status')
-
                 with col2:
                     funktion = st.selectbox('Funktion',["Operativ",'Administration','Management'],key='funktion')
                     firma = st.selectbox("Unternehmen", ['BAT', 'LOG-IN'], key='firma')
                     fachbereich = st.selectbox("Fachbereich", ['Super-Depot'],  key='fachbereich')
-                
                 speichern = st.form_submit_button("Speichern")  
-                if speichern:
-                    #check user input  
-                    if aktiv == True:
-                        aktiv = 1
-                    if name == "":
-                        st.error("Bitte Name eingeben")
-                    elif oneid == "":
-                        st.error("Bitte One ID eingeben")
-                    else:
-                        oneid = int(oneid)
-                        dfMitarbeiter = dfMitarbeiter.append({'Name':name,'One ID':oneid,'Funktion':funktion,'Unternehmen':firma,'Fachbereich':fachbereich,'Status':status},ignore_index=True)
-                        SQL.sql_updateTabelle( tabellenName=SQL.tabellemitarbeiter ,df=dfMitarbeiter)
-                        #dfMitarbeiter.to_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather')
-                        st.success("Mitarbeiter wurde angelegt")
 
-        with st.expander("Mitarbeiter Löschen"):
-            with st.form(key='my_form2', clear_on_submit=True):
-                selMitarbeiter = st.selectbox("Mitarbeiter", dfMitarbeiter['Name'],key='selMitarbeiter')
-                löschen = st.form_submit_button("Löschen")
-                if löschen:
-                        dfMitarbeiter = dfMitarbeiter[dfMitarbeiter['Name'] != selMitarbeiter]
-                        dfMitarbeiter = dfMitarbeiter.reset_index(drop=True)
-                        dfMitarbeiter.to_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather')
-                
-                    #st.experimental_rerun()
-        st.dataframe(dfMitarbeiter, use_container_width=True)     
+                # if speichern:
+                #     # #check user input  
+                #     # if aktiv == True:
+                #     #     aktiv = 1
+                #     # if name == "":
+                #     #     st.error("Bitte Name eingeben")
+                #     # elif oneid == "":
+                #     #     st.error("Bitte One ID eingeben")
+                #     # else:
+                #     #     oneid = int(oneid)
+                #         #df = pd.concat([df, pd.DataFrame([[name, oneid, funktion, firma, fachbereich, status]], columns=['Name', 'One ID', 'Funktion', 'Unternehmen', 'Fachbereich', 'Status'])], ignore_index=True)                        #SQL.sql_updateTabelle( tabellenName=SQL.tabellemitarbeiter ,df=df)
+                        
+                #         st.success("Mitarbeiter wurde angelegt")
+
+        # with st.expander("Mitarbeiter Löschen"):
+        #     with st.form(key='my_form2', clear_on_submit=True):
+        #         selMitarbeiter = st.selectbox("Mitarbeiter", df['Name'],key='selMitarbeiter')
+        #         löschen = st.form_submit_button("Löschen")
+        #         if löschen:
+        #                 df = df[df['Name'] != selMitarbeiter]
+        #                 df = df.reset_index(drop=True)
+        #                 df.to_feather('/Users/martinwolf/Python/Superdepot Reporting/data/user.feather')
+        # st.dataframe(df, use_container_width=True)     
 
     def datenUpdate():
         st.markdown("Welche Daten möchtest du Updaten?")
@@ -157,9 +133,6 @@ class Einstellungen:
                 if sel_upload is not None:
                     df = pd.read_excel(sel_upload)
                     DA.sapLt22DatenBerechnen(df)
-
-
-                #TODO Daten werde
 
     def page():
         selected2 = Einstellungen.menueLaden()

@@ -136,6 +136,8 @@ class DatenAgregieren():
 
         return df
 
+
+
     def oderDaten(df):
         #df = DatenAgregieren.orderDatenLines()
         dfLabel = SQL.sql_datenLadenDatum(DatenAgregieren.vorgestern, DatenAgregieren.morgen ,SQL.tabelleSSCCLabel,'CreatedTimestamp')       
@@ -157,8 +159,6 @@ class DatenAgregieren():
         df['Picks Karton fertig'] = df['SapOrderNumber'].apply(lambda x: df1.loc[(df1['SapOrderNumber'] == x) & (df1['AllSSCCLabelsPrinted'] == 1)]['Picks CS'].sum())
         df['Picks Paletten fertig'] = df['SapOrderNumber'].apply(lambda x: df1.loc[(df1['SapOrderNumber'] == x) & (df1['AllSSCCLabelsPrinted'] == 1)]['Picks PAL'].sum())
         df['Picks Stangen fertig'] = df['SapOrderNumber'].apply(lambda x: df1.loc[(df1['SapOrderNumber'] == x) & (df1['AllSSCCLabelsPrinted'] == 1)]['Picks OUT'].sum())
-
-
 
         #df PartnerName, SapOrderNumber, AllSSCCLabelsPrinted, Picks Gesamt to str
         df['PartnerName'] = df['PartnerName'].astype(str)

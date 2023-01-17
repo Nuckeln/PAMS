@@ -8,8 +8,6 @@ from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 
 class DatenAgregieren():
 
-
-    
     def sapLt22DatenBerechnen(dflt22):
         #dflt22 = pd.read_excel('Data/upload/lt22.xlsx')
         dfStammdaten = SQL.sql_Stammdaten()

@@ -69,9 +69,6 @@ class SQL_TabellenLadenBearbeiten:
     tabellemitarbeiter = 'Mitarbeiter' # Tabelle mit den Mitarbeitern
     tabelleSAP_lt22 = 'upload_SAP_lt22' # Tabelle mit den SAP lt22
 
-    
-
-
     def verbinder():
 
         conn_settings = ConnectionSettings(    
