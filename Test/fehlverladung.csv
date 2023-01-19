@@ -1,6 +1,0 @@
-ID,Bereich,AD oder OP,Status,Kurzbeschreibung,Gemeldet von,Kunde oder Endmarkt,Verursacher,Gespräch durchgeführt?,Verladedatum,Meldedatum,Typ,Lieferschein,PO,Menge,Einheit,Mail,Upload,Maßnahme,Beschreibung,V
-64986,LOG-IN Leaf,OP,Offen,Neue ,wehm,edeka,bat,Nein,2022-11-20,2022-11-20,Schaden,2332,344343,,,,,,khj,1
-26414,Super-Depot,OP,Offen,,,,,,2022-11-21,2022-11-21,Schaden,,,,,,,,,1
-13627,LOG-IN CW,AD,In Bearbeitung,kurz,gemeldet von,kunde,verursacher,Nein,2022-11-21,2022-11-21,Packvorschrift,3200000,45000000,9999,Out,/Users/martinwolf/Python/Superdepot Reporting/data/temp/WG_ Teststellung Honewell __ Angebot 4920569_1.msg,,maßnahme ,beschreibung,1
-64986,LOG-IN Leaf,OP,Gelöst,Neue ,wehm,edeka,bat,,2022-11-20,2022-11-20,Schaden,2332,344343,,,,,,,1
-64986,LOG-IN CW,OP,Offen,Neue ,wehm,edeka,bat,,2022-11-20,2022-11-20,Schaden,2332,344343,,,,,,Test,1

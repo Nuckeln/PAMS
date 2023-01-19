@@ -69,11 +69,6 @@ class SAPWM:
         if st.button("Reload"):
             SAPWM.loadDF.clear()
         
-    def sessionstate():
-        if 'key' not in st.session_state:
-            st.session_state['key'] = 'value'
-        if 'key' not in st.session_state:
-            st.session_state.key = +1
 
     def menueLaden():
         selected2 = option_menu(None, ["Stellplatzverwaltung", "Zugriffe SN/TN "],

@@ -130,10 +130,6 @@ class DatenAgregieren():
         df['UnloadingListIdentifier'] = df['UnloadingListIdentifier'].astype(str)
         #NiceLabelTransmissionState_TimeStamp to string
         df['NiceLabelTransmissionState_TimeStamp'] = df['NiceLabelTransmissionState_TimeStamp'].astype(str)
-
-        #createnewTable(df,'tabelle_OrdersBerechnet')
-
-
         return df
 
 
