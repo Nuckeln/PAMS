@@ -15,13 +15,12 @@ from Seiten.P_DDS import ddsPage
 from Seiten.P_Infocenter import Infocenter
 from Seiten.P_SAP_PicksMA import LoadPageSapPicksMA
 import datetime
-from Data_Class.DB_Daten_Agg import DatenAgregieren as DA
 
 # Zum Ausführen
 #MAC#    streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
 
 # --- Set Global Page Configs ---
-st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="expanded")
+st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
 hide_streamlit_style = """
                 <style>
                 @import url('https://fonts.googleapis.com/css?family=Montserrat');
@@ -75,8 +74,6 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-st.spinner(text='Lade Daten...')
-
 
 img = Image.open('Data/img/img_bat_logo_blau.png', mode='r')
 
@@ -91,23 +88,23 @@ def berechtigung():
     # Berechtigungen für die Seiten
     if st.session_state.rechte == 1:
         #admin Vollzugriff
-        return ['Home',"Live Status",'SAP WM Daten','SAP Mitarbeiter','Einstellungen','Fehlverladungen','DDS','Infocenter']
+        return ["Live Status",'SAP WM Daten','SAP Mitarbeiter','Einstellungen','Fehlverladungen','DDS','Infocenter']
     
     elif st.session_state.rechte == 2:
         # Manager
-        return ['Home',"Live Status",'SAP Mitarbeiter','SAP WM Daten','Einstellungen','Fehlverladungen','DDS','Infocenter']
+        return ["Live Status",'SAP Mitarbeiter','SAP WM Daten','Einstellungen','Fehlverladungen','DDS','Infocenter']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 
-        return ['Home',"Live Status",'SAP WM Daten','Einstellungen']
+        return ["Live Status",'SAP WM Daten','Einstellungen']
     
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd
-        return ['Home',"Live Status",'SAP WM Daten','Einstellungen']
+        return ["Live Status",'SAP WM Daten','Einstellungen']
         # Lager
     
     elif st.session_state.rechte == 5:
-        return ['Home',"Live Status"]
+        return ["Live Status"]
 
 # ----- Login -----
 
@@ -167,6 +164,9 @@ if authentication_status == True:
 
     if sel_main_m == 'Live Status':
         LIVE.PageTagesReport()
+        #expand st.sidebar false
+
+        
     if sel_main_m == 'Einstellungen': 
         Einstellungen.page()
     if sel_main_m == 'Fehlverladungen':

@@ -2,8 +2,8 @@ from distutils.log import info
 import datetime
 import pandas as pd
 import numpy as np
-from Data_Class.SQL import  sql_datenLadenKunden, sql_datenLadenMaster_CS_OUT,sql_datenLadenOderItems
-from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
+from SQL import  sql_datenLadenKunden, sql_datenLadenMaster_CS_OUT,sql_datenLadenOderItems
+from SQL import SQL_TabellenLadenBearbeiten as SQL
 
 class DatenAgregieren():
     '''Klasse zum Agregieren von Daten aus der Datenbank
@@ -189,3 +189,11 @@ class UpdateDaten():
         df.to_parquet('Data/appData/df.parquet.gzip', compression='gzip')
 
 UpdateDaten.updateDaten_byDate()
+
+actTime = datetime.datetime.now()
+#save actDateTime to string
+actDateTime = actTime.strftime("%H:%M")
+#save actDateTime to txt
+with open('Data/appData/lastUpdate.txt', 'w') as f:
+    f.write(actDateTime)
+

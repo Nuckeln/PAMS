@@ -5,9 +5,10 @@ import datetime
 import st_aggrid as ag
 #parquet
 import pyarrow.parquet as pq
+import time
 
 #from Data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
-from Data_Class.DB_Daten import UpdateDaten as UD
+
 from Data_Class.wetter.api import getWetterBayreuth
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten
 import plotly_express as px
@@ -26,6 +27,17 @@ class LIVE:
     morgen =heute + datetime.timedelta(days=3)
     vorgestern = heute - datetime.timedelta(days=3)
 
+    def timer():
+        st.markdown("5-Minute Timer")
+        time_left = st.empty()
+        start_time = time.time()
+        time_left.text("5:00")
+
+        while time.time() - start_time <= 300:  # 300 seconds is 5 minutes
+            time_left.text("{:02d}:{:02d}".format(*divmod(int(time.time() - start_time), 60)))
+            time.sleep(1)
+
+        time_left.text("Time's up!")
 
     def loadDF(day1=None, day2=None):
         # load data from Data/appData/df.parquet.gzip
@@ -40,9 +52,6 @@ class LIVE:
             day2 = pd.to_datetime(day2).date()
         #filter nach Datum
         dfOr = dfOr[(dfOr['PlannedDate'].dt.date >= day1) & (dfOr['PlannedDate'].dt.date <= day2)]
-        return dfOr
-    def UpdateDF():
-        dfOr = UD.updateDaten_byDate()
         return dfOr
 
     def wetter():
@@ -68,9 +77,6 @@ class LIVE:
             st.write("Schnee")
         else:
             st.write("Sonstiges")
-    def reload():
-        if st.button("Reload"):
-            LIVE.UpdateDF()
 
     ## Filter für Live AllSSCCLabelsPrinted Func ###
     def FilterNachDatum(day1, day2,df):
@@ -281,7 +287,13 @@ class LIVE:
             sel_date = st.date_input('Datum', LIVE.heute)
             dfOr = LIVE.loadDF(sel_date,sel_date)
         with colhead2:
-            LIVE.reload()
+            with open("Data/appData/lastUpdate.txt", "r") as file:
+                lastUpdate = file.read()
+                update_plus5 = pd.to_datetime(lastUpdate) + pd.to_timedelta('5 minutes')
+                update_plus5 = update_plus5.strftime('%H:%M')
+            st.write('Letztes Update: ' + lastUpdate + ' nächstes um: ' + str(update_plus5)+ ' Uhr')
+            #LIVE.timer()
+
             LIVE.downLoadTagesReport(dfOr)
         with colhead3:
             LIVE.wetter()
