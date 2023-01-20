@@ -125,8 +125,6 @@ class LIVE:
             st.write(f'Fertig Stuttgart: {df2.loc[df2["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()}')
             st.write(f"Fertige Lieferscheine: {df2['SapOrderNumber'].nunique()}")
 
-    ## Plotly Func ###
-
     ## Plotly Flexibles Bar Chart ###
     def userBauDirDiagramm(df):
         userAuswahl = ['Amount of DNs',	'DESADV','Amount of picks',	'Amount of picks for next Day'	,'Volume available for next Day in %' ,'Amount transmissions w/o TPD' ,'Operational activities completed',]
@@ -184,14 +182,13 @@ class LIVE:
         st.plotly_chart(figTagKunden,use_container_width=True)      
 
     def figPicksBy_SAP_Order_CS_PAL(df):
-        
         sel = st.multiselect('Depot  ', ['KNSTR','KNLEJ'],['KNSTR','KNLEJ'])
         df = df[df['DeliveryDepot'].isin(sel)]
-        df= df.groupby(['SapOrderNumber','PartnerName'])['Picks Karton','Picks Paletten','Picks Stangen'].sum().reset_index()
+        df= df.groupby(['SapOrderNumber','PartnerName','AllSSCCLabelsPrinted'])['Picks Karton','Picks Paletten','Picks Stangen'].sum().reset_index()
         #sort by Picks CS+ PAL + OUT 
         df['Picks Gesamt'] = df['Picks Karton'] + df['Picks Paletten'] + df['Picks Stangen']
         df = df.sort_values(by=['Picks Gesamt'], ascending=False)
-        figPicksBySAPOrder = px.bar(df, x="SapOrderNumber", y=['Picks Karton','Picks Paletten','Picks Stangen'], title="Picks SAP Order in CS/PAL/OUT")
+        figPicksBySAPOrder = px.bar(df, x="SapOrderNumber", y=['Picks Karton','Picks Paletten','Picks Stangen'], title="Picks SAP Order in CS/PAL/OUT",hover_data=['Picks Gesamt','PartnerName',])
         # change color Picks Karton = #0F2B63 Picks Paletten = #4FAF46 Picks Stangen = #E72482
         figPicksBySAPOrder.update_traces(marker_color='#0F2B63', selector=dict(name='Picks Karton'))
         figPicksBySAPOrder.update_traces(marker_color='#4FAF46', selector=dict(name='Picks Paletten'))
@@ -201,6 +198,10 @@ class LIVE:
         figPicksBySAPOrder.update_xaxes(title_text='')
         figPicksBySAPOrder.update_yaxes(title_text='')
         figPicksBySAPOrder.layout.xaxis.tickangle = 70
+        df['Transparency'] = np.where(df['AllSSCCLabelsPrinted']==True, 0.3, 1)
+        figPicksBySAPOrder.update_traces(marker=dict(opacity=df['Transparency']))
+
+    
         st.plotly_chart(figPicksBySAPOrder,use_container_width=True)
 
 
@@ -306,10 +307,11 @@ class LIVE:
             except:
                 st.write('Keine Daten vorhanden')
         with st.expander('Lieferscheine nach Volumen in Stangen, Karton, Paletten', expanded=True):
-            try:
-                LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr) 
-            except:
-                st.write('Keine Daten vorhanden')
+            # try:
+            #     LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr) 
+            # except:
+            #     st.write('Keine Daten vorhanden')
+            LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr) 
         with st.expander('Deadline eingehalten? Grün = Ja, Rot = Nein', expanded=True):     
             try:    
                 LIVE.figUebermitteltInDeadline(dfOr)
