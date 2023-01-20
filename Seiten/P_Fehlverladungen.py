@@ -82,7 +82,7 @@ def fehlverladungErfassen(df):
             mailpath = ""
             uploadverpath = ""
             maßnahme =  st.text_area("Maßnahme",key='maßnahme')
-            st.write("Achtung: Es kann nur ein File pro Typ Mail/Andere Uploads hochgeladen werden")
+            st.write("Achtung: Es ist jeweils nur ein Dokument pro Auswahl (Mail oder Datei) Zum Hochladen möglich")
             col3, col4 = st.columns(2)
             with col3:
                 mail = st.file_uploader("Mail",type=['msg','eml'],key='mail')                 

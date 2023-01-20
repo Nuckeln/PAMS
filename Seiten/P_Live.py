@@ -3,9 +3,11 @@ import pandas as pd
 import numpy as np
 import datetime
 import st_aggrid as ag
+#parquet
+import pyarrow.parquet as pq
 
 #from Data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
-from Data_Class.DB_Daten_Agg import DatenAgregieren as DA
+from Data_Class.DB_Daten import UpdateDaten as UD
 from Data_Class.wetter.api import getWetterBayreuth
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten
 import plotly_express as px
@@ -24,18 +26,25 @@ class LIVE:
     morgen =heute + datetime.timedelta(days=3)
     vorgestern = heute - datetime.timedelta(days=3)
 
-    @st.experimental_memo
-    def loadDF(day1=heute, day2=heute):
-        st.spinner(text="dauert a weng..is noch beta...")
-        dfOr = DA.orderDatenGo(day1=day1, day2=day2)
-        dfOr = dfOr.reset_index(drop=True)
+
+    def loadDF(day1=None, day2=None):
+        # load data from Data/appData/df.parquet.gzip
+        dfOr = pq.read_table('Data/appData/df.parquet.gzip').to_pandas()
+        if day1 is None:
+            day1 = pd.to_datetime('today').date()
+        else:
+            day1 = pd.to_datetime(day1).date()
+        if day2 is None:
+            day2 = pd.to_datetime('today').date()
+        else:
+            day2 = pd.to_datetime(day2).date()
+        #filter nach Datum
+        dfOr = dfOr[(dfOr['PlannedDate'].dt.date >= day1) & (dfOr['PlannedDate'].dt.date <= day2)]
+        return dfOr
+    def UpdateDF():
+        dfOr = UD.updateDaten_byDate()
         return dfOr
 
-    def sessionstate():
-        if 'key' not in st.session_state:
-            st.session_state['key'] = 'value'
-        if 'key' not in st.session_state:
-            st.session_state.key = +1
     def wetter():
         df = getWetterBayreuth()
         temp = df.loc[0,'Temp']
@@ -61,7 +70,7 @@ class LIVE:
             st.write("Sonstiges")
     def reload():
         if st.button("Reload"):
-            st.experimental_memo.clear()
+            LIVE.UpdateDF()
 
     ## Filter für Live AllSSCCLabelsPrinted Func ###
     def FilterNachDatum(day1, day2,df):
@@ -270,8 +279,6 @@ class LIVE:
         colhead1, colhead2 ,colhead3, = st.columns(3)
         with colhead1:
             sel_date = st.date_input('Datum', LIVE.heute)
-            day1 = sel_date
-            day2 = sel_date
             dfOr = LIVE.loadDF(sel_date,sel_date)
         with colhead2:
             LIVE.reload()
