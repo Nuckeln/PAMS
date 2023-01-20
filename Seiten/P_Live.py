@@ -212,7 +212,7 @@ class LIVE:
         with col1:
             sel_deadStr = st.text_input('Deadline Lej', '14:00:00')
         with col2:
-            sel_deadLej = st.text_input('Deadline Str', '16:00:00')
+            sel_deadLej = st.text_input('Deadline Str', '14:00:00')
         #add deadlines to df by DeliveryDepot
         df['Deadline'] = np.where(df['DeliveryDepot'] == 'KNLEJ', sel_deadStr, sel_deadLej)
         df['PlannedDate'] = df['PlannedDate'] + pd.to_timedelta(df['Deadline'])
