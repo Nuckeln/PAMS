@@ -15,17 +15,18 @@ import plotly_express as px
 import plotly.graph_objects as go
 
 
-
-#from streamlit import caching
-#caching.clear_cache()
-
-
-
 class LIVE:
     
     heute  = datetime.date.today()
     morgen =heute + datetime.timedelta(days=3)
     vorgestern = heute - datetime.timedelta(days=3)
+
+    def reload():
+        #st.button("Reload")
+        from Data_Class.DB_Daten import UpdateDaten
+        
+        if st.button("Reload", key="reloadao"):
+            UpdateDaten.updateDaten_byDate()#st.experimental_rerun()
 
     def timer():
         st.markdown("5-Minute Timer")
@@ -161,6 +162,7 @@ class LIVE:
             showlegend=True)
         fig.update_traces(hovertemplate='Depot: %{x}<br>Picks Gesamt: %{y:.2f}')
         fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
+        fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
         st.plotly_chart(fig, use_container_width=True)
 
     def figPicksKunde(df):
@@ -179,6 +181,7 @@ class LIVE:
         figTagKunden.update_xaxes(title_text='')
         figTagKunden.update_yaxes(title_text='')
         figTagKunden.layout.xaxis.tickangle = 70
+        figTagKunden.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
         st.plotly_chart(figTagKunden,use_container_width=True)      
 
     def figPicksBy_SAP_Order_CS_PAL(df):
@@ -200,10 +203,145 @@ class LIVE:
         figPicksBySAPOrder.layout.xaxis.tickangle = 70
         df['Transparency'] = np.where(df['AllSSCCLabelsPrinted']==True, 0.3, 1)
         figPicksBySAPOrder.update_traces(marker=dict(opacity=df['Transparency']))
-
+        figPicksBySAPOrder.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
     
         st.plotly_chart(figPicksBySAPOrder,use_container_width=True)
 
+    def figTachoDiagrammPicksLei(df):
+
+        df1 = df[df['AllSSCCLabelsPrinted']==0]
+        offenLei = df1.loc[df1["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()
+        offenStu = df1.loc[df1["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()
+
+        df2 = df[df['AllSSCCLabelsPrinted']==1]
+        fertigLei = df2.loc[df2["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()
+        fertigStu = df2.loc[df2["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()
+
+        data = {'Offen': [offenLei, offenStu],
+                'Fertig': [fertigLei, fertigStu]}
+        df = pd.DataFrame(data, index=['Leipzig', 'Stuttgart'])
+
+        # Berechnen Sie den Prozentsatz der abgeschlossenen Lieferungen
+        completion_rate = (fertigLei / (fertigLei + offenLei)) * 100
+
+        fig = go.Figure(go.Indicator(
+            domain = {'x': [0, 1], 'y': [0, 1]},
+            value = completion_rate,
+            mode = "gauge+number+delta",
+            title = {'text': "Leipzig Ziel (%)"},
+            delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
+            gauge = {'axis': {'range': [0, 100], 'tickangle': -90},
+                    'steps' : [
+                        {'range': [0, 100], 'color': "#0F2B63"},
+                        ],
+
+                    'threshold' : {'line': {'color': "#E72482", 'width': 4}, 'thickness': 0.75, 'value': 100}}))
+        fig.update_traces(number_suffix=" %")
+        # add suffix to delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
+        fig.update_traces(delta_suffix=" %")
+        fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
+        fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
+        fig.update_layout(title_text='')
+        fig.update_xaxes(title_text='')
+        fig.update_yaxes(title_text='')
+        fig.layout.xaxis.tickangle = 70
+        st.plotly_chart(fig,use_container_width=True,use_container_height=True,sharing='streamlit')
+
+    def figTachoDiagrammPicksStr(df):
+            
+            df1 = df[df['AllSSCCLabelsPrinted']==0]
+            offenLei = df1.loc[df1["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()
+            offenStu = df1.loc[df1["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()
+    
+            df2 = df[df['AllSSCCLabelsPrinted']==1]
+            fertigLei = df2.loc[df2["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()
+            fertigStu = df2.loc[df2["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()
+    
+            data = {'Offen': [offenLei, offenStu],
+                    'Fertig': [fertigLei, fertigStu]}
+            df = pd.DataFrame(data, index=['Leipzig', 'Stuttgart'])
+    
+            # Berechnen Sie den Prozentsatz der abgeschlossenen Lieferungen
+            completion_rate = (fertigStu / (fertigStu + offenStu)) * 100
+    
+            fig = go.Figure(go.Indicator(
+                domain = {'x': [0, 1], 'y': [0, 1]},
+                value = completion_rate,
+                mode = "gauge+number+delta",
+                title = {'text': "Stuttgart Ziel (%)"},
+                delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
+                gauge = {'axis': {'range': [0, 100], 'tickangle': -90},
+                        'steps' : [
+                            {'range': [0, 100], 'color': "#0F2B63"},
+                            ],
+    
+                        'threshold' : {'line': {'color': "#E72482", 'width': 4}, 'thickness': 0.75, 'value': 100}}))
+            fig.update_traces(number_suffix=" %")
+            # add suffix to delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
+            fig.update_traces(delta_suffix=" %")
+            fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
+            fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
+            fig.update_layout(title_text='')
+            fig.update_xaxes(title_text='')
+            fig.update_yaxes(title_text='')
+            fig.layout.xaxis.tickangle = 70
+            st.plotly_chart(fig,use_container_width=True)
+    
+    def figTachoDiagrammMitarbeiterstunden(sel_date):
+        früh = 8
+        spät = 6
+        # früschicht von Uhrzeit bis Uhrzeit 
+        frühSchicht = ['06:00:00', '14:00:00']
+        # spätschicht von Uhrzeit bis Uhrzeit
+        spätSchicht = ['14:00:00', '22:00:00']
+        verfügbar = 0
+
+        # Berechnen der noch verfügbaren Mitarbeiterstunden
+        istTag =  datetime.datetime.now().date()
+        istZeit = datetime.datetime.now().time()
+
+        if istTag < sel_date:
+            verfügbar = früh * 7.5
+        if istTag == sel_date:
+            if istZeit > datetime.time(6,0,0) and istZeit < datetime.time(14,0,0):
+                verfügbar = früh * 7.5
+            if istZeit > datetime.time(14,0,0) and istZeit < datetime.time(22,0,0):
+                verfügbar = früh * 7.5 + spät * 7.5
+            if istZeit > datetime.time(22,0,0) and istZeit < datetime.time(23,59,59):
+                verfügbar = spät * 7.5
+        if istTag > sel_date:
+            verfügbar = 0
+
+
+
+
+        # Berechnen Sie den Prozentsatz der noch verfügbaren stunden  von den Gesamtstunden
+        completion_rate = (verfügbar / 150) * 100
+        
+
+        fig = go.Figure(go.Indicator(
+            domain = {'x': [0, 1], 'y': [0, 1]},
+            value = completion_rate,
+            mode = "gauge+number+delta",
+            title = {'text': "Verfügbare Mitarbeiterstunden in H"},
+                            delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
+            gauge = {'axis': {'range': [0, (früh+spät * 7.5)], 'tickangle': -90},
+                    'steps' : [
+                        {'range': [0, 100], 'color': "#0F2B63"},
+                        ],
+    
+                    'threshold' : {'line': {'color': "#E72482", 'width': 4}, 'thickness': 0.75, 'value': verfügbar}}))
+        fig.update_traces(number_suffix=" h")
+        # add suffix to delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
+        fig.update_traces(delta_suffix=" h")
+        fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
+        fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
+        fig.update_layout(title_text='')
+        fig.update_xaxes(title_text='')
+        fig.update_yaxes(title_text='')
+        fig.layout.xaxis.tickangle = 70
+        st.plotly_chart(fig,use_container_width=True)
+        return completion_rate
 
     def figUebermitteltInDeadline(df):
        # Kannst du mir ein Plotly chart geben welches eine Zeitachse hat und darauf die Lieferschiene ausgibt und anzeigt ob inTime oder nicht 
@@ -245,6 +383,7 @@ class LIVE:
         # remove xaxis and yaxis title
         fig.update_xaxes(title_text='')
         fig.update_yaxes(title_text='')
+        fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
         fig.update_layout(legend_title_text='InTime')
          
         # Date PartnerName to text
@@ -288,11 +427,12 @@ class LIVE:
             sel_date = st.date_input('Datum', LIVE.heute)
             dfOr = LIVE.loadDF(sel_date,sel_date)
         with colhead2:
-            with open("Data/appData/lastUpdate.txt", "r") as file:
-                lastUpdate = file.read()
-                update_plus5 = pd.to_datetime(lastUpdate) + pd.to_timedelta('5 minutes')
-                update_plus5 = update_plus5.strftime('%H:%M')
-            st.write('Letztes Update: ' + lastUpdate + ' nächstes um: ' + str(update_plus5)+ ' Uhr')
+            # with open("Data/appData/lastUpdate.txt", "r") as file:
+            #     lastUpdate = file.read()
+            #     update_plus5 = pd.to_datetime(lastUpdate) + pd.to_timedelta('5 minutes')
+            #     update_plus5 = update_plus5.strftime('%H:%M')
+            # st.write('Letztes Update: ' + lastUpdate + ' nächstes um: ' + str(update_plus5)+ ' Uhr')
+            LIVE.reload()   
             #LIVE.timer()
 
             LIVE.downLoadTagesReport(dfOr)
@@ -300,6 +440,21 @@ class LIVE:
             LIVE.wetter()
 
         LIVE.columnsKennzahlen(dfOr)
+        # with st.expander('Performance', expanded=True):
+        #     try:
+        #         col34, col35, col36 = st.columns(3)
+        #         with col34:
+        #             LIVE.figTachoDiagrammPicksLei(dfOr)
+        #         with col35:
+        #             LIVE.figTachoDiagrammPicksStr(dfOr)
+        #         with col36:
+        #             LIVE.figTachoDiagrammMitarbeiterstunden(sel_date)
+        #     except:
+        #         with col36:
+        #             LIVE.figTachoDiagrammMitarbeiterstunden(sel_date)
+        #             a = LIVE.figTachoDiagrammMitarbeiterstunden(sel_date)
+        #             st.write(a)
+
 
         with st.expander('Kundenübersicht, grün = Fertig, rot = Offen', expanded=True):
             try:
@@ -321,5 +476,13 @@ class LIVE:
 
         LIVE.tabelleAnzeigen(dfOr)
         
+        with open("Data/appData/lastUpdate.txt", "r") as file:
+            lastUpdate = file.read()
+            update_plus5 = pd.to_datetime(lastUpdate) + pd.to_timedelta('5 minutes')
+            update_plus5 = update_plus5.strftime('%H:%M')
+        st.write('Letztes Update: ' + lastUpdate )# + ' nächstes um: ' + str(update_plus5)+ ' Uhr')
+        
+        #write actual date
+        st.write('Aktuelles Datum: ' + LIVE.heute.strftime("%d.%m.%Y"))
 
 
