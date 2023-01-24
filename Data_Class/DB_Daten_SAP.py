@@ -83,6 +83,11 @@ class DatenAgregieren():
                 dflt22.loc[each, 'Umlagerung'] = 1
                 dflt22.loc[each, 'Art'] = 'Gebinde'
 
+        # change dfMitabeiter OneID to string 
+        dfMitarbeiter['One ID'] = dfMitarbeiter['One ID'].astype(str)
+        dflt22['MitarbeiterConfirmTO'] = dflt22['MitarbeiterConfirmTO'].astype(str)
+        #dfMitarbeiter['One ID'] = dfMitarbeiter['One ID'].apply(lambda x: 999999999 if type(x) == str else x)
+
         ## Füge den Mitarbeiter hinzu
         # if the value of dfMitarbeiter[OneID] exists in dflt22[MitarbeiterConfirmTO] then add the value of dfMitarbeiter[Mitarbeiter] to dflt22[MitarbeiterConfirmTO]
         dflt22 = pd.merge(dflt22, dfMitarbeiter,left_on='MitarbeiterConfirmTO', right_on='One ID',how='left')

@@ -1,0 +1,5 @@
+Bitte Antworte in Deutsch bitte gebe mit einen Python Code  
+Verwende dabei bitte die Frameworks keras und sklearn
+um folgendes zu tun.
+
+Einlesen eines Pandas Datenframes mit Lieferdatum in PlannedDate, Kunde in PartnerName, Bestellmenge Karton in Pick Karton, Bestellmenge in Stangen in Picks Stangen, Bestellmenge Paletten in Picks Paletten. Der Datensatz reicht von 04.2021 bis heute, nun möchte ich einen Forecast, welcher mir für die nächsten 5 Werktage die wahrscheinlichen Bestellmengen pro Tag und Kunde ausgibt. Bitte beachte das die Bestellmengen, oder Kunden auch Nullwerte enthalten können

@@ -100,12 +100,13 @@ class PicksMA:
             def page(df):
                 col1, col2, col3 = st.columns(3)
                 with col1:
-                    sel_date = st.date_input("Datum auswählen", datetime.date(2022, 12, 1))
+                    #letzer Tag im Datenframe
+                    first_date = df['Pick Datum'].min()
+                    last_date = df['Pick Datum'].max()
+                    sel_date = st.date_input("Datum auswählen", last_date)
                     df = df[df['Pick Datum'] == sel_date]     
                 with col2:
                 #first and last date from df 
-                    first_date = df['Pick Datum'].min()
-                    last_date = df['Pick Datum'].max()
                     st.write(f"Vorhandender Datenzeitraum vom:")
                     st.write(f' {first_date} bis: {last_date}')
                 with col3:

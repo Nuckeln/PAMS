@@ -9,7 +9,8 @@ from Seiten.P_UserLogin import Login
 from Seiten.P_Live import LIVE
 from Seiten.P_SAP_WM import SAPWM
 #from Seiten.P_Forecast import *
-from Seiten.P_Einstellungen import Einstellungen
+from Seiten.P_Admin import Admin
+from Seiten.P_Daten_Update import Daten_Update
 from Seiten.P_Fehlverladungen import fehlverladungenPage
 from Seiten.P_DDS import ddsPage
 from Seiten.P_Infocenter import Infocenter
@@ -17,8 +18,8 @@ from Seiten.P_SAP_PicksMA import LoadPageSapPicksMA
 import datetime
 
 # Zum Ausführen
-#MAC#    streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
-
+#MAC#   streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
+ 
 # --- Set Global Page Configs ---
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
 hide_streamlit_style = """
@@ -88,11 +89,11 @@ def berechtigung():
     # Berechtigungen für die Seiten
     if st.session_state.rechte == 1:
         #admin Vollzugriff
-        return ["Live Status",'SAP WM Daten','SAP Mitarbeiter','Einstellungen','Fehlverladungen','DDS','Infocenter']
+        return ["Live Status",'SAP WM Daten','SAP Bewegungsdaten','Fehlverladungen','DDS','Infocenter','Daten Updaten','Admin','Einstellungen']
     
     elif st.session_state.rechte == 2:
         # Manager
-        return ["Live Status",'SAP Mitarbeiter','SAP WM Daten','Einstellungen','Fehlverladungen','DDS','Infocenter']
+        return ["Live Status",'SAP Mitarbeiter','SAP Bewegungsdaten','Fehlverladungen','DDS','Infocenter','Daten Updaten','Einstellungen']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 
@@ -167,18 +168,20 @@ if authentication_status == True:
         #expand st.sidebar false
 
         
-    if sel_main_m == 'Einstellungen': 
-        Einstellungen.page()
+    if sel_main_m == 'Admin': 
+        Admin.page()
     if sel_main_m == 'Fehlverladungen':
         fehlverladungenPage()
     if sel_main_m == 'DDS':
         ddsPage()
-    if sel_main_m == 'SAP Mitarbeiter':
+    if sel_main_m == 'SAP Bewegungsdaten':
         LoadPageSapPicksMA.mitarbeiterPage()
     if sel_main_m == 'SAP WM Daten':
         SAPWM.sap_wm_page()
     if sel_main_m == 'Infocenter':
         Infocenter.page()
+    if sel_main_m == 'Daten Updaten':
+        Daten_Update.page()
 
 
 

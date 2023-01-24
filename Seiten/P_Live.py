@@ -27,7 +27,8 @@ class LIVE:
         
         if st.button("Reload", key="reloadao"):
             UpdateDaten.updateDaten_byDate()#st.experimental_rerun()
-
+            # rerun script
+            st.experimental_rerun()
     def timer():
         st.markdown("5-Minute Timer")
         time_left = st.empty()
@@ -40,7 +41,7 @@ class LIVE:
 
         time_left.text("Time's up!")
 
-    def loadDF(day1=None, day2=None):
+    def loadDF(day1=None, day2=None): 
         # load data from Data/appData/df.parquet.gzip
         dfOr = pq.read_table('Data/appData/df.parquet.gzip').to_pandas()
         if day1 is None:
@@ -440,21 +441,15 @@ class LIVE:
             LIVE.wetter()
 
         LIVE.columnsKennzahlen(dfOr)
-        # with st.expander('Performance', expanded=True):
-        #     try:
-        #         col34, col35, col36 = st.columns(3)
-        #         with col34:
-        #             LIVE.figTachoDiagrammPicksLei(dfOr)
-        #         with col35:
-        #             LIVE.figTachoDiagrammPicksStr(dfOr)
-        #         with col36:
-        #             LIVE.figTachoDiagrammMitarbeiterstunden(sel_date)
-        #     except:
-        #         with col36:
-        #             LIVE.figTachoDiagrammMitarbeiterstunden(sel_date)
-        #             a = LIVE.figTachoDiagrammMitarbeiterstunden(sel_date)
-        #             st.write(a)
-
+        with st.expander('', expanded=True):
+            try:
+                col34, col35, col36 = st.columns(3)
+                with col34:
+                    LIVE.figTachoDiagrammPicksLei(dfOr)
+                with col35:
+                    LIVE.figTachoDiagrammPicksStr(dfOr)
+            except:
+               st.write('Keine Daten vorhanden')
 
         with st.expander('Kundenübersicht, grün = Fertig, rot = Offen', expanded=True):
             try:
