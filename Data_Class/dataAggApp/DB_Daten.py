@@ -197,6 +197,11 @@ st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar
 
 
 st.write('Update Daten')
-#UpdateDaten.updateDaten_byDate()
+try:
+    if st.button('Update'):
+        UpdateDaten.updateDaten_byDate()
+        st.write('Update erfolgreich')
+except:
+    st.write('Update nicht erfolgreich')
 #print('done')
 

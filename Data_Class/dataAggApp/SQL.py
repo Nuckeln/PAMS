@@ -159,7 +159,6 @@ class SQL_TabellenLadenBearbeiten:
         # close connection to the database
         db_conn.dispose()
         
-
     ##löschen von einträgen in Tabelle
     def sql_deleteEintrag(tabellenName, eintrag):
         '''erwartet den Tabellennamen als String und ein DataFrame'''
