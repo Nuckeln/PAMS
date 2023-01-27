@@ -4,7 +4,7 @@ from lark import logger
 import pandas as pd
 import numpy as np
 from SQL import SQL_TabellenLadenBearbeiten as SQL
-
+import streamlit as st # Streamlit Web App Framework
 class DatenAgregieren():
     '''Klasse zum Agregieren von Daten aus der Datenbank
     Datum eingrenzen? 
@@ -193,7 +193,10 @@ class UpdateDaten():
         #SQL.sql_updateTabelle('Kundenbestellungen',df)
         print(df.dtypes)
 
+st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
 
-UpdateDaten.updateDaten_byDate()
-print('done')
+
+st.write('Update Daten')
+#UpdateDaten.updateDaten_byDate()
+#print('done')
 
