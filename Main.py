@@ -90,7 +90,8 @@ def berechtigung():
     # Berechtigungen für die Seiten
     if st.session_state.rechte == 1:
         #admin Vollzugriff
-        return ["Live Status",'SAP WM Daten','SAP Bewegungsdaten','Fehlverladungen','DDS','Infocenter','Daten Updaten','Admin','Einstellungen','Wartung']
+        #return ["Live Status",'SAP WM Daten','SAP Bewegungsdaten','Fehlverladungen','DDS','Infocenter','Daten Updaten','Admin','Einstellungen','Wartung']
+        return ['Wartung']
     else:
         return ['Wartung']
     
