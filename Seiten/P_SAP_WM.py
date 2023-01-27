@@ -10,7 +10,6 @@ import plotly.graph_objects as go
 from streamlit_option_menu import option_menu
 from Data_Class.DB_Daten_Agg import DatenAgregieren as DA
 from Data_Class.SQL import createnewTable, sql_datenLadenMLGT
-import ntplib
 from time import ctime
 
 class figSAPWM:       

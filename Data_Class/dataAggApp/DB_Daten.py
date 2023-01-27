@@ -1,8 +1,8 @@
 from distutils.log import info
 import datetime
+from lark import logger
 import pandas as pd
 import numpy as np
-from SQL import  sql_datenLadenKunden, sql_datenLadenMaster_CS_OUT,sql_datenLadenOderItems
 from SQL import SQL_TabellenLadenBearbeiten as SQL
 
 class DatenAgregieren():
@@ -19,7 +19,7 @@ class DatenAgregieren():
         '''Lädt die Daten aus der Datenbank und berechnet die Werte
         erwartet 2 Datumsangaben'''
         ##------------------ Stammdaten Laden und berechnen ------------------##
-        dfStammdaten = sql_datenLadenMaster_CS_OUT()
+        dfStammdaten = SQL.sql_datenTabelleLaden('data_materialmaster-MaterialMasterUnitOfMeasures')
         dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]
         dfStammdaten['MaterialNumber'] = dfStammdaten['MaterialNumber'].str.replace('0000000000', '')
         dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]   
@@ -48,9 +48,9 @@ class DatenAgregieren():
         ##------------------ Order Date von DB Laden ------------------##
         dfOrder = SQL.sql_datenLadenDatum(date1,date2,SQL.tabelle_DepotDEBYKNOrders,SQL.datumplannedDate)
         ##------------------ Order Items von DB Laden ------------------##
-        dfOrderItems = sql_datenLadenOderItems()
+        dfOrderItems = SQL.sql_datenTabelleLaden('business_depotDEBYKN-DepotDEBYKNOrderItems')
         ##------------------ Kunden von DB Laden ------------------##
-        dfKunden = sql_datenLadenKunden()
+        dfKunden = SQL.sql_datenTabelleLaden('Kunden_mit_Packinfos')
         ##------------------ Merge Items und Stammdaten ------------------##
         dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].astype(str)
         dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].str.replace('0000000000', '')
@@ -176,6 +176,7 @@ class UpdateDaten():
         df.to_parquet('Data/appData/df.parquet.gzip', compression='gzip')
 
     def updateDaten_byDate():
+        logger.info("Starting to update data by date")
         df = pd.read_parquet('Data/appData/df.parquet.gzip')
         day1 = df['PlannedDate'].max()
         #add 10 days to lastDay
@@ -185,15 +186,14 @@ class UpdateDaten():
         df1 = DatenAgregieren.orderDatenGo(day1,DatenAgregieren.fuenfTage)
         #concat df and df1
         df = pd.concat([df,df1])
-        #save df to parquet
-        df.to_parquet('Data/appData/df.parquet.gzip', compression='gzip')
+        #convert 'Lieferschein erhalten' to string
+        df['Lieferschein erhalten'] = df['Lieferschein erhalten'].astype(str)
+        columns = df.columns
+        #SAVE TO SQL TABLE 'Kundenbestellungen'
+        #SQL.sql_updateTabelle('Kundenbestellungen',df)
+        print(df.dtypes)
+
 
 UpdateDaten.updateDaten_byDate()
-
-actTime = datetime.datetime.now()
-#save actDateTime to string
-actDateTime = actTime.strftime("%H:%M")
-#save actDateTime to txt
-with open('Data/appData/lastUpdate.txt', 'w') as f:
-    f.write(actDateTime)
+print('done')
 
