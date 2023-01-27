@@ -1,10 +1,14 @@
-from distutils.log import info
+from datetime import datetime
 import datetime
 from lark import logger
 import pandas as pd
 import numpy as np
 from SQL import SQL_TabellenLadenBearbeiten as SQL
 import streamlit as st # Streamlit Web App Framework
+
+#   streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Data_Class/dataAggApp/DB_Daten.py"
+
+
 class DatenAgregieren():
     '''Klasse zum Agregieren von Daten aus der Datenbank
     Datum eingrenzen? 
@@ -131,9 +135,19 @@ class DatenAgregieren():
         df1 = df
             
         df = df.groupby(['PlannedDate','PartnerName','SapOrderNumber',"AllSSCCLabelsPrinted",'DeliveryDepot']).agg({'Picks Gesamt':'sum'}).reset_index()
-        # add column with CreatedTimestamp from df1 to df by first hit of SapOrderNumber
         df['Lieferschein erhalten'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['CreatedTimestamp'].iloc[0])
         df['Fertiggestellt'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['QuantityCheckTimestamp'].iloc[0])
+
+        def handle_invalid_date(date_value):
+            try:
+                return pd.to_datetime(date_value).strftime("%Y-%m-%d %H:%M:%S%z")
+            except ValueError:
+                # handle invalid date value
+                return None
+
+        df["Fertiggestellt"] = df["Fertiggestellt"].apply(handle_invalid_date)
+        df['Fertiggestellt'] = pd.to_datetime(df['Fertiggestellt']).dt.strftime("%Y-%m-%d %H:%M:%S%z")
+
         df['Truck Kennzeichen'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['UnloadingListIdentifier'].iloc[0])
         # sum for each in df.SapOrderNumber of df1'Picks CS'  with same SapOrderNumber
         df['Picks Karton'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['Picks CS'].sum())
@@ -176,7 +190,6 @@ class UpdateDaten():
         df.to_parquet('Data/appData/df.parquet.gzip', compression='gzip')
 
     def updateDaten_byDate():
-        logger.info("Starting to update data by date")
         df = pd.read_parquet('Data/appData/df.parquet.gzip')
         day1 = df['PlannedDate'].max()
         #add 10 days to lastDay
@@ -186,22 +199,24 @@ class UpdateDaten():
         df1 = DatenAgregieren.orderDatenGo(day1,DatenAgregieren.fuenfTage)
         #concat df and df1
         df = pd.concat([df,df1])
-        #convert 'Lieferschein erhalten' to string
-        df['Lieferschein erhalten'] = df['Lieferschein erhalten'].astype(str)
-        columns = df.columns
-        #SAVE TO SQL TABLE 'Kundenbestellungen'
+        #save df to parquet
+        df.to_parquet('Data/appData/df.parquet.gzip', compression='gzip')
         #SQL.sql_updateTabelle('Kundenbestellungen',df)
-        print(df.dtypes)
+    
 
 st.set_page_config(layout="wide", page_title="DBDaten", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
 
-
+df = pd.read_parquet('Data/appData/df.parquet.gzip')
 st.write('Update Daten')
 if st.button('Update'):
-    try:
-        UpdateDaten.updateDaten_byDate()
-        st.write('Update erfolgreich')
-    except:
-        st.write('Update nicht erfolgreich')
-#print('done')
+    df = DatenAgregieren.orderDatenGo(DatenAgregieren.startDatumDepot,DatenAgregieren.fuenfTage)
+    df.to_parquet('Data/appData/df.parquet.gzip', compression='gzip')
+    
+    UpdateDaten.updateDaten_byDate()
+    st.write('dfneuh')
+    st.dataframe(df, width=2000, height=1000)
+    st.write('Update erfolgreich')
 
+st.dataframe(df, width=2000, height=1000)
+# df2 = SQL.sql_datenTabelleLaden('Kundenbestellungen')
+# st.dataframe(df2, width=2000, height=1000)
