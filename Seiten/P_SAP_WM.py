@@ -10,6 +10,8 @@ import plotly.graph_objects as go
 from streamlit_option_menu import option_menu
 from Data_Class.DB_Daten_Agg import DatenAgregieren as DA
 from Data_Class.SQL import createnewTable, sql_datenLadenMLGT
+import ntplib
+from time import ctime
 
 class figSAPWM:       
 
@@ -24,7 +26,7 @@ class figSAPWM:
         anzZugrBIN15min = anzZugrBIN15min.sort_values(by=['Anzahl Zugriffe SKU/BIN'], ascending=False)
         fig = px.bar(anzZugrBIN15min, x='LGPLA', y='Anzahl Zugriffe SKU/BIN', color='Anzahl Zugriffe SKU/BIN',hover_data=['MaterialNumber'])
         fig.update(layout_coloraxis_showscale=False)
-        #fig.update_layout(yaxis=dict(visible=False))
+        fig.update_layout(yaxis=dict(visible=False))
         return fig
 
     def fig_TN1(df):
@@ -43,33 +45,35 @@ class figSAPWM:
         return fig
 
 class SAPWM:
+    def get_next_weekdays(start_date, weekdays, today_minus_x_days):
+        """Returns a list of the next four weekdays (Mon-Fri) after
+           today's date.
+        """
+        dates = []
+        current_date = start_date
+        while len(dates) < 4:
+            if current_date.weekday() in weekdays:
+                dates.append(current_date)
+            current_date += datetime.timedelta(days=1)
+        return dates
 
     heute = datetime.date.today()
     morgen = heute + datetime.timedelta(days=4)
     weekdays = [0, 1, 2, 3, 4]  # Montag ist 0, Dienstag ist 1, usw.
-    today = datetime.date.today()
-    workdays = []
-    for i in range(5):
-        if today.weekday() in weekdays:
-            workdays.append(today)
-        today -= datetime.timedelta(days=1)
-    heute_minus_10_tage = workdays[0] - datetime.timedelta(days=30)
-
-    
+    heute_minus_10_tage =  datetime.timedelta(days=30)
     @st.experimental_memo
+
     def loadDF():
-        heute = datetime.date.today()
-        heute_minus_10_tage = heute - datetime.timedelta(days=30)
+        heute = datetime.date.today(day=3)
+        heute_minus_10_tage = SAPWM.morgen - datetime.timedelta(days=30)
         df = DA.orderDatenLines(
             heute_minus_10_tage, heute)
         return df
-
-
+    
     def reload():
         if st.button("Reload"):
             SAPWM.loadDF.clear()
-        
-
+    
     def menueLaden():
         selected2 = option_menu(None, ["Stellplatzverwaltung", "Zugriffe SN/TN "],
         icons=['house', 'cloud-upload', "list-task"], 
@@ -116,6 +120,7 @@ class SAPWM:
         with col2:
             sel_range = st.slider('Wähle einen Bedarfszeitraum', min_value=1, max_value=30, value=5, step=1)
             sel_range = SAPWM.heute - datetime.timedelta(days=sel_range)
+            
         #-- Bedarf letzte 7 Tage ermitteln und Df für Figur erstellen
         dfBedarfSKU = SAPWM.FilterNachDatum(sel_range,SAPWM.heute,dfOrders)
         dfFig = dfBedarfSKU.groupby(['MaterialNumber','PlannedDate','Picks OUT']).size().reset_index(name='Picks CS')
@@ -124,7 +129,7 @@ class SAPWM:
 
         #-- Filter nach Datum
         if seldate:
-            dfOrders = SAPWM.FilterNachDatum(seldate,SAPWM.morgen,dfOrders)
+            dfOrders = SAPWM.FilterNachDatum(seldate,seldate,dfOrders)
 
         def bedarfCS(dfBedarfSKU,dfOrders):
                 #--- Stellplatzdaten mit Bedarf zusammenführen-----

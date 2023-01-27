@@ -11,7 +11,12 @@ from streamlit_option_menu import option_menu
 from Data_Class.DB_Daten_SAP import DatenAgregieren as DA 
 
 #' Murmade'
-
+class HeadMenue:
+        def menueLaden():
+            selected2 = option_menu(None, ["Tag Auswerten", "Zeitraum Auswerten"], 
+            icons=['house', 'cloud-upload', "list-task"], 
+            menu_icon="cast", default_index=0, orientation="horizontal")
+            return selected2
 
 class PicksMA:
         def menueLaden():
@@ -58,7 +63,6 @@ class PicksMA:
                 df = df.reset_index()
                 df['GesamtPicks'] = df['Picks CS'] + df['Picks OUT'] + df['PICKS PAL']
                 df = df.sort_values(by='GesamtPicks', ascending=False)
-                st.dataframe(df, use_container_width=True)
 
             def figPicksMitarbeiter(df):
                 df = df.groupby(['Name']).agg({'Picks CS': 'sum', 'Picks OUT': 'sum', 'PICKS PAL': 'sum','DestBin': 'nunique'})
@@ -93,9 +97,6 @@ class PicksMA:
                 
             def figVerfügbareTo(dfNurDate):
                 dfNurDate = dfNurDate.groupby(['PickDatum']).agg({'Picks CS': 'sum', 'Picks OUT': 'sum', 'PICKS PAL': 'sum','DestBin': 'nunique'})
-
-
-
 
             def page(df):
                 col1, col2, col3 = st.columns(3)
@@ -133,15 +134,28 @@ class PicksMA:
                
             page(df)
 
+class PicksMaZeitraum:
+    
+    def datefFilter():
+        #create a date slider from to
+        st.slider("Zeitraum auswählen", value=(datetime.date(2021, 1, 1), datetime.date(2021, 1, 31)), min_value=datetime.date(2021, 1, 1), max_value=datetime.date(2021, 1, 31), format="DD.MM.YYYY")
+
+
+    def page():
+        st.write(" ")
+        pass
+        
+
 
 class LoadPageSapPicksMA:    
 
     def mitarbeiterPage():
-        
-        selected2 = PicksMA.menueLaden()
+        selected2 = HeadMenue.menueLaden()
         if selected2 == "Tag Auswerten":
             df = PicksMA.load_data()    
             PicksMA.TagAuswerten(df)
+        elif selected2 == "Zeitraum Auswerten":
+            PicksMaZeitraum.page()
 
                 
             

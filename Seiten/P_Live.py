@@ -209,7 +209,8 @@ class LIVE:
         st.plotly_chart(figPicksBySAPOrder,use_container_width=True)
 
     def figTachoDiagrammPicksLei(df):
-
+        #TODO: Skaliert nicht auf dem Ipad sieht extrem klein aus
+        
         df1 = df[df['AllSSCCLabelsPrinted']==0]
         offenLei = df1.loc[df1["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()
         offenStu = df1.loc[df1["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()
@@ -250,6 +251,7 @@ class LIVE:
 
     def figTachoDiagrammPicksStr(df):
             
+
             df1 = df[df['AllSSCCLabelsPrinted']==0]
             offenLei = df1.loc[df1["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()
             offenStu = df1.loc[df1["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()
@@ -441,13 +443,15 @@ class LIVE:
             LIVE.wetter()
 
         LIVE.columnsKennzahlen(dfOr)
-        with st.expander('', expanded=False):
+        with st.expander('', expanded=True):
             try:
                 col34, col35, col36 = st.columns(3)
                 with col34:
                     LIVE.figTachoDiagrammPicksLei(dfOr)
                 with col35:
                     LIVE.figTachoDiagrammPicksStr(dfOr)
+                with col36:
+                    LIVE.figTachoDiagrammMitarbeiterstunden(dfOr)
             except:
                st.write('Keine Daten vorhanden')
 
