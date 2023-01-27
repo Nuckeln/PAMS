@@ -441,7 +441,7 @@ class LIVE:
             LIVE.wetter()
 
         LIVE.columnsKennzahlen(dfOr)
-        with st.expander('', expanded=True):
+        with st.expander('', expanded=False):
             try:
                 col34, col35, col36 = st.columns(3)
                 with col34:
