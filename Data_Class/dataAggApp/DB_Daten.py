@@ -193,15 +193,15 @@ class UpdateDaten():
         #SQL.sql_updateTabelle('Kundenbestellungen',df)
         print(df.dtypes)
 
-st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
+st.set_page_config(layout="wide", page_title="DBDaten", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
 
 
 st.write('Update Daten')
-try:
-    if st.button('Update'):
+if st.button('Update'):
+    try:
         UpdateDaten.updateDaten_byDate()
         st.write('Update erfolgreich')
-except:
-    st.write('Update nicht erfolgreich')
+    except:
+        st.write('Update nicht erfolgreich')
 #print('done')
 
