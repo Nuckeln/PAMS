@@ -2,8 +2,8 @@ from distutils.log import info
 import datetime
 import pandas as pd
 import numpy as np
-from Data_Class.SQL import  sql_datenLadenKunden, sql_datenLadenMaster_CS_OUT,sql_datenLadenOderItems
-from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
+from SQL import  sql_datenLadenKunden, sql_datenLadenMaster_CS_OUT,sql_datenLadenOderItems
+from SQL import SQL_TabellenLadenBearbeiten as SQL
 import streamlit as st
 
 class DatenAgregieren():
@@ -14,6 +14,7 @@ class DatenAgregieren():
     morgen = heute + datetime.timedelta(days=1)
     fuenfTage = heute + datetime.timedelta(days=5)
     startDatumDepot = '2021-04-01'
+    time = datetime.datetime.now()
 
 
     def orderDatenLines(date1, date2):
@@ -194,9 +195,20 @@ class UpdateDaten():
         #save actDateTime to txt
         with open('Data/appData/lastUpdate.txt', 'w') as f:
             f.write(actDateTime)
+st.set_page_config(layout="wide", page_title="DBDaten", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
 
 df= pd.read_parquet('Data/appData/df.parquet.gzip')
 st.dataframe(df)
+st.write(DatenAgregieren.heute)
+st.write(DatenAgregieren.fuenfTage)
+st.write(DatenAgregieren.startDatumDepot)
+st.write(DatenAgregieren.time)
+
+st.write('Update Daten')
+if st.button('Update'):
+
+    UpdateDaten.updateDaten_byDate()
+    st.dataframe(df)
 #UpdateDaten.updateDaten_byDate()
 
 
