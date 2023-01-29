@@ -51,6 +51,9 @@ class Login:
             self.authenticator.logout('Logout')
             if st.session_state.user is None:
                 st.success("Logout successful!", key='logout_success')
+                #reload page
+                st.experimental_rerun()
+
             else:
                 st.error("Logout failed!", key='logout_error')
 
