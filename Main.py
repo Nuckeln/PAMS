@@ -188,5 +188,12 @@ if authentication_status == True:
     if sel_main_m == 'Daten Updaten':
         Daten_Update.page()
 
+with st.sidebar:
+
+    if st.button('Logout'):
+        Login.authenticator.logout('Logout')
+        if st.session_state.user is None:
+            st.success("Logout successful!")
+            #timer 10 sec und dann neu laden
 
 
