@@ -436,6 +436,8 @@ class LIVE:
             #     update_plus5 = update_plus5.strftime('%H:%M')
             # st.write('Letztes Update: ' + lastUpdate + ' nächstes um: ' + str(update_plus5)+ ' Uhr')
             LIVE.reload()   
+            time = datetime.datetime.now()
+            st.write(time)
             #LIVE.timer()
 
             LIVE.downLoadTagesReport(dfOr)
