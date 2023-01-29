@@ -47,15 +47,14 @@ class Login:
         return authentication_status
     
     def Logout(self):
-        if st.button('Logout', key='logout_button'):
-            self.authenticator.logout('Logout')
-            if st.session_state.user is None:
-                st.success("Logout successful!", key='logout_success')
-                #reload page
-                st.experimental_rerun()
+    
+        self.authenticator.logout('Logout', 'main')
+        if st.session_state.user is None:
+            st.success("Logout successful!", key='logout_success')
+            # clear cookies
+            #reload page
+            st.experimental_rerun()
 
-            else:
-                st.error("Logout failed!", key='logout_error')
 
 
 
