@@ -78,11 +78,11 @@ class SQL_TabellenLadenBearbeiten:
         password='b2.5v^H!IKjetuXMVNvW')
         db_conn = AzureDbConnection(conn_settings)
         return db_conn
-
+    
     ### Tabellen erstellen
     def sql_createTable(tabellenName, df):
         '''erwartet den Tabellennamen als String und ein DataFrame'''
-        db_conn = verbinder()
+        db_conn = SQL_TabellenLadenBearbeiten.verbinder()
         db_conn.connect()
         df.to_sql(tabellenName, db_conn.conn, if_exists='replace')
         db_conn.dispose()
@@ -102,7 +102,7 @@ class SQL_TabellenLadenBearbeiten:
         'data_materialmaster-MaterialMasterUnitOfMeasures'''
         
         sqlQuery = f"SELECT * FROM [{tabellenName}] WHERE {datumsSpalte} BETWEEN '{day1}' AND '{day2}'"
-        db_conn = verbinder()
+        db_conn = SQL_TabellenLadenBearbeiten.verbinder()
         db_conn.connect()
         df = pd.read_sql(sqlQuery, db_conn.conn)
         db_conn.dispose()
@@ -110,14 +110,14 @@ class SQL_TabellenLadenBearbeiten:
 
     def sql_datenTabelleLaden(tabellenName):
         '''erwartet den Tabellennamen als String'''
-        db_conn = verbinder()
+        db_conn = SQL_TabellenLadenBearbeiten.verbinder()
         db_conn.connect()
         df = pd.read_sql(f"SELECT * FROM [{tabellenName}]", db_conn.conn)
         db_conn.dispose()
         return df
 
     def sql_Stammdaten():
-        db_conn = verbinder()
+        db_conn = SQL_TabellenLadenBearbeiten.verbinder()
         db_conn.connect()
         df = pd.read_sql('SELECT [UnitOfMeasure],[MaterialNumber], [NumeratorToBaseUnitOfMeasure], [DenominatorToBaseUnitOfMeasure] FROM [data_materialmaster-MaterialMasterUnitOfMeasures] WHERE [UnitOfMeasure] IN (\'CS\', \'OUT\', \'D97\')', db_conn.conn)
         db_conn.dispose()
@@ -126,7 +126,7 @@ class SQL_TabellenLadenBearbeiten:
     def sql_datenLadenItems(orders):
         # order is a list of numbers from dataframe now we need to get the items from the SapOrderNumber
         
-        db_conn = verbinder()
+        db_conn = SQL_TabellenLadenBearbeiten.verbinder()
         db_conn.connect()
         df = pd.read_sql(f"SELECT * FROM [business_depotDEBYKN-DepotDEBYKNOrderItems] WHERE [SapOrderNumber] IN {(orders)}", db_conn.conn)
         db_conn.dispose()
@@ -135,16 +135,30 @@ class SQL_TabellenLadenBearbeiten:
 
     def sql_updateTabelle(tabellenName, df):
         '''erwartet den Tabellennamen als String und ein DataFrame'''
-        db_conn = verbinder()
+        db_conn = SQL_TabellenLadenBearbeiten.verbinder()
         db_conn.connect()
-        df.to_sql(tabellenName, db_conn.conn, if_exists='replace', index=False)
+        df.to_sql(tabellenName, db_conn.conn, if_exists='append', index=False)
         db_conn.dispose()
         return 'Tabelle wurde erfolgreich aktualisiert'
 
+    def sql_updateEintrag(tabellenName, df, columns):
+        '''erwartet den Tabellennamen als String und ein DataFrame'''
+        # Starte Verbindung mit Datenbank
+        db_conn = SQL_TabellenLadenBearbeiten.verbinder()
+        db_conn.connect()
+        # Lade Tabelle
+        df_sql = pd.read_sql(f"SELECT * FROM [{tabellenName}]", db_conn.conn)
+        # Merge Tabelle
+        df_sql_merge = pd.merge(df_sql, df, on=columns, how='left')
+        # Update Tabelle
+        df_sql_merge.to_sql(tabellenName, db_conn.conn, if_exists='replace', index=False)
+        db_conn.dispose()
+        return 'Eintrag wurde erfolgreich aktualisiert'
+        
     ##löschen von einträgen in Tabelle
     def sql_deleteEintrag(tabellenName, eintrag):
         '''erwartet den Tabellennamen als String und ein DataFrame'''
-        db_conn = verbinder()
+        db_conn = SQL_TabellenLadenBearbeiten.verbinder()
         db_conn.connect()
         db_conn.conn.execute(f"DELETE FROM [{tabellenName}] WHERE [Index] = {eintrag}")
         db_conn.dispose()
@@ -153,129 +167,8 @@ class SQL_TabellenLadenBearbeiten:
     ##Löschen einer Tabelle
     def sql_deleteTabelle(tabellenName):
         '''erwartet den Tabellennamen als String'''
-        db_conn = verbinder()
+        db_conn = SQL_TabellenLadenBearbeiten.verbinder()
         db_conn.connect()
         db_conn.conn.execute(f"DROP TABLE [{tabellenName}]")
         db_conn.dispose()
         return 'Tabelle wurde erfolgreich gelöscht'
-
-def verbinderTestServer():
-
-    conn_settings = ConnectionSettings(
-    server='batsql-pd-ne-cmes-dev-10',
-    database='batsdb-pd-ne-dev-reporting_SuperDepot',
-    username='batedp-cmes-dev-reportinguser',
-    password='b2.5v^H!IKjetuXMVNvW')
-
-    db_conn = AzureDbConnection(conn_settings)
-    return db_conn
-
-def verbinder():
-
-    conn_settings = ConnectionSettings(    
-    server = 'batsql-pp-ne-cmes-prod-10',
-    database= 'batsdb-pp-ne-prod-reporting_SuperDepot',
-    username='batedp-cmes-prod-reportinguser',
-    password='b2.5v^H!IKjetuXMVNvW')
-    db_conn = AzureDbConnection(conn_settings)
-    return db_conn
-
-def createnewTable(df, tableName):
-    db_conn = verbinder()
-    db_conn.connect()
-    df.to_sql(tableName, db_conn.conn, if_exists='replace', index=False)
-    db_conn.dispose()
-
-# Usereingaben/Interne Datenbanken
-def datenLadenUser():
-    db_conn = verbinder()
-    db_conn.connect()
-    df= pd.read_sql('SELECT * FROM [user]', db_conn.conn)
-    db_conn.dispose()
-    return df
-def updateUser(df):
-    db_conn = verbinder()
-    db_conn.connect()
-    df.to_sql('user', db_conn.conn, if_exists='replace', index=False)
-    db_conn.dispose()
-
-def sql_datenLadenMLGT():
-    db_conn = verbinder()
-    db_conn.connect()
-    df= pd.read_sql('SELECT * FROM [MLGT_Stellplatz]', db_conn.conn)
-    db_conn.dispose()
-    return df
-
-def datenLadenMitarbeiter():
-    db_conn = verbinderTestServer()
-    db_conn.connect()
-    dfMitarbeiter = pd.read_sql('SELECT * FROM [Mitarbeiter]', db_conn.conn)
-    db_conn.dispose()
-    return dfMitarbeiter   
-def datenSpeichernMitarbeiter(dfMitarbeiter):
-    db_conn = verbinderTestServer()
-    db_conn.connect()
-    #save dfMitarbeiter to Azure SQL
-    dfMitarbeiter.to_sql('Mitarbeiter', db_conn.conn, if_exists='replace', index=False)
-    db_conn.dispose()
-def datenLadenFehlverladungen():
-    db_conn = verbinder()
-    db_conn.connect()
-    dfMitarbeiter = pd.read_sql('SELECT * FROM [issues]', db_conn.conn)
-    db_conn.dispose()
-    return dfMitarbeiter   
-def datenSpeichernFehlverladungen(df):
-    db_conn = verbinder()
-    db_conn.connect()
-    # change index to id 
-    df.to_sql('issues', db_conn.conn, if_exists='replace', index=False)
-    db_conn.dispose()
-def datenSpeichern_CS_OUT_STammdaten(df):
-    db_conn = verbinder()
-    db_conn.connect()
-    #save dfMitarbeiter to Azure SQL
-    df.to_sql('Mitarbeiter', db_conn.conn, if_exists='replace', index=False)
-    db_conn.dispose()
-# Externe Datenbanken
-def sql_datenLadenLabel():
-    db_conn = verbinder()
-    db_conn.connect()
-    dfLabel = pd.read_sql('SELECT * FROM [business_depotDEBYKN-LabelPrintOrders]', db_conn.conn)
-    return dfLabel
-def sql_datenLadenStammdaten():
-    db_conn = verbinder()
-    db_conn.connect()
-    dfStammdaten = pd.read_sql('SELECT * FROM [data_materialmaster-MaterialMasterUnitOfMeasures]', db_conn.conn)
-    return dfStammdaten
-def sql_datenLadenMaster_CS_OUT():
-    db_conn = verbinder()
-    db_conn.connect()
-    #load  only from dbo.MaterialMasterUnitOfMeasures if is in 'UnitOfMeasureId' == CS, OUT, D97 and load only Columns [UnitOfMeasure],[MaterialNumber],[SnapshotId],[NumeratorToBaseUnitOfMeasure],[DenominatorToBaseUnitOfMeasure]
-    df = pd.read_sql('SELECT * FROM [data_materialmaster-MaterialMasterUnitOfMeasures] WHERE [UnitOfMeasure] IN (\'CS\', \'OUT\', \'D97\')', db_conn.conn)
-    return df
-def sql_datenLadenOder():
-    db_conn = verbinder()
-    db_conn.connect()
-    df = pd.read_sql('SELECT * FROM [business_depotDEBYKN-DepotDEBYKNOrders]', db_conn.conn)
-    db_conn.dispose()
-    return df  
-def sql_datenLadenOderItems():
-    db_conn = verbinder()
-    db_conn.connect()
-    df = pd.read_sql('SELECT * FROM [business_depotDEBYKN-DepotDEBYKNOrderItems]', db_conn.conn)
-    db_conn.dispose()
-    return df  
-
-def sql_datenLadenKunden():
-    db_conn = verbinder()
-    db_conn.connect()
-    df = pd.read_sql('SELECT * FROM [Kunden_mit_Packinfos]', db_conn.conn)
-    db_conn.dispose()
-    return df  
-
-def sql_datenLadenDDS():
-    db_conn = verbinder()
-    db_conn.connect()
-    df = pd.read_sql('SELECT * FROM [dds]', db_conn.conn)
-    db_conn.dispose()
-    return df  
