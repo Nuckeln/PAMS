@@ -137,7 +137,7 @@ class SQL_TabellenLadenBearbeiten:
         '''erwartet den Tabellennamen als String und ein DataFrame'''
         db_conn = SQL_TabellenLadenBearbeiten.verbinder()
         db_conn.connect()
-        df.to_sql(tabellenName, db_conn.conn, if_exists='replace', index=False)
+        df.to_sql(tabellenName, db_conn.conn, if_exists='append', index=False)
         db_conn.dispose()
         return 'Tabelle wurde erfolgreich aktualisiert'
 
@@ -146,18 +146,14 @@ class SQL_TabellenLadenBearbeiten:
         # Starte Verbindung mit Datenbank
         db_conn = SQL_TabellenLadenBearbeiten.verbinder()
         db_conn.connect()
-        # update data in table
-        for index, row in df.iterrows():
-            # get the values from the dataframe
-            values = row[columns].values
-            # get the index from the dataframe
-            index = row['Index']
-            # create the update statement
-            sqlQuery = f"UPDATE [{tabellenName}] SET {columns} = ? WHERE [Index] = ?"
-            # execute the update statement
-            db_conn.conn.execute(sqlQuery, values, index)
-        # close connection to the database
+        # Lade Tabelle
+        df_sql = pd.read_sql(f"SELECT * FROM [{tabellenName}]", db_conn.conn)
+        # Merge Tabelle
+        df_sql_merge = pd.merge(df_sql, df, on=columns, how='left')
+        # Update Tabelle
+        df_sql_merge.to_sql(tabellenName, db_conn.conn, if_exists='replace', index=False)
         db_conn.dispose()
+        return 'Eintrag wurde erfolgreich aktualisiert'
         
     ##löschen von einträgen in Tabelle
     def sql_deleteEintrag(tabellenName, eintrag):
