@@ -51,7 +51,6 @@ class AzureDbConnection:
     def execute(self, query: str) -> None:
         """Execute query."""
         self.conn.execute(query)
-
 class SQL_TabellenLadenBearbeiten:
     '''Ermöglicht die Auswahl von Spalten aus bestimmten Tabellen
     sowie Datumsbereich
