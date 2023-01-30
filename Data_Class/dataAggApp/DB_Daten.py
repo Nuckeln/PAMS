@@ -235,13 +235,13 @@ class UpdateDaten():
 
         
 st.set_page_config(layout="wide", page_title="DBDaten", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
-#df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-df = pd.read_parquet('Data/appData/df.parquet.gzip')
+df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
 # df['PlannedDate'] to string
-
-df['PlannedDate'] = df['PlannedDate'].astype(str)
-
-df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+try:
+    df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+except:
+    df['PlannedDate'] = df['PlannedDate'].astype(str)
+    df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
 st.write(DatenAgregieren.time)
 
 #erease timestamps from PlannedDate
