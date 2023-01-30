@@ -43,7 +43,11 @@ class LIVE:
 
     def loadDF(day1=None, day2=None): 
         # load data from Data/appData/df.parquet.gzip
-        dfOr = pq.read_table('Data/appData/df.parquet.gzip').to_pandas()
+        dfOr = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_Kundenbestellungen')
+        #dfOr = pq.read_table('Data/appData/df.parquet.gzip').to_pandas()
+        #plannedDate to datetime
+        dfOr['PlannedDate'] = dfOr['PlannedDate'].astype(str)
+        dfOr['PlannedDate'] = pd.to_datetime(dfOr['PlannedDate'].str[:10])
         if day1 is None:
             day1 = pd.to_datetime('today').date()
         else:
@@ -417,7 +421,6 @@ class LIVE:
         "text/csv",
         key='download-csv'
             )
-
 
     #######------------------Main------------------########
 

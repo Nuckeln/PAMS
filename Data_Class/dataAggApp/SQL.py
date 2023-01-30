@@ -84,7 +84,7 @@ class SQL_TabellenLadenBearbeiten:
         '''erwartet den Tabellennamen als String und ein DataFrame'''
         db_conn = SQL_TabellenLadenBearbeiten.verbinder()
         db_conn.connect()
-        df.to_sql(tabellenName, db_conn.conn, if_exists='replace')
+        df.to_sql(tabellenName, db_conn.conn, if_exists='replace', index=True, index_label='id', chunksize=1000)
         db_conn.dispose()
         return print(f'Tabelle {tabellenName} wurde erstellt')
     
@@ -135,6 +135,7 @@ class SQL_TabellenLadenBearbeiten:
 
     def sql_updateTabelle(tabellenName, df):
         '''expects table name as a string and a DataFrame'''
+
         db_conn = SQL_TabellenLadenBearbeiten.verbinder()
         db_conn.connect()
         df.to_sql(tabellenName, db_conn.conn, if_exists='replace', index=False, chunksize=1000)

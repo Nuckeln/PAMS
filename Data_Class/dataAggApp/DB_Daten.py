@@ -229,28 +229,23 @@ class UpdateDaten():
         SQL.sql_createTable('prod_Kundenbestellungen',df)
         #save df to parquet
         st.dataframe(df)
-        b = df['Picks Karton fertig'].sum()
-        st.write('Picks Karton fertig',b)
 
 
         
 st.set_page_config(layout="wide", page_title="DBDaten", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
-df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-# df['PlannedDate'] to string
+df= pd.read_parquet('Data/appData/df.parquet.gzip')
+#df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+
 try:
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
 except:
     df['PlannedDate'] = df['PlannedDate'].astype(str)
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+
+    
 st.write(DatenAgregieren.time)
-
-#erease timestamps from PlannedDate
-#creeate df 2 columns one with actual date and one with time both from WEB API call
 st.dataframe(df)
-st.write('Update Daten')
-if st.button('Update'):
 
+if st.button('Update'):
+    st.write(datetime.datetime.now())
     UpdateDaten.updateDaten_byDate(df)
-    df2 = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-    #TagUndZeit.UpdateZeitSQLTabelle()
-    st.dataframe(df2)
