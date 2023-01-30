@@ -166,7 +166,13 @@ class DatenAgregieren():
         #df1["QuantityCheckTimestamp"] = df1["QuantityCheckTimestamp"].dt.tz_localize(None)
         df['Fertiggestellt'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['QuantityCheckTimestamp'].iloc[0])
         if df['Fertiggestellt'].notna().all():
-            df['Fertiggestellt'] = df['Fertiggestellt'].dt.tz_localize(None)        
+            try:
+                df['Fertiggestellt'] = pd.to_datetime(df['Fertiggestellt']).dt.strftime("%Y-%m-%d %H:%M:%S")
+                df['Fertiggestellt'] = df['Fertiggestellt'].dt.tz_localize(None)    
+            
+            except:
+                pass
+    
         df['Truck Kennzeichen'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['UnloadingListIdentifier'].iloc[0])
         # sum for each in df.SapOrderNumber of df1'Picks CS'  with same SapOrderNumber
         df['Picks Karton'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['Picks CS'].sum())
@@ -220,21 +226,21 @@ class UpdateDaten():
         df = pd.concat([df,df1])
         #delete table
 
-        try:
-            st.write('Tabelle wird gelöscht')
-            SQL.sql_deleteTabelle('prod_Kundenbestellungen')
-        except:
-            pass
-        st.write('Tabelle wird erstellt')
-        SQL.sql_createTable('prod_Kundenbestellungen',df)
+        # try:
+        #     st.write('Tabelle wird gelöscht')
+        #     SQL.sql_deleteTabelle('prod_Kundenbestellungen')
+        # except:
+        #     pass
+        # st.write('Tabelle wird erstellt')
+        # SQL.sql_createTable('prod_Kundenbestellungen',df)
+
+        SQL.sql_test('prod_Kundenbestellungen', df)
         #save df to parquet
         st.dataframe(df)
-
-
         
 st.set_page_config(layout="wide", page_title="DBDaten", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
-#df= pd.read_parquet('Data/appData/df.parquet.gzip')
-df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+df= pd.read_parquet('Data/appData/df.parquet.gzip')
+#df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
 
 try:
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
@@ -242,9 +248,10 @@ except:
     df['PlannedDate'] = df['PlannedDate'].astype(str)
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
 
-    
 st.write(DatenAgregieren.time)
 st.dataframe(df)
+if st.button('Trunk'):
+    SQL.sql_trunkTable('prod_Kundenbestellungen')
 
 if st.button('Update'):
     st.write(datetime.datetime.now())

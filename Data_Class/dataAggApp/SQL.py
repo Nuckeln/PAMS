@@ -21,6 +21,7 @@ class ConnectionSettings:
     driver: str = '{ODBC Driver 18 for SQL Server}'
     timeout: int = 30
 class AzureDbConnection:
+    db = None
     """
     Azure SQL database connection.
     """
@@ -36,7 +37,8 @@ class AzureDbConnection:
             'Connection Timeout=%s;' % conn_settings.timeout
         )
         conn_string = f'mssql+pyodbc:///?odbc_connect={conn_params}'
-        self.db = create_engine(conn_string, echo=echo)
+        #self.db = create_engine(conn_string, echo=echo)
+        AzureDbConnection.db = create_engine(conn_string, echo=echo)
     def connect(self) -> None:
         """Estimate connection."""
         self.conn = self.db.connect()
@@ -131,6 +133,24 @@ class SQL_TabellenLadenBearbeiten:
         db_conn.dispose()
         return df
     ### Update von Tabellen
+
+    def sql_trunkTable(tabellenName):
+        '''erwartet den Tabellennamen als String'''
+        db_conn = SQL_TabellenLadenBearbeiten.verbinder()
+        db_conn.connect()
+        db_conn.conn.execute(f"TRUNCATE TABLE [{tabellenName}]")
+        db_conn.dispose()
+        return print(f'Tabelle {tabellenName} wurde geleert')
+    
+    def sql_test(tabellenName, df):
+        # truncate
+        # Einfügen der Werte
+        db_conn = SQL_TabellenLadenBearbeiten.verbinder()
+        db_conn.connect() 
+        with AzureDbConnection.db.begin() as connection:
+            connection.execute(f"TRUNCATE TABLE [{tabellenName}]")
+            df.to_sql(tabellenName, connection, if_exists='append', index=False, chunksize=1000)
+        return print(f'Tabelle {tabellenName} wurde geleert und neu befüllt')
 
     def sql_updateTabelle(tabellenName, df):
         '''expects table name as a string and a DataFrame'''
