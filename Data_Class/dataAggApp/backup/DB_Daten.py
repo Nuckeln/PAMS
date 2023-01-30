@@ -219,21 +219,16 @@ class UpdateDaten():
         df1 = DatenAgregieren.orderDatenGo(lastDay,DatenAgregieren.fuenfTage)
         st.success('Daten wurden aktualisiert')
         df = pd.concat([df,df1])
-        st.warning('DB wird gelöscht')
-        SQL.sql_deleteTabelle('prod_Kundenbestellungen')
-        st.success('DB wurde gelöscht')
-        st.warning('Daten werden in DB gespeichert')
-        SQL.sql_createTabelle('prod_Kundenbestellungen',df)
-        st.success('Daten wurden in DB gespeichert')
+        SQL.sql_updateTabelle(df)
         #save df to parquet
 
 st.set_page_config(layout="wide", page_title="DBDaten", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
 df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
 df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
-st.write(DatenAgregieren.heute)
-st.write(DatenAgregieren.fuenfTage)
-st.write(DatenAgregieren.startDatumDepot)
 st.write(DatenAgregieren.time)
+#Count Picks Karton Fertig
+a = df['Picks Karton fertig'].sum()
+st.write('Picks Karton fertig',a)
 
 #erease timestamps from PlannedDate
 #creeate df 2 columns one with actual date and one with time both from WEB API call
