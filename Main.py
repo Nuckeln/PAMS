@@ -91,22 +91,23 @@ def berechtigung():
     if st.session_state.rechte == 1:
         #admin Vollzugriff
         return ["Live Status",'SAP WM Daten','SAP Bewegungsdaten','Fehlverladungen','DDS','Infocenter','Daten Updaten','Admin','Einstellungen','Wartung']
+    else:
+        return ['Wartung']
+    # elif st.session_state.rechte == 2:
+    #     # Manager
+    #     return ["Live Status",'SAP Mitarbeiter','SAP Bewegungsdaten','Fehlverladungen','DDS','Infocenter','Daten Updaten','Einstellungen']
     
-    elif st.session_state.rechte == 2:
-        # Manager
-        return ["Live Status",'SAP Mitarbeiter','SAP Bewegungsdaten','Fehlverladungen','DDS','Infocenter','Daten Updaten','Einstellungen']
+    # elif st.session_state.rechte == 3:
+    #     # Mitarbeiter AD 
+    #     return ["Live Status",'SAP WM Daten','Einstellungen']
     
-    elif st.session_state.rechte == 3:
-        # Mitarbeiter AD 
-        return ["Live Status",'SAP WM Daten','Einstellungen']
+    # elif st.session_state.rechte == 4:
+    #     # Mitarbeiter Fremd
+    #     return ["Live Status",'SAP WM Daten','Einstellungen']
+    #     # Lager
     
-    elif st.session_state.rechte == 4:
-        # Mitarbeiter Fremd
-        return ["Live Status",'SAP WM Daten','Einstellungen']
-        # Lager
-    
-    elif st.session_state.rechte == 5:
-        return ["Live Status"]
+    # elif st.session_state.rechte == 5:
+    #     return ["Live Status"]
 
 # ----- Login -----
 

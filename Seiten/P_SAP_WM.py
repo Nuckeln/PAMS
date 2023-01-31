@@ -179,7 +179,6 @@ class SAPWM:
             fig2 = figSAPWM.fig_TN1(dfFig)
             st.plotly_chart(fig2, use_container_width=True)
 
-
     def sap_wm_page():
 
         selected2 = SAPWM.menueLaden()

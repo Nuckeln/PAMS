@@ -22,12 +22,6 @@ class LIVE:
     vorgestern = heute - datetime.timedelta(days=3)
 
     def reload():
-        #st.button("Reload")
-        from Data_Class.DB_Daten import UpdateDaten
-        
-        if st.button("Reload", key="reloadao"):
-            UpdateDaten.updateDaten_byDate()#st.experimental_rerun()
-            # rerun script
             st.experimental_rerun()
     def timer():
         st.markdown("5-Minute Timer")
@@ -438,7 +432,6 @@ class LIVE:
             #     update_plus5 = pd.to_datetime(lastUpdate) + pd.to_timedelta('5 minutes')
             #     update_plus5 = update_plus5.strftime('%H:%M')
             # st.write('Letztes Update: ' + lastUpdate + ' nächstes um: ' + str(update_plus5)+ ' Uhr')
-            LIVE.reload()   
             time = datetime.datetime.now()
             st.write(time)
             #LIVE.timer()

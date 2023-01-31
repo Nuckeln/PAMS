@@ -9,5 +9,5 @@ class Wartung:
         st.header("Wartungsarbeiten")
         st.subheader("Genießt das Wochenende!")
 
-        img = Image.open('Data/img/muede.jpeg', mode='r')
+        img = Image.open('Data/img/balzurück.png', mode='r')
         st.image(img, use_column_width=True)

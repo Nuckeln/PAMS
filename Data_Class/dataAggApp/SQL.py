@@ -149,7 +149,7 @@ class SQL_TabellenLadenBearbeiten:
         db_conn.connect() 
         with AzureDbConnection.db.begin() as connection:
             connection.execute(f"TRUNCATE TABLE [{tabellenName}]")
-            df.to_sql(tabellenName, connection, if_exists='append', index=False, chunksize=1000)
+            df.to_sql(tabellenName, connection, if_exists='replace', index=False, chunksize=10000)
         return print(f'Tabelle {tabellenName} wurde geleert und neu befüllt')
 
     def sql_updateTabelle(tabellenName, df):

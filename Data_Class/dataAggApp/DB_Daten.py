@@ -238,7 +238,7 @@ class UpdateDaten():
         #save df to parquet
         st.dataframe(df)
         
-st.set_page_config(layout="wide", page_title="DBDaten", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
+#st.set_page_config(layout="wide", page_title="DBDaten", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
 df= pd.read_parquet('Data/appData/df.parquet.gzip')
 #df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
 
@@ -248,11 +248,11 @@ except:
     df['PlannedDate'] = df['PlannedDate'].astype(str)
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
 
-st.write(DatenAgregieren.time)
-st.dataframe(df)
-if st.button('Trunk'):
-    SQL.sql_trunkTable('prod_Kundenbestellungen')
+# st.write(DatenAgregieren.time)
+# st.dataframe(df)
 
-if st.button('Update'):
-    st.write(datetime.datetime.now())
-    UpdateDaten.updateDaten_byDate(df)
+# if st.button('Update'):
+#st.write(datetime.datetime.now())
+print('Update')
+UpdateDaten.updateDaten_byDate(df)
+print('Update fertig')
