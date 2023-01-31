@@ -6,8 +6,5 @@ from PIL import Image
 class Wartung:
 
     def page():
-        st.header("Wartungsarbeiten")
-        st.subheader("Genießt das Wochenende!")
-
         img = Image.open('Data/img/wartung.png', mode='r')
-        st.image(img, use_column_width=True)
+        st.image(img)
