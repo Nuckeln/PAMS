@@ -427,14 +427,12 @@ class LIVE:
             sel_date = st.date_input('Datum', LIVE.heute)
             dfOr = LIVE.loadDF(sel_date,sel_date)
         with colhead2:
-            # with open("Data/appData/lastUpdate.txt", "r") as file:
-            #     lastUpdate = file.read()
-            #     update_plus5 = pd.to_datetime(lastUpdate) + pd.to_timedelta('5 minutes')
-            #     update_plus5 = update_plus5.strftime('%H:%M')
-            # st.write('Letztes Update: ' + lastUpdate + ' nächstes um: ' + str(update_plus5)+ ' Uhr')
-            time = datetime.datetime.now()
-            st.write(time)
-            #LIVE.timer()
+            dfUpdatetime = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_KundenbestellungenUpdateTime')
+            #vupdatetag = value last entry in dfUpdateTime[date]
+            updatetag = dfUpdatetime['Date'].iloc[-1]
+            #updatetime = value last entry in dfUpdateTime[time]
+            updatetime = dfUpdatetime['Time'].iloc[-1]
+            st.write('Letztes Update: ', updatetag, updatetime)
 
             LIVE.downLoadTagesReport(dfOr)
         with colhead3:
