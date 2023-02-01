@@ -101,3 +101,82 @@ class DatenAgregieren():
 
         #PartnerNo
         return dflt22
+    
+    def vl06oBerechnen():
+        df = pd.read_excel('Data/de55.XLSX') 
+        ##------------------ Stammdaten Laden und berechnen ------------------##
+        dfStammdaten = SQL.sql_datenTabelleLaden('data_materialmaster-MaterialMasterUnitOfMeasures')
+        dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]
+        dfStammdaten['MaterialNumber'] = dfStammdaten['MaterialNumber'].str.replace('0000000000', '')
+        dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]   
+        def f_CS(row):
+            try:
+                if row.UnitOfMeasure == 'CS':          
+                    return row.NumeratorToBaseUnitOfMeasure / row.DenominatorToBaseUnitOfMeasure
+            except:
+                return np.nan
+        def f_PAL(row):
+            try:
+                if row.UnitOfMeasure == 'D97':
+                    return row.NumeratorToBaseUnitOfMeasure / row.DenominatorToBaseUnitOfMeasure
+            except:
+                return np.nan
+        def f_OUT(row):
+            try:
+                if row.UnitOfMeasure == 'OUT':
+                    return row.NumeratorToBaseUnitOfMeasure / row.DenominatorToBaseUnitOfMeasure
+            except:
+                return np.nan
+        dfStammdaten['OUT'] = dfStammdaten.apply(f_OUT,axis=1)
+        dfStammdaten['CS'] = dfStammdaten.apply(f_CS,axis=1)
+        dfStammdaten['PAL'] = dfStammdaten.apply(f_PAL,axis=1)
+        #Umbenennen der Spalten    
+        df = df.rename(columns={'Material':'SKU'})
+        dfStammdaten = dfStammdaten.rename(columns={'MaterialNumber':'SKU'})
+        #Merge Stammdaten mit Lieferdaten
+        df['SKU'] = df['SKU'].astype(str)
+
+        df = pd.merge(df, dfStammdaten[dfStammdaten['UnitOfMeasure'] == 'CS'][['SKU','CS']],left_on='SKU', right_on='SKU',how='left')
+        df = pd.merge(df, dfStammdaten[dfStammdaten['UnitOfMeasure'] == 'D97'][['SKU','PAL']],left_on='SKU', right_on='SKU',how='left')
+        df = pd.merge(df, dfStammdaten[dfStammdaten['UnitOfMeasure'] == 'OUT'][['SKU','OUT']],left_on='SKU', right_on='SKU',how='left')
+        # Berechne Picks
+        # rename df Actual delivery qty to O
+        df = df.rename(columns={'Actual delivery qty':'O'})
+
+        df['Picks PAL'] = df.O / df.PAL
+        df['Picks CS'] = df.O / df.CS
+        df['Picks OUT'] = df.O / df.OUT
+        #Bereinige Berechnungen der Picks 
+        for i in range(0,len(df.index)):
+            #----PAL bereinigen
+                if (df.loc[i,'Picks PAL'] <1):
+                    df.loc[i,'Picks PAL'] = 0
+            #----cs bereinigen
+                if (df.loc[i,'Picks CS'] <1):
+                    df.loc[i,'Picks CS'] = 0 
+            #mögliche PAL picks abziehen
+                if (df.loc[i,'Picks PAL'] >=1):
+                    df.loc[i,'Picks CS'] = (df.loc[i,'O'] - (df.loc[i,'Picks PAL'] * df.loc[i,'PAL'])) * df.loc[i,'CS']
+            #---OUT bereinigen
+                if (df.loc[i,'Picks OUT'] <1):
+                    df.loc[i,'Picks OUT'] = 0
+            #mögliche PAL picks abziehen
+                if (df.loc[i,'Picks PAL'] >=1):
+                    df.loc[i,'Picks OUT'] = (df.loc[i,'O'] - (df.loc[i,'Picks PAL'] * df.loc[i,'PAL'])) * df.loc[i,'OUT']
+            #mögliche CS picks abziehen
+                if (df.loc[i,'Picks CS'] >=1):
+                    df.loc[i,'Picks OUT'] = 0#(df.loc[i,'O'] - (df.loc[i,'Picks CS'] * df.loc[i,'CS'])) * df.loc[i,'OUT']
+        # Picks Gesamt
+        df['Picks Gesamt'] = df['Picks PAL'] + df['Picks CS'] + df['Picks OUT']
+        df['Kalender Woche'] = df['Picking Date'].dt.strftime('%U')
+        #add to df Kalender Woche 'KW '
+        
+
+
+        df['Monat'] = df['Picking Date'].dt.month
+        dfKunden = pd.read_excel('Data/de55Kunden.xlsx') 
+        df = pd.merge(df, dfKunden,left_on='Sold-To Party', right_on='Customer',how='left')
+        # if df.TSP = <NA> then 'Unbekannt'
+        df['TSP'] = df['TSP'].fillna('Unbekannt')
+        df.to_parquet('Data/appData/dfDe55.parquet')
+

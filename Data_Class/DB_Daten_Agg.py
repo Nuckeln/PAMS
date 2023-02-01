@@ -131,9 +131,7 @@ class DatenAgregieren():
         #NiceLabelTransmissionState_TimeStamp to string
         df['NiceLabelTransmissionState_TimeStamp'] = df['NiceLabelTransmissionState_TimeStamp'].astype(str)
         return df
-
-
-
+    
     def oderDaten(df):
         #df = DatenAgregieren.orderDatenLines()
         dfLabel = SQL.sql_datenLadenDatum(DatenAgregieren.vorgestern, DatenAgregieren.morgen ,SQL.tabelleSSCCLabel,'CreatedTimestamp')       

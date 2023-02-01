@@ -178,3 +178,11 @@ class SQL_TabellenLadenBearbeiten:
         db_conn.conn.execute(f"DROP TABLE [{tabellenName}]")
         db_conn.dispose()
         return 'Tabelle wurde erfolgreich gelöscht'
+    
+    def sql_updateTabelle(tabellenName, df):
+        '''erwartet den Tabellennamen als String und ein DataFrame'''
+        db_conn = SQL_TabellenLadenBearbeiten.verbinder()
+        db_conn.connect()
+        df.to_sql(tabellenName, db_conn.conn, if_exists='replace', index=False)
+        db_conn.dispose()
+        return 'Tabelle wurde erfolgreich aktualisiert'
