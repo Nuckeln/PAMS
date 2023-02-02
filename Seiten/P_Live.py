@@ -36,10 +36,9 @@ class LIVE:
         time_left.text("Time's up!")
 
     def loadDF(day1=None, day2=None): 
-        # load data from Data/appData/df.parquet.gzip
         dfOr = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_Kundenbestellungen')
-        #dfOr = pq.read_table('Data/appData/df.parquet.gzip').to_pandas()
-        #plannedDate to datetime
+
+
         dfOr['PlannedDate'] = dfOr['PlannedDate'].astype(str)
         dfOr['PlannedDate'] = pd.to_datetime(dfOr['PlannedDate'].str[:10])
         if day1 is None:
@@ -421,6 +420,9 @@ class LIVE:
     def PageTagesReport():
 
         pd.set_option("display.precision", 2)
+        #rerun script all 2 minutes
+         
+        
 
         colhead1, colhead2 ,colhead3, = st.columns(3)
         with colhead1:

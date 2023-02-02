@@ -63,10 +63,12 @@ class SAPWM:
     @st.experimental_memo
 
     def loadDF():
-        heute = datetime.date.today(day=3)
+        heute = datetime.date.today()
+        # heute plus 4 Tage
+        heute_plus_4_tage = SAPWM.morgen
         heute_minus_10_tage = SAPWM.morgen - datetime.timedelta(days=30)
         df = DA.orderDatenLines(
-            heute_minus_10_tage, heute)
+            heute_minus_10_tage, heute_plus_4_tage)
         return df
     
     def reload():
@@ -168,12 +170,12 @@ class SAPWM:
             return dfOrders
 
         dfBedarfSKU = dfBedarfSKU.groupby(['MaterialNumber']).sum().reset_index()
-        with st.expander('Kartonbedarf SN1', expanded=False):
+        with st.expander('Kartonbedarf SN1', expanded=True):
             dfKarton = bedarfCS(dfBedarfSKU,dfOrders)
             ag.AgGrid(dfKarton,height=400)
             fig = figSAPWM.fig_SN1(dfFig)
             st.plotly_chart(fig, use_container_width=True)
-        with st.expander('Stangenbedarf TN1', expanded=False):
+        with st.expander('Stangenbedarf TN1', expanded=True):
             dfKarton = bedarfOut(dfBedarfSKU,dfOrders)
             ag.AgGrid(dfKarton,height=400)
             fig2 = figSAPWM.fig_TN1(dfFig)
@@ -181,10 +183,7 @@ class SAPWM:
 
     def sap_wm_page():
 
-        selected2 = SAPWM.menueLaden()
-        if selected2 == "Stellplatzverwaltung":
-            SAPWM.pageStellplatzverwaltung()
-        elif selected2 == "Zugriffe SN/TN":
-            SAPWM.pageLaden()
+        SAPWM.pageStellplatzverwaltung()
+
             
 

@@ -83,7 +83,7 @@ def expanderFigGesamtPicks(df):
             # drop empty ticks on x
             fig.layout.xaxis.type = 'category'
             fig.layout.xaxis.tickangle = 70
-            
+
 
             fig.update_layout(showlegend=False)
             fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
@@ -98,12 +98,15 @@ def expanderFigGesamtPicks(df):
             
             # Convert 'PlannedDate' to datetime format
             df['PlannedDate'] = pd.to_datetime(df['PlannedDate'], format='%Y-%m-%d %H:%M:%S.%f')
-            df['Lieferschein erhalten'] = pd.to_datetime(df['Lieferschein erhalten'], format='%Y-%m-%d %H:%M:%S.%f')
+            #df['Lieferschein erhalten'] = pd.to_datetime(df['Lieferschein erhalten'], format='%Y-%m-%d %H:%M:%S.%f')
 
             # Fill missing values in 'Lieferschein erhalten' with values from 'PlannedDate'
             df['Lieferschein erhalten'] = df['Lieferschein erhalten'].fillna(df['PlannedDate'])
             # Convert 'Lieferschein erhalten' to datetime format
-            df['Lieferschein erhalten'] = pd.to_datetime(df['Lieferschein erhalten'], format='%Y-%m-%d %H:%M:%S.%f')
+            try:
+                df['Lieferschein erhalten'] = pd.to_datetime(df['Lieferschein erhalten'])#, format='%Y-%m-%d %H:%M:%S.%f')
+            except:
+                pass
             # Round the datetime values in 'Lieferschein erhalten' to nearest hour
             df['Lieferschein erhalten'] = df['Lieferschein erhalten'].dt.round('H')
             
@@ -124,12 +127,14 @@ def expanderFigGesamtPicks(df):
             fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
             #remove timespamp from xaxis
             fig.update_xaxes(tickformat='%d.%m.%Y')
+            fig.layout.xaxis.type = 'category'
+            fig.layout.xaxis.tickangle = 70
             st.plotly_chart(fig, use_container_width=True)
             if tabelle == True:
                 st.dataframe(df_grouped)
         
     
-        with st.expander('PickVolumen Nach:'):
+        with st.expander('Pick Volumen:', expanded=True):
 
             col1, col2, col3 = st.columns(3)
             #form selectbox
@@ -160,7 +165,7 @@ def expanderTruckAuslastung(df):
             fig.update_xaxes(tickformat='%d.%m.%Y')
             st.plotly_chart(fig, use_container_width=True)
             #st.dataframe(df)
-        with st.expander('Truck Auslastung'):
+        with st.expander('Truck Auslastung', expanded=True):
             figPalTruckAuslastung(df)
 
 def ddsPage():
@@ -175,9 +180,10 @@ def ddsPage():
         
         df = berechneAlleDepots(dfOr, dfHannover)
         df = dateFilter(df)
-        expanderTruckAuslastung(df)
+        
         expanderFigGesamtPicks(df)
-        st.dataframe(df)
+        expanderTruckAuslastung(df)
+        
 
         
 

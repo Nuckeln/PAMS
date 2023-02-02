@@ -90,24 +90,24 @@ def berechtigung():
     # Berechtigungen für die Seiten
     if st.session_state.rechte == 1:
         #admin Vollzugriff
-        return ["Live Status",'SAP WM Daten','SAP Bewegungsdaten','Fehlverladungen','DDS','Infocenter','Daten Updaten','Admin','Einstellungen','Wartung']
-    else:
-        return ['Wartung']
-    # elif st.session_state.rechte == 2:
-    #     # Manager
-    #     return ["Live Status",'SAP Mitarbeiter','SAP Bewegungsdaten','Fehlverladungen','DDS','Infocenter','Daten Updaten','Einstellungen']
+        return ["Live Status",'Daten Analyse','SAP Bewegungsdaten','Nachschub','Daten Updaten','Einstellungen']#,'Fehlverladungen','Infocenter','Admin','Einstellungen','Wartung']
+    # else:
+    #     return ['Wartung']
+    elif st.session_state.rechte == 2:
+        # Manager
+        return ["Live Status",'SAP Bewegungsdaten','Nachschub','Daten Updaten','Einstellungen']
     
-    # elif st.session_state.rechte == 3:
-    #     # Mitarbeiter AD 
-    #     return ["Live Status",'SAP WM Daten','Einstellungen']
+    elif st.session_state.rechte == 3:
+        # Mitarbeiter AD 
+        return ["Live Status",'Nachschub','Einstellungen']
     
-    # elif st.session_state.rechte == 4:
-    #     # Mitarbeiter Fremd
-    #     return ["Live Status",'SAP WM Daten','Einstellungen']
-    #     # Lager
+    elif st.session_state.rechte == 4:
+        # Mitarbeiter Fremd
+        return ["Live Status",'Nachschub','Einstellungen']
+        # Lager
     
-    # elif st.session_state.rechte == 5:
-    #     return ["Live Status"]
+    elif st.session_state.rechte == 5:
+        return ["Live Status"]
 
 # ----- Login -----
 
@@ -175,11 +175,11 @@ if authentication_status == True:
         Admin.page()
     if sel_main_m == 'Fehlverladungen':
         fehlverladungenPage()
-    if sel_main_m == 'DDS':
+    if sel_main_m == 'Daten Analyse':
         ddsPage()
     if sel_main_m == 'SAP Bewegungsdaten':
         LoadPageSapPicksMA.mitarbeiterPage()
-    if sel_main_m == 'SAP WM Daten':
+    if sel_main_m == 'Nachschub':
         SAPWM.sap_wm_page()
     if sel_main_m == 'Infocenter':
         Infocenter.page()
