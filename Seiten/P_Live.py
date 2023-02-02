@@ -429,10 +429,7 @@ class LIVE:
         with colhead2:
             dfUpdatetime = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_KundenbestellungenUpdateTime')
             #vupdatetag = value last entry in dfUpdateTime[date]
-            updatetag = dfUpdatetime['Date'].iloc[-1]
-            #updatetime = value last entry in dfUpdateTime[time]
-            updatetime = dfUpdatetime['Time'].iloc[-1]
-            st.write('Letztes Update: ', updatetag, updatetime)
+            st.dataframe(dfUpdatetime)
 
             LIVE.downLoadTagesReport(dfOr)
         with colhead3:
