@@ -258,5 +258,5 @@ UpdateDaten.updateDaten_byDate(df)
 print('Update fertig')
 # write actual datetime in df
 dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
-SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime,'time')
+SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
 

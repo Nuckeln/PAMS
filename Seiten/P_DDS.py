@@ -79,15 +79,12 @@ def expanderFigGesamtPicks(df):
             df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
             #i as double  = sum of Picks Gesamt by PlannedDate
             i = df.groupby('PlannedDate')['Picks Gesamt'].sum()
-
-            # int text = sum of Picks Gesamt by PlannedDate
-            # fig = px.bar(df, x="PlannedDate", y="Picks Gesamt", color="PartnerName", barmode=sel_barmode, facet_col=unterteilen,hover_data=["Picks Gesamt","DeliveryDepot","PlannedDate","Lieferschein erhalten"])      
-            # fig.update_layout(showlegend=False)
-            # fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
-            # st.plotly_chart(fig, use_container_width=True)
-
             fig = px.bar(df, x="PlannedDate", y="Picks Gesamt", color="PartnerName", barmode=sel_barmode, facet_col=unterteilen,hover_data=["Picks Gesamt","DeliveryDepot","PlannedDate","Lieferschein erhalten"])
-            #fig.update_traces(texttemplate='%{y:.2f}', textposition='top center')
+            # drop empty ticks on x
+            fig.layout.xaxis.type = 'category'
+            fig.layout.xaxis.tickangle = 70
+            
+
             fig.update_layout(showlegend=False)
             fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
             st.plotly_chart(fig, use_container_width=True)
@@ -131,6 +128,7 @@ def expanderFigGesamtPicks(df):
             if tabelle == True:
                 st.dataframe(df_grouped)
         
+    
         with st.expander('PickVolumen Nach:'):
 
             col1, col2, col3 = st.columns(3)
@@ -152,7 +150,18 @@ def expanderFigGesamtPicks(df):
             if sel_GesamtOderNachDepot == 'Verfügbarkeit':
                 figPicksGesamtnachTagUndVerfügbarkeit(df,unterteilen,sel_tabelle)
             
-
+def expanderTruckAuslastung(df):
+        def figPalTruckAuslastung(df):
+            # Create a bar chart of 'Picks Gesamt' grouped by delivery Depot and stacked by sum Vortag and Verladetag
+            fig = px.bar(df, x="PlannedDate", y="Picks Gesamt", color="Truck Kennzeichen", barmode="stack", facet_col="DeliveryDepot",hover_data=["Picks Gesamt","DeliveryDepot","PlannedDate","Lieferschein erhalten"])
+            fig.update_layout(showlegend=False)
+            fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
+            #remove timespamp from xaxis
+            fig.update_xaxes(tickformat='%d.%m.%Y')
+            st.plotly_chart(fig, use_container_width=True)
+            #st.dataframe(df)
+        with st.expander('Truck Auslastung'):
+            figPalTruckAuslastung(df)
 
 def ddsPage():
     dfLT22 = pd.read_parquet('Data/upload/lt22.parquet')
@@ -166,6 +175,7 @@ def ddsPage():
         
         df = berechneAlleDepots(dfOr, dfHannover)
         df = dateFilter(df)
+        expanderTruckAuslastung(df)
         expanderFigGesamtPicks(df)
         st.dataframe(df)
 
