@@ -430,7 +430,8 @@ class LIVE:
             dfOr = LIVE.loadDF(sel_date,sel_date)
         with colhead2:
             dfUpdatetime = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_KundenbestellungenUpdateTime')
-            #vupdatetag = value last entry in dfUpdateTime[date]
+            #dfUpdatetime rename time to Last Update
+            dfUpdatetime = dfUpdatetime.rename(columns={'time':'Last Update'})
             st.dataframe(dfUpdatetime)
 
             LIVE.downLoadTagesReport(dfOr)
