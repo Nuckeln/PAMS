@@ -213,7 +213,8 @@ class UpdateDaten():
         '''update Daten' seit Depotstart, braucht 1-2 min'''
         df = DatenAgregieren.orderDatenGo(DatenAgregieren.startDatumDepot,DatenAgregieren.fuenfTage)
         #save df to parquet
-        df.to_parquet('Data/appData/df.parquet.gzip', compression='gzip')
+        df.to_parquet('df.parquet.gzip', compression='gzip')
+        #SQL.sql_test('prod_Kundenbestellungen', df)
 
     def updateDaten_byDate(df):
         '''update Daten' seit Depotstart, braucht 1-2 min'''
@@ -239,8 +240,8 @@ class UpdateDaten():
         st.dataframe(df)
         
 #st.set_page_config(layout="wide", page_title="DBDaten", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
-df= pd.read_parquet('Data/appData/df.parquet.gzip')
-#df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+#df= pd.read_parquet('Data/appData/df.parquet.gzip')
+df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
 
 try:
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
@@ -254,11 +255,13 @@ except:
 # if st.button('Update'):
 #st.write(datetime.datetime.now())
 print('Update')
-UpdateDaten.updateDaten_byDate(df)
+#UpdateDaten.updateDaten_byDate(df)
+UpdateDaten.updateAlle_Daten_()
 print('Update fertig')
 # write actual datetime in df
 dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
 # add one hour to time
 dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
 SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+
 
