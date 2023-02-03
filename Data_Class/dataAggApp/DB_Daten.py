@@ -226,21 +226,10 @@ class UpdateDaten():
         df1 = DatenAgregieren.orderDatenGo(lastDay,DatenAgregieren.fuenfTage)
         df = pd.concat([df,df1])
         #delete table
-
-        # try:
-        #     st.write('Tabelle wird gelöscht')
-        #     SQL.sql_deleteTabelle('prod_Kundenbestellungen')
-        # except:
-        #     pass
-        # st.write('Tabelle wird erstellt')
-        # SQL.sql_createTable('prod_Kundenbestellungen',df)
-
         SQL.sql_test('prod_Kundenbestellungen', df)
         #save df to parquet
         st.dataframe(df)
-        
-#st.set_page_config(layout="wide", page_title="DBDaten", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
-#df= pd.read_parquet('Data/appData/df.parquet.gzip')
+
 df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
 
 try:
@@ -249,18 +238,13 @@ except:
     df['PlannedDate'] = df['PlannedDate'].astype(str)
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
 
-# st.write(DatenAgregieren.time)
-# st.dataframe(df)
+st.dataframe(df)
 
-# if st.button('Update'):
-#st.write(datetime.datetime.now())
-print('Update')
-#UpdateDaten.updateDaten_byDate(df)
-UpdateDaten.updateAlle_Daten_()
-print('Update fertig')
-# write actual datetime in df
+st.warning('Daten werden aktualisiert')
+UpdateDaten.updateDaten_byDate(df)
+st.success('Daten wurden aktualisiert')
+
 dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
-# add one hour to time
 dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
 SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
 
