@@ -5,6 +5,7 @@ from lark import logger
 import pandas as pd
 import numpy as np
 from SQL import SQL_TabellenLadenBearbeiten as SQL
+import streamlit as st # Streamlit Web App Framework
 import requests
 import os
 
@@ -226,6 +227,7 @@ class UpdateDaten():
         #delete table
         SQL.sql_test('prod_Kundenbestellungen', df)
         #save df to parquet
+        st.dataframe(df)
 
 df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
 # load df from parquet
@@ -236,9 +238,12 @@ except:
     df['PlannedDate'] = df['PlannedDate'].astype(str)
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
 
+st.dataframe(df)
 
+st.warning('Daten werden aktualisiert')
 #UpdateDaten.updateAlle_Daten_()
 UpdateDaten.updateDaten_byDate(df)
+st.success('Daten wurden aktualisiert')
 
 dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
 dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
