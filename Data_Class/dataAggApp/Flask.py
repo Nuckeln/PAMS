@@ -6,10 +6,10 @@ import pandas as pd
 import numpy as np
 from SQL import SQL_TabellenLadenBearbeiten as SQL
 from flask import Flask, request
-import requests
-import os
+import time
 
-#   streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Data_Class/dataAggApp/DB_Daten.py"
+
+#   http://127.0.0.1:5000
 
 class TagUndZeit():
 
@@ -227,20 +227,18 @@ class UpdateDaten():
         #delete table
         SQL.sql_test('prod_Kundenbestellungen', df)
         #save df to parquet
-        st.dataframe(df)
 
-        
+
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return 'Welcome to the Data Aggregation App'
-
-@app.route('/data', methods=['GET', 'POST'])
-def data():
-
+    print('Loading data from SQL...')
     df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+    print('Data loaded')
+
+    print('Converting date column...')
     try:
         df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
     except:
@@ -249,17 +247,17 @@ def data():
         date1 = request.form.get('date1')
         date2 = request.form.get('date2')
         UpdateDaten.updateDaten_byDate(df)
+    print('Date conversion completed')
 
+    print('Updating SQL table...')
     dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
     dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
-    result = SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+    SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+    print('SQL table updated')
 
-    html_table = result.to_html()
-    return html_table
+    return 'Data processing completed'
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-
-
-
+    while True:
+        app.run()
+        time.sleep(300) # Sleep for 5 minutes

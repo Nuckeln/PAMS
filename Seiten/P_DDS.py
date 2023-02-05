@@ -406,8 +406,8 @@ def ddsPage():
 
     
     expanderFigGesamtPicks(df)
-    expanderPicksLager(df)
-    expanderKundenVerhalten(df)
+    #expanderPicksLager(df)
+    #expanderKundenVerhalten(df)
     expanderTruckAuslastung(df)
     st.dataframe(df)       
 
