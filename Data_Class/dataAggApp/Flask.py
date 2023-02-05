@@ -252,7 +252,7 @@ def data():
 
     dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
     dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
-    SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+    result = SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
 
     html_table = result.to_html()
     return html_table
