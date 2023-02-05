@@ -5,7 +5,7 @@ from lark import logger
 import pandas as pd
 import numpy as np
 from SQL import SQL_TabellenLadenBearbeiten as SQL
-import streamlit as st # Streamlit Web App Framework
+#import streamlit as st # Streamlit Web App Framework
 import requests
 import os
 
@@ -238,12 +238,12 @@ except:
     df['PlannedDate'] = df['PlannedDate'].astype(str)
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
 
-st.dataframe(df)
+#st.dataframe(df)
 
-st.warning('Daten werden aktualisiert')
+#st.warning('Daten werden aktualisiert')
 #UpdateDaten.updateAlle_Daten_()
 UpdateDaten.updateDaten_byDate(df)
-st.success('Daten wurden aktualisiert')
+# st.success('Daten wurden aktualisiert')
 
 dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
 dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
