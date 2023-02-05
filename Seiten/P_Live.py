@@ -13,7 +13,7 @@ from Data_Class.wetter.api import getWetterBayreuth
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten
 import plotly_express as px
 import plotly.graph_objects as go
-
+import Data_Class.DB_Daten_Agg as DB_Daten_Agg
 
 class LIVE:
     
@@ -21,8 +21,6 @@ class LIVE:
     morgen =heute + datetime.timedelta(days=3)
     vorgestern = heute - datetime.timedelta(days=3)
 
-    def reload():
-            st.experimental_rerun()
     def timer():
         st.markdown("5-Minute Timer")
         time_left = st.empty()
@@ -440,6 +438,7 @@ class LIVE:
         with colhead1:
             sel_date = st.date_input('Datum', LIVE.heute)
             dfOr = LIVE.loadDF(sel_date,sel_date)
+            sel_reload = st.button('Reload')
         with colhead2:
             dfUpdatetime = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_KundenbestellungenUpdateTime')
             #dfUpdatetime rename time to Last Update
@@ -448,6 +447,10 @@ class LIVE:
 
             LIVE.downLoadTagesReport(dfOr)
         with colhead3:
+            if sel_reload:
+                DB_Daten_Agg.update()
+                st.success('Daten wurden aktualisiert')
+                
             LIVE.wetter()
 
         LIVE.columnsKennzahlen(dfOr)

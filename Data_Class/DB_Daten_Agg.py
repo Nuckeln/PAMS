@@ -1,32 +1,44 @@
-from distutils.log import info
+from datetime import datetime
+from pytz import timezone
 import datetime
+from lark import logger
 import pandas as pd
 import numpy as np
-from Data_Class.SQL import  sql_datenLadenStammdaten,sql_datenLadenKunden, sql_datenLadenMaster_CS_OUT,sql_datenLadenOderItems
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
+import streamlit as st # Streamlit Web App Framework
+import requests
+import os
+
+#   streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Data_Class/dataAggApp/DB_Daten.py"
+
+class TagUndZeit():
+
+    def UpdateZeitSQLTabelle():
+        date_time_obj = datetime.datetime.now()
+        # Create a pandas dataframe with two columns for the date and time
+        df = pd.DataFrame({'Date': [date_time_obj.date()], 'Time': [date_time_obj.time()]})
+        df = pd.DataFrame({'Date': [date_time_obj.date()], 'Time': [date_time_obj.time()]})
+        #to string
+        df['Date'] = df['Date'].astype(str)
+        df['Time'] = df['Time'].astype(str)
+        SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime', df)
+        return df
 
 class DatenAgregieren():
     '''Klasse zum Agregieren von Daten aus der Datenbank
     Datum eingrenzen? 
     '''
-    def __init__(self):
-        self.heute
-
     heute = datetime.date.today()
-    heute = heute - datetime.timedelta(days=2)
-    #heute = heute- datetime.timedelta(days=3)
-    # heute plus 3 Tage
-    morgen = heute + datetime.timedelta(days=3)
-    # heute minus 10 Tage
-    day2 = heute - datetime.timedelta(days=10)
-    # heute minus 3 Tage
-    vorgestern = heute - datetime.timedelta(days=90)
+    morgen = heute + datetime.timedelta(days=1)
+    fuenfTage = heute + datetime.timedelta(days=5)
+    startDatumDepot = '2021-04-01'
+    time = datetime.datetime.now()
 
     def orderDatenLines(date1, date2):
         '''Lädt die Daten aus der Datenbank und berechnet die Werte
         erwartet 2 Datumsangaben'''
         ##------------------ Stammdaten Laden und berechnen ------------------##
-        dfStammdaten = sql_datenLadenMaster_CS_OUT()
+        dfStammdaten = SQL.sql_datenTabelleLaden('data_materialmaster-MaterialMasterUnitOfMeasures')
         dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]
         dfStammdaten['MaterialNumber'] = dfStammdaten['MaterialNumber'].str.replace('0000000000', '')
         dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]   
@@ -55,9 +67,9 @@ class DatenAgregieren():
         ##------------------ Order Date von DB Laden ------------------##
         dfOrder = SQL.sql_datenLadenDatum(date1,date2,SQL.tabelle_DepotDEBYKNOrders,SQL.datumplannedDate)
         ##------------------ Order Items von DB Laden ------------------##
-        dfOrderItems = sql_datenLadenOderItems()
+        dfOrderItems = SQL.sql_datenTabelleLaden('business_depotDEBYKN-DepotDEBYKNOrderItems')
         ##------------------ Kunden von DB Laden ------------------##
-        dfKunden = sql_datenLadenKunden()
+        dfKunden = SQL.sql_datenTabelleLaden('Kunden_mit_Packinfos')
         ##------------------ Merge Items und Stammdaten ------------------##
         dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].astype(str)
         dfOrderItems['MaterialNumber'] = dfOrderItems['MaterialNumber'].str.replace('0000000000', '')
@@ -131,16 +143,36 @@ class DatenAgregieren():
         #NiceLabelTransmissionState_TimeStamp to string
         df['NiceLabelTransmissionState_TimeStamp'] = df['NiceLabelTransmissionState_TimeStamp'].astype(str)
         return df
-    
+
     def oderDaten(df):
         #df = DatenAgregieren.orderDatenLines()
-        dfLabel = SQL.sql_datenLadenDatum(DatenAgregieren.vorgestern, DatenAgregieren.morgen ,SQL.tabelleSSCCLabel,'CreatedTimestamp')       
+        dfLabel = SQL.sql_datenLadenDatum(DatenAgregieren.startDatumDepot, DatenAgregieren.fuenfTage ,SQL.tabelleSSCCLabel,'CreatedTimestamp')       
         df1 = df
+        
             
         df = df.groupby(['PlannedDate','PartnerName','SapOrderNumber',"AllSSCCLabelsPrinted",'DeliveryDepot']).agg({'Picks Gesamt':'sum'}).reset_index()
-        # add column with CreatedTimestamp from df1 to df by first hit of SapOrderNumber
         df['Lieferschein erhalten'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['CreatedTimestamp'].iloc[0])
+
+
+        def handle_invalid_date(date_value):
+            try:
+                return pd.to_datetime(date_value).strftime("%Y-%m-%d %H:%M:%S%z")
+            except ValueError:
+                # handle invalid date value
+                return None
+
+        df1["QuantityCheckTimestamp"] = df1["QuantityCheckTimestamp"].apply(handle_invalid_date)
+        df1['QuantityCheckTimestamp'] = pd.to_datetime(df1['QuantityCheckTimestamp']).dt.strftime("%Y-%m-%d %H:%M:%S")
+        #df1["QuantityCheckTimestamp"] = df1["QuantityCheckTimestamp"].dt.tz_localize(None)
         df['Fertiggestellt'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['QuantityCheckTimestamp'].iloc[0])
+        if df['Fertiggestellt'].notna().all():
+            try:
+                df['Fertiggestellt'] = pd.to_datetime(df['Fertiggestellt']).dt.strftime("%Y-%m-%d %H:%M:%S")
+                df['Fertiggestellt'] = df['Fertiggestellt'].dt.tz_localize(None)    
+            
+            except:
+                pass
+    
         df['Truck Kennzeichen'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['UnloadingListIdentifier'].iloc[0])
         # sum for each in df.SapOrderNumber of df1'Picks CS'  with same SapOrderNumber
         df['Picks Karton'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['Picks CS'].sum())
@@ -163,11 +195,58 @@ class DatenAgregieren():
         # count for each in df.SapOrderNumber how many D97 entrys are in dfLabel.UnitOfMeasure with same SapOrderNumber and ParentID = null
         df['Fertige Paletten'] = df['SapOrderNumber'].apply(lambda x: dfLabel[(dfLabel['UnitOfMeasure'] == 'D97') & (dfLabel['ParentID'].isnull())].loc[dfLabel['SapOrderNumber'] == x].shape[0])
         #df['Paletten Label'] = df['SapOrderNumber'].apply(lambda x: dfLabel[dfLabel['UnitOfMeasure'] == 'D97'].loc[dfLabel['SapOrderNumber'] == x].shape[0])
-        
+        df['Lieferschein erhalten'] = df['Lieferschein erhalten'].astype(str)
+        df['Fertiggestellt'] = df['Fertiggestellt'].astype(str)
+        df['Fertiggestellt'] = df['Fertiggestellt'].str.replace("nan","")
+        df['Fertiggestellt'] = df['Fertiggestellt'].str.replace("NaT","")
+        df['PlannedDate'] = df['PlannedDate'].astype(str)
         return df
 
-
     def orderDatenGo(day1,day2):
+        '''<<<start date, end date>>> gibt die Konsolidierten Daten als df zurück'''
         df = DatenAgregieren.orderDatenLines(date1=day1,date2=day2)
         df = DatenAgregieren.oderDaten(df)
         return df
+
+class UpdateDaten():
+    def updateAlle_Daten_():
+        '''update Daten' seit Depotstart, braucht 1-2 min'''
+        df = DatenAgregieren.orderDatenGo(DatenAgregieren.startDatumDepot,DatenAgregieren.fuenfTage)
+        #save df to parquet
+        df.to_parquet('df.parquet.gzip', compression='gzip')
+        #SQL.sql_test('prod_Kundenbestellungen', df)
+
+    def updateDaten_byDate(df):
+        '''update Daten' seit Depotstart, braucht 1-2 min'''
+        lastDay = df['PlannedDate'].max()
+        #add 10 days to lastDay
+        #erase all data from day1 to day2
+        df = df[df['PlannedDate'] < lastDay]
+        df1 = DatenAgregieren.orderDatenGo(lastDay,DatenAgregieren.fuenfTage)
+        df = pd.concat([df,df1])
+        #delete table
+        SQL.sql_test('prod_Kundenbestellungen', df)
+        #save df to parquet
+        st.dataframe(df)
+
+class updatePusher():
+    def update():
+        # load df from sql
+        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+        # load df from parquet
+        #df = pd.read_parquet('df.parquet.gzip')
+        try:
+            df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+        except:
+            df['PlannedDate'] = df['PlannedDate'].astype(str)
+            df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+        #UpdateDaten.updateAlle_Daten_()
+        UpdateDaten.updateDaten_byDate(df)
+
+        dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
+        dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
+        SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+
+        return ('Daten wurden aktualisiert')
+
+
