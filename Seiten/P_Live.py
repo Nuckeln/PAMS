@@ -171,15 +171,22 @@ class LIVE:
         df = df[df['DeliveryDepot'].isin(depoth)]
         #sort by picks and second by 
         df = df.sort_values(by=['Picks Gesamt','AllSSCCLabelsPrinted'], ascending=False)
-        figTagKunden = px.bar(df, x="PartnerName", y="Picks Gesamt",  title="Kundenverteilung",hover_data=['Picks Gesamt','SapOrderNumber','Fertiggestellt'],color='Picks Gesamt')
+        figTagKunden = px.bar(df, x="PartnerName", y="Picks Gesamt",  title="Kundenverteilung",hover_data=['Picks Gesamt','SapOrderNumber','Fertiggestellt'],color='Picks Gesamt',height=900)
         figTagKunden.update_traces(marker_color=np.where(df['AllSSCCLabelsPrinted'] == 1, '#4FAF46', '#E72482'))
-        figTagKunden.update_traces(texttemplate='%{text:.2s}', text=df['Picks Gesamt'])
+        figTagKunden.update_traces(texttemplate='%{text:.3}', text=df['Picks Gesamt'],textposition='inside')
         figTagKunden.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
         figTagKunden.update_layout(title_text='')
         figTagKunden.update_xaxes(title_text='')
         figTagKunden.update_yaxes(title_text='')
         figTagKunden.layout.xaxis.tickangle = 70
         figTagKunden.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
+        
+        figTagKunden.update_layout(
+                    annotations=[
+                        {"x": x, "y": total * 1.05, "text": str(total), "showarrow": False}
+                        for x, total in df.groupby("PartnerName", as_index=False).agg({"Picks Gesamt": "sum"}).values])
+             
+
         st.plotly_chart(figTagKunden,use_container_width=True)      
 
     def figPicksBy_SAP_Order_CS_PAL(df):
@@ -189,7 +196,7 @@ class LIVE:
         #sort by Picks CS+ PAL + OUT 
         df['Picks Gesamt'] = df['Picks Karton'] + df['Picks Paletten'] + df['Picks Stangen']
         df = df.sort_values(by=['Picks Gesamt'], ascending=False)
-        figPicksBySAPOrder = px.bar(df, x="SapOrderNumber", y=['Picks Karton','Picks Paletten','Picks Stangen'], title="Picks SAP Order in CS/PAL/OUT",hover_data=['Picks Gesamt','PartnerName',])
+        figPicksBySAPOrder = px.bar(df, x="SapOrderNumber", y=['Picks Karton','Picks Paletten','Picks Stangen'], title="Picks SAP Order in CS/PAL/OUT",hover_data=['Picks Gesamt','PartnerName',],height=600)
         # change color Picks Karton = #0F2B63 Picks Paletten = #4FAF46 Picks Stangen = #E72482
         figPicksBySAPOrder.update_traces(marker_color='#0F2B63', selector=dict(name='Picks Karton'))
         figPicksBySAPOrder.update_traces(marker_color='#4FAF46', selector=dict(name='Picks Paletten'))
@@ -202,7 +209,10 @@ class LIVE:
         df['Transparency'] = np.where(df['AllSSCCLabelsPrinted']==True, 0.3, 1)
         figPicksBySAPOrder.update_traces(marker=dict(opacity=df['Transparency']))
         figPicksBySAPOrder.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
-    
+        figPicksBySAPOrder.update_traces(text=df['Picks Karton'], selector=dict(name='Picks Karton'),textposition='inside')
+        figPicksBySAPOrder.update_traces(text=df['Picks Paletten'], selector=dict(name='Picks Paletten'),textposition='inside')
+        figPicksBySAPOrder.update_traces(text=df['Picks Stangen'], selector=dict(name='Picks Stangen'),textposition='inside')
+
         st.plotly_chart(figPicksBySAPOrder,use_container_width=True)
 
     def figTachoDiagrammPicksLei(df):
@@ -235,6 +245,8 @@ class LIVE:
                         ],
 
                     'threshold' : {'line': {'color': "#E72482", 'width': 4}, 'thickness': 0.75, 'value': 100}}))
+        #update fig to high 600
+        fig.update_layout(height=320)
         fig.update_traces(number_suffix=" %")
         # add suffix to delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
         fig.update_traces(delta_suffix=" %")
@@ -285,6 +297,8 @@ class LIVE:
             fig.update_xaxes(title_text='')
             fig.update_yaxes(title_text='')
             fig.layout.xaxis.tickangle = 70
+            fig.update_layout(height=320)
+
             st.plotly_chart(fig,use_container_width=True)
     
     def figTachoDiagrammMitarbeiterstunden(sel_date):
@@ -311,10 +325,6 @@ class LIVE:
                 verfügbar = spät * 7.5
         if istTag > sel_date:
             verfügbar = 0
-
-
-
-
         # Berechnen Sie den Prozentsatz der noch verfügbaren stunden  von den Gesamtstunden
         completion_rate = (verfügbar / 150) * 100
         
@@ -340,6 +350,8 @@ class LIVE:
         fig.update_xaxes(title_text='')
         fig.update_yaxes(title_text='')
         fig.layout.xaxis.tickangle = 70
+        fig.update_layout(height=280)
+
         st.plotly_chart(fig,use_container_width=True)
         return completion_rate
 
@@ -373,7 +385,7 @@ class LIVE:
         #sort by Fertiggestellt
         dfFertig = dfFertig.sort_values(by=['Fertiggestellt'], ascending=True)
         #Create Plotly Chart
-        fig = px.bar(dfFertig, x='Fertiggestellt', y="Picks Gesamt", color="InTime", hover_data=['PartnerName','Fertig um','SapOrderNumber','DeliveryDepot'])
+        fig = px.bar(dfFertig, x='Fertiggestellt', y="Picks Gesamt", color="InTime", hover_data=['PartnerName','Fertig um','SapOrderNumber','DeliveryDepot'],height=600)
         #if in Time 1 set to green else to red
         fig.update_traces(marker_color=['#4FAF46' if x == 1 else '#E72482' for x in dfFertig['InTime']])
         fig.data[0].text = dfFertig['PartnerName'] + '<br>' + dfFertig['Picks Gesamt'].astype(str)
@@ -387,7 +399,7 @@ class LIVE:
         fig.update_layout(legend_title_text='InTime')
          
         # Date PartnerName to text
-        st.plotly_chart(fig, use_container_width=True,height=800)
+        st.plotly_chart(fig, use_container_width=True)
 
    ## AG-Grid Func ###
 
@@ -439,15 +451,13 @@ class LIVE:
             LIVE.wetter()
 
         LIVE.columnsKennzahlen(dfOr)
-        with st.expander('', expanded=True):
+        with st.expander('Zielerfüllung', expanded=True):
             try:
-                col34, col35, col36 = st.columns(3)
+                col34, col35 = st.columns(2)
                 with col34:
                     LIVE.figTachoDiagrammPicksLei(dfOr)
                 with col35:
                     LIVE.figTachoDiagrammPicksStr(dfOr)
-                with col36:
-                    LIVE.figTachoDiagrammMitarbeiterstunden(dfOr)
             except:
                st.write('Keine Daten vorhanden')
 
@@ -457,11 +467,10 @@ class LIVE:
             except:
                 st.write('Keine Daten vorhanden')
         with st.expander('Lieferscheine nach Volumen in Stangen, Karton, Paletten', expanded=True):
-            # try:
-            #     LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr) 
-            # except:
-            #     st.write('Keine Daten vorhanden')
-            LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr) 
+            try:
+                LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr) 
+            except:
+                st.write('Keine Daten vorhanden')
         with st.expander('Deadline eingehalten? Grün = Ja, Rot = Nein', expanded=True):     
             try:    
                 LIVE.figUebermitteltInDeadline(dfOr)

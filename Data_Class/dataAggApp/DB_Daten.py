@@ -222,7 +222,6 @@ class UpdateDaten():
         #add 10 days to lastDay
         #erase all data from day1 to day2
         df = df[df['PlannedDate'] < lastDay]
-        st.warning('Daten werden aktualisiert')
         df1 = DatenAgregieren.orderDatenGo(lastDay,DatenAgregieren.fuenfTage)
         df = pd.concat([df,df1])
         #delete table
@@ -231,7 +230,8 @@ class UpdateDaten():
         st.dataframe(df)
 
 df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-
+# load df from parquet
+#df = pd.read_parquet('df.parquet.gzip')
 try:
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
 except:
@@ -241,6 +241,7 @@ except:
 st.dataframe(df)
 
 st.warning('Daten werden aktualisiert')
+#UpdateDaten.updateAlle_Daten_()
 UpdateDaten.updateDaten_byDate(df)
 st.success('Daten wurden aktualisiert')
 
