@@ -5,7 +5,7 @@ from lark import logger
 import pandas as pd
 import numpy as np
 from SQL import SQL_TabellenLadenBearbeiten as SQL
-import streamlit as st # Streamlit Web App Framework
+from flask import Flask, request
 import requests
 import os
 
@@ -229,24 +229,37 @@ class UpdateDaten():
         #save df to parquet
         st.dataframe(df)
 
-df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-# load df from parquet
-#df = pd.read_parquet('df.parquet.gzip')
-try:
-    df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
-except:
-    df['PlannedDate'] = df['PlannedDate'].astype(str)
-    df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+        
 
-st.dataframe(df)
+app = Flask(__name__)
 
-st.warning('Daten werden aktualisiert')
-#UpdateDaten.updateAlle_Daten_()
-UpdateDaten.updateDaten_byDate(df)
-st.success('Daten wurden aktualisiert')
+@app.route('/')
+def index():
+    return 'Welcome to the Data Aggregation App'
 
-dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
-dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
-SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+@app.route('/data', methods=['GET', 'POST'])
+def data():
+
+    df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+    try:
+        df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+    except:
+        df['PlannedDate'] = df['PlannedDate'].astype(str)
+        df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+        date1 = request.form.get('date1')
+        date2 = request.form.get('date2')
+        UpdateDaten.updateDaten_byDate(df)
+
+    dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
+    dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
+    SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+
+    html_table = result.to_html()
+    return html_table
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
 
 
