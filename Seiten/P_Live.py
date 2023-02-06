@@ -445,7 +445,8 @@ class LIVE:
             LIVE.downLoadTagesReport(dfOr)
         with colhead3:
             if sel_reload:
-                DB_Daten.UpdateDaten.updateDaten_byDate(dfOr)
+                dfUpdate = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_Kundenbestellungen')
+                DB_Daten.UpdateDaten.updateDaten_byDate(dfUpdate)
                 st.success('Daten wurden aktualisiert')
                 
             LIVE.wetter()
@@ -480,13 +481,6 @@ class LIVE:
 
         LIVE.tabelleAnzeigen(dfOr)
         
-        with open("Data/appData/lastUpdate.txt", "r") as file:
-            lastUpdate = file.read()
-            update_plus5 = pd.to_datetime(lastUpdate) + pd.to_timedelta('5 minutes')
-            update_plus5 = update_plus5.strftime('%H:%M')
-        st.write('Letztes Update: ' + lastUpdate )# + ' nächstes um: ' + str(update_plus5)+ ' Uhr')
-        
-        #write actual date
-        st.write('Aktuelles Datum: ' + LIVE.heute.strftime("%d.%m.%Y"))
+
 
 
