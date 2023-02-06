@@ -431,8 +431,6 @@ class LIVE:
 
         pd.set_option("display.precision", 2)
         #rerun script all 2 minutes
-         
-        
 
         colhead1, colhead2 ,colhead3, = st.columns(3)
         with colhead1:
