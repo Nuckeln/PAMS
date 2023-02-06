@@ -250,7 +250,7 @@ def expanderFigGesamtPicks(df):
             if sel_GesamtOderNachDepot == 'Verfügbarkeit':
                 figPicksGesamtnachTagUndVerfügbarkeit(df,unterteilen,sel_tabelle,sel_barmode=sel_barmode)
 
-def expanderPicksLager(df):
+def expanderPicksLager(df,dflt22):
 
         def figLieferscheinFertigTag(df,unterteilen,tabelle,sel_barmode):
             #round df Picks Gesamt to int
@@ -349,8 +349,11 @@ def expanderPicksLager(df):
             ## FARBEN
             if tabelle == True:
                 st.dataframe(df)
-                
-    
+
+        def figSAPpicks(dflt22,df):
+            df = df.sort_values(by=['PlannedDate'], ascending=[False])
+            df_grouped = df.groupby(['PlannedDate'], as_index=False).agg({'Picks Gesamt': 'sum'})
+            
         with st.expander('Warehouse', expanded=True):
 
             col1, col2, col3 = st.columns(3)
@@ -365,7 +368,7 @@ def expanderPicksLager(df):
                 else:
                     sel_barmodeP = 'group'
             with col3:
-                 sel_MengeneinheitP = st.selectbox('Mengeneinheit:', ['Picks','KG/TH'],key='1MengeP')
+                    sel_MengeneinheitP = st.selectbox('Mengeneinheit:', ['Picks','KG/TH'],key='1MengeP')
             # unterteilen ja nein       
             if sel_NachDepotP == 'Depot':
                     unterteilen = 'DeliveryDepot'
@@ -376,8 +379,9 @@ def expanderPicksLager(df):
             #     figPicksGesamtKunden(df,unterteilen,sel_tabelle,sel_barmode=sel_barmode)
             if sel_GesamtOderNachDepot == 'Verfügbarkeit':
                 figLieferscheinFertigTag(df,unterteilen,sel_tabelleP,sel_barmode=sel_barmodeP)
-  
-
+        
+            figSAPpicks(dflt22)
+    
 
 def expanderTruckAuslastung(df):
         def figPalTruckAuslastung(df):
@@ -406,8 +410,8 @@ def ddsPage():
 
     
     expanderFigGesamtPicks(df)
-    #expanderPicksLager(df)
+    expanderPicksLager(df,dfLT22)
     #expanderKundenVerhalten(df)
     expanderTruckAuslastung(df)
-    st.dataframe(df)       
+    #st.dataframe(df)       
 

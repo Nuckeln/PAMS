@@ -95,7 +95,7 @@ def berechtigung():
     #     return ['Wartung']
     elif st.session_state.rechte == 2:
         # Manager
-        return ["Live Status",'Daten Analyse','SAP Bewegungsdaten','Nachschub','Daten Updaten','Einstellungen']
+        return ["Live Status",'SAP Bewegungsdaten','Nachschub','Daten Updaten','Einstellungen']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 
