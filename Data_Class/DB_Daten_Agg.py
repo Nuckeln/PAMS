@@ -9,20 +9,7 @@ import streamlit as st # Streamlit Web App Framework
 import requests
 import os
 
-#   streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Data_Class/dataAggApp/DB_Daten.py"
 
-class TagUndZeit():
-
-    def UpdateZeitSQLTabelle():
-        date_time_obj = datetime.datetime.now()
-        # Create a pandas dataframe with two columns for the date and time
-        df = pd.DataFrame({'Date': [date_time_obj.date()], 'Time': [date_time_obj.time()]})
-        df = pd.DataFrame({'Date': [date_time_obj.date()], 'Time': [date_time_obj.time()]})
-        #to string
-        df['Date'] = df['Date'].astype(str)
-        df['Time'] = df['Time'].astype(str)
-        SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime', df)
-        return df
 
 class DatenAgregieren():
     '''Klasse zum Agregieren von Daten aus der Datenbank
@@ -226,8 +213,11 @@ class UpdateDaten():
         df = pd.concat([df,df1])
         #delete table
         SQL.sql_test('prod_Kundenbestellungen', df)
-        #save df to parquet
-        st.dataframe(df)
+        dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
+        dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
+        SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+    
     def manualUpdate():
         df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
         try:
@@ -240,26 +230,4 @@ class UpdateDaten():
         dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
         SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
         df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-
-##---------------------Streamlit---------------------##
-
-# # load df from parquet
-# #df = pd.read_parquet('df.parquet.gzip')
-# df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-# try:
-#     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
-# except:
-#     df['PlannedDate'] = df['PlannedDate'].astype(str)
-#     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
-
-# st.dataframe(df)
-
-# st.warning('Daten werden aktualisiert')
-# #UpdateDaten.updateAlle_Daten_()
-# UpdateDaten.updateDaten_byDate(df)
-# st.success('Daten wurden aktualisiert')
-
-# dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
-# dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
-# SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
 

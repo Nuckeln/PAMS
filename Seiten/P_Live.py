@@ -15,6 +15,8 @@ import plotly_express as px
 import plotly.graph_objects as go
 import Data_Class.DB_Daten_Agg as DB_Daten
 
+
+
 class LIVE:
     
     heute  = datetime.date.today()
@@ -438,14 +440,11 @@ class LIVE:
             sel_reload = st.button('Reload')
         with colhead2:
             dfUpdatetime = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_KundenbestellungenUpdateTime')
-            #dfUpdatetime rename time to Last Update
             dfUpdatetime = dfUpdatetime.rename(columns={'time':'Last Update'})
-            st.dataframe(dfUpdatetime)
-
             LIVE.downLoadTagesReport(dfOr)
         with colhead3:
             if sel_reload:
-                DB_Daten.UpdateDaten.manualUpdate()
+                DB_Daten.UpdateDaten.updateDaten_byDate(dfOr)
                 st.success('Daten wurden aktualisiert')
                 
             LIVE.wetter()

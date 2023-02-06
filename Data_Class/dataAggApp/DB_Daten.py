@@ -11,18 +11,6 @@ import os
 
 #   streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Data_Class/dataAggApp/DB_Daten.py"
 
-class TagUndZeit():
-
-    def UpdateZeitSQLTabelle():
-        date_time_obj = datetime.datetime.now()
-        # Create a pandas dataframe with two columns for the date and time
-        df = pd.DataFrame({'Date': [date_time_obj.date()], 'Time': [date_time_obj.time()]})
-        df = pd.DataFrame({'Date': [date_time_obj.date()], 'Time': [date_time_obj.time()]})
-        #to string
-        df['Date'] = df['Date'].astype(str)
-        df['Time'] = df['Time'].astype(str)
-        SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime', df)
-        return df
 
 class DatenAgregieren():
     '''Klasse zum Agregieren von Daten aus der Datenbank
@@ -250,6 +238,7 @@ class UpdateDaten():
         df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
 
 ##---------------------Streamlit---------------------##
+st.set_page_config(layout="wide", page_title="PAMS DatenUpdate", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
 
 # load df from parquet
 #df = pd.read_parquet('df.parquet.gzip')

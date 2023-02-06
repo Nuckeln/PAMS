@@ -21,7 +21,6 @@ pip install pyarrow
 pip install fastparquet (Datenkompression)
 # Funktionen:
 Notwendig zum Release: 
-Das aktuelle Wetter in der Sidebar! (Einfach nur zum Lernen API) Hey, kommt man eventuell an Live Temp aus dem Depot?  
 ## Home:  
     Live Tagesübersicht  
 ## Mitarbeiter:  
