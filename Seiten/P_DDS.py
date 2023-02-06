@@ -132,6 +132,7 @@ def expanderFigGesamtPicks(df):
                 st.dataframe(df)
 
         def figPicksGesamtnachTagUndVerfügbarkeit(df,unterteilen,tabelle,sel_barmode):
+            ##TODO Try Except if not all Depots selectet
             #round df Picks Gesamt to int
             df['Picks Gesamt'] = df['Picks Gesamt'].round(0).astype(int)
             # Convert 'PlannedDate' to datetime format
@@ -166,39 +167,51 @@ def expanderFigGesamtPicks(df):
                 fig.update_xaxes(showticklabels=True, row=1, col=3)
                 fig.update_xaxes(showticklabels=True, row=1, col=4)
                 fig.update_layout(title_text="Picks Gesamt Unterteilt in Zieldepot und Verfügbarkeit", title_x=0.5, title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", legend_title_font_color="#0F2B63", legend_title_font_family="Montserrat", legend_title_font_size=14, legend_font_size=12, legend_font_family="Montserrat", legend_font_color="#0F2B63", height=700)
-                df_groupedStr = df_grouped[df_grouped['DeliveryDepot'] == 'Stuttgart']
-                df_groupedStrVerl = df_groupedStr[df_groupedStr['Verfügbarkeit'] == 'Verladetag']
-                df_groupedStrVerl = df_groupedStrVerl.sort_values(by=['PlannedDate'], ascending=[False])
-                fig.update_traces( text= df_groupedStrVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=1)
-                df_groupedStrVor = df_groupedStr[df_groupedStr['Verfügbarkeit'] == 'Vortag']
-                df_groupedStrVor = df_groupedStrVor.sort_values(by=['PlannedDate'], ascending=[False])
-                fig.update_traces( text= df_groupedStrVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=1)
-                df_groupedLei = df_grouped[df_grouped['DeliveryDepot'] == 'Leipzig']
-                df_groupedLeiVerl = df_groupedLei[df_groupedLei['Verfügbarkeit'] == 'Verladetag']
-                df_groupedLeiVerl = df_groupedLeiVerl.sort_values(by=['PlannedDate'], ascending=[False])
-                fig.update_traces( text= df_groupedLeiVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=2)
-                df_groupedLeiVor = df_groupedLei[df_groupedLei['Verfügbarkeit'] == 'Vortag']
-                df_groupedLeiVor = df_groupedLeiVor.sort_values(by=['PlannedDate'], ascending=[False])
-                fig.update_traces( text= df_groupedLeiVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=2)
-                df_groupedHan = df_grouped[df_grouped['DeliveryDepot'] == 'Hannover']
-                df_groupedHanVerl = df_groupedHan[df_groupedHan['Verfügbarkeit'] == 'Verladetag']
-                df_groupedHanVerl = df_groupedHanVerl.sort_values(by=['PlannedDate'], ascending=[False])
-                fig.update_traces( text= df_groupedHanVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=3)
-                df_groupedHanVor = df_groupedHan[df_groupedHan['Verfügbarkeit'] == 'Vortag']
-                df_groupedHanVor = df_groupedHanVor.sort_values(by=['PlannedDate'], ascending=[False])
-                fig.update_traces( text= df_groupedHanVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=3)
-                df_groupedBil = df_grouped[df_grouped['DeliveryDepot'] == 'Bielefeld']
-                df_groupedBilVerl = df_groupedBil[df_groupedBil['Verfügbarkeit'] == 'Verladetag']
-                df_groupedBilVerl = df_groupedBilVerl.sort_values(by=['PlannedDate'], ascending=[False])
-                fig.update_traces( text= df_groupedBilVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=4)
-                df_groupedBilVor = df_groupedBil[df_groupedBil['Verfügbarkeit'] == 'Vortag']
-                df_groupedBilVor = df_groupedBilVor.sort_values(by=['PlannedDate'], ascending=[False])
-                fig.update_traces( text= df_groupedBilVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=4)
+                try:
+                    df_groupedStr = df_grouped[df_grouped['DeliveryDepot'] == 'Stuttgart']
+                    df_groupedStrVerl = df_groupedStr[df_groupedStr['Verfügbarkeit'] == 'Verladetag']
+                    df_groupedStrVerl = df_groupedStrVerl.sort_values(by=['PlannedDate'], ascending=[False])
+                    fig.update_traces( text= df_groupedStrVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=1)
+                    df_groupedStrVor = df_groupedStr[df_groupedStr['Verfügbarkeit'] == 'Vortag']
+                    df_groupedStrVor = df_groupedStrVor.sort_values(by=['PlannedDate'], ascending=[False])
+                except:
+                     pass
+                try:
+                    fig.update_traces( text= df_groupedStrVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=1)
+                    df_groupedLei = df_grouped[df_grouped['DeliveryDepot'] == 'Leipzig']
+                    df_groupedLeiVerl = df_groupedLei[df_groupedLei['Verfügbarkeit'] == 'Verladetag']
+                    df_groupedLeiVerl = df_groupedLeiVerl.sort_values(by=['PlannedDate'], ascending=[False])
+                    fig.update_traces( text= df_groupedLeiVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=2)
+                    df_groupedLeiVor = df_groupedLei[df_groupedLei['Verfügbarkeit'] == 'Vortag']
+                    df_groupedLeiVor = df_groupedLeiVor.sort_values(by=['PlannedDate'], ascending=[False])
+                except:
+                    pass
+                try:
+                    fig.update_traces( text= df_groupedLeiVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=2)
+                    df_groupedHan = df_grouped[df_grouped['DeliveryDepot'] == 'Hannover']
+                    df_groupedHanVerl = df_groupedHan[df_groupedHan['Verfügbarkeit'] == 'Verladetag']
+                    df_groupedHanVerl = df_groupedHanVerl.sort_values(by=['PlannedDate'], ascending=[False])
+                    fig.update_traces( text= df_groupedHanVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=3)
+                    df_groupedHanVor = df_groupedHan[df_groupedHan['Verfügbarkeit'] == 'Vortag']
+                    df_groupedHanVor = df_groupedHanVor.sort_values(by=['PlannedDate'], ascending=[False])
+                except:
+                    pass
+                try:
+                    fig.update_traces( text= df_groupedHanVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=3)
+                    df_groupedBil = df_grouped[df_grouped['DeliveryDepot'] == 'Bielefeld']
+                    df_groupedBilVerl = df_groupedBil[df_groupedBil['Verfügbarkeit'] == 'Verladetag']
+                    df_groupedBilVerl = df_groupedBilVerl.sort_values(by=['PlannedDate'], ascending=[False])
+                    fig.update_traces( text= df_groupedBilVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=4)
+                    df_groupedBilVor = df_groupedBil[df_groupedBil['Verfügbarkeit'] == 'Vortag']
+                    df_groupedBilVor = df_groupedBilVor.sort_values(by=['PlannedDate'], ascending=[False])
+                    fig.update_traces( text= df_groupedBilVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=4)
+                except:
+                    pass
                 fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
 
 
             else:
-                    #add text to each bar
+                
                 df_groupedVor = df_grouped[df_grouped['Verfügbarkeit'] == 'Vortag']
                 fig.update_traces( text= df_groupedVor['Picks Gesamt'].astype(str) + '<br>'+df_groupedVor['DeliveryDepot'], textposition='inside',selector=dict(name='Vortag'))
                 df_groupedVer = df_grouped[df_grouped['Verfügbarkeit'] == 'Verladetag']
