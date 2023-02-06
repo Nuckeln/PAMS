@@ -441,6 +441,7 @@ class LIVE:
         with colhead2:
             dfUpdatetime = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_KundenbestellungenUpdateTime')
             dfUpdatetime = dfUpdatetime.rename(columns={'time':'Last Update'})
+            st.dataframe(dfUpdatetime)
             LIVE.downLoadTagesReport(dfOr)
         with colhead3:
             if sel_reload:
