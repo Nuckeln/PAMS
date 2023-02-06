@@ -228,25 +228,38 @@ class UpdateDaten():
         SQL.sql_test('prod_Kundenbestellungen', df)
         #save df to parquet
         st.dataframe(df)
-
-class updatePusher():
-    def update():
-        # load df from sql
+    def manualUpdate():
         df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-        # load df from parquet
-        #df = pd.read_parquet('df.parquet.gzip')
         try:
             df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
         except:
             df['PlannedDate'] = df['PlannedDate'].astype(str)
             df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
-        #UpdateDaten.updateAlle_Daten_()
         UpdateDaten.updateDaten_byDate(df)
-
         dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
         dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
         SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
 
-        return ('Daten wurden aktualisiert')
+##---------------------Streamlit---------------------##
 
+# # load df from parquet
+# #df = pd.read_parquet('df.parquet.gzip')
+# df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+# try:
+#     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+# except:
+#     df['PlannedDate'] = df['PlannedDate'].astype(str)
+#     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+
+# st.dataframe(df)
+
+# st.warning('Daten werden aktualisiert')
+# #UpdateDaten.updateAlle_Daten_()
+# UpdateDaten.updateDaten_byDate(df)
+# st.success('Daten wurden aktualisiert')
+
+# dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
+# dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
+# SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
 

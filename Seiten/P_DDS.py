@@ -350,9 +350,8 @@ def expanderPicksLager(df,dflt22):
             if tabelle == True:
                 st.dataframe(df)
 
-        def figSAPpicks(dflt22,df):
-            df = df.sort_values(by=['PlannedDate'], ascending=[False])
-            df_grouped = df.groupby(['PlannedDate'], as_index=False).agg({'Picks Gesamt': 'sum'})
+        def figSAPpicks(dflt22):
+            st.dataframe(dflt22)
             
         with st.expander('Warehouse', expanded=True):
 
@@ -411,7 +410,6 @@ def ddsPage():
     
     expanderFigGesamtPicks(df)
     expanderPicksLager(df,dfLT22)
-    #expanderKundenVerhalten(df)
     expanderTruckAuslastung(df)
     #st.dataframe(df)       
 

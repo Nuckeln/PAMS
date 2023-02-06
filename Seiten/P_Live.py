@@ -13,7 +13,7 @@ from Data_Class.wetter.api import getWetterBayreuth
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten
 import plotly_express as px
 import plotly.graph_objects as go
-import Data_Class.DB_Daten_Agg as DB_Daten_Agg
+import Data_Class.DB_Daten_Agg as DB_Daten
 
 class LIVE:
     
@@ -244,7 +244,6 @@ class LIVE:
 
                     'threshold' : {'line': {'color': "#E72482", 'width': 4}, 'thickness': 0.75, 'value': 100}}))
         #update fig to high 600
-        fig.update_layout(height=320)
         fig.update_traces(number_suffix=" %")
         # add suffix to delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
         fig.update_traces(delta_suffix=" %")
@@ -295,7 +294,7 @@ class LIVE:
             fig.update_xaxes(title_text='')
             fig.update_yaxes(title_text='')
             fig.layout.xaxis.tickangle = 70
-            fig.update_layout(height=320)
+            #fig.update_layout(height=320)
 
             st.plotly_chart(fig,use_container_width=True)
     
@@ -446,7 +445,7 @@ class LIVE:
             LIVE.downLoadTagesReport(dfOr)
         with colhead3:
             if sel_reload:
-                DB_Daten_Agg.update()
+                DB_Daten.UpdateDaten.manualUpdate()
                 st.success('Daten wurden aktualisiert')
                 
             LIVE.wetter()
