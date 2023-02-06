@@ -22,7 +22,7 @@ import datetime
 #MAC#   streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
  
 # --- Set Global Page Configs ---
-st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
+st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="expanded")
 hide_streamlit_style = """
                 <style>
                 @import url('https://fonts.googleapis.com/css?family=Montserrat');
