@@ -447,6 +447,7 @@ class LIVE:
             if sel_reload:
                 dfUpdate = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_Kundenbestellungen')
                 DB_Daten.UpdateDaten.updateDaten_byDate(dfUpdate)
+                dfOr = LIVE.loadDF(sel_date,sel_date)
                 st.success('Daten wurden aktualisiert')
                 
             LIVE.wetter()

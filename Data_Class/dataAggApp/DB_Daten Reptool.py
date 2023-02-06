@@ -213,6 +213,8 @@ class UpdateDaten():
         #delete table
         SQL.sql_test('prod_Kundenbestellungen', df)
         #save df to parquet
+        
+        
         st.dataframe(df)
     def manualUpdate():
         df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
