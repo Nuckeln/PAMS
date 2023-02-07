@@ -42,6 +42,10 @@ class Admin:
         with st.expander("Bestellungen", expanded=True):
             df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
             st.dataframe(df)
+        with st.expander("Bestellungen Lines", expanded=True):
+            #df = dfLines.parquet.gzip
+            dfLines = pd.read_parquet('dfLines.parquet.gzip')
+            st.dataframe(dfLines)
         with st.expander("Berechnungen", expanded=True):
             dflt22 = pd.read_parquet('Data/upload/lt22.parquet')
 

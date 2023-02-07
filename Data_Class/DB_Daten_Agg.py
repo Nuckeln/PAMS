@@ -187,6 +187,8 @@ class DatenAgregieren():
         df['Fertiggestellt'] = df['Fertiggestellt'].str.replace("nan","")
         df['Fertiggestellt'] = df['Fertiggestellt'].str.replace("NaT","")
         df['PlannedDate'] = df['PlannedDate'].astype(str)
+        #save df to parquet
+        df.to_parquet('dfLines.parquet.gzip', compression='gzip')
         return df
 
     def orderDatenGo(day1,day2):
