@@ -259,7 +259,7 @@ class LIVE:
 
     def figTachoDiagrammPicksStr(df):
             
-
+           
             df1 = df[df['AllSSCCLabelsPrinted']==0]
             offenLei = df1.loc[df1["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()
             offenStu = df1.loc[df1["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()

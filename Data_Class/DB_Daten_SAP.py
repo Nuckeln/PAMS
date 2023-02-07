@@ -96,6 +96,9 @@ class DatenAgregieren():
         dflt22['LieferscheinErhalten'] = dfOrders['SapOrderNumber'].apply(lambda x: dfOrders.loc[dfOrders['SapOrderNumber'] == x]['CreatedTimestamp'].iloc[0])
         dflt22['PartnerNo'] = dfOrders['SapOrderNumber'].apply(lambda x: dfOrders.loc[dfOrders['SapOrderNumber'] == x]['PartnerNo'].iloc[0])
         dflt22['SuperDepot'] = dflt22['DestBin'].isin(dfOrders['SapOrderNumber'])
+        #df['Truck Kennzeichen'] = df['SapOrderNumber'].apply(lambda x: df1.loc[df1['SapOrderNumber'] == x]['UnloadingListIdentifier'].iloc[0])
+        dflt22['Lieferschein'] = dflt22['DestBin'].apply(lambda x: dflt22.loc[dflt22['SuperDepot'] == True]['DestBin'].iloc[0])
+
         # save to parquet
         dflt22.to_parquet('Data/upload/lt22.parquet')
 

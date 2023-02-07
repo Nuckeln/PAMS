@@ -9,20 +9,32 @@ import plotly.express as px
 import pyarrow.parquet as pq
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten as sql
 from Data_Class.DB_Daten_SAP import DatenAgregieren as da
+import plotly.graph_objs as go
+import plotly.subplots as sp
+
+
+
 
 #Berichtsdaten laden und berechnen und Filtern ##############
-def dateFilter(df):
+def dateFilterdfOr(df,dflt22):
+    #dflt22['Pick Datum'] to datetime
+    dflt22['Pick Datum'] = pd.to_datetime(dflt22['Pick Datum'])
+
     df['PlannedDate'] = df['PlannedDate'].astype(str)
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
     df['Tag'] = df['PlannedDate'].dt.strftime('%d.%m.%Y')
+    dflt22['Tag'] = dflt22['Pick Datum']
+
    # df tag to datetime.date
     df['Tag'] = pd.to_datetime(df['Tag'])
     df['Wochentag'] = df['PlannedDate'].dt.strftime('%A')
-
+    dflt22['Wochentag'] = dflt22['Pick Datum'].dt.strftime('%A')
     # df['Woche'] = Wochennummer und Jahr
     df['Woche'] = df['PlannedDate'].dt.strftime('%V.%Y')
+    dflt22['Woche'] = dflt22['Pick Datum'].dt.strftime('%V.%Y')
     
     df['Monat'] = df['PlannedDate'].dt.strftime('%m.%Y')
+    dflt22['Monat'] = dflt22['Pick Datum'].dt.strftime('%m.%Y')
 
     col1, col2, col3 = st.columns(3)
     # Nach Zeitraum Devinieren
@@ -33,44 +45,56 @@ def dateFilter(df):
         if sel_datePicker == 'Tag':
             sel_date = st.date_input('Wähle Tag', datetime.date.today())
             df = df[(df['Tag'] == np.datetime64(sel_date))]
+            dflt22 = dflt22[(dflt22['Tag'] == np.datetime64(sel_date))]
         if sel_datePicker == 'Tage letzte 30':
             end_date = datetime.date.today()
             start_date = end_date - datetime.timedelta(days=30)
             format = "DD.MM.YYYY"
             sel_dateRange = st.slider('Selektiere Zeitraum', min_value=start_date, value=(start_date, end_date), max_value=end_date, format=format)
             df = df[(df['Tag'] >= np.datetime64(sel_dateRange[0])) & (df['Tag'] <= np.datetime64(sel_dateRange[1]))]
+            dflt22 = dflt22[(dflt22['Tag'] >= np.datetime64(sel_dateRange[0])) & (dflt22['Tag'] <= np.datetime64(sel_dateRange[1]))]
         if sel_datePicker == 'Tage letzte 90':
             end_date = datetime.date.today()
             start_date = end_date - datetime.timedelta(days=90)
             format = "DD.MM.YYYY"
             sel_dateRange = st.slider('Selektiere Zeitraum', min_value=start_date, value=(start_date, end_date), max_value=end_date, format=format)
             df = df[(df['Tag'] >= np.datetime64(sel_dateRange[0])) & (df['Tag'] <= np.datetime64(sel_dateRange[1]))]
+            dflt22 = dflt22[(dflt22['Tag'] >= np.datetime64(sel_dateRange[0])) & (dflt22['Tag'] <= np.datetime64(sel_dateRange[1]))]
         if sel_datePicker == 'Woche':
             # sort by week by greater to lower 
             df = df.sort_values(by=['Woche'], ascending=False)
             
             sel_weekRange = st.selectbox('Woche:', df['Woche'].unique(),)
             df = df[df['Woche'] == sel_weekRange]
+            dflt22 = dflt22[dflt22['Woche'] == sel_weekRange]
     # Nach Wochentag filtern
     with col3:
         sel_Wochentag = st.selectbox('Wochentag Filtern:', ['Alle', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'])
         if sel_Wochentag != 'Alle':
             if sel_Wochentag == 'Montag':
                 df = df[df['Wochentag'] == 'Monday']
+                dflt22 = dflt22[dflt22['Wochentag'] == 'Monday']
             elif sel_Wochentag == 'Dienstag':
-                df = df[df['Wochentag'] == 'Tuesday']
+                df = df[df['Wochentag'] == 'Tuesday']#
+                dflt22 = dflt22[dflt22['Wochentag'] == 'Tuesday']
             elif sel_Wochentag == 'Mittwoch':
                 df = df[df['Wochentag'] == 'Wednesday']
+                dflt22 = dflt22[dflt22['Wochentag'] == 'Wednesday']
             elif sel_Wochentag == 'Donnerstag':
                 df = df[df['Wochentag'] == 'Thursday']
+                dflt22 = dflt22[dflt22['Wochentag'] == 'Thursday']
             elif sel_Wochentag == 'Freitag':
                 df = df[df['Wochentag'] == 'Friday']
+                dflt22 = dflt22[dflt22['Wochentag'] == 'Friday']
             elif sel_Wochentag == 'Samstag':
                 df = df[df['Wochentag'] == 'Saturday']
+                dflt22 = dflt22[dflt22['Wochentag'] == 'Saturday']
             elif sel_Wochentag == 'Sonntag':
                 df = df[df['Wochentag'] == 'Sunday']
+                dflt22 = dflt22[dflt22['Wochentag'] == 'Sunday']
 
-    return df
+    return df, dflt22
+
 
 def berechneAlleDepots(dfOr, dfHannover):
     #to string dfHannover = dfHannover['Delivery'] 
@@ -263,7 +287,7 @@ def expanderFigGesamtPicks(df):
             if sel_GesamtOderNachDepot == 'Verfügbarkeit':
                 figPicksGesamtnachTagUndVerfügbarkeit(df,unterteilen,sel_tabelle,sel_barmode=sel_barmode)
 
-def expanderPicksLager(df,dflt22):
+def expanderPicksLager(dfOrder,dflt22):
 
         def figLieferscheinFertigTag(df,unterteilen,tabelle,sel_barmode):
             #round df Picks Gesamt to int
@@ -363,9 +387,36 @@ def expanderPicksLager(df,dflt22):
             if tabelle == True:
                 st.dataframe(df)
 
-        def figSAPpicks(dflt22):
-            st.dataframe(dflt22)
-            
+        def figSAPpicks(dflt22, dfOrder):
+
+            dflt22 = dflt22[dflt22['SuperDepot'] == True]
+            #group df by PlannedDate and SapOrderNumber
+
+            dfOrder_grouped = dfOrder.groupby(['PlannedDate']).agg({'Picks Gesamt':'sum'}).reset_index()
+            dflt22_grouped = dflt22.groupby(['Pick Datum']).agg({'PICKS':'sum'}).reset_index()
+
+            # create first plot
+            bar_plot = go.Bar(x=dfOrder_grouped['PlannedDate'], y=dfOrder_grouped['Picks Gesamt'], name='Picks Gesamt')
+
+            # create second plot
+            line_plot = go.Line(x=dflt22_grouped['Pick Datum'], y=dflt22_grouped['PICKS'], name='PICKS', mode='lines+markers')
+
+            # create subplots
+            fig = sp.make_subplots(rows=1, cols=2, shared_yaxes=True, subplot_titles=('Picks by Date and SAP Order', 'Picks by Date and DestBin'))
+            fig.add_trace(bar_plot, row=1, col=1)
+            fig.add_trace(line_plot, row=1, col=2)
+
+            # update subplot titles
+            fig.update_layout(title='Picks by Date and SAP Order', xaxis_title='Date', yaxis_title='Picks')
+
+            st.plotly_chart(fig, use_container_width=True)
+
+
+            st.dataframe(dflt22_grouped)
+            st.dataframe(dfOrder_grouped)
+
+
+
         with st.expander('Warehouse', expanded=True):
 
             col1, col2, col3 = st.columns(3)
@@ -392,7 +443,7 @@ def expanderPicksLager(df,dflt22):
             if sel_GesamtOderNachDepot == 'Verfügbarkeit':
                 figLieferscheinFertigTag(df,unterteilen,sel_tabelleP,sel_barmode=sel_barmodeP)
         
-            figSAPpicks(dflt22)
+            figSAPpicks(dflt22,dfOrder)
     
 
 def expanderTruckAuslastung(df):
@@ -418,11 +469,12 @@ def ddsPage():
     dfHannover = pd.read_parquet('Data/appData/dfDe55.parquet')
    #pd.set_option("display.precision", 2)   
     df = berechneAlleDepots(dfOr, dfHannover)
-    df = dateFilter(df)
+    df, dfLT22 = dateFilterdfOr(df,dfLT22)
+
 
     
     expanderFigGesamtPicks(df)
-    expanderPicksLager(df,dfLT22)
+    #expanderPicksLager(df,dfLT22)
     expanderTruckAuslastung(df)
     #st.dataframe(df)       
 

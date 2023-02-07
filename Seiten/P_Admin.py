@@ -6,6 +6,7 @@ from streamlit_option_menu import option_menu
 from Data_Class.DB_Daten_SAP import DatenAgregieren as DA
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 import streamlit_authenticator as stauth
+from Data_Class.DB_Daten_SAP import DatenAgregieren as DA
 
 class Admin:
 
@@ -36,6 +37,19 @@ class Admin:
                 SQL.sql_updateTabelle(SQL.tabelleUser,df)
                 st.success("User erfolgreich angelegt")
                 st.experimental_rerun()
+    
+    def zeigeDFOrder():
+        with st.expander("Bestellungen", expanded=True):
+            df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+            st.dataframe(df)
+        with st.expander("Berechnungen", expanded=True):
+            dflt22 = pd.read_parquet('Data/upload/lt22.parquet')
+
+            update = st.button("Update lt22")
+            if update:
+                dflt22 = DA.sapLt22DatenBerechnen(dflt22)
+            st.dataframe(dflt22)
+
     def eingelogterUser():
         st.write("Eingelogter User")
         st.write(st.session_state.user)
@@ -44,5 +58,6 @@ class Admin:
         df=SQL.sql_datenTabelleLaden(SQL.tabelleUser)            
         Admin.userLöschen(df)    
         Admin.UserAnlegen(df)
+        Admin.zeigeDFOrder()
         Admin.eingelogterUser()
         st.dataframe(df)            
