@@ -36,8 +36,9 @@ class LIVE:
         time_left.text("Time's up!")
 
     def loadDF(day1=None, day2=None): 
-        dfOr = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_Kundenbestellungen')
-
+        #dfOr = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_Kundenbestellungen')
+        #load parquet
+        dfOr = pq.read_table('df.parquet.gzip').to_pandas()
 
         dfOr['PlannedDate'] = dfOr['PlannedDate'].astype(str)
         dfOr['PlannedDate'] = pd.to_datetime(dfOr['PlannedDate'].str[:10])
@@ -445,8 +446,9 @@ class LIVE:
             LIVE.downLoadTagesReport(dfOr)
         with colhead3:
             if sel_reload:
-                dfUpdate = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_Kundenbestellungen')
-                DB_Daten.UpdateDaten.updateDaten_byDate(dfUpdate)
+                #load dfUpdate from parquet df.parquet.gzip'
+            
+                DB_Daten.UpdateDaten.updateDaten_byDate()
                 dfOr = LIVE.loadDF(sel_date,sel_date)
                 st.success('Daten wurden aktualisiert')
                 

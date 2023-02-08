@@ -8,6 +8,8 @@ from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 import streamlit as st # Streamlit Web App Framework
 import requests
 import os
+import pyarrow.parquet as pq
+
 
 
 
@@ -129,6 +131,8 @@ class DatenAgregieren():
         df['UnloadingListIdentifier'] = df['UnloadingListIdentifier'].astype(str)
         #NiceLabelTransmissionState_TimeStamp to string
         df['NiceLabelTransmissionState_TimeStamp'] = df['NiceLabelTransmissionState_TimeStamp'].astype(str)
+        df.to_parquet('dfLines.parquet.gzip', compression='gzip')
+
         return df
 
     def oderDaten(df):
@@ -188,7 +192,6 @@ class DatenAgregieren():
         df['Fertiggestellt'] = df['Fertiggestellt'].str.replace("NaT","")
         df['PlannedDate'] = df['PlannedDate'].astype(str)
         #save df to parquet
-        df.to_parquet('dfLines.parquet.gzip', compression='gzip')
         return df
 
     def orderDatenGo(day1,day2):
@@ -205,20 +208,28 @@ class UpdateDaten():
         df.to_parquet('df.parquet.gzip', compression='gzip')
         #SQL.sql_test('prod_Kundenbestellungen', df)
 
-    def updateDaten_byDate(df):
+    def updateDaten_byDate():
+        df = pq.read_table('df.parquet.gzip').to_pandas()
         '''update Daten' seit Depotstart, braucht 1-2 min'''
+        #df PlannetDate to datetime
+        df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
         lastDay = df['PlannedDate'].max()
+        # last day -5 tage
+
+        lastDay = pd.to_datetime(lastDay) - datetime.timedelta(days=5)
         #add 10 days to lastDay
         #erase all data from day1 to day2
         df = df[df['PlannedDate'] < lastDay]
         df1 = DatenAgregieren.orderDatenGo(lastDay,DatenAgregieren.fuenfTage)
-        df = pd.concat([df,df1])
-        #delete table
-        SQL.sql_test('prod_Kundenbestellungen', df)
+        dfneu = pd.concat([df,df1])
+        #save
+        #SQL.sql_test('prod_Kundenbestellungen', dfneu)
+        # save to parquet
+        dfneu.to_parquet('df.parquet.gzip', compression='gzip')
         dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
         dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
         SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
-        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+        #df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
     
     def manualUpdate():
         df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')

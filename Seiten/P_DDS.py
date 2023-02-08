@@ -474,7 +474,7 @@ def ddsPage():
 
     
     expanderFigGesamtPicks(df)
-    #expanderPicksLager(df,dfLT22)
+    expanderPicksLager(df,dfLT22)
     expanderTruckAuslastung(df)
     #st.dataframe(df)       
 

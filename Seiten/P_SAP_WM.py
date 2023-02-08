@@ -12,12 +12,12 @@ from Data_Class.DB_Daten_Agg import DatenAgregieren as DA
 from Data_Class.SQL import createnewTable, sql_datenLadenMLGT
 from time import ctime
 
+#TODO: Nehme 
+
+
 class figSAPWM:       
 
     def fig_SN1(df):
-
-        # TODO Wenn SKU gewählt dann Hervorheben mit Rot 
-
         df = df[df.LGTYP != 'TN1']
         anzZugrBIN15min = df.groupby(['LGPLA','MaterialNumber']).size().reset_index(name='Anzahl Zugriffe SKU/BIN')
         # create a heatmap with the numbers of LGPLA x = quantity of LGPLA
@@ -149,6 +149,7 @@ class SAPWM:
         # Tn1 rausfiltern 
             dfOrders = dfOrders[dfOrders.LGTYP != 'TN1']
             return dfOrders
+        
         def bedarfOut(dfBedarfSKU,dfOrders):
                 #--- Stellplatzdaten mit Bedarf zusammenführen-----
             dfBedarfSKU['Bedarf über Zeitraum'] = dfBedarfSKU['Picks OUT']
