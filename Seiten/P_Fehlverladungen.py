@@ -14,7 +14,7 @@ def fehlverladungSQL():
     df = datenLadenFehlverladungen()
     return df
 def menueLaden():
-    selected2 = option_menu(None, ["Dashboard", "Fehlverladung Erfassen",'Fehlverladung Bearbeiten', "Fehlverladung Anzeigen"],
+    selected2 = option_menu(None, ["Fehlverladung Anzeigen", "Fehlverladung Erfassen",'Fehlverladung Bearbeiten'],
     icons=['house', 'cloud-upload', "list-task"], 
     menu_icon="cast", default_index=0, orientation="horizontal")
     return selected2   
@@ -32,15 +32,12 @@ def filterFehlverladungen(df):
             selstati = st.multiselect('Status', stati, stati)
         with col2:
             selbereiche = st.multiselect('Bereich', bereiche, bereiche)
-        col3 , col4 = st.columns(2)
-        with col3:
-            seltyp = st.multiselect('Typ', typ, typ)
-        with col4:
-            selversion = st.multiselect('Version', version, version)
+        
+
+        seltyp = st.multiselect('Typ', typ, typ)
         df = df[df['Status'].isin(selstati)]
         df = df[df['Bereich'].isin(selbereiche)]
         df = df[df['Typ'].isin(seltyp)]
-        df = df[df['V'].isin(selversion)]
 
         day1 = datetime.date.today()
         day2 = day1 - datetime.timedelta(days=30)
@@ -307,22 +304,6 @@ def fehlverladungAnzeigen(df):
         mailAnzeigen(mail)        
     fehlverladungImDetail(selid)
 
-def fehlverladungDashboard(df):
-
-    def fig_Bar_Chart(df):
-        
-        dfIssueDay = df.groupby(['Verladedatum'])['Typ'].count().reset_index()
-        fig = px.line(dfIssueDay, x="Verladedatum", y="Typ", title="Fehlverladungen pro Tag")
-        
-
-
-        st.plotly_chart(fig, use_container_width=True)
-
-
-    #fig_Bar_Chart(df)
-    
-    st.dataframe(df)
-
 
 def fehlverladungenPage():
     df = datenLadenFehlverladungen()
@@ -335,9 +316,7 @@ def fehlverladungenPage():
     elif selected2 == 'Fehlverladung Anzeigen':
          df = filterFehlverladungen(df)
          fehlverladungAnzeigen(df)
-    elif selected2 == 'Dashboard':
-        df = filterFehlverladungen(df)
-        fehlverladungDashboard(df)
+
 
 
     

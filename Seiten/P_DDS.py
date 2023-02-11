@@ -17,7 +17,7 @@ from PIL import Image
 
 
 #Berichtsdaten laden und berechnen und Filtern ##############
-def dateFilterdfOr(df: pd,dflt22: pd):
+def dateFilterdfOr(df: pd,dflt22: pd,dfIssues: pd):
     '''erwartet df (DB_Daten_Agg) und dflt22 (DB_Daten_SAP) als pd.DataFrame'''
     #dflt22['Pick Datum'] to datetime
     dflt22['Pick Datum'] = pd.to_datetime(dflt22['Pick Datum'])
@@ -26,6 +26,7 @@ def dateFilterdfOr(df: pd,dflt22: pd):
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
     df['Tag'] = df['PlannedDate'].dt.strftime('%d.%m.%Y')
     dflt22['Tag'] = dflt22['Pick Datum']
+    dfIssues['Verladedatum'] = pd.to_datetime(dfIssues['Verladedatum'])
 
    # df tag to datetime.date
     df['Tag'] = pd.to_datetime(df['Tag'])
@@ -34,14 +35,16 @@ def dateFilterdfOr(df: pd,dflt22: pd):
     # df['Woche'] = Wochennummer und Jahr
     df['Woche'] = df['PlannedDate'].dt.strftime('%V.%Y')
     dflt22['Woche'] = dflt22['Pick Datum'].dt.strftime('%V.%Y')
+    dfIssues['Woche'] = dfIssues['Verladedatum'].dt.strftime('%V.%Y')
     
     df['Monat'] = df['PlannedDate'].dt.strftime('%m.%Y')
     dflt22['Monat'] = dflt22['Pick Datum'].dt.strftime('%m.%Y')
+    dfIssues['Monat'] = dfIssues['Verladedatum'].dt.strftime('%m.%Y')
 
     col1, col2, col3 = st.columns(3)
     # Nach Zeitraum Devinieren
     with col1:
-        sel_datePicker = st.selectbox('Zeitraum:', ['Woche','Tag','Tage letzte 30', 'Tage letzte 90'])
+        sel_datePicker = st.selectbox('Zeitraum:', ['Woche','Monat','Tag'])
     # Nach Tage filtern
     with col2:
         if sel_datePicker == 'Tag':
@@ -49,26 +52,21 @@ def dateFilterdfOr(df: pd,dflt22: pd):
             sel_date = sel_date.strftime('%d.%m.%Y')
             df = df[df['Tag'] == sel_date]
             dflt22 = dflt22[dflt22['Tag'] == sel_date]
-        if sel_datePicker == 'Tage letzte 30':
-            end_date = datetime.date.today()
-            start_date = end_date - datetime.timedelta(days=30)
-            format = "DD.MM.YYYY"
-            sel_dateRange = st.slider('Selektiere Zeitraum', min_value=start_date, value=(start_date, end_date), max_value=end_date, format=format)
-            df = df[(df['Tag'] >= np.datetime64(sel_dateRange[0])) & (df['Tag'] <= np.datetime64(sel_dateRange[1]))]
-            dflt22 = dflt22[(dflt22['Tag'] >= np.datetime64(sel_dateRange[0])) & (dflt22['Tag'] <= np.datetime64(sel_dateRange[1]))]
-        if sel_datePicker == 'Tage letzte 90':
-            end_date = datetime.date.today()
-            start_date = end_date - datetime.timedelta(days=90)
-            format = "DD.MM.YYYY"
-            sel_dateRange = st.slider('Selektiere Zeitraum', min_value=start_date, value=(start_date, end_date), max_value=end_date, format=format)
-            df = df[(df['Tag'] >= np.datetime64(sel_dateRange[0])) & (df['Tag'] <= np.datetime64(sel_dateRange[1]))]
-            dflt22 = dflt22[(dflt22['Tag'] >= np.datetime64(sel_dateRange[0])) & (dflt22['Tag'] <= np.datetime64(sel_dateRange[1]))]
+            dfIssues = dfIssues[dfIssues['Verladedatum'] == sel_date]
         if sel_datePicker == 'Woche':
             dfWeek = df['Woche'].unique()
             dfWeek = np.sort(dfWeek)
             sel_weekRange = st.selectbox('Wähle Woche', dfWeek)
             df = df[df['Woche'] == sel_weekRange]
             dflt22 = dflt22[dflt22['Woche'] == sel_weekRange]
+            dfIssues = dfIssues[dfIssues['Woche'] == sel_weekRange]
+        if sel_datePicker == 'Monat':
+            dfMonth = df['Monat'].unique()
+            dfMonth = np.sort(dfMonth)
+            sel_monthRange = st.selectbox('Wähle Monat', dfMonth)
+            df = df[df['Monat'] == sel_monthRange]
+            dflt22 = dflt22[dflt22['Monat'] == sel_monthRange]
+            dfIssues = dfIssues[dfIssues['Monat'] == sel_monthRange]
     # Nach Wochentag filtern
     with col3:
         sel_Wochentag = st.selectbox('Wochentag Filtern:', ['Alle', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'])
@@ -95,7 +93,7 @@ def dateFilterdfOr(df: pd,dflt22: pd):
                 df = df[df['Wochentag'] == 'Sunday']
                 dflt22 = dflt22[dflt22['Wochentag'] == 'Sunday']
 
-    return df, dflt22
+    return df, dflt22, dfIssues
 
 
 def berechneAlleDepots(dfOr, dfHannover):
@@ -180,8 +178,9 @@ def expanderFigGesamtPicks(df,dflt22):
 
             fig = px.bar(df, x="PlannedDate", y="Picks Gesamt", barmode=sel_barmode, facet_col=unterteilen,hover_data=["Picks Gesamt","DeliveryDepot","PlannedDate"])
             fig.update_traces(marker_color='#0e2b63')
-            fig.update_layout(title_text="Picks Gesamt DE30", title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", height=700)
-
+            fig.update_layout(title_text="Picks Gesamt DE30", title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", height=700,)
+            #update font to Montserrat
+            fig.update_layout(font_family="Montserrat")
             if unterteilen == 'DeliveryDepot':
                 fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
                 #sum of each bar to tex
@@ -201,15 +200,11 @@ def expanderFigGesamtPicks(df,dflt22):
             df['text'] = df['DeliveryDepot'] + "<br>Picks Gesamt: " + df['Picks Gesamt'].astype(str)
             fig = px.scatter_mapbox(df, lat="latitude", lon="longitude", hover_name="DeliveryDepot", hover_data=["Picks Gesamt"], color_discrete_sequence=["fuchsia"], size="Picks Gesamt", size_max=50, zoom=5, height=600)
             fig.update_layout(mapbox_style="carto-positron", showlegend=False)
-            fig.update_traces(marker_color='#0e2b63', text=df['text'])
+            fig.update_traces(marker_color='#0e2b63', text=df['text'].astype(str))
             
             st.plotly_chart(fig,use_container_width=True)
             if tabelle == True:
                 st.dataframe(df)
-
-
-
-
 
         def figPicksGesamtKunden(df,unterteilen,tabelle,sel_barmode):
             df['Picks Gesamt'] = df['Picks Gesamt'].round(0).astype(int)
@@ -238,7 +233,7 @@ def expanderFigGesamtPicks(df,dflt22):
 
                 
             fig.update_traces(marker_color='#50af47', selector=dict(name='Vortag'))
-            fig.update_traces(marker_color='#e72582', selector=dict(name='Verladetag'))
+            fig.update_traces(marker_color='#e72582', selector=dict(name='Verladedatum'))
             fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
 
             st.plotly_chart(fig, use_container_width=True)       
@@ -262,14 +257,14 @@ def expanderFigGesamtPicks(df,dflt22):
             df['PlannedDate'] = df['PlannedDate'].dt.date
             try:
                 df.loc[df['Lieferschein erhalten'] < df['PlannedDate'], 'Verfügbarkeit'] = 'Vortag'
-                df.loc[df['Lieferschein erhalten'] >= df['PlannedDate'], 'Verfügbarkeit'] = 'Verladetag'
+                df.loc[df['Lieferschein erhalten'] >= df['PlannedDate'], 'Verfügbarkeit'] = 'Verladedatum'
             except:
                 #all values are Vortag
-                df['Verfügbarkeit'] = 'Verladetag'
+                df['Verfügbarkeit'] = 'Verladedatum'
                 st.warning('Der Filter liefert keine Ergebnisse')
             df_grouped = df.groupby(["PlannedDate", "Verfügbarkeit","DeliveryDepot"])["Picks Gesamt"].sum().reset_index()     
             df_grouped = df_grouped.sort_values(by=['PlannedDate','Verfügbarkeit','DeliveryDepot'], ascending=[False,False,False])
-            # Create a bar chart of 'Picks Gesamt' grouped by delivery Depot and stacked by sum Vortag and Verladetag
+            # Create a bar chart of 'Picks Gesamt' grouped by delivery Depot and stacked by sum Vortag and Verladedatum
             fig = px.bar(df_grouped, x="PlannedDate", y="Picks Gesamt", color="Verfügbarkeit", barmode=sel_barmode, facet_col=unterteilen,hover_data=["Picks Gesamt","DeliveryDepot","PlannedDate"])
             #remove timespamp from xaxis
             fig.update_xaxes(tickformat='%d.%m.%Y')
@@ -285,9 +280,9 @@ def expanderFigGesamtPicks(df,dflt22):
                 fig.update_layout(title_text="Picks Gesamt Unterteilt in Zieldepot und Verfügbarkeit", title_x=0.5, title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", legend_title_font_color="#0F2B63", legend_title_font_family="Montserrat", legend_title_font_size=14, legend_font_size=12, legend_font_family="Montserrat", legend_font_color="#0F2B63", height=700)
                 try:
                     df_groupedStr = df_grouped[df_grouped['DeliveryDepot'] == 'Stuttgart']
-                    df_groupedStrVerl = df_groupedStr[df_groupedStr['Verfügbarkeit'] == 'Verladetag']
+                    df_groupedStrVerl = df_groupedStr[df_groupedStr['Verfügbarkeit'] == 'Verladedatum']
                     df_groupedStrVerl = df_groupedStrVerl.sort_values(by=['PlannedDate'], ascending=[False])
-                    fig.update_traces( text= df_groupedStrVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=1)
+                    fig.update_traces( text= df_groupedStrVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladedatum'), row=1, col=1)
                     df_groupedStrVor = df_groupedStr[df_groupedStr['Verfügbarkeit'] == 'Vortag']
                     df_groupedStrVor = df_groupedStrVor.sort_values(by=['PlannedDate'], ascending=[False])
                 except:
@@ -295,9 +290,9 @@ def expanderFigGesamtPicks(df,dflt22):
                 try:
                     fig.update_traces( text= df_groupedStrVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=1)
                     df_groupedLei = df_grouped[df_grouped['DeliveryDepot'] == 'Leipzig']
-                    df_groupedLeiVerl = df_groupedLei[df_groupedLei['Verfügbarkeit'] == 'Verladetag']
+                    df_groupedLeiVerl = df_groupedLei[df_groupedLei['Verfügbarkeit'] == 'Verladedatum']
                     df_groupedLeiVerl = df_groupedLeiVerl.sort_values(by=['PlannedDate'], ascending=[False])
-                    fig.update_traces( text= df_groupedLeiVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=2)
+                    fig.update_traces( text= df_groupedLeiVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladedatum'), row=1, col=2)
                     df_groupedLeiVor = df_groupedLei[df_groupedLei['Verfügbarkeit'] == 'Vortag']
                     df_groupedLeiVor = df_groupedLeiVor.sort_values(by=['PlannedDate'], ascending=[False])
                 except:
@@ -305,9 +300,9 @@ def expanderFigGesamtPicks(df,dflt22):
                 try:
                     fig.update_traces( text= df_groupedLeiVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=2)
                     df_groupedHan = df_grouped[df_grouped['DeliveryDepot'] == 'Hannover']
-                    df_groupedHanVerl = df_groupedHan[df_groupedHan['Verfügbarkeit'] == 'Verladetag']
+                    df_groupedHanVerl = df_groupedHan[df_groupedHan['Verfügbarkeit'] == 'Verladedatum']
                     df_groupedHanVerl = df_groupedHanVerl.sort_values(by=['PlannedDate'], ascending=[False])
-                    fig.update_traces( text= df_groupedHanVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=3)
+                    fig.update_traces( text= df_groupedHanVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladedatum'), row=1, col=3)
                     df_groupedHanVor = df_groupedHan[df_groupedHan['Verfügbarkeit'] == 'Vortag']
                     df_groupedHanVor = df_groupedHanVor.sort_values(by=['PlannedDate'], ascending=[False])
                 except:
@@ -315,9 +310,9 @@ def expanderFigGesamtPicks(df,dflt22):
                 try:
                     fig.update_traces( text= df_groupedHanVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=3)
                     df_groupedBil = df_grouped[df_grouped['DeliveryDepot'] == 'Bielefeld']
-                    df_groupedBilVerl = df_groupedBil[df_groupedBil['Verfügbarkeit'] == 'Verladetag']
+                    df_groupedBilVerl = df_groupedBil[df_groupedBil['Verfügbarkeit'] == 'Verladedatum']
                     df_groupedBilVerl = df_groupedBilVerl.sort_values(by=['PlannedDate'], ascending=[False])
-                    fig.update_traces( text= df_groupedBilVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=4)
+                    fig.update_traces( text= df_groupedBilVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladedatum'), row=1, col=4)
                     df_groupedBilVor = df_groupedBil[df_groupedBil['Verfügbarkeit'] == 'Vortag']
                     df_groupedBilVor = df_groupedBilVor.sort_values(by=['PlannedDate'], ascending=[False])
                     fig.update_traces( text= df_groupedBilVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=4)
@@ -333,14 +328,14 @@ def expanderFigGesamtPicks(df,dflt22):
                 
                 df_groupedVor = df_grouped[df_grouped['Verfügbarkeit'] == 'Vortag']
                 fig.update_traces( text= df_groupedVor['Picks Gesamt'].astype(str) + '<br>'+df_groupedVor['DeliveryDepot'], textposition='inside',selector=dict(name='Vortag'))
-                df_groupedVer = df_grouped[df_grouped['Verfügbarkeit'] == 'Verladetag']
-                fig.update_traces( text=df_groupedVer['Picks Gesamt'].astype(str) + '<br>'+df_groupedVer['DeliveryDepot'], textposition='inside',selector=dict(name='Verladetag'))
+                df_groupedVer = df_grouped[df_grouped['Verfügbarkeit'] == 'Verladedatum']
+                fig.update_traces( text=df_groupedVer['Picks Gesamt'].astype(str) + '<br>'+df_groupedVer['DeliveryDepot'], textposition='inside',selector=dict(name='Verladedatum'))
             fig.update_layout(title_text="Picks Gesamt DE30 nach Verfügbarkeit", title_x=0.5, title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", legend_title_font_color="#0F2B63", legend_title_font_family="Montserrat", legend_title_font_size=14, legend_font_size=12, legend_font_family="Montserrat", legend_font_color="#0F2B63", legend_orientation="h", height=700)
                  
 
                 
             fig.update_traces(marker_color='#50af47', selector=dict(name='Vortag'))
-            fig.update_traces(marker_color='#ef7d00', selector=dict(name='Verladetag'))
+            fig.update_traces(marker_color='#ef7d00', selector=dict(name='Verladedatum'))
             fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
 
         
@@ -386,7 +381,7 @@ def expanderFigGesamtPicks(df,dflt22):
             #create px Area Chart by PlannedDate and Bearbeitungszeit
             if sel_inProzent == 'In Prozent':
                 fig = px.bar(df, x="PlannedDate", y=["Bearbeitungszeit", "Mitarbeiterstunden"], barmode=sel_barmodeP)
-                fig.update_layout(title_text="Stundeneinsatz DE30 für Verladetag", title_x=0.5, title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", legend_title_font_color="#0F2B63", legend_title_font_family="Montserrat", legend_title_font_size=14, legend_font_size=12, legend_font_family="Montserrat", legend_font_color="#0F2B63", legend_orientation="h", height=700)
+                fig.update_layout(title_text="Stundeneinsatz DE30 für Verladedatum", title_x=0.5, title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", legend_title_font_color="#0F2B63", legend_title_font_family="Montserrat", legend_title_font_size=14, legend_font_size=12, legend_font_family="Montserrat", legend_font_color="#0F2B63", legend_orientation="h", height=700)
                 fig.update_traces(marker_color='#0e2b63', selector=dict(name='Bearbeitungszeit'))
                 fig.update_traces(marker_color='#ffbb00', selector=dict(name='Mitarbeiterstunden'))
                 fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
@@ -396,7 +391,7 @@ def expanderFigGesamtPicks(df,dflt22):
                         for x, total in df.groupby("PlannedDate", as_index=False).agg({"Bearbeitungszeit": "sum"}).values])                
             else:
                 fig = px.bar(df, x="PlannedDate", y=["Bearbeitungszeit", "Mitarbeiterstunden"], barmode=sel_barmodeP)
-                fig.update_layout(title_text="Stundeneinsatz DE30 für Verladetag", title_x=0.5, title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", legend_title_font_color="#0F2B63", legend_title_font_family="Montserrat", legend_title_font_size=14, legend_font_size=12, legend_font_family="Montserrat", legend_font_color="#0F2B63", legend_orientation="h", height=700)
+                fig.update_layout(title_text="Stundeneinsatz DE30 für Verladedatum", title_x=0.5, title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", legend_title_font_color="#0F2B63", legend_title_font_family="Montserrat", legend_title_font_size=14, legend_font_size=12, legend_font_family="Montserrat", legend_font_color="#0F2B63", legend_orientation="h", height=700)
                 fig.update_traces(marker_color='#0e2b63', selector=dict(name='Bearbeitungszeit'))
                 fig.update_traces(marker_color='#ffbb00', selector=dict(name='Mitarbeiterstunden'))
                 fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
@@ -490,8 +485,6 @@ def expanderFigGesamtPicks(df,dflt22):
             if sel_Auswertungstyp == 'Karte':
                 figMap(df,sel_tabelle)
 
-
-
 def expanderPicksLager(df,dflt22):
  
 
@@ -552,9 +545,9 @@ def expanderPicksLager(df,dflt22):
                 fig.update_layout(title_text="Picks Gesamt Unterteilt in Zieldepot und Verfügbarkeit", title_x=0.5, title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", legend_title_font_color="#0F2B63", legend_title_font_family="Montserrat", legend_title_font_size=14, legend_font_size=12, legend_font_family="Montserrat", legend_font_color="#0F2B63", height=700)
                 try:
                     df_groupedStr = df_grouped[df_grouped['DeliveryDepot'] == 'Stuttgart']
-                    df_groupedStrVerl = df_groupedStr[df_groupedStr['Verfügbarkeit'] == 'Verladetag']
+                    df_groupedStrVerl = df_groupedStr[df_groupedStr['Verfügbarkeit'] == 'Verladedatum']
                     df_groupedStrVerl = df_groupedStrVerl.sort_values(by=['PlannedDate'], ascending=[False])
-                    fig.update_traces( text= df_groupedStrVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=1)
+                    fig.update_traces( text= df_groupedStrVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladedatum'), row=1, col=1)
                     df_groupedStrVor = df_groupedStr[df_groupedStr['Verfügbarkeit'] == 'Vortag']
                     df_groupedStrVor = df_groupedStrVor.sort_values(by=['PlannedDate'], ascending=[False])
                 except:
@@ -562,9 +555,9 @@ def expanderPicksLager(df,dflt22):
                 try:
                     fig.update_traces( text= df_groupedStrVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=1)
                     df_groupedLei = df_grouped[df_grouped['DeliveryDepot'] == 'Leipzig']
-                    df_groupedLeiVerl = df_groupedLei[df_groupedLei['Verfügbarkeit'] == 'Verladetag']
+                    df_groupedLeiVerl = df_groupedLei[df_groupedLei['Verfügbarkeit'] == 'Verladedatum']
                     df_groupedLeiVerl = df_groupedLeiVerl.sort_values(by=['PlannedDate'], ascending=[False])
-                    fig.update_traces( text= df_groupedLeiVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=2)
+                    fig.update_traces( text= df_groupedLeiVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladedatum'), row=1, col=2)
                     df_groupedLeiVor = df_groupedLei[df_groupedLei['Verfügbarkeit'] == 'Vortag']
                     df_groupedLeiVor = df_groupedLeiVor.sort_values(by=['PlannedDate'], ascending=[False])
                 except:
@@ -572,9 +565,9 @@ def expanderPicksLager(df,dflt22):
                 try:
                     fig.update_traces( text= df_groupedLeiVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=2)
                     df_groupedHan = df_grouped[df_grouped['DeliveryDepot'] == 'Hannover']
-                    df_groupedHanVerl = df_groupedHan[df_groupedHan['Verfügbarkeit'] == 'Verladetag']
+                    df_groupedHanVerl = df_groupedHan[df_groupedHan['Verfügbarkeit'] == 'Verladedatum']
                     df_groupedHanVerl = df_groupedHanVerl.sort_values(by=['PlannedDate'], ascending=[False])
-                    fig.update_traces( text= df_groupedHanVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=3)
+                    fig.update_traces( text= df_groupedHanVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladedatum'), row=1, col=3)
                     df_groupedHanVor = df_groupedHan[df_groupedHan['Verfügbarkeit'] == 'Vortag']
                     df_groupedHanVor = df_groupedHanVor.sort_values(by=['PlannedDate'], ascending=[False])
                 except:
@@ -582,9 +575,9 @@ def expanderPicksLager(df,dflt22):
                 try:
                     fig.update_traces( text= df_groupedHanVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=3)
                     df_groupedBil = df_grouped[df_grouped['DeliveryDepot'] == 'Bielefeld']
-                    df_groupedBilVerl = df_groupedBil[df_groupedBil['Verfügbarkeit'] == 'Verladetag']
+                    df_groupedBilVerl = df_groupedBil[df_groupedBil['Verfügbarkeit'] == 'Verladedatum']
                     df_groupedBilVerl = df_groupedBilVerl.sort_values(by=['PlannedDate'], ascending=[False])
-                    fig.update_traces( text= df_groupedBilVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladetag'), row=1, col=4)
+                    fig.update_traces( text= df_groupedBilVerl['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Verladedatum'), row=1, col=4)
                     df_groupedBilVor = df_groupedBil[df_groupedBil['Verfügbarkeit'] == 'Vortag']
                     df_groupedBilVor = df_groupedBilVor.sort_values(by=['PlannedDate'], ascending=[False])
                     fig.update_traces( text= df_groupedBilVor['Picks Gesamt'].astype(str), textposition='inside',selector=dict(name='Vortag'), row=1, col=4)
@@ -665,10 +658,9 @@ def expanderPicksLager(df,dflt22):
             
             #figSAPpicks(dflt22,dfOrder)
     
-
 def expanderTruckAuslastung(df):
         def figPalTruckAuslastung(df):
-            # Create a bar chart of 'Picks Gesamt' grouped by delivery Depot and stacked by sum Vortag and Verladetag
+            # Create a bar chart of 'Picks Gesamt' grouped by delivery Depot and stacked by sum Vortag and Verladedatum
             fig = px.bar(df, x="PlannedDate", y='Fertige Paletten', color="Truck Kennzeichen", barmode='group', facet_col="DeliveryDepot",hover_data=["Picks Gesamt","DeliveryDepot","PlannedDate","Lieferschein erhalten"])
             fig.update_layout(showlegend=False)
             fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
@@ -680,12 +672,25 @@ def expanderTruckAuslastung(df):
         with st.expander('Truck Auslastung', expanded=True):
             figPalTruckAuslastung(df)
 
+def expanderFehlverladungen(df,dfIssues):
+    def figFehlverladungenGesamt(dfIssues):
+        # Create a bar chart of 'Picks Gesamt' grouped by delivery Depot and stacked by sum Vortag and Verladedatum
+        fig = px.bar(dfIssues, x="Verladedatum", color="Typ", barmode='stack')
+        fig.update_layout(showlegend=False)
+        st.plotly_chart(fig, use_container_width=True)
+    with st.expander('Fehlverladungen', expanded=True):
+        figFehlverladungenGesamt(dfIssues)
+        st.dataframe(dfIssues)
+
+
 def expanderKundenVerhalten(df):
     pass
 #main function ###########################################
 def ddsPage():
     dfLT22 = pd.read_parquet('Data/upload/lt22.parquet')
     df = pd.read_parquet('Data/appData/dfOrAnalyse_Page.parquet')
+    dfIssues = sql.sql_datenTabelleLaden('Issues')
+
     pd.set_option("display.precision", 2)   
     img_strip = Image.open('Data/img/strip.png')   
     img_strip = img_strip.resize((1000, 15))     
@@ -694,11 +699,12 @@ def ddsPage():
     depot = st.multiselect('Depot', ['Stuttgart','Hannover','Bielefeld','Hamburg','Leipzig'], ['Stuttgart' ,'Leipzig'])
     df = df[df['DeliveryDepot'].isin(depot)]
 
-    df, dfLT22 = dateFilterdfOr(df,dfLT22)
+    df, dfLT22, dfIssues = dateFilterdfOr(df,dfLT22,dfIssues)
    
     expanderFigGesamtPicks(df,dfLT22)
     expanderPicksLager(df,dfLT22)
-
+    #expanderTruckAuslastung(df)
+    expanderFehlverladungen(df, dfIssues)
     sel_reload = st.button('Reload Data',key='reloadAnalyse')
     if sel_reload == True:
         dfOr = sql.sql_datenTabelleLaden('prod_Kundenbestellungen')
