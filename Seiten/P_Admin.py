@@ -5,8 +5,9 @@ from streamlit_option_menu import option_menu
 
 from Data_Class.DB_Daten_SAP import DatenAgregieren as DA
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
+import Data_Class.DB_Daten_Agg as DB
 import streamlit_authenticator as stauth
-from Data_Class.DB_Daten_SAP import DatenAgregieren as DA
+import datetime
 
 class Admin:
 
@@ -42,13 +43,23 @@ class Admin:
         with st.expander("Bestellungen", expanded=True):
             df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
             st.dataframe(df)
+            byAll = st.button('Update Alle Daten')
+            if byAll:
+                st.warning('Daten werden aktualisiert')
+                DB.UpdateDaten.updateAlle_Daten_()
+                st.success('Daten wurden aktualisiert')
+                dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
+                dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
+                SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+
+
+
         with st.expander("Bestellungen Lines", expanded=True):
             #df = dfLines.parquet.gzip
             dfLines = pd.read_parquet('dfLines.parquet.gzip')
             st.dataframe(dfLines)
         with st.expander("Berechnungen", expanded=True):
             dflt22 = pd.read_parquet('Data/upload/lt22.parquet')
-
             update = st.button("Update lt22")
             if update:
                 dflt22 = DA.sapLt22DatenBerechnen(dflt22)

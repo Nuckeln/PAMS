@@ -6,6 +6,7 @@ import st_aggrid as ag
 #parquet
 import pyarrow.parquet as pq
 import time
+from PIL import Image
 
 #from Data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
 
@@ -36,10 +37,9 @@ class LIVE:
         time_left.text("Time's up!")
 
     def loadDF(day1=None, day2=None): 
-        #dfOr = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_Kundenbestellungen')
+        dfOr = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_Kundenbestellungen')
         #load parquet
-        dfOr = pq.read_table('df.parquet.gzip').to_pandas()
-
+        #dfOr = pq.read_table('df.parquet.gzip').to_pandas()
         dfOr['PlannedDate'] = dfOr['PlannedDate'].astype(str)
         dfOr['PlannedDate'] = pd.to_datetime(dfOr['PlannedDate'].str[:10])
         if day1 is None:
@@ -172,13 +172,10 @@ class LIVE:
         df = df[df['DeliveryDepot'].isin(depoth)]
         #sort by picks and second by 
         df = df.sort_values(by=['Picks Gesamt','AllSSCCLabelsPrinted'], ascending=False)
-        figTagKunden = px.bar(df, x="PartnerName", y="Picks Gesamt",  title="Kundenverteilung",hover_data=['Picks Gesamt','SapOrderNumber','Fertiggestellt'],color='Picks Gesamt',height=900)
+        figTagKunden = px.bar(df, x="PartnerName", y="Picks Gesamt",  title="Kundenübersicht nach Status",hover_data=['Picks Gesamt','SapOrderNumber','Fertiggestellt'],color='Picks Gesamt',height=900)
         figTagKunden.update_traces(marker_color=np.where(df['AllSSCCLabelsPrinted'] == 1, '#4FAF46', '#E72482'))
         figTagKunden.update_traces(texttemplate='%{text:.3}', text=df['Picks Gesamt'],textposition='inside')
         figTagKunden.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
-        figTagKunden.update_layout(title_text='')
-        figTagKunden.update_xaxes(title_text='')
-        figTagKunden.update_yaxes(title_text='')
         figTagKunden.layout.xaxis.tickangle = 70
         figTagKunden.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
         
@@ -193,19 +190,19 @@ class LIVE:
     def figPicksBy_SAP_Order_CS_PAL(df):
         sel = st.multiselect('Depot  ', ['KNSTR','KNLEJ'],['KNSTR','KNLEJ'])
         df = df[df['DeliveryDepot'].isin(sel)]
-        df= df.groupby(['SapOrderNumber','PartnerName','AllSSCCLabelsPrinted'])['Picks Karton','Picks Paletten','Picks Stangen'].sum().reset_index()
-        #sort by Picks CS+ PAL + OUT 
+        df = df.groupby(['SapOrderNumber','PartnerName','AllSSCCLabelsPrinted'])['Picks Karton','Picks Paletten','Picks Stangen'].sum().reset_index()
         df['Picks Gesamt'] = df['Picks Karton'] + df['Picks Paletten'] + df['Picks Stangen']
+        df['Picks Gesamt'] = df['Picks Gesamt'].round(0).astype(int)
+        df['Picks Karton'] = df['Picks Karton'].round(0).astype(int)
+        df['Picks Stangen'] = df['Picks Stangen'].round(0).astype(int)
+        df['Picks Paletten'] = df['Picks Paletten'].round(0).astype(int)
         df = df.sort_values(by=['Picks Gesamt'], ascending=False)
-        figPicksBySAPOrder = px.bar(df, x="SapOrderNumber", y=['Picks Karton','Picks Paletten','Picks Stangen'], title="Picks SAP Order in CS/PAL/OUT",hover_data=['Picks Gesamt','PartnerName',],height=600)
+        figPicksBySAPOrder = px.bar(df, x="SapOrderNumber", y=['Picks Karton','Picks Paletten','Picks Stangen'], title="Picks Pro Lieferschein in CS/PAL/OUT",hover_data=['Picks Gesamt','PartnerName',],height=600)
         # change color Picks Karton = #0F2B63 Picks Paletten = #4FAF46 Picks Stangen = #E72482
         figPicksBySAPOrder.update_traces(marker_color='#0F2B63', selector=dict(name='Picks Karton'))
         figPicksBySAPOrder.update_traces(marker_color='#4FAF46', selector=dict(name='Picks Paletten'))
-        figPicksBySAPOrder.update_traces(marker_color='#E72482', selector=dict(name='Picks Stangen'))
+        figPicksBySAPOrder.update_traces(marker_color='#5a328a', selector=dict(name='Picks Stangen'))
         figPicksBySAPOrder.update_layout(showlegend=False)
-        figPicksBySAPOrder.update_layout(title_text='')
-        figPicksBySAPOrder.update_xaxes(title_text='')
-        figPicksBySAPOrder.update_yaxes(title_text='')
         figPicksBySAPOrder.layout.xaxis.tickangle = 70
         df['Transparency'] = np.where(df['AllSSCCLabelsPrinted']==True, 0.3, 1)
         figPicksBySAPOrder.update_traces(marker=dict(opacity=df['Transparency']))
@@ -385,7 +382,7 @@ class LIVE:
         #sort by Fertiggestellt
         dfFertig = dfFertig.sort_values(by=['Fertiggestellt'], ascending=True)
         #Create Plotly Chart
-        fig = px.bar(dfFertig, x='Fertiggestellt', y="Picks Gesamt", color="InTime", hover_data=['PartnerName','Fertig um','SapOrderNumber','DeliveryDepot'],height=600)
+        fig = px.bar(dfFertig, x='Fertiggestellt', y="Picks Gesamt", color="InTime", hover_data=['PartnerName','Fertig um','SapOrderNumber','DeliveryDepot'],height=600, title='Lieferschiene in Deadline übermittelt ja/nein')
         #if in Time 1 set to green else to red
         fig.update_traces(marker_color=['#4FAF46' if x == 1 else '#E72482' for x in dfFertig['InTime']])
         fig.data[0].text = dfFertig['PartnerName'] + '<br>' + dfFertig['Picks Gesamt'].astype(str)
@@ -393,8 +390,6 @@ class LIVE:
         # x aaxis text horizontal
         fig.layout.xaxis.tickangle = 70
         # remove xaxis and yaxis title
-        fig.update_xaxes(title_text='')
-        fig.update_yaxes(title_text='')
         fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
         fig.update_layout(legend_title_text='InTime')
          
@@ -436,24 +431,18 @@ class LIVE:
 
         colhead1, colhead2 ,colhead3, = st.columns(3)
         with colhead1:
-            sel_date = st.date_input('Datum', LIVE.heute)
-            dfOr = LIVE.loadDF(sel_date,sel_date)
-            sel_reload = st.button('Reload')
+            st.title('SuperDepot Live')
         with colhead2:
-            dfUpdatetime = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_KundenbestellungenUpdateTime')
-            dfUpdatetime = dfUpdatetime.rename(columns={'time':'Last Update'})
-            st.dataframe(dfUpdatetime)
-            LIVE.downLoadTagesReport(dfOr)
-        with colhead3:
-            if sel_reload:
-                #load dfUpdate from parquet df.parquet.gzip'
+            sel_date = datetime.date.today()  
+            sel_date = st.date_input('Datum', sel_date)   
+            dfOr = LIVE.loadDF(sel_date,sel_date)   
             
-                DB_Daten.UpdateDaten.updateDaten_byDate()
-                dfOr = LIVE.loadDF(sel_date,sel_date)
-                st.success('Daten wurden aktualisiert')
-                
+        with colhead3:                
             LIVE.wetter()
-
+        img_strip = Image.open('Data/img/strip.png')   
+        img_strip = img_strip.resize((1000, 15))     
+        
+        st.image(img_strip, use_column_width=True, caption='',)     
         LIVE.columnsKennzahlen(dfOr)
         with st.expander('Zielerfüllung', expanded=True):
             try:
@@ -464,7 +453,6 @@ class LIVE:
                     LIVE.figTachoDiagrammPicksStr(dfOr)
             except:
                st.write('Keine Daten vorhanden')
-
         with st.expander('Kundenübersicht, grün = Fertig, rot = Offen', expanded=True):
             try:
                 LIVE.figPicksKunde(dfOr)
@@ -481,7 +469,7 @@ class LIVE:
             except:
                 st.write('Keine Daten vorhanden, schreibweise beachtet?')
 
-
+        LIVE.downLoadTagesReport(dfOr)
         LIVE.tabelleAnzeigen(dfOr)
         
 

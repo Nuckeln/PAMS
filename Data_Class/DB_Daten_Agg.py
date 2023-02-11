@@ -30,7 +30,6 @@ class DatenAgregieren():
         dfStammdaten = SQL.sql_datenTabelleLaden('data_materialmaster-MaterialMasterUnitOfMeasures')
         dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]
         dfStammdaten['MaterialNumber'] = dfStammdaten['MaterialNumber'].str.replace('0000000000', '')
-        dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]   
         def f_CS(row):
             try:
                 if row.UnitOfMeasure == 'CS':          
@@ -131,7 +130,7 @@ class DatenAgregieren():
         df['UnloadingListIdentifier'] = df['UnloadingListIdentifier'].astype(str)
         #NiceLabelTransmissionState_TimeStamp to string
         df['NiceLabelTransmissionState_TimeStamp'] = df['NiceLabelTransmissionState_TimeStamp'].astype(str)
-        df.to_parquet('dfLines.parquet.gzip', compression='gzip')
+        #df.to_parquet('dfLines.parquet.gzip', compression='gzip')
 
         return df
 
@@ -191,6 +190,7 @@ class DatenAgregieren():
         df['Fertiggestellt'] = df['Fertiggestellt'].str.replace("nan","")
         df['Fertiggestellt'] = df['Fertiggestellt'].str.replace("NaT","")
         df['PlannedDate'] = df['PlannedDate'].astype(str)
+        
         #save df to parquet
         return df
 
@@ -203,10 +203,12 @@ class DatenAgregieren():
 class UpdateDaten():
     def updateAlle_Daten_():
         '''update Daten' seit Depotstart, braucht 1-2 min'''
-        df = DatenAgregieren.orderDatenGo(DatenAgregieren.startDatumDepot,DatenAgregieren.fuenfTage)
+        heute = datetime.datetime.now()
+        heutePlus6 = heute + datetime.timedelta(days=6)
+        df = DatenAgregieren.orderDatenGo(DatenAgregieren.startDatumDepot,heutePlus6)
         #save df to parquet
         df.to_parquet('df.parquet.gzip', compression='gzip')
-        #SQL.sql_test('prod_Kundenbestellungen', df)
+        SQL.sql_test('prod_Kundenbestellungen', df)
 
     def updateDaten_byDate():
         df = pq.read_table('df.parquet.gzip').to_pandas()

@@ -9,7 +9,7 @@ import streamlit as st # Streamlit Web App Framework
 import requests
 import os
 
-#   streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Data_Class/dataAggApp/DB_Daten Reptool.py"
+#   streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Data_Class/dataAggApp/DB_DatenReptool.py"
 
 
 class DatenAgregieren():
@@ -200,6 +200,8 @@ class UpdateDaten():
     def updateAlle_Daten_():
         '''update Daten' seit Depotstart, braucht 1-2 min'''
         df = DatenAgregieren.orderDatenGo(DatenAgregieren.startDatumDepot,DatenAgregieren.fuenfTage)
+        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+
         SQL.sql_test('prod_Kundenbestellungen', df)
 
     def updateDaten_byDate(df):
@@ -258,6 +260,8 @@ if byDate:
     dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
     dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
     SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+    #save df to parquet
+    df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
     st.dataframe(df)
 byAll = st.button('Update Alle Daten')
 if byAll:
@@ -267,6 +271,7 @@ if byAll:
     dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
     dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
     SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+
     st.dataframe(df)
 
 

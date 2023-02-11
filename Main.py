@@ -3,6 +3,7 @@ import streamlit as st # Streamlit Web App Framework
 from streamlit_option_menu import option_menu # pip install streamlit-option-menu # CSS Style für Main Menu # https://icons.getbootstrap.com
 import pandas as pd # Dataframes
 from PIL import Image # Bilder
+import time # Zeit
 
 #Eigene Klassen
 from Seiten.P_UserLogin import Login
@@ -68,7 +69,7 @@ st.markdown("""
                     padding-right: 5rem;
                 }
             .css-1d391kg {
-                    padding-top: 3.5rem;
+                    padding-top: 0rem;
                     padding-right: 1rem;
                     padding-bottom: 3.5rem;
                     padding-left: 1rem;
@@ -77,7 +78,7 @@ st.markdown("""
         """, unsafe_allow_html=True)
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-img = Image.open('Data/img/img_bat_logo_blau.png', mode='r')
+img = Image.open('Data/img/logo.png', mode='r')
 
 # ----- Config Main Menue -----
 def berechtigung():
@@ -90,16 +91,16 @@ def berechtigung():
     # Berechtigungen für die Seiten
     if st.session_state.rechte == 1:
         #admin Vollzugriff
-        return ["Live Status",'Daten Analyse','SAP Bewegungsdaten','Nachschub','Fehlverladungen','Daten Updaten','Admin','Infocenter','Wartung','Einstellungen']
+        return ["Live Status",'Datenanalyse','SAP Bewegungsdaten','Nachschub','Fehlverladungen','Daten Updaten','Admin','Infocenter','Wartung','Einstellungen']
     # else:
     #     return ['Wartung']
     elif st.session_state.rechte == 2:
         # Manager
-        return ["Live Status",'Daten Analyse','SAP Bewegungsdaten','Nachschub','Daten Updaten','Einstellungen']
+        return ["Live Status",'Datenanalyse','SAP Bewegungsdaten','Nachschub','Daten Updaten','Einstellungen']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 
-        return ["Live Status",'Daten Analyse','Nachschub','Einstellungen']
+        return ["Live Status",'Datenanalyse','Nachschub','Einstellungen']
     
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd
@@ -114,33 +115,15 @@ def berechtigung():
 authentication_status = Login.Login(self=Login)
 
 with st.sidebar: 
-    a = ("""
-        <style>
-            .css-18e3th9 {
-                    padding-top: 0rem;
-                    padding-bottom: 10rem;
-                    padding-left: 5rem;
-                    padding-right: 5rem;
-                }
-            .css-1d391kg {
-                    padding-top: 0rem;
-                    padding-right: 1rem;
-                    padding-bottom: 3.5rem;
-                    padding-left: 1rem;
-                }
-        </style>
-        """) 
-
-    st.markdown(a, unsafe_allow_html=True)  
     try:
         st.image(img)
     except:
-        st.text('Bild nicht gefunden')
+        st.text('')
     try:     
         sel_main_m = option_menu('PAMS', berechtigung(), 
             icons=[''], 
             menu_icon='kanban-fill',
-            styles={'container':{'font':'arial'}},)
+            styles={'container':{'font':'Montserrat'}},)
     except:
         sel_main_m = option_menu('PAMS', ['Home'], 
             icons=[''], 
@@ -175,7 +158,7 @@ if authentication_status == True:
         Admin.page()
     if sel_main_m == 'Fehlverladungen':
         fehlverladungenPage()
-    if sel_main_m == 'Daten Analyse':
+    if sel_main_m == 'Datenanalyse':
         ddsPage()
     if sel_main_m == 'SAP Bewegungsdaten':
         LoadPageSapPicksMA.mitarbeiterPage()

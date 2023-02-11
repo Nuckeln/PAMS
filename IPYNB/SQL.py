@@ -9,6 +9,7 @@ import pyodbc
 
 
 
+
 @dataclass(frozen=True)
 class ConnectionSettings:
     """Connection Settings."""
@@ -21,6 +22,7 @@ class ConnectionSettings:
     driver: str = '{ODBC Driver 18 for SQL Server}'
     timeout: int = 30
 class AzureDbConnection:
+    db = None
     """
     Azure SQL database connection.
     """
@@ -36,7 +38,8 @@ class AzureDbConnection:
             'Connection Timeout=%s;' % conn_settings.timeout
         )
         conn_string = f'mssql+pyodbc:///?odbc_connect={conn_params}'
-        self.db = create_engine(conn_string, echo=echo)
+        #self.db = create_engine(conn_string, echo=echo)
+        AzureDbConnection.db = create_engine(conn_string, echo=echo)
     def connect(self) -> None:
         """Estimate connection."""
         self.conn = self.db.connect()
@@ -51,7 +54,6 @@ class AzureDbConnection:
     def execute(self, query: str) -> None:
         """Execute query."""
         self.conn.execute(query)
-
 class SQL_TabellenLadenBearbeiten:
     '''Ermöglicht die Auswahl von Spalten aus bestimmten Tabellen
     sowie Datumsbereich
@@ -78,6 +80,16 @@ class SQL_TabellenLadenBearbeiten:
         password='b2.5v^H!IKjetuXMVNvW')
         db_conn = AzureDbConnection(conn_settings)
         return db_conn
+    
+    def sql_test(tabellenName, df):
+        # truncate
+        # Einfügen der Werte
+        db_conn = SQL_TabellenLadenBearbeiten.verbinder()
+        db_conn.connect() 
+        with AzureDbConnection.db.begin() as connection:
+            connection.execute(f"TRUNCATE TABLE [{tabellenName}]")
+            df.to_sql(tabellenName, connection, if_exists='replace', index=False, chunksize=10000)
+        return print(f'Tabelle {tabellenName} wurde geleert und neu befüllt')
 
     ### Tabellen erstellen
     def sql_createTable(tabellenName, df):
