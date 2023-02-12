@@ -65,14 +65,53 @@ class Admin:
                 dflt22 = DA.sapLt22DatenBerechnen(dflt22)
             st.dataframe(dflt22)
 
-    def eingelogterUser():
-        st.write("Eingelogter User")
-        st.write(st.session_state.user)
-        st.write(st.session_state.name)
+    def SqlDownload():
+        with st.expander("Datenbank Download", expanded=True):
+            tabellen = SQL.readAlltablesNames()
+            sel_tab = st.selectbox("Tabelle",tabellen)
+
+
+            if st.button("Zeige Tabelle",key='zeigeTabelle'):
+                df = SQL.sql_datenTabelleLaden(sel_tab)
+                st.success('Tabelle wurde geladen'+ sel_tab)
+                st.dataframe(df)
+            if st.button('Lösche Tabelle',key='löschen'):
+                SQL.sql_deleteTabelle(sel_tab)
+                st.success('Tabelle wurde gelöscht')
+            
+
+            if st.button("Download als csv",key='download'):
+                def convert_df(df):
+                    return df.to_csv(index=False, sep=';', encoding='utf-8').encode("utf-8")
+                df = SQL.sql_datenTabelleLaden(sel_tab)
+                st.download_button(
+                    label="Download",
+                    data=convert_df(df),
+                    file_name=sel_tab+".csv",
+                    mime="text/csv",
+                )
+                st.success('Tabelle wurde geladen'+ sel_tab)
+                st.dataframe(df)
+
+
+    def uploadExcel():
+        with st.expander("Datenbank Upload", expanded=True):
+            a = st.file_uploader("Upload Excel", type=["xls"])
+            if a is not None:
+                a = pd.read_excel(a)
+                st.dataframe(a)
+            table_name = st.text_input("Tabelle Name")
+            if st.button("Upload"):
+                SQL.sql_updateTabelle(table_name,a)
+                st.success("Tabelle wurde erfolgreich erstellt")
+                st.experimental_rerun()
+            
+
     def page():
-        df=SQL.sql_datenTabelleLaden(SQL.tabelleUser)            
+        df=SQL.sql_datenTabelleLaden(SQL.tabelleUser)       
+        Admin.uploadExcel()     
+        Admin.SqlDownload()
         Admin.userLöschen(df)    
         Admin.UserAnlegen(df)
         Admin.zeigeDFOrder()
-        Admin.eingelogterUser()
         st.dataframe(df)            

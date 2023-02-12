@@ -81,6 +81,13 @@ class SQL_TabellenLadenBearbeiten:
         db_conn = AzureDbConnection(conn_settings)
         return db_conn
     
+    def readAlltablesNames():
+        db_conn = verbinder()
+        db_conn.connect()
+        tables = db_conn.get_tables()
+        db_conn.dispose()
+        return tables
+    
     def sql_test(tabellenName, df):
         # truncate
         # Einfügen der Werte

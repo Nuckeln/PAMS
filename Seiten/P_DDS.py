@@ -13,7 +13,17 @@ import plotly.graph_objs as go
 import plotly.subplots as sp
 from PIL import Image
 
-
+''' BAT Colurs
+#0e2b63 darkBlue
+#004f9f MidBlue
+#00b1eb LightBlue
+#ef7d00 Orange
+#ffbb00 Yellow
+#ffaf47 Green
+#afca0b lightGreen
+#5a328a Purple
+#e72582 Pink
+'''
 
 
 #Berichtsdaten laden und berechnen und Filtern ##############
@@ -165,6 +175,17 @@ def berechne_dfOr_Pickdauer(df, dflt22):
 
 # Grafiken ###################################################
 def expanderFigGesamtPicks(df,dflt22):
+        colorswithgreen = [
+                    "#0e2b63", # darkBlue
+                    "#004f9f", # MidBlue
+                    "#00b1eb", # LightBlue
+                    "#ef7d00", # Orange
+                    "#ffbb00", # Yellow
+                    "#ffaf47", # Green
+                    "#afca0b", # lightGreen
+                    "#5a328a", # Purple
+                    "#e72582"  # Pink
+                ]  
         
         def figGesamtVolumen(df,unterteilen,tabelle,sel_barmode):
             df = df.groupby(['PlannedDate','DeliveryDepot']).agg({'Picks Gesamt':'sum','Picks Karton':'sum','Picks Stangen':'sum','Picks Paletten':'sum'}).reset_index()
@@ -346,7 +367,7 @@ def expanderFigGesamtPicks(df,dflt22):
             ## FARBEN
             if tabelle == True:
                 st.dataframe(df)
-                
+          
         def figStudeneinsatz(df,dflt22, tabelle,sel_barmodeP,unterteilen):
             col1, col2 = st.columns(2)
             with col1:    
@@ -449,6 +470,98 @@ def expanderFigGesamtPicks(df,dflt22):
             
             # Date PartnerName to text
             st.plotly_chart(fig, use_container_width=True)
+        
+        def figKundeVerfügbarkeit(df,unterteilen,tabelle,sel_barmode):
+            df['Picks Gesamt'] = df['Picks Gesamt'].round(0).astype(int)
+            # Convert 'PlannedDate' to datetime format
+            df['PlannedDate'] = pd.to_datetime(df['PlannedDate'], format='%Y-%m-%d %H:%M:%S.%f')
+            df['Lieferschein erhalten'] = df['Lieferschein erhalten'].fillna(df['PlannedDate'])
+            #Convert 'Lieferschein erhalten' to datetime format
+            df['Lieferschein erhalten'] = pd.to_datetime(df['Lieferschein erhalten'])   
+            df.sort_values("PlannedDate", inplace=True)
+            df = df.reset_index()
+            df['Lieferschein erhalten'] = df['Lieferschein erhalten'].dt.date
+            # PlannedDate to date only
+            df['PlannedDate'] = df['PlannedDate'].dt.date
+            try:
+                df.loc[df['Lieferschein erhalten'] < df['PlannedDate'], 'Verfügbarkeit'] = 'Vortag 48h'
+                df.loc[df['Lieferschein erhalten'] >= df['PlannedDate'], 'Verfügbarkeit'] = 'Verladetag 24h'
+            except:
+                #all values are Vortag
+                df['Verfügbarkeit'] = 'Verladedatum'
+                st.warning('Der Filter liefert keine Ergebnisse')
+            df_grouped = df.groupby(["PlannedDate", "Verfügbarkeit","DeliveryDepot"])["Picks Gesamt"].sum().reset_index()     
+            df_grouped = df_grouped.sort_values(by=['PlannedDate','Verfügbarkeit','DeliveryDepot'], ascending=[False,False,False])
+            #add trce colorswithgreen
+
+            
+            if unterteilen == None:
+                fig = px.treemap(df, path=['Verfügbarkeit', 'PartnerName'], values='Picks Gesamt',color='Verfügbarkeit')
+                #add trce colorswithgreen
+                fig.update_traces(marker_colors=colorswithgreen)
+            else:
+                fig = px.treemap(df, path=['DeliveryDepot','Verfügbarkeit', 'PartnerName'], values='Picks Gesamt',color='Verfügbarkeit')
+                fig.update_traces(marker_colors=colorswithgreen)
+                fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63",title_text='Bearbeitungszeit pro Kunde und Depot')
+            st.plotly_chart(fig, use_container_width=True)
+
+
+
+        def figPicksBearbeitungsTimeline(df):
+                df2 = df.copy()
+                def figPicksBearbeitungsTimelineLive(df):
+                    df = df.dropna(subset=['ErsterPickDate'])
+                    #df['ErsterPickTime']to hh:MM:SS
+                    df['ErsterPickTime'] = df['ErsterPickTime'].astype(str).str[11:19]
+                    df['LetzterPickTime'] = df['LetzterPickTime'].astype(str).str[11:19]
+                    df['Erster'] = df['ErsterPickDate'].astype(str) + ' ' + df['ErsterPickTime']
+                    df['Letzter'] = df['LetzterPickDate'].astype(str) + ' ' + df['LetzterPickTime']
+
+                    df['Erster'] = pd.to_datetime(df['Erster'], format='%m/%d/%y %H:%M:%S') 
+                    df['Letzter'] = pd.to_datetime(df['Letzter'], format='%m/%d/%y %H:%M:%S')
+                    #sort by date
+                    df = df.sort_values(by=['ErsterPickTime'])
+                    df["Start"] = df["Erster"]
+                    df["Ende"] = df["Letzter"]
+
+                    fig = px.timeline(df, x_start='Start' , x_end='Ende', y='SapOrderNumber', height=800, animation_frame="Start", animation_group="SapOrderNumber", range_x=[df["Start"].min(), df["Ende"].max()], color="SapOrderNumber")
+                    fig.update_layout(showlegend=False)
+                    fig.update_layout(font_family="Montserrat", font_color="#0F2B63", title_font_family="Montserrat", title_font_color="#0F2B63", title_text='Timeline Fehler')
+                    #change color
+                    fig.update_traces(marker_color='#5a328a')
+                    fig.update_layout(updatemenus=[dict(type='buttons', showactive=False, buttons=[dict(label='Play',
+                                                            method='animate',
+                                                            args=[None, dict(frame=dict(duration=200, redraw=True), fromcurrent=True,mode='immediate')])])])
+
+                    return fig
+
+                df = df.dropna(subset=['ErsterPickDate'])
+                #df['ErsterPickTime']to hh:MM:SS
+                df['ErsterPickTime'] = df['ErsterPickTime'].astype(str).str[11:19]
+                df['LetzterPickTime'] = df['LetzterPickTime'].astype(str).str[11:19]
+                df['Erster'] = df['ErsterPickDate'].astype(str) + ' ' + df['ErsterPickTime']
+                df['Letzter'] = df['LetzterPickDate'].astype(str) + ' ' + df['LetzterPickTime']
+                
+                df['Erster'] = pd.to_datetime(df['Erster'], format='%m/%d/%y %H:%M:%S') 
+                df['Letzter'] = pd.to_datetime(df['Letzter'], format='%m/%d/%y %H:%M:%S')
+                #sort by date
+                df = df.sort_values(by=['ErsterPickTime'])
+                df["Start"] = df["Erster"]# - pd.Timedelta(hours=3)
+                df["Ende"] = df["Letzter"]# + pd.Timedelta(hours=3)
+
+                fig = px.timeline(df, x_start='Start' , x_end='Ende', y='SapOrderNumber',height=800,text='SapOrderNumber',color='SapOrderNumber',hover_data=['SapOrderNumber','ErsterPickDate','ErsterPickTime','LetzterPickDate','LetzterPickTime','Picks Gesamt','PicksProStunde'])
+                fig.update_layout(showlegend=False)
+                fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63",title_text='Timeline WH SAP Picks')
+                #change color
+                fig.update_traces(marker_color='#5a328a')
+                #update text
+                fig.update_traces(textposition='inside')
+
+                st.plotly_chart(fig, use_container_width=True)
+
+                st.dataframe(df)
+
+
 
 
         with st.expander('Volumen', expanded=True):
@@ -459,7 +572,7 @@ def expanderFigGesamtPicks(df,dflt22):
                 sel_NachDepot = st.selectbox('Gliederung nach:', ['Alle Depots zusammen','Depot unterteilt'])
                 sel_tabelle = st.checkbox('Tabelle Anzeigen:', value=False)
             with col2:
-                sel_Auswertungstyp = st.selectbox('Auswertung:', ['Gesamtvolumen','Übermittelt in Deadline','Verfügbarkeit','Kunden','Stundeneinsatz','Karte'],key='AuswertungstypGesamt')
+                sel_Auswertungstyp = st.selectbox('Auswertung:', ['Gesamtvolumen','Übermittelt in Deadline','BearbeitungsTimeline WH Picks','Verfügbarkeit','Verfügbarkeit nach Kunde','Kunden','Stundeneinsatz','Karte'],key='AuswertungstypGesamt')
                 if st.checkbox('Gestapelt', value=True):
                     sel_barmode = 'stack'
                 else:
@@ -484,7 +597,10 @@ def expanderFigGesamtPicks(df,dflt22):
                 figUebermitteltInDeadline(df,unterteilen,sel_tabelle,sel_barmode=sel_barmode)
             if sel_Auswertungstyp == 'Karte':
                 figMap(df,sel_tabelle)
-
+            if sel_Auswertungstyp == 'Verfügbarkeit nach Kunde':
+                figKundeVerfügbarkeit(df,unterteilen,sel_tabelle,sel_barmode=sel_barmode)
+            if sel_Auswertungstyp == 'BearbeitungsTimeline WH Picks':
+                figPicksBearbeitungsTimeline(df)
 def expanderPicksLager(df,dflt22):
  
 
@@ -662,29 +778,120 @@ def expanderTruckAuslastung(df):
         def figPalTruckAuslastung(df):
             # Create a bar chart of 'Picks Gesamt' grouped by delivery Depot and stacked by sum Vortag and Verladedatum
             df = df.groupby(["DeliveryDepot","PlannedDate","Truck Kennzeichen"])["Fertige Paletten"].sum().reset_index()
-            fig = px.bar(df, x="PlannedDate", y="Truck Kennzeichen", color='Fertige Paletten', barmode='group', facet_col="DeliveryDepot")
+            fig = px.bar(df, x="PlannedDate", color="Truck Kennzeichen", barmode='group', facet_col="DeliveryDepot")
             fig.update_layout(showlegend=False)
             fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
             #remove timespamp from xaxis
             fig.update_xaxes(tickformat='%d.%m.%Y')
             fig.layout.xaxis.type = 'category'
+            #remove empty subplots
+            fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+            fig.update_layout(margin = dict(t=50, l=25, r=25, b=25))
 
             st.plotly_chart(fig, use_container_width=True)
-            st.dataframe(df)
             #plotly sum of stacked bar
 
-        with st.expander('Truck Auslastung', expanded=True):
+        with st.expander('Linehauls', expanded=False):
             figPalTruckAuslastung(df)
 
 def expanderFehlverladungen(df,dfIssues):
-    def figFehlverladungenGesamt(dfIssues):
-        # Create a bar chart of 'Picks Gesamt' grouped by delivery Depot and stacked by sum Vortag and Verladedatum
-        fig = px.bar(dfIssues, x="Verladedatum", color="Typ", barmode='stack')
+
+    colorswithgreen = [
+                "#0e2b63", # darkBlue
+                "#004f9f", # MidBlue
+                "#00b1eb", # LightBlue
+                "#ef7d00", # Orange
+                "#ffbb00", # Yellow
+                "#ffaf47", # Green
+                "#afca0b", # lightGreen
+                "#5a328a", # Purple
+                "#e72582"  # Pink
+            ]  
+
+
+    def figTimelineFehler(df, dfIssues):
+
+        dfIsFehler = dfIssues.groupby(["Verladedatum","Typ"])["Typ"].count().reset_index(name="Anzahl")
+        dfIsFehler = dfIsFehler.dropna(subset=["Typ"])
+        dfIsFehler["Verladedatum"] = pd.to_datetime(dfIsFehler["Verladedatum"])
+        #sort by date
+        dfIsFehler = dfIsFehler.sort_values(by=['Verladedatum'])
+        dfIsFehler["Start"] = dfIsFehler["Verladedatum"] - pd.Timedelta(hours=3)
+        dfIsFehler["Ende"] = dfIsFehler["Verladedatum"] + pd.Timedelta(hours=3)
+
+        fig = px.timeline(dfIsFehler, x_start='Start', x_end='Ende', y='Typ')
         fig.update_layout(showlegend=False)
+        fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63",title_text='Timeline Fehler')
+        #change color
+        fig.update_traces(marker_color='#5a328a')
+
         st.plotly_chart(fig, use_container_width=True)
-    with st.expander('Fehlverladungen', expanded=True):
-        figFehlverladungenGesamt(dfIssues)
+
+        st.dataframe(dfIsFehler)
+
+
+    def figFehlverladungenGesamt(df,dfIssues):
+        dfcopy = df.copy()
+        dfIssuescopy = dfIssues.copy()
+        df = df.groupby(["PlannedDate"])["SapOrderNumber"].count().reset_index()
+        anz_lieferscheine = df['SapOrderNumber'].unique().sum()
+        #count issues 
+        dfIsFehler = dfIssues.groupby(["Verladedatum","Typ"])["Typ"].count().reset_index(name="Anzahl")
+
+        # Create a bar chart of 'Picks Gesamt' grouped by delivery Depot and stacked by sum Vortag and Verladedatum
+
+        #e50af47
+
+        # Anteil Fehlverladungen
+        colorswithgreen = [
+            "#0e2b63", # darkBlue
+            "#004f9f", # MidBlue
+            "#00b1eb", # LightBlue
+            "#ef7d00", # Orange
+            "#ffbb00", # Yellow
+            "#ffaf47", # Green
+            "#afca0b", # lightGreen
+            "#5a328a", # Purple
+            "#e72582"  # Pink
+        ]
+        colors = [
+            "#0e2b63", # darkBlue
+            "#004f9f", # MidBlue
+            "#00b1eb", # LightBlue
+            "#ef7d00", # Orange
+            "#ffbb00", # Yellow
+            "#5a328a", # Purple
+            "#e72582"  # Pink
+        ]        
+        fig2 = px.pie(dfIsFehler, values='Anzahl', names='Typ', title='Fehlerarten')
+        fig2.update_traces(textposition='inside', textinfo='percent+label')
+        fig2.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
+        fig2.update_traces(marker=dict(colors=colors))
+
+        
+        # OTIF 
+        hundertProzent = 100
+        anteilFehlverladungen = round((dfIsFehler['Anzahl'].sum()/anz_lieferscheine)*100,2)
+        fig3 = go.Figure(data=[go.Pie(labels=['Fehlerhafte Lieferrungen','Fehlerfreie LS'], values=[anteilFehlverladungen,hundertProzent-anteilFehlverladungen])])
+        fig3.update_layout(title_text='OTIF in Anzahl Lieferscheine im Zeitraum')
+        fig3.update_traces(textposition='inside', textinfo='percent+label')
+        fig3.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
+        # for rest color #e50af47
+
+        fig3.update_traces(marker=dict(colors=['#e72582', '#50af47']))
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            st.plotly_chart(fig3, use_container_width=True)
+        with col2:
+            st.plotly_chart(fig2, use_container_width=True)
+        figTimelineFehler(dfcopy,dfIssuescopy)
+    
         st.dataframe(dfIssues)
+        #st.write('Anteil Fehlverladungen: ',anteilFehlverladungen,'%')
+    with st.expander('Fehlverladungen', expanded=True):
+        figFehlverladungenGesamt(df,dfIssues)
+        
 
 
 def expanderKundenVerhalten(df):

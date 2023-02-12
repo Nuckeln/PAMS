@@ -22,7 +22,6 @@ def filterFehlverladungen(df):
         stati = df['Status'].unique()
         bereiche = df['Bereich'].unique()
         typ = df['Typ'].unique()
-        version = df['V'].unique()
         #new column with month by verladedatum
         df['VerladeMonat'] = pd.DatetimeIndex(df['Verladedatum']).month
         df['VerladeMonat'] = df['VerladeMonat'].replace([1,2,3,4,5,6,7,8,9,10,11,12],['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'])
@@ -46,16 +45,16 @@ def filterFehlverladungen(df):
         
         # slide Date
         format = "DD.MM.YYYY"
-        sel_dateRange = st.slider('Select date', min_value=start_date, value=(start_date, end_date), max_value=end_date, format=format)
+        #sel_dateRange = st.slider('Select date', min_value=start_date, value=(start_date, end_date), max_value=end_date, format=format)
         
-        df = df[(df['Verladedatum'] >= sel_dateRange[0]) & (df['Verladedatum'] <= sel_dateRange[1])]
+        #df = df[(df['Verladedatum'] >= sel_dateRange[0]) & (df['Verladedatum'] <= sel_dateRange[1])]
             
         return df
 
 def fehlverladungErfassen(df):
     
     with st.expander("Fehlverladung erfassen"):
-        version = 1
+        
         with st.form(key='my_form', clear_on_submit=True):
             col1, col2 = st.columns(2)
             with col1:
@@ -106,7 +105,7 @@ def fehlverladungErfassen(df):
                             st.write(uploadverpath)
                 
                 id = np.random.randint(10000,99999)
-                dfnew = pd.DataFrame({'ID': [id], 'Bereich': [bereich], 'AD oder OP': [adop], 'Status': [status], 'Kurzbeschreibung': [kurztext], 'Gemeldet von': [gemledetvon], 'Kunde oder Endmarkt': [kunde], 'Verursacher': [verursacher], 'Gespräch durchgeführt?': [gesp], 'Verladedatum': [verladedatum], 'Meldedatum': [meldeDatum], 'Typ': [typ], 'Lieferschein': [leiferschein], 'PO': [po], 'Menge': [menge], 'Einheit': [einheit], 'Mail': [mailpath], 'Upload': [uploadverpath], 'Maßnahme': [maßnahme], 'Beschreibung': [beschreibung] ,'V': [version]})
+                dfnew = pd.DataFrame({'ID': [id], 'Bereich': [bereich], 'AD oder OP': [adop], 'Status': [status], 'Kurzbeschreibung': [kurztext], 'Gemeldet von': [gemledetvon], 'Kunde oder Endmarkt': [kunde], 'Verursacher': [verursacher], 'Gespräch durchgeführt?': [gesp], 'Verladedatum': [verladedatum], 'Meldedatum': [meldeDatum], 'Typ': [typ], 'Lieferschein': [leiferschein], 'PO': [po], 'Menge': [menge], 'Einheit': [einheit], 'Mail': [mailpath], 'Upload': [uploadverpath], 'Maßnahme': [maßnahme], 'Beschreibung': [beschreibung]})
                 
                 dfnew = pd.concat([df, dfnew], ignore_index=True)
                 datenSpeichernFehlverladungen(dfnew)
@@ -174,7 +173,6 @@ def fehlverladungBearbeiten(df):
 
     if speichern:
 
-                version = df['V'].values[0] +1
                 st.write("Fehlverladung wurde gespeichert")
                 if mail is not None:
                     mailpath1 = '/Users/martinwolf/Python/Superdepot Reporting/data/temp/' + mail.name
@@ -209,8 +207,7 @@ def fehlverladungBearbeiten(df):
                                         'Mail': [mailpath], 
                                         'Upload': [uploadverpath], 
                                         'Maßnahme': [maßnahme], 
-                                        'Beschreibung': [beschreibung],
-                                        'V':[version]})
+                                        'Beschreibung': [beschreibung]})
                 # save to DB and update
                 dfnew = pd.concat([df1, dfnew], ignore_index=True)
                 datenSpeichernFehlverladungen(dfnew)
@@ -220,13 +217,20 @@ def fehlverladungBearbeiten(df):
 def fehlverladungAnzeigen(df):
     st.dataframe(df, use_container_width=True, height=160)
     dfbestand = df   
-    c1 ,c2 = st.columns(2)
-    with c1:
+    
+    col1, col2 = st.columns(2)
+    with col1:
         selid = st.selectbox('ID',dfbestand['ID'])
-    with c2:
-        selversion = st.selectbox('Version',dfbestand['V'].unique())
-    mask = (df['ID'] == selid) & (df['V'] == selversion)
-    df = df.loc[mask]
+        df = dfbestand[dfbestand['ID'] == selid]
+    with col2:
+        if st.button("Löschen"):
+            df1 = dfbestand[dfbestand['ID'] != selid]
+            datenSpeichernFehlverladungen(df1)
+            st.write("Fehlverladung wurde gelöscht")
+            #reload
+            
+
+
  
     pdffile = df['Upload'].values[0]
     mail = df['Mail'].values[0]
