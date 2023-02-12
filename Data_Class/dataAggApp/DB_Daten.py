@@ -10,6 +10,7 @@ import requests
 import os
 
 #   streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Data_Class/dataAggApp/DB_Daten.py"
+st.set_page_config(layout="wide", page_title="PAMS DatenUpdate", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
 
 
 class DatenAgregieren():
