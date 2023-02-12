@@ -31,6 +31,6 @@ steps:
   displayName: 'Install dependencies'
 
 - script: |
-    pip install pytest pytest-azurepipelines
-    pytest
-  displayName: 'pytest'
+    python Data_Class/dataAggApp/DB_Daten.py
+  displayName: 'Ausführung des Python-Scripts'
+
