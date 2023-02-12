@@ -52,36 +52,32 @@ variables:
   # Working Directory
   workingDirectory: '$(System.DefaultWorkingDirectory)/'
 
-    steps:
-    - task: UsePythonVersion@0
-      displayName: 'Use Python 3.9'
-      inputs:
-        versionSpec: 3.9 # Functions V2 supports Python 3.6 as of today
-        architecture: 'x64'
-    - bash: |
-        if [ -f extensions.csproj ]
-        then
-            dotnet build extensions.csproj --output ./bin
-        fi
-        pip install --target="./.python_packages/lib/site-packages" -r ./requirements.txt
-      workingDirectory: $(workingDirectory)
+  steps:
+  - task: UsePythonVersion@0
+    displayName: 'Use Python 3.9'
+    inputs:
+      versionSpec: 3.9 # Functions V2 supports Python 3.6 as of today
+      architecture: 'x64'
+  - bash: |
+      if [ -f extensions.csproj ]
+      then
+          dotnet build extensions.csproj --output ./bin
+      fi
+      pip install --target="./.python_packages/lib/site-packages" -r ./requirements.txt
+    workingDirectory: $(workingDirectory)
 
-    - task: ArchiveFiles@2
-      displayName: 'Archive files'
-      inputs:
-        rootFolderOrFile: '$(workingDirectory)'
-        includeRootFolder: false
-        archiveType: zip
-        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-        replaceExistingArchive: true
+  - task: ArchiveFiles@2
+    displayName: 'Archive files'
+    inputs:
+      rootFolderOrFile: '$(workingDirectory)'
+      includeRootFolder: false
+      archiveType: zip
+      archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+      replaceExistingArchive: true
 
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      artifact: drop
+  - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+    artifact: drop
 
-- stage: Deploy
-  displayName: Deploy stage
-  dependsOn: Build
-  condition: succeeded()
 
   jobs:
   - deployment: Deploy
