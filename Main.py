@@ -17,7 +17,6 @@ from Seiten.P_DDS import ddsPage
 from Seiten.P_Infocenter import Infocenter
 from Seiten.P_SAP_PicksMA import LoadPageSapPicksMA
 from Seiten.P_Wartung import Wartung
-import datetime
 
 # Zum Ausführen
 #MAC#   streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"

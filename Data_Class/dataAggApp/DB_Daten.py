@@ -5,7 +5,7 @@ from lark import logger
 import pandas as pd
 import numpy as np
 from SQL import SQL_TabellenLadenBearbeiten as SQL
-import streamlit as st # Streamlit Web App Framework
+#import streamlit as st # Streamlit Web App Framework
 import requests
 import os
 
@@ -207,57 +207,52 @@ class UpdateDaten():
     def updateDaten_byDate(df):
         '''update Daten' seit Depotstart, braucht 1-2 min'''
         lastDay = df['PlannedDate'].max()
-        #add 10 days to lastDay
-        #erase all data from day1 to day2
+        #last day - 1 day
+        lastDay = lastDay - datetime.timedelta(days=5)
         df = df[df['PlannedDate'] < lastDay]
         df1 = DatenAgregieren.orderDatenGo(lastDay,DatenAgregieren.fuenfTage)
         df = pd.concat([df,df1])
         #delete table
         SQL.sql_test('prod_Kundenbestellungen', df)
         #save df to parquet
-        st.dataframe(df)
     def manualUpdate():
         df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-        # load df from parquet
-        #df = pd.read_parquet('df.parquet.gzip')
         try:
             df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
         except:
             df['PlannedDate'] = df['PlannedDate'].astype(str)
             df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
-
-        
-
         #UpdateDaten.updateAlle_Daten_()
         UpdateDaten.updateDaten_byDate(df)
-
-
         dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
         dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
         SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
-        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+        #df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+print('Start')
+UpdateDaten.manualUpdate()
+print('Ende')
 
 ##---------------------Streamlit---------------------##
-st.set_page_config(layout="wide", page_title="PAMS DatenUpdate", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
+# st.set_page_config(layout="wide", page_title="PAMS DatenUpdate", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
 
-# load df from parquet
-#df = pd.read_parquet('df.parquet.gzip')
-df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-try:
-    df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
-except:
-    df['PlannedDate'] = df['PlannedDate'].astype(str)
-    df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+# # load df from parquet
+# #df = pd.read_parquet('df.parquet.gzip')
+# df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+# try:
+#     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+# except:
+#     df['PlannedDate'] = df['PlannedDate'].astype(str)
+#     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
 
-st.dataframe(df)
+# st.dataframe(df)
 
-st.warning('Daten werden aktualisiert')
-#UpdateDaten.updateAlle_Daten_()
-UpdateDaten.updateDaten_byDate(df)
-st.success('Daten wurden aktualisiert')
+# st.warning('Daten werden aktualisiert')
+# #UpdateDaten.updateAlle_Daten_()
+# UpdateDaten.updateDaten_byDate(df)
+# st.success('Daten wurden aktualisiert')
 
-dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
-dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
-SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+# dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
+# dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
+# SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
 
 

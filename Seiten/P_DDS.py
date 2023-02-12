@@ -661,12 +661,16 @@ def expanderPicksLager(df,dflt22):
 def expanderTruckAuslastung(df):
         def figPalTruckAuslastung(df):
             # Create a bar chart of 'Picks Gesamt' grouped by delivery Depot and stacked by sum Vortag and Verladedatum
-            fig = px.bar(df, x="PlannedDate", y='Fertige Paletten', color="Truck Kennzeichen", barmode='group', facet_col="DeliveryDepot",hover_data=["Picks Gesamt","DeliveryDepot","PlannedDate","Lieferschein erhalten"])
+            df = df.groupby(["DeliveryDepot","PlannedDate","Truck Kennzeichen"])["Fertige Paletten"].sum().reset_index()
+            fig = px.bar(df, x="PlannedDate", y="Truck Kennzeichen", color='Fertige Paletten', barmode='group', facet_col="DeliveryDepot")
             fig.update_layout(showlegend=False)
             fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
             #remove timespamp from xaxis
             fig.update_xaxes(tickformat='%d.%m.%Y')
+            fig.layout.xaxis.type = 'category'
+
             st.plotly_chart(fig, use_container_width=True)
+            st.dataframe(df)
             #plotly sum of stacked bar
 
         with st.expander('Truck Auslastung', expanded=True):
@@ -703,7 +707,7 @@ def ddsPage():
    
     expanderFigGesamtPicks(df,dfLT22)
     expanderPicksLager(df,dfLT22)
-    #expanderTruckAuslastung(df)
+    expanderTruckAuslastung(df)
     expanderFehlverladungen(df, dfIssues)
     sel_reload = st.button('Reload Data',key='reloadAnalyse')
     if sel_reload == True:
