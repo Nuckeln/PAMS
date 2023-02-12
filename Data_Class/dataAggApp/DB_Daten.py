@@ -5,7 +5,7 @@ from lark import logger
 import pandas as pd
 import numpy as np
 from SQL import SQL_TabellenLadenBearbeiten as SQL
-#import streamlit as st # Streamlit Web App Framework
+import streamlit as st # Streamlit Web App Framework
 import requests
 import os
 
@@ -228,9 +228,13 @@ class UpdateDaten():
         dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
         SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
         #df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-print('Start')
-UpdateDaten.manualUpdate()
-print('Ende')
+        return df
+
+
+st.warning('Daten werden aktualisiert')
+df = UpdateDaten.manualUpdate()
+st.success('Daten wurden aktualisiert')
+st.dataframe(df)
 
 ##---------------------Streamlit---------------------##
 # st.set_page_config(layout="wide", page_title="PAMS DatenUpdate", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
