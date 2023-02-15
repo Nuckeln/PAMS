@@ -282,7 +282,6 @@ class UpdateDaten():
                 #SQL.sql_createTable('prod_Kundenbestellungen_14days',df1)
                 SQL.sql_test('prod_Kundenbestellungen_14days', df1)
                 dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
-                dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
                 SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
                 st.dataframe(df1)               
         if st.button('Concat Dataframes and Update Table' , key = 'concat'):
