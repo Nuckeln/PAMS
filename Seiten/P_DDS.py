@@ -370,16 +370,16 @@ def expanderFigGesamtPicks(df,dflt22):
           
         def figStudeneinsatz(df,dflt22, tabelle,sel_barmodeP,unterteilen):
             col1, col2 = st.columns(2)
-            with col1:    
-                sel_inProzent= st.selectbox('Total Summen',['In Prozent', 'in Stunden'],key='stundeinStudeneinsatz')            #create px Area Chart by PlannedDate and Bearbeitungszeit
-                # rename PickDauer in Bearbeitungszeit
-                df = df.rename(columns={'PickDauer':'Bearbeitungszeit'})
-            with col2:
-                anzal_MaStunden = st.number_input('Anzahl Mitarbeiterstunden', min_value=8, max_value=900, value=168, step=1, key='anzal_MAStunden')
+
+            df = df.rename(columns={'PickDauer':'Bearbeitungszeit'})
+
+            anzal_MaStunden = st.number_input('Anzahl Mitarbeiterstunden', min_value=8, max_value=900, value=168, step=1, key='anzal_MAStunden')
 
             #sort by Bearbeitungszeit
             df = df.sort_values(by=['Bearbeitungszeit'], ascending=[False])
             df['Bearbeitungszeit'] = df['Bearbeitungszeit']/60
+            #round to 2 decimal places
+            df['Bearbeitungszeit'] = df['Bearbeitungszeit'].round(2)
 
             df = df.groupby(["PlannedDate",'Picks Gesamt','DeliveryDepot'])["Bearbeitungszeit"].sum().reset_index()
             #add to df_groupby[Mitarbeiterstunden] = anzal_MaStunden
@@ -400,27 +400,19 @@ def expanderFigGesamtPicks(df,dflt22):
             df['PlannedDate'] = df['PlannedDate'].astype(str)
 
             #create px Area Chart by PlannedDate and Bearbeitungszeit
-            if sel_inProzent == 'In Prozent':
-                fig = px.bar(df, x="PlannedDate", y=["Bearbeitungszeit", "Mitarbeiterstunden"], barmode=sel_barmodeP)
-                fig.update_layout(title_text="Stundeneinsatz DE30 für Verladedatum", title_x=0.5, title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", legend_title_font_color="#0F2B63", legend_title_font_family="Montserrat", legend_title_font_size=14, legend_font_size=12, legend_font_family="Montserrat", legend_font_color="#0F2B63", legend_orientation="h", height=700)
-                fig.update_traces(marker_color='#0e2b63', selector=dict(name='Bearbeitungszeit'))
-                fig.update_traces(marker_color='#ffbb00', selector=dict(name='Mitarbeiterstunden'))
-                fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
-                fig.update_layout(
-                    annotations=[
-                        {"x": x, "y": total * 1.05, "text": str(total), "showarrow": False}
-                        for x, total in df.groupby("PlannedDate", as_index=False).agg({"Bearbeitungszeit": "sum"}).values])                
-            else:
-                fig = px.bar(df, x="PlannedDate", y=["Bearbeitungszeit", "Mitarbeiterstunden"], barmode=sel_barmodeP)
-                fig.update_layout(title_text="Stundeneinsatz DE30 für Verladedatum", title_x=0.5, title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", legend_title_font_color="#0F2B63", legend_title_font_family="Montserrat", legend_title_font_size=14, legend_font_size=12, legend_font_family="Montserrat", legend_font_color="#0F2B63", legend_orientation="h", height=700)
-                fig.update_traces(marker_color='#0e2b63', selector=dict(name='Bearbeitungszeit'))
-                fig.update_traces(marker_color='#ffbb00', selector=dict(name='Mitarbeiterstunden'))
-                fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
-                fig.update_layout(
-                    annotations=[
-                        {"x": x, "y": total * 1.05, "text": str(total), "showarrow": False}
-                        for x, total in df.groupby("PlannedDate", as_index=False).agg({"Bearbeitungszeit": "sum"}).values])
-    
+
+                #normalize to 100%
+            df['Restzeit'] = 100 - df['Bearbeitungszeit']
+            fig = px.area(df, x="PlannedDate", y=["Bearbeitungszeit", "Restzeit"], title="Stundeneinsatz DE30 für Verladedatum", color_discrete_sequence=['#0e2b63', '#ffbb00'])
+            fig.update_layout(title_text="Stundeneinsatz DE30 für Verladedatum", title_x=0.5, title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", legend_title_font_color="#0F2B63", legend_title_font_family="Montserrat", legend_title_font_size=14, legend_font_size=12, legend_font_family="Montserrat", legend_font_color="#0F2B63", legend_orientation="h", height=700)
+            fig.update_traces(marker_color='#0e2b63', selector=dict(name='Bearbeitungszeit'))
+            fig.update_traces(marker_color='#ffbb00', selector=dict(name='Mitarbeiterstunden'))
+            fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
+            fig.update_layout(
+                annotations=[
+                    {"x": x, "y": total * 1.05, "text": str(total), "showarrow": False}
+                    for x, total in df.groupby("PlannedDate", as_index=False).agg({"Bearbeitungszeit": "sum"}).values])                
+        
             st.plotly_chart(fig, use_container_width=True)
             if tabelle == True:
                 st.dataframe(df)
@@ -572,7 +564,7 @@ def expanderFigGesamtPicks(df,dflt22):
                 sel_NachDepot = st.selectbox('Gliederung nach:', ['Alle Depots zusammen','Depot unterteilt'])
                 sel_tabelle = st.checkbox('Tabelle Anzeigen:', value=False)
             with col2:
-                sel_Auswertungstyp = st.selectbox('Auswertung:', ['Gesamtvolumen','Übermittelt in Deadline','BearbeitungsTimeline WH Picks','Verfügbarkeit','Verfügbarkeit nach Kunde','Kunden','Stundeneinsatz','Karte'],key='AuswertungstypGesamt')
+                sel_Auswertungstyp = st.selectbox('Auswertung:', ['Gesamtvolumen','BearbeitungsTimeline WH Picks','Verfügbarkeit','Verfügbarkeit nach Kunde','Kunden','Stundeneinsatz','Karte'],key='AuswertungstypGesamt')
                 if st.checkbox('Gestapelt', value=True):
                     sel_barmode = 'stack'
                 else:
@@ -906,6 +898,8 @@ def ddsPage():
         dfIssues = sql.sql_datenTabelleLaden('Issues')
         return df, dfLT22, dfIssues
     df, dfLT22, dfIssues = load_data()
+    #drop rows with 0 values in df['Picks Gesamt']
+    df = df[df['Picks Gesamt'] != 0]
 
     pd.set_option("display.precision", 2)   
     img_strip = Image.open('Data/img/strip.png')   

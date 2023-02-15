@@ -54,6 +54,8 @@ class LIVE:
             day2 = pd.to_datetime(day2).date()
         #filter nach Datum
         dfOr = dfOr[(dfOr['PlannedDate'].dt.date >= day1) & (dfOr['PlannedDate'].dt.date <= day2)]
+        dfOr = dfOr[dfOr['Picks Gesamt'] != 0]
+
         return dfOr
 
     def wetter():
