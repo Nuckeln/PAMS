@@ -898,9 +898,14 @@ def expanderKundenVerhalten(df):
     pass
 #main function ###########################################
 def ddsPage():
-    dfLT22 = pd.read_parquet('Data/upload/lt22.parquet')
-    df = pd.read_parquet('Data/appData/dfOrAnalyse_Page.parquet')
-    dfIssues = sql.sql_datenTabelleLaden('Issues')
+    # load data
+    st.cache(allow_output_mutation=True)
+    def load_data():
+        dfLT22 = pd.read_parquet('Data/upload/lt22.parquet')
+        df = pd.read_parquet('Data/appData/dfOrAnalyse_Page.parquet')
+        dfIssues = sql.sql_datenTabelleLaden('Issues')
+        return df, dfLT22, dfIssues
+    df, dfLT22, dfIssues = load_data()
 
     pd.set_option("display.precision", 2)   
     img_strip = Image.open('Data/img/strip.png')   
