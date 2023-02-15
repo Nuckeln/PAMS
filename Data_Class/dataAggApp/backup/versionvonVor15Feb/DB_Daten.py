@@ -4,15 +4,13 @@ import datetime
 from lark import logger
 import pandas as pd
 import numpy as np
-from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
+from SQL import SQL_TabellenLadenBearbeiten as SQL
 import streamlit as st # Streamlit Web App Framework
 import requests
 import os
-import pyarrow.parquet as pq
-import pytz
 
-
-
+#   streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Data_Class/dataAggApp/DB_Daten.py"
+st.set_page_config(layout="wide", page_title="PAMS DatenUpdate", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
 
 
 class DatenAgregieren():
@@ -32,6 +30,7 @@ class DatenAgregieren():
         dfStammdaten = SQL.sql_datenTabelleLaden('data_materialmaster-MaterialMasterUnitOfMeasures')
         dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]
         dfStammdaten['MaterialNumber'] = dfStammdaten['MaterialNumber'].str.replace('0000000000', '')
+        dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(['CS','D97','OUT'])]   
         def f_CS(row):
             try:
                 if row.UnitOfMeasure == 'CS':          
@@ -132,8 +131,6 @@ class DatenAgregieren():
         df['UnloadingListIdentifier'] = df['UnloadingListIdentifier'].astype(str)
         #NiceLabelTransmissionState_TimeStamp to string
         df['NiceLabelTransmissionState_TimeStamp'] = df['NiceLabelTransmissionState_TimeStamp'].astype(str)
-        #df.to_parquet('dfLines.parquet.gzip', compression='gzip')
-
         return df
 
     def oderDaten(df):
@@ -192,8 +189,6 @@ class DatenAgregieren():
         df['Fertiggestellt'] = df['Fertiggestellt'].str.replace("nan","")
         df['Fertiggestellt'] = df['Fertiggestellt'].str.replace("NaT","")
         df['PlannedDate'] = df['PlannedDate'].astype(str)
-        
-        #save df to parquet
         return df
 
     def orderDatenGo(day1,day2):
@@ -205,98 +200,64 @@ class DatenAgregieren():
 class UpdateDaten():
     def updateAlle_Daten_():
         '''update Daten' seit Depotstart, braucht 1-2 min'''
-        heute = datetime.datetime.now()
-        heutePlus6 = heute + datetime.timedelta(days=6)
-        df = DatenAgregieren.orderDatenGo(DatenAgregieren.startDatumDepot,heutePlus6)
+        df = DatenAgregieren.orderDatenGo(DatenAgregieren.startDatumDepot,DatenAgregieren.fuenfTage)
         #save df to parquet
         df.to_parquet('df.parquet.gzip', compression='gzip')
-        SQL.sql_test('prod_Kundenbestellungen', df)
+        #SQL.sql_test('prod_Kundenbestellungen', df)
 
-    def updateDaten_byDate():
-        df = pq.read_table('df.parquet.gzip').to_pandas()
+    def updateDaten_byDate(df):
         '''update Daten' seit Depotstart, braucht 1-2 min'''
-        #df PlannetDate to datetime
-        df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
         lastDay = df['PlannedDate'].max()
-        # last day -5 tage
-
-        lastDay = pd.to_datetime(lastDay) - datetime.timedelta(days=5)
-        #add 10 days to lastDay
-        #erase all data from day1 to day2
+        #last day - 1 day
+        lastDay = lastDay - datetime.timedelta(days=5)
         df = df[df['PlannedDate'] < lastDay]
         df1 = DatenAgregieren.orderDatenGo(lastDay,DatenAgregieren.fuenfTage)
-        dfneu = pd.concat([df,df1])
-        #save
-        #SQL.sql_test('prod_Kundenbestellungen', dfneu)
-        # save to parquet
-        #dfneu.to_parquet('df.parquet.gzip', compression='gzip')
+        df = pd.concat([df,df1])
+        #delete table
+        SQL.sql_test('prod_Kundenbestellungen', df)
+        #save df to parquet
+    def manualUpdate():
+        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+        try:
+            df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+        except:
+            df['PlannedDate'] = df['PlannedDate'].astype(str)
+            df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+        #UpdateDaten.updateAlle_Daten_()
+        UpdateDaten.updateDaten_byDate(df)
         dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
         dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
         SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
-        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-    def updateTable_Kundenbestellungen_14Days():
-        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-        df['PlannedDate'] = df['PlannedDate'].astype(str)
-        df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
-        # max date
-        lastDay = df['PlannedDate'].max()
-        # Calculate the date 5 days before the last day
-        cutoff_date = lastDay - pd.Timedelta(days=14)
-        # Keep only rows with PlannedDate greater than cutoff_date
-        df = df[df['PlannedDate'] > cutoff_date]
-        # last day plus 5 tage
-        lastDayplus5 = pd.to_datetime(lastDay) + datetime.timedelta(days=15)
-        df1 = pd.DataFrame()
-        df1 = DatenAgregieren.orderDatenGo(cutoff_date,lastDayplus5)
-        SQL.sql_test('prod_Kundenbestellungen_14days', df1)
-        dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
-        dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
-        SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+        #df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+        return df
 
-    def neuUpdate():
-        if st.button('Update Daten'):
-            UpdateDaten.updateAlle_Daten_()
-            st.write('Update erfolgreich')
-        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-        dfOrginal = df.copy()
-        st.dataframe(df)
-        df['PlannedDate'] = df['PlannedDate'].astype(str)
-        df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
-        # max date
-        lastDay = df['PlannedDate'].max()
-        # Calculate the date 5 days before the last day
-        cutoff_date = lastDay - pd.Timedelta(days=14)
 
-        # Keep only rows with PlannedDate greater than cutoff_date
-        df = df[df['PlannedDate'] > cutoff_date]
-        st.write('df nach cutoff')
-        st.dataframe(df)
-        # last day plus 5 tage
-        lastDayplus5 = pd.to_datetime(lastDay) + datetime.timedelta(days=15)
-        st.write('lastDay plus 5')
-        st.write(lastDayplus5)
-        df1 = pd.DataFrame()
-        if st.button('Führe Daten AGG Aus und Update Tabelle prod_KundenbestellungenUpdateTime'):
-                df1 = DatenAgregieren.orderDatenGo(cutoff_date,lastDayplus5)
-                st.write('Daten AGG Ausgeführt', key = 'df1')
-                #SQL.sql_createTable('prod_Kundenbestellungen_14days',df1)
-                SQL.sql_test('prod_Kundenbestellungen_14days', df1)
-                dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
-                dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
-                SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
-                st.dataframe(df1)               
-        if st.button('Concat Dataframes and Update Table' , key = 'concat'):
-                #merge df and df1
-                dfneu = pd.concat([dfOrginal,df1])
-                st.write('DF nach Concat')
-                st.dataframe(dfneu)
-                SQL.sql_test('prod_Kundenbestellungen', dfneu)
-                st.write('Tabelle prod_Kundenbestellungen wurde aktualisiert')
-                df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-                st.write('Tabelle prod_Kundenbestellungen aktualisiert')
-                st.dataframe(df)
+st.warning('Daten werden aktualisiert')
+df = UpdateDaten.manualUpdate()
+st.success('Daten wurden aktualisiert')
+st.dataframe(df)
 
-if __name__ == '__main__':
-    UpdateDaten.updateTable_Kundenbestellungen_14Days()
-    st.write('Update Daten')
-    
+##---------------------Streamlit---------------------##
+# st.set_page_config(layout="wide", page_title="PAMS DatenUpdate", page_icon=":bar_chart:",initial_sidebar_state="collapsed")
+
+# # load df from parquet
+# #df = pd.read_parquet('df.parquet.gzip')
+# df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+# try:
+#     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+# except:
+#     df['PlannedDate'] = df['PlannedDate'].astype(str)
+#     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+
+# st.dataframe(df)
+
+# st.warning('Daten werden aktualisiert')
+# #UpdateDaten.updateAlle_Daten_()
+# UpdateDaten.updateDaten_byDate(df)
+# st.success('Daten wurden aktualisiert')
+
+# dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
+# dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
+# SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+
+

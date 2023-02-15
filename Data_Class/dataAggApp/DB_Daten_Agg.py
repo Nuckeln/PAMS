@@ -295,8 +295,3 @@ class UpdateDaten():
                 df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
                 st.write('Tabelle prod_Kundenbestellungen aktualisiert')
                 st.dataframe(df)
-
-if __name__ == '__main__':
-    UpdateDaten.updateTable_Kundenbestellungen_14Days()
-    st.write('Update Daten')
-    
