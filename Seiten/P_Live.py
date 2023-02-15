@@ -18,6 +18,8 @@ import Data_Class.DB_Daten_Agg as DB_Daten
 
 
 
+
+
 class LIVE:
     
     heute  = datetime.date.today()
@@ -37,7 +39,7 @@ class LIVE:
         time_left.text("Time's up!")
 
     def loadDF(day1=None, day2=None): 
-        dfOr = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_Kundenbestellungen')
+        dfOr = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_Kundenbestellungen_14days')
         #load parquet
         #dfOr = pq.read_table('df.parquet.gzip').to_pandas()
         dfOr['PlannedDate'] = dfOr['PlannedDate'].astype(str)
@@ -428,6 +430,16 @@ class LIVE:
 
         pd.set_option("display.precision", 2)
         #rerun script all 2 minutes
+        #write update line 
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button('Update'):
+                DB_Daten.UpdateDaten.updateTable_Kundenbestellungen_14Days()
+                st.experimental_rerun()
+        with col2:
+            lastUpdate = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_KundenbestellungenUpdateTime')
+            lastUpdateDate = lastUpdate['time'].iloc[0]
+            st.write('Letztes Update: ', lastUpdateDate)
 
         colhead1, colhead2 ,colhead3, = st.columns(3)
         with colhead1:

@@ -93,6 +93,10 @@ class Admin:
                 st.success('Tabelle wurde geladen'+ sel_tab)
                 st.dataframe(df)
 
+    def checkDB():
+        with st.expander("Datenbank Check", expanded=True):
+            if st.button("Check"):
+                DB.neuUpdate()
 
     def uploadExcel():
         with st.expander("Datenbank Upload", expanded=True):
@@ -105,13 +109,18 @@ class Admin:
                 SQL.sql_updateTabelle(table_name,a)
                 st.success("Tabelle wurde erfolgreich erstellt")
                 st.experimental_rerun()
+    def showOrderDatenGo():
+        with st.expander("Bestellungen", expanded=True):
+            DB.UpdateDaten.neuUpdate()
             
+       
 
     def page():
         df=SQL.sql_datenTabelleLaden(SQL.tabelleUser)       
-        Admin.uploadExcel()     
+        Admin.uploadExcel() 
+        Admin.checkDB()
         Admin.SqlDownload()
         Admin.userLöschen(df)    
         Admin.UserAnlegen(df)
         Admin.zeigeDFOrder()
-        st.dataframe(df)            
+        Admin.showOrderDatenGo()

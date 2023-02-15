@@ -9,6 +9,8 @@ import streamlit as st # Streamlit Web App Framework
 import requests
 import os
 import pyarrow.parquet as pq
+import pytz
+
 
 
 
@@ -227,22 +229,69 @@ class UpdateDaten():
         #save
         #SQL.sql_test('prod_Kundenbestellungen', dfneu)
         # save to parquet
-        dfneu.to_parquet('df.parquet.gzip', compression='gzip')
-        dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
-        dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
-        SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
-        #df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-    
-    def manualUpdate():
-        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
-        try:
-            df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
-        except:
-            df['PlannedDate'] = df['PlannedDate'].astype(str)
-            df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
-        UpdateDaten.updateDaten_byDate(df)
+        #dfneu.to_parquet('df.parquet.gzip', compression='gzip')
         dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
         dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
         SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
         df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+    def updateTable_Kundenbestellungen_14Days():
+        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+        df['PlannedDate'] = df['PlannedDate'].astype(str)
+        df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+        # max date
+        lastDay = df['PlannedDate'].max()
+        # Calculate the date 5 days before the last day
+        cutoff_date = lastDay - pd.Timedelta(days=14)
+        # Keep only rows with PlannedDate greater than cutoff_date
+        df = df[df['PlannedDate'] > cutoff_date]
+        # last day plus 5 tage
+        lastDayplus5 = pd.to_datetime(lastDay) + datetime.timedelta(days=15)
+        df1 = pd.DataFrame()
+        df1 = DatenAgregieren.orderDatenGo(cutoff_date,lastDayplus5)
+        SQL.sql_test('prod_Kundenbestellungen_14days', df1)
+        dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
+        dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
+        SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
 
+    def neuUpdate():
+        if st.button('Update Daten'):
+            UpdateDaten.updateAlle_Daten_()
+            st.write('Update erfolgreich')
+        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+        dfOrginal = df.copy()
+        st.dataframe(df)
+        df['PlannedDate'] = df['PlannedDate'].astype(str)
+        df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
+        # max date
+        lastDay = df['PlannedDate'].max()
+        # Calculate the date 5 days before the last day
+        cutoff_date = lastDay - pd.Timedelta(days=14)
+
+        # Keep only rows with PlannedDate greater than cutoff_date
+        df = df[df['PlannedDate'] > cutoff_date]
+        st.write('df nach cutoff')
+        st.dataframe(df)
+        # last day plus 5 tage
+        lastDayplus5 = pd.to_datetime(lastDay) + datetime.timedelta(days=15)
+        st.write('lastDay plus 5')
+        st.write(lastDayplus5)
+        df1 = pd.DataFrame()
+        if st.button('Führe Daten AGG Aus und Update Tabelle prod_KundenbestellungenUpdateTime'):
+                df1 = DatenAgregieren.orderDatenGo(cutoff_date,lastDayplus5)
+                st.write('Daten AGG Ausgeführt', key = 'df1')
+                #SQL.sql_createTable('prod_Kundenbestellungen_14days',df1)
+                SQL.sql_test('prod_Kundenbestellungen_14days', df1)
+                dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
+                dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
+                SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+                st.dataframe(df1)               
+        if st.button('Concat Dataframes and Update Table' , key = 'concat'):
+                #merge df and df1
+                dfneu = pd.concat([dfOrginal,df1])
+                st.write('DF nach Concat')
+                st.dataframe(dfneu)
+                SQL.sql_test('prod_Kundenbestellungen', dfneu)
+                st.write('Tabelle prod_Kundenbestellungen wurde aktualisiert')
+                df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+                st.write('Tabelle prod_Kundenbestellungen aktualisiert')
+                st.dataframe(df)

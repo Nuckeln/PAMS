@@ -132,25 +132,8 @@ if authentication_status == True:
     # erfolgreich eingelogt dann Code ausführen!
     # ----- gewählte Page Laden -----
     
-    if sel_main_m == 'Home':
-        st.write('Hallo ' '!')
-        st.write(st.session_state['user'])
-        st.write()
-        st.text('Willkommen in der PAMS BETA Version')
-        st.text('Zur Zeit aktualisiert sich das tool jede Stunde')
-        st.text('Bei Fragen oder Problemen bitte an Martin Wolf wenden')
-        st.text('Viel Spaß beim Auswerten.')
-        a = st.session_state.user       
-        Login.authenticator.logout('Logout')
-        if st.session_state.user is None:
-            st.success("Logout successful!")
-            #timer 10 sec und dann neu laden
-
-
     if sel_main_m == 'Live Status':
         LIVE.PageTagesReport()
-        #expand st.sidebar false
-
     if sel_main_m == 'Wartung':
         Wartung.page()
     if sel_main_m == 'Admin': 
