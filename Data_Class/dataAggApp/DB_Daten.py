@@ -265,7 +265,7 @@ class UpdateDaten():
         # max date
         lastDay = df['PlannedDate'].max()
         # Calculate the date 5 days before the last day
-        cutoff_date = lastDay - pd.Timedelta(days=14)
+        cutoff_date = lastDay - pd.Timedelta(days=5)
 
         # Keep only rows with PlannedDate greater than cutoff_date
         df = df[df['PlannedDate'] > cutoff_date]
