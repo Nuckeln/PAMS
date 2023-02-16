@@ -449,13 +449,15 @@ class LIVE:
         with colhead2:
             sel_date = datetime.date.today()  
             sel_date = st.date_input('Datum', sel_date)   
-            dfOr = LIVE.loadDF(sel_date,sel_date)   
+            dfOr = LIVE.loadDF(sel_date,sel_date) 
+            dfor2 = dfOr.copy()  
             
         with colhead3:                
             LIVE.wetter()
         img_strip = Image.open('Data/img/strip.png')   
         img_strip = img_strip.resize((1000, 15))     
-        
+        #st.dataframe(dfOr)
+
         st.image(img_strip, use_column_width=True, caption='',)     
         LIVE.columnsKennzahlen(dfOr)
         with st.expander('Zielerfüllung', expanded=True):
@@ -482,7 +484,7 @@ class LIVE:
                 LIVE.figUebermitteltInDeadline(dfOr)
             except:
                 st.write('Keine Daten vorhanden, schreibweise beachtet?')
-
+        st.dataframe(dfOr)
         LIVE.downLoadTagesReport(dfOr)
         LIVE.tabelleAnzeigen(dfOr)
         

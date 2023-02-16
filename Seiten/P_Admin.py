@@ -93,6 +93,21 @@ class Admin:
                 st.success('Tabelle wurde geladen'+ sel_tab)
                 st.dataframe(df)
 
+    def zeigeDFOrderLines():
+        with st.expander("Bestellungen Lines", expanded=True):
+            #df = dfLines.parquet.gzip
+            if st.button("Update"):
+                heute = datetime.datetime.now()
+                vorgestern = heute - datetime.timedelta(days=6)
+                dfLines = DB.DatenAgregieren.orderDatenLines(heute , vorgestern)
+                st.dataframe(dfLines)
+                dfLines.to_parquet('dfLines.parquet.gzip')
+                st.success("Daten wurden aktualisiert")
+            # heute = datetime.datetime.now()
+            # gestern = heute - datetime.timedelta(days=1)
+            # dfLines = DB.DatenAgregieren.orderDatenLines(heute , gestern)
+            # st.dataframe(dfLines)
+
     def checkDB():
         with st.expander("Datenbank Check", expanded=True):
             if st.button("Check"):
@@ -116,7 +131,8 @@ class Admin:
        
 
     def page():
-        df=SQL.sql_datenTabelleLaden(SQL.tabelleUser)       
+        df=SQL.sql_datenTabelleLaden(SQL.tabelleUser)      
+        Admin.zeigeDFOrderLines() 
         Admin.uploadExcel() 
         Admin.checkDB()
         Admin.SqlDownload()

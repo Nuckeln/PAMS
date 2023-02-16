@@ -235,7 +235,7 @@ class UpdateDaten():
         SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
         df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
     def updateTable_Kundenbestellungen_14Days():
-        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen_14days')
         df['PlannedDate'] = df['PlannedDate'].astype(str)
         df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
         # max date
