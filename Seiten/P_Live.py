@@ -433,11 +433,13 @@ class LIVE:
         pd.set_option("display.precision", 2)
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.write('')
-        with col2:
             lastUpdate = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_KundenbestellungenUpdateTime')
             lastUpdateDate = lastUpdate['time'].iloc[0]
             st.write('Letztes Update: ', lastUpdateDate)
+
+        with col2:
+
+            st.write('')
 
         colhead1, colhead2 ,colhead3, = st.columns(3)
         with colhead1:
