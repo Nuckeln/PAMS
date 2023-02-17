@@ -819,7 +819,6 @@ def expanderFehlverladungen(df,dfIssues):
 
         st.plotly_chart(fig, use_container_width=True)
 
-        st.dataframe(dfIsFehler)
 
 
     def figFehlverladungenGesamt(df,dfIssues):
@@ -879,7 +878,6 @@ def expanderFehlverladungen(df,dfIssues):
             st.plotly_chart(fig2, use_container_width=True)
         figTimelineFehler(dfcopy,dfIssuescopy)
     
-        st.dataframe(dfIssues)
         #st.write('Anteil Fehlverladungen: ',anteilFehlverladungen,'%')
     with st.expander('Fehlverladungen', expanded=True):
         figFehlverladungenGesamt(df,dfIssues)
