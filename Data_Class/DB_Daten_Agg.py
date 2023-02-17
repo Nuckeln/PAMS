@@ -53,6 +53,8 @@ class DatenAgregieren():
         dfStammdaten['OUT'] = dfStammdaten.apply(f_OUT,axis=1)
         dfStammdaten['CS'] = dfStammdaten.apply(f_CS,axis=1)
         dfStammdaten['PAL'] = dfStammdaten.apply(f_PAL,axis=1)
+        #safe dfSammdaten to excel
+        dfStammdaten.to_excel('/Users/martinwolf/Python/Superdepot Reporting/dfStammdaten.xlsx')
 
         ##------------------ Order Date von DB Laden ------------------##
         dfOrder = SQL.sql_datenLadenDatum(date1,date2,SQL.tabelle_DepotDEBYKNOrders,SQL.datumplannedDate)
@@ -199,8 +201,9 @@ class DatenAgregieren():
     def orderDatenGo(day1,day2):
         '''<<<start date, end date>>> gibt die Konsolidierten Daten als df zurück'''
         df = DatenAgregieren.orderDatenLines(date1=day1,date2=day2)
-        df = DatenAgregieren.oderDaten(df)
-        return df
+        df2 = df.copy()
+        dfOr = DatenAgregieren.oderDaten(df2)
+        return dfOr
 
 class UpdateDaten():
     def updateAlle_Daten_():

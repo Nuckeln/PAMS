@@ -926,6 +926,6 @@ def ddsPage():
         df.to_parquet('Data/appData/dfOrAnalyse_Page.parquet')
         st.success('Data reloaded')
     #expanderTruckAuslastung(df)
-    st.dataframe(df)
+    #st.dataframe(df)
       
 

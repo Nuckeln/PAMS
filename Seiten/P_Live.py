@@ -433,15 +433,15 @@ class LIVE:
         pd.set_option("display.precision", 2)
         #rerun script all 2 minutes
         #write update line 
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            if st.button('Update'):
-                DB_Daten.UpdateDaten.updateTable_Kundenbestellungen_14Days()
-                st.experimental_rerun()
-        with col2:
-            lastUpdate = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_KundenbestellungenUpdateTime')
-            lastUpdateDate = lastUpdate['time'].iloc[0]
-            st.write('Letztes Update: ', lastUpdateDate)
+        # col1, col2, col3 = st.columns(3)
+        # with col1:
+        #     # if st.button('Update'):
+        #     #     DB_Daten.UpdateDaten.updateTable_Kundenbestellungen_14Days()
+        #     #     st.experimental_rerun()
+        # with col2:
+        #     lastUpdate = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_KundenbestellungenUpdateTime')
+        #     lastUpdateDate = lastUpdate['time'].iloc[0]
+        #     st.write('Letztes Update: ', lastUpdateDate)
 
         colhead1, colhead2 ,colhead3, = st.columns(3)
         with colhead1:

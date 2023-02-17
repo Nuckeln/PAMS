@@ -4,7 +4,7 @@ import datetime
 from lark import logger
 import pandas as pd
 import numpy as np
-from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
+from SQL import SQL_TabellenLadenBearbeiten as SQL
 import streamlit as st # Streamlit Web App Framework
 import requests
 import os
@@ -53,6 +53,8 @@ class DatenAgregieren():
         dfStammdaten['OUT'] = dfStammdaten.apply(f_OUT,axis=1)
         dfStammdaten['CS'] = dfStammdaten.apply(f_CS,axis=1)
         dfStammdaten['PAL'] = dfStammdaten.apply(f_PAL,axis=1)
+        #safe dfSammdaten to excel
+        dfStammdaten.to_excel('/Users/martinwolf/Python/Superdepot Reporting/dfStammdaten.xlsx')
 
         ##------------------ Order Date von DB Laden ------------------##
         dfOrder = SQL.sql_datenLadenDatum(date1,date2,SQL.tabelle_DepotDEBYKNOrders,SQL.datumplannedDate)
@@ -199,8 +201,9 @@ class DatenAgregieren():
     def orderDatenGo(day1,day2):
         '''<<<start date, end date>>> gibt die Konsolidierten Daten als df zurück'''
         df = DatenAgregieren.orderDatenLines(date1=day1,date2=day2)
-        df = DatenAgregieren.oderDaten(df)
-        return df
+        df2 = df.copy()
+        dfOr = DatenAgregieren.oderDaten(df2)
+        return dfOr
 
 class UpdateDaten():
     def updateAlle_Daten_():
@@ -235,7 +238,7 @@ class UpdateDaten():
         SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
         df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
     def updateTable_Kundenbestellungen_14Days():
-        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen_14days')
         df['PlannedDate'] = df['PlannedDate'].astype(str)
         df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
         # max date
@@ -295,3 +298,5 @@ class UpdateDaten():
                 df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
                 st.write('Tabelle prod_Kundenbestellungen aktualisiert')
                 st.dataframe(df)
+
+UpdateDaten.updateTable_Kundenbestellungen_14Days()

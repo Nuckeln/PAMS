@@ -4,7 +4,7 @@ import datetime
 from lark import logger
 import pandas as pd
 import numpy as np
-from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
+from SQL import SQL_TabellenLadenBearbeiten as SQL
 import streamlit as st # Streamlit Web App Framework
 import requests
 import os
@@ -53,6 +53,8 @@ class DatenAgregieren():
         dfStammdaten['OUT'] = dfStammdaten.apply(f_OUT,axis=1)
         dfStammdaten['CS'] = dfStammdaten.apply(f_CS,axis=1)
         dfStammdaten['PAL'] = dfStammdaten.apply(f_PAL,axis=1)
+        #safe dfSammdaten to excel
+        dfStammdaten.to_excel('/Users/martinwolf/Python/Superdepot Reporting/dfStammdaten.xlsx')
 
         ##------------------ Order Date von DB Laden ------------------##
         dfOrder = SQL.sql_datenLadenDatum(date1,date2,SQL.tabelle_DepotDEBYKNOrders,SQL.datumplannedDate)
@@ -199,8 +201,9 @@ class DatenAgregieren():
     def orderDatenGo(day1,day2):
         '''<<<start date, end date>>> gibt die Konsolidierten Daten als df zurück'''
         df = DatenAgregieren.orderDatenLines(date1=day1,date2=day2)
-        df = DatenAgregieren.oderDaten(df)
-        return df
+        df2 = df.copy()
+        dfOr = DatenAgregieren.oderDaten(df2)
+        return dfOr
 
 class UpdateDaten():
     def updateAlle_Daten_():
@@ -235,7 +238,7 @@ class UpdateDaten():
         SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
         df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
     def updateTable_Kundenbestellungen_14Days():
-        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen')
+        df = SQL.sql_datenTabelleLaden('prod_Kundenbestellungen_14days')
         df['PlannedDate'] = df['PlannedDate'].astype(str)
         df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
         # max date
@@ -265,7 +268,7 @@ class UpdateDaten():
         # max date
         lastDay = df['PlannedDate'].max()
         # Calculate the date 5 days before the last day
-        cutoff_date = lastDay - pd.Timedelta(days=5)
+        cutoff_date = lastDay - pd.Timedelta(days=14)
 
         # Keep only rows with PlannedDate greater than cutoff_date
         df = df[df['PlannedDate'] > cutoff_date]
@@ -282,6 +285,7 @@ class UpdateDaten():
                 #SQL.sql_createTable('prod_Kundenbestellungen_14days',df1)
                 SQL.sql_test('prod_Kundenbestellungen_14days', df1)
                 dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
+                dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
                 SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
                 st.dataframe(df1)               
         if st.button('Concat Dataframes and Update Table' , key = 'concat'):
@@ -295,7 +299,4 @@ class UpdateDaten():
                 st.write('Tabelle prod_Kundenbestellungen aktualisiert')
                 st.dataframe(df)
 
-if __name__ == '__main__':
-    UpdateDaten.updateTable_Kundenbestellungen_14Days()
-    st.write('Update Daten')
-    
+UpdateDaten.updateTable_Kundenbestellungen_14Days()
