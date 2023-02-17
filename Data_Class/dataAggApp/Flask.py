@@ -10,6 +10,7 @@ import requests
 import os
 import pyarrow.parquet as pq
 import pytz
+import flask
 
 
 
@@ -299,4 +300,11 @@ class UpdateDaten():
                 st.write('Tabelle prod_Kundenbestellungen aktualisiert')
                 st.dataframe(df)
 
-UpdateDaten.updateTable_Kundenbestellungen_14Days()
+app = flask(__name__)
+@app.route('/update', methods=['GET'])
+def example():
+    UpdateDaten.updateTable_Kundenbestellungen_14Days()
+    return 200
+
+if __name__ == '__main__':
+    app.run(debug=True)
