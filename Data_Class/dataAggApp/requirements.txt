@@ -7,4 +7,4 @@ pyodbc==4.0.34
 pytz==2022.2.1
 requests==2.28.1
 SQLAlchemy==1.4.43
-flask==2.2.2
+flask==2.0.2
