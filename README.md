@@ -48,6 +48,11 @@ Notwendig zum Release:
     Datenbank abfrage von EDV über erstellte Label  
     Datenbankabfrage Stammdaten  
 
+## Pip requirements.txt
+pip install pipreqs
+pipreqs /path/to/project
+
+
 # FAQ LINKS
 
 streamlit to exe <https://discuss.streamlit.io/t/streamlit-deployment-as-an-executable-file-exe-for-windows-macos-and-android/6812?page=2>

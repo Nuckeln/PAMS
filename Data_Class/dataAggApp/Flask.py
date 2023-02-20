@@ -24,7 +24,7 @@ class DatenAgregieren():
     startDatumDepot = '2021-04-01'
     time = datetime.datetime.now()
 
-    def orderDatenLines(date1, date2):
+    def orderDatenLines(date1:datetime, date2:datetime)-> pd.DataFrame:
         '''Lädt die Daten aus der Datenbank und berechnet die Werte
         erwartet 2 Datumsangaben'''
         ##------------------ Stammdaten Laden und berechnen ------------------##

@@ -4,7 +4,7 @@ import numpy as np
 import datetime
 import st_aggrid as ag
 #parquet
-import pyarrow.parquet as pq
+
 import time
 from PIL import Image
 
@@ -14,7 +14,7 @@ from Data_Class.wetter.api import getWetterBayreuth
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten
 import plotly_express as px
 import plotly.graph_objects as go
-import Data_Class.DB_Daten_Agg as DB_Daten
+
 
 
 

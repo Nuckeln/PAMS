@@ -1,16 +1,14 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import datetime
 #from Data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
 #from Data_Class.DB_Daten_Agg import orderDatenAgg
 import st_aggrid as ag
 import plotly_express as px
-import plotly.graph_objects as go
 from streamlit_option_menu import option_menu
 from Data_Class.DB_Daten_Agg import DatenAgregieren as DA
 from Data_Class.SQL import createnewTable, sql_datenLadenMLGT
-from time import ctime
+
 
 #TODO: Nehme 
 

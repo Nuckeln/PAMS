@@ -1,9 +1,7 @@
 # Python Module
 import streamlit as st # Streamlit Web App Framework
 from streamlit_option_menu import option_menu # pip install streamlit-option-menu # CSS Style für Main Menu # https://icons.getbootstrap.com
-import pandas as pd # Dataframes
 from PIL import Image # Bilder
-import time # Zeit
 
 #Eigene Klassen
 from Seiten.P_UserLogin import Login

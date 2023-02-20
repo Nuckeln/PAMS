@@ -1,7 +1,5 @@
 import streamlit as st
 import streamlit_authenticator as stauth
-from pathlib import Path
-import pandas as pd
 from Data_Class.SQL import datenLadenUser
 
 class Login:
