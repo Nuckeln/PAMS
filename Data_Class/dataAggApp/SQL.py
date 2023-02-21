@@ -72,6 +72,7 @@ class SQL_TabellenLadenBearbeiten:
     tabelleSAP_lt22 = 'upload_SAP_lt22' # Tabelle mit den SAP lt22
 
     def verbinder():
+        'TODO Michael als String schicken'
 
         conn_settings = ConnectionSettings(    
         server = 'batsql-pp-ne-cmes-prod-10',
