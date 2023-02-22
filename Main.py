@@ -77,6 +77,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 img = Image.open('Data/img/logo.png', mode='r')
 
+##
 # ----- Config Main Menue -----
 def berechtigung():
 
