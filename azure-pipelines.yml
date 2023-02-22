@@ -24,7 +24,6 @@ steps:
     source antenv/bin/activate
     python -m pip install --upgrade pip
     pip install --target="./.python_packages/lib/site-packages" -r ./requirements.txt
-  workingDirectory: $(projectRoot)
   displayName: 'Install dependencies'
 
 - task: ArchiveFiles@2
