@@ -19,3 +19,4 @@ streamlit==1.13.0
 streamlit_authenticator==0.2.1
 streamlit_autorefresh==0.0.1
 streamlit_option_menu==0.3.2
+streamlit-aggrid==0.3.3
