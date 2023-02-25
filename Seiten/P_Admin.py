@@ -49,6 +49,11 @@ class Admin:
                 dftime = pd.DataFrame({'time':[datetime.datetime.now()]})
                 dftime['time'] = dftime['time'] + datetime.timedelta(hours=1)
                 SQL.sql_updateTabelle('prod_KundenbestellungenUpdateTime',dftime)
+            saveLoc = st.button('Als Locale File ablegen')
+            if saveLoc:
+                st.warning('Daten werden aktualisiert')
+                DB.UpdateDaten.updateAlle_Daten_()
+                df.to_parquet('prod_Kundenbestellungen.parquet.gzip')
 
 
 

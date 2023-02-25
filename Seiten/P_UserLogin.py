@@ -13,12 +13,12 @@ class Login:
         self.credentials = {}
         self.authenticator = None
         st.session_state = None
-        st.session_state.rechte = None
+        #st.session_state.rechte = None
 
 
     def Login(self):
         # Initialize the 'rechte' attribute of session_state.
-        st.session_state.rechte = None
+        #st.session_state.rechte = None
 
         df = datenLadenUser()
         self.usernames = df['username'].tolist()

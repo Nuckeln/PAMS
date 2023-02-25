@@ -3,28 +3,19 @@ import pandas as pd
 import numpy as np
 import datetime
 import st_aggrid as ag
-#parquet
-
 import time
 from PIL import Image
-
-#from Data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
-
-from Data_Class.wetter.api import getWetterBayreuth
-from Data_Class.SQL import SQL_TabellenLadenBearbeiten
 import plotly_express as px
 import plotly.graph_objects as go
 
 
-
+from Data_Class.wetter.api import getWetterBayreuth
+from Data_Class.SQL import SQL_TabellenLadenBearbeiten
 
 
 
 class LIVE:
     
-    heute  = datetime.date.today()
-    morgen =heute + datetime.timedelta(days=3)
-    vorgestern = heute - datetime.timedelta(days=3)
 
     def timer():
         st.markdown("5-Minute Timer")
@@ -416,7 +407,7 @@ class LIVE:
             return df.to_csv(index=False).encode('utf-8')
         csv = convert_df(df)
         # LIVE.heute to string
-        tagimfilename= LIVE.heute.strftime("%d.%m.%Y")
+        tagimfilename= datetime.date.today().strftime("%d.%m.%Y")
 
         st.download_button(
         "Download Tagesreport als csv",
@@ -454,7 +445,6 @@ class LIVE:
             LIVE.wetter()
         img_strip = Image.open('Data/img/strip.png')   
         img_strip = img_strip.resize((1000, 15))     
-        #st.dataframe(dfOr)
 
         st.image(img_strip, use_column_width=True, caption='',)     
         LIVE.columnsKennzahlen(dfOr)

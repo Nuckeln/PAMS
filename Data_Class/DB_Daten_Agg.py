@@ -54,7 +54,7 @@ class DatenAgregieren():
         dfStammdaten['CS'] = dfStammdaten.apply(f_CS,axis=1)
         dfStammdaten['PAL'] = dfStammdaten.apply(f_PAL,axis=1)
         #safe dfSammdaten to excel
-        dfStammdaten.to_excel('/Users/martinwolf/Python/Superdepot Reporting/dfStammdaten.xlsx')
+        #dfStammdaten.to_excel('/Users/martinwolf/Python/Superdepot Reporting/dfStammdaten.xlsx')
 
         ##------------------ Order Date von DB Laden ------------------##
         dfOrder = SQL.sql_datenLadenDatum(date1,date2,SQL.tabelle_DepotDEBYKNOrders,SQL.datumplannedDate)

@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import extract_msg
 from streamlit_option_menu import option_menu
-import os
+
 from Data_Class.SQL import datenLadenFehlverladungen , datenSpeichernFehlverladungen
 import datetime
 

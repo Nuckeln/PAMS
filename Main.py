@@ -80,13 +80,6 @@ img = Image.open('Data/img/logo.png', mode='r')
 ##
 # ----- Config Main Menue -----
 def berechtigung():
-
-    # Berechtigungen für die Seiten
-    try :
-        a = st.session_state.rechte
-    except:
-        a = st.session_state.rechte = 0
-    # Berechtigungen für die Seiten
     if st.session_state.rechte == 1:
         #admin Vollzugriff
         return ["Live Status",'Datenanalyse','SAP Bewegungsdaten','Nachschub','Fehlverladungen','Daten Updaten','Admin','Infocenter','Wartung','Einstellungen']
@@ -111,26 +104,21 @@ def berechtigung():
 # ----- Login -----
 
 authentication_status = Login.Login(self=Login)
-
-with st.sidebar: 
-    try:
-        st.image(img)
-    except:
-        st.text('')
-    try:     
-        sel_main_m = option_menu('PAMS', berechtigung(), 
-            icons=[''], 
-            menu_icon='kanban-fill',
-            styles={'container':{'font':'Montserrat'}},)
-    except:
-        sel_main_m = option_menu('PAMS', ['Home'], 
-            icons=[''], 
-            menu_icon="cast", )
-
 if authentication_status == True:
-    # erfolgreich eingelogt dann Code ausführen!
-    # ----- gewählte Page Laden -----
-    
+    with st.sidebar: 
+        try:
+            st.image(img)
+        except:
+            st.text('')
+        try:     
+            sel_main_m = option_menu('PAMS', berechtigung(), 
+                icons=[''], 
+                menu_icon='kanban-fill',
+                styles={'container':{'font':'Montserrat'}},)
+            Login.authenticator.logout('Logout')
+        except:
+            pass
+if authentication_status == True:
     if sel_main_m == 'Live Status':
         LIVE.PageTagesReport()
     if sel_main_m == 'Wartung':
@@ -150,9 +138,5 @@ if authentication_status == True:
     if sel_main_m == 'Daten Updaten':
         Daten_Update.page()
 
-with st.sidebar:
-    Login.authenticator.logout('Logout')
-    #reload page
-    
 
 
