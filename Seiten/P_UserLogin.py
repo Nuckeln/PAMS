@@ -34,7 +34,7 @@ class Login:
             self.credentials["usernames"].update({uname: user_dict})
 
         self.authenticator = stauth.Authenticate(self.credentials, "cokkie_name", "random_key",
-                                            cookie_expiry_days=1)
+                                            cookie_expiry_days=30)
         name, authentication_status, usernames= self.authenticator.login("Login", 'main')
         if authentication_status == True:
             st.session_state.user = name

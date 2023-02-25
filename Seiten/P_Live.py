@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import datetime
 import st_aggrid as ag
-import time
+import streamlit_autorefresh as sar
 from PIL import Image
 import plotly_express as px
 import plotly.graph_objects as go
@@ -16,19 +16,6 @@ from Data_Class.SQL import SQL_TabellenLadenBearbeiten
 
 class LIVE:
     
-
-    def timer():
-        st.markdown("5-Minute Timer")
-        time_left = st.empty()
-        start_time = time.time()
-        time_left.text("5:00")
-
-        while time.time() - start_time <= 300:  # 300 seconds is 5 minutes
-            time_left.text("{:02d}:{:02d}".format(*divmod(int(time.time() - start_time), 60)))
-            time.sleep(1)
-
-        time_left.text("Time's up!")
-
     def loadDF(day1=None, day2=None): 
         dfOr = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_Kundenbestellungen_14days')
         #load parquet
@@ -422,6 +409,7 @@ class LIVE:
     def PageTagesReport():
 
         pd.set_option("display.precision", 2)
+        sar.st_autorefresh(interval=24000)
         col1, col2, col3 = st.columns(3)
         with col1:
             lastUpdate = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_KundenbestellungenUpdateTime')
