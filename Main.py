@@ -91,11 +91,11 @@ def berechtigung():
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 
-        return ["Live Status",'Datenanalyse','Nachschub','Einstellungen']
+        return ["Live Status",'Datenanalyse','Nachschub','Fehlverladungen']
     
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd
-        return ["Live Status",'Nachschub','Einstellungen']
+        return ["Live Status"]
         # Lager
     
     elif st.session_state.rechte == 5:

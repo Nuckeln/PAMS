@@ -58,7 +58,6 @@ class SAPWM:
     morgen = heute + datetime.timedelta(days=4)
     weekdays = [0, 1, 2, 3, 4]  # Montag ist 0, Dienstag ist 1, usw.
     heute_minus_10_tage =  datetime.timedelta(days=30)
-    @st.experimental_memo
 
     def loadDF():
         heute = datetime.date.today()
