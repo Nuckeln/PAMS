@@ -13,7 +13,7 @@ def fehlverladungSQL():
     df = datenLadenFehlverladungen()
     return df
 def menueLaden():
-    selected2 = option_menu(None, ["Fehlverladung Anzeigen", "Fehlverladung Erfassen",'Fehlverladung Bearbeiten'],
+    selected2 = option_menu(None, ["Fehlverladung Erfassen",'Fehlverladung Bearbeiten'],
     icons=['house', 'cloud-upload', "list-task"], 
     menu_icon="cast", default_index=0, orientation="horizontal")
     return selected2   
@@ -90,14 +90,14 @@ def fehlverladungErfassen(df):
             if speichern:
                 st.write("Fehlverladung wurde gespeichert")
                 if mail is not None:
-                    mailpath1 = '/Users/martinwolf/Python/Superdepot Reporting/data/temp/' + mail.name
+                    mailpath1 = 'Data/temp/' + mail.name
                     with open(mailpath1,
                                 'wb') as f:
                             f.write(mail.getbuffer())
                             mailpath = (str(mailpath1))
                             st.write(mailpath)
                 if uploadAndere is not None:
-                    uploadverpath1 = '/Users/martinwolf/Python/Superdepot Reporting/data/temp/' + uploadAndere.name
+                    uploadverpath1 = 'Data/temp/' + uploadAndere.name
                     with open(uploadverpath1,
                                 'wb') as f:
                             f.write(uploadAndere.getbuffer())
@@ -109,8 +109,7 @@ def fehlverladungErfassen(df):
                 
                 dfnew = pd.concat([df, dfnew], ignore_index=True)
                 datenSpeichernFehlverladungen(dfnew)
-                #createnewTable(dfnew, 'issues')
-                #dfnew.to_excel('/Users/martinwolf/Python/Superdepot Reporting/data/fehlverladungen.xlsx', index=False)
+
     
     st.dataframe(df)
 
@@ -175,14 +174,14 @@ def fehlverladungBearbeiten(df):
 
                 st.write("Fehlverladung wurde gespeichert")
                 if mail is not None:
-                    mailpath1 = '/Users/martinwolf/Python/Superdepot Reporting/data/temp/' + mail.name
+                    mailpath1 = 'Data/temp/' + mail.name
                     with open(mailpath1,
                                 'wb') as f:
                             f.write(mail.getbuffer())
                             mailpath = (str(mailpath1))
                             st.write(mailpath)
                 if uploadAndere is not None:
-                    uploadverpath1 = '/Users/martinwolf/Python/Superdepot Reporting/data/temp/' + uploadAndere.name
+                    uploadverpath1 = 'Data/temp/' + uploadAndere.name
                     with open(uploadverpath1,
                                 'wb') as f:
                             f.write(uploadAndere.getbuffer())
@@ -316,9 +315,9 @@ def fehlverladungenPage():
     elif selected2 == 'Fehlverladung Bearbeiten':
          df = filterFehlverladungen(df)
          fehlverladungBearbeiten(df)
-    elif selected2 == 'Fehlverladung Anzeigen':
-         df = filterFehlverladungen(df)
-         fehlverladungAnzeigen(df)
+    # elif selected2 == 'Fehlverladung Anzeigen':
+    #      df = filterFehlverladungen(df)
+    #      fehlverladungAnzeigen(df)
 
 
 
