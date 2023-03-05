@@ -31,7 +31,7 @@ def dateFilterdfOr(df: pd,dflt22: pd,dfIssues: pd):
     '''erwartet df (DB_Daten_Agg) und dflt22 (DB_Daten_SAP) als pd.DataFrame'''
     #dflt22['Pick Datum'] to datetime
     dflt22['Pick Datum'] = pd.to_datetime(dflt22['Pick Datum'])
-
+ # type: ignore
     df['PlannedDate'] = df['PlannedDate'].astype(str)
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'].str[:10])
     df['Tag'] = df['PlannedDate'].dt.strftime('%d.%m.%Y')
@@ -104,7 +104,6 @@ def dateFilterdfOr(df: pd,dflt22: pd,dfIssues: pd):
                 dflt22 = dflt22[dflt22['Wochentag'] == 'Sunday']
 
     return df, dflt22, dfIssues
-
 
 def berechneAlleDepots(dfOr, dfHannover):
     #to string dfHannover = dfHannover['Delivery'] 
@@ -889,7 +888,7 @@ def expanderKundenVerhalten(df):
 #main function ###########################################
 def ddsPage():
     # load data
-    st.cache(allow_output_mutation=True)
+    @st.cache_data
     def load_data():
         dfLT22 = pd.read_parquet('Data/upload/lt22.parquet')
         df = pd.read_parquet('Data/appData/dfOrAnalyse_Page.parquet')
