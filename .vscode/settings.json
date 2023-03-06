@@ -1,7 +1,0 @@
-{
-    "python.autoComplete.extraPaths": [
-    
-    ],
-    "python.defaultInterpreterPath": "/Applications/Python 3.11",
-    "python.analysis.typeCheckingMode": "basic"
-}
