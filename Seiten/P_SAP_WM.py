@@ -54,12 +54,7 @@ class SAPWM:
         heute_minus_10_tage = SAPWM.morgen - datetime.timedelta(days=30)
         df = DA.orderDatenLines(
             heute_minus_10_tage, heute_plus_4_tage)
-        return df
-    
-    def reload():
-        if st.button("Reload"):
-            
-    
+        return df    
     def menueLaden():
         selected2 = option_menu(None, ["Stellplatzverwaltung", "Zugriffe SN/TN "],
         icons=['house', 'cloud-upload', "list-task"], 
