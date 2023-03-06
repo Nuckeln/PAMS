@@ -84,12 +84,8 @@ class SAPWM:
          
     def pageStellplatzverwaltung():
         dfOrders = SAPWM.loadDF()
-        col1, col2 = st.columns(2)
-        #----- Zeige StellplatzUptaden -----
-        with col1:
-            SAPWM.datenUpload()
-        with col2:
-            st.button("Reload", on_click=SAPWM.reload)
+        SAPWM.datenUpload()
+
         #----- Lade Stellplatzdaten -----
         dfBIN = SAPWM.datenLadenBIN()
         dfBIN['MATNR'] = dfBIN['MATNR'].astype(str)
