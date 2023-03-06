@@ -42,21 +42,9 @@ class figSAPWM:
         return fig
 
 class SAPWM:
-    def get_next_weekdays(start_date, weekdays, today_minus_x_days):
-        """Returns a list of the next four weekdays (Mon-Fri) after
-           today's date.
-        """
-        dates = []
-        current_date = start_date
-        while len(dates) < 4:
-            if current_date.weekday() in weekdays:
-                dates.append(current_date)
-            current_date += datetime.timedelta(days=1)
-        return dates
 
     heute = datetime.date.today()
     morgen = heute + datetime.timedelta(days=4)
-    weekdays = [0, 1, 2, 3, 4]  # Montag ist 0, Dienstag ist 1, usw.
     heute_minus_10_tage =  datetime.timedelta(days=30)
 
     def loadDF():
@@ -70,7 +58,7 @@ class SAPWM:
     
     def reload():
         if st.button("Reload"):
-            SAPWM.loadDF.clear()
+            
     
     def menueLaden():
         selected2 = option_menu(None, ["Stellplatzverwaltung", "Zugriffe SN/TN "],
@@ -88,14 +76,15 @@ class SAPWM:
         with st.expander('Stellplatzdaten Updaten', expanded=False):
             uploaded_file = st.file_uploader("Bitte die Stellplatzdaten hochladen", type="xlsx")
             if uploaded_file is not None:
-                df = pd.read_excel(uploaded_file,header=3)
-                createnewTable(df,'MLGT_Stellplatz')
-                st.success("File uploaded successfully")
+                # save file to Data/appData
+                uploaded_file.save('Data/appData/Stellplatzdaten.xlsx')
                 st.balloons()
                 st.experimental_rerun()
 
     def datenLadenBIN():
-        df = sql_datenLadenMLGT()
+        #df = pd.read_excel(uploaded_file,header=3)
+        #df = sql_datenLadenMLGT()
+        df = pd.read_excel('Data/appData/Stellplatzdaten.xlsx',header=3)
         return df
          
     def pageStellplatzverwaltung():

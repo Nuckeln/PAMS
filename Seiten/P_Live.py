@@ -173,25 +173,29 @@ class LIVE:
         sel = st.multiselect('Depot  ', ['KNSTR','KNLEJ'],['KNSTR','KNLEJ'])
         df = df[df['DeliveryDepot'].isin(sel)]
         df = df.groupby(['SapOrderNumber','PartnerName','AllSSCCLabelsPrinted'])['Picks Karton','Picks Paletten','Picks Stangen'].sum().reset_index()
+        #set index to SapOrderNumber
         df['Picks Gesamt'] = df['Picks Karton'] + df['Picks Paletten'] + df['Picks Stangen']
         df['Picks Gesamt'] = df['Picks Gesamt'].round(0).astype(int)
         df['Picks Karton'] = df['Picks Karton'].round(0).astype(int)
         df['Picks Stangen'] = df['Picks Stangen'].round(0).astype(int)
         df['Picks Paletten'] = df['Picks Paletten'].round(0).astype(int)
         df = df.sort_values(by=['Picks Gesamt'], ascending=False)
-        figPicksBySAPOrder = px.bar(df, x="SapOrderNumber", y=['Picks Karton','Picks Paletten','Picks Stangen'], title="Picks Pro Lieferschein in CS/PAL/OUT",hover_data=['Picks Gesamt','PartnerName',],height=600)
-        # # change color Picks Karton = #0F2B63 Picks Paletten = #4FAF46 Picks Stangen = #E72482
-        # figPicksBySAPOrder.update_traces(marker_color='#0F2B63', selector=dict(name='Picks Karton'))
-        # figPicksBySAPOrder.update_traces(marker_color='#4FAF46', selector=dict(name='Picks Paletten'))
-        # figPicksBySAPOrder.update_traces(marker_color='#5a328a', selector=dict(name='Picks Stangen'))
-        # figPicksBySAPOrder.update_layout(showlegend=False)
-        # figPicksBySAPOrder.layout.xaxis.tickangle = 70
-        # df['Transparency'] = np.where(df['AllSSCCLabelsPrinted']==True, 0.3, 1)
-        # figPicksBySAPOrder.update_traces(marker=dict(opacity=df['Transparency']))
-        # figPicksBySAPOrder.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
-        # figPicksBySAPOrder.update_traces(text=df['Picks Karton'], selector=dict(name='Picks Karton'),textposition='inside')
-        # figPicksBySAPOrder.update_traces(text=df['Picks Paletten'], selector=dict(name='Picks Paletten'),textposition='inside')
-        # figPicksBySAPOrder.update_traces(text=df['Picks Stangen'], selector=dict(name='Picks Stangen'),textposition='inside')
+        #reset index
+        df = df.reset_index(drop=True)
+        figPicksBySAPOrder = px.bar(df, y=['Picks Karton','Picks Paletten','Picks Stangen'], title="Picks Pro Lieferschein in CS/PAL/OUT",hover_data=['SapOrderNumber','Picks Gesamt','PartnerName',],height=600)
+        figPicksBySAPOrder.update_traces(marker_color='#0F2B63', selector=dict(name='Picks Karton'))
+        figPicksBySAPOrder.update_traces(marker_color='#4FAF46', selector=dict(name='Picks Paletten'))
+        figPicksBySAPOrder.update_traces(marker_color='#5a328a', selector=dict(name='Picks Stangen'))
+        figPicksBySAPOrder.update_layout(showlegend=False)
+        figPicksBySAPOrder.layout.xaxis.tickangle = 70
+        df['Transparency'] = np.where(df['AllSSCCLabelsPrinted']==True, 0.3, 1)
+        figPicksBySAPOrder.update_traces(marker=dict(opacity=df['Transparency']))
+        figPicksBySAPOrder.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
+        figPicksBySAPOrder.update_traces(text=df['Picks Karton'], selector=dict(name='Picks Karton'),textposition='inside')
+        figPicksBySAPOrder.update_traces(text=df['Picks Paletten'], selector=dict(name='Picks Paletten'),textposition='inside')
+        figPicksBySAPOrder.update_traces(text=df['Picks Stangen'], selector=dict(name='Picks Stangen'),textposition='inside')
+        #hide xaxis title and ticks
+        figPicksBySAPOrder.update_xaxes(showticklabels=False)
 
         st.plotly_chart(figPicksBySAPOrder,use_container_width=True)
 
