@@ -105,13 +105,23 @@ def dateFilterdfOr(df: pd,dflt22: pd,dfIssues: pd):
 
     return df, dflt22, dfIssues
 
-def berechneAlleDepots(df):
-
+def berechneAlleDepots(dfOr, dfHannover):
+    #to string dfHannover = dfHannover['Delivery'] 
+    dfHannover['Delivery'] = dfHannover['Delivery'].astype(str)
+    #dfHannover group by Delivery and Date
+    dfHannover = dfHannover.groupby(['Picking Date','Delivery','Name of the ship-to party','TSP',]).agg({'Picks Gesamt':'sum','Picks CS':'sum','Picks PAL':'sum','Picks OUT':'sum'}).reset_index()
+    #rename dfHannover Delivery to SapOrderNumber, Picking Date to PlannedDate, Name of the ship-to party to PartnerName, TSP to DeliveryDepot, Picks CS to Picks Karton, Picks OUT to Picks Stangen, Picks PAL to Picks Paletten
+    dfHannover = dfHannover.rename(columns={'Delivery':'SapOrderNumber','Picking Date':'PlannedDate', 'Name of the ship-to party':'PartnerName', 'TSP':'DeliveryDepot', 'Picks CS':'Picks Karton', 'Picks OUT':'Picks Stangen', 'Picks PAL':'Picks Paletten'})
+    #concat rows with same column names to df
+    df = pd.concat([dfOr, dfHannover], ignore_index=True)
+    #if in Delivery Depot  'Bielefeld': 'Bielefeld',   'DE54 - KN Hamburg': 'Hamburg','DE59 - KN Stuttgart': 'Stuttgart', 'HAJ - KN Hannover': 'Hannover','KNBFE': 'Bielefeld', 'KNLEJ': 'Leipzig','KNSTR': 'Stuttgart','Unbekannt': 'Hannover'
     df['DeliveryDepot'] = df['DeliveryDepot'].replace({'Bielefeld': 'Bielefeld',   'DE54 - KN Hamburg': 'Hamburg','DE59 - KN Stuttgart': 'Stuttgart', 'HAJ - KN Hannover': 'Hannover','KNBFE': 'Bielefeld', 'KNLEJ': 'Leipzig','KNSTR': 'Stuttgart','Unbekannt': 'Hannover'})
+    # Filter by Depot
     data = {
     'city': ['Leipzig', 'Stuttgart', 'Hannover', 'Bielefeld'],
     'latitude': [51.339695, 48.775846, 52.375892, 52.031257],
     'longitude': [12.373075, 9.182932, 9.732010, 8.523864]}
+    #merge df with databy Depot
     df = pd.merge(df, pd.DataFrame(data), left_on='DeliveryDepot', right_on='city')
     return df
 
@@ -755,25 +765,25 @@ def expanderPicksLager(df,dflt22):
             
             #figSAPpicks(dflt22,dfOrder)
     
-# def expanderTruckAuslastung(df):
-#         def figPalTruckAuslastung(df):
-#             # Create a bar chart of 'Picks Gesamt' grouped by delivery Depot and stacked by sum Vortag and Verladedatum
-#             df = df.groupby(["DeliveryDepot","PlannedDate","Truck Kennzeichen"])["Fertige Paletten"].sum().reset_index()
-#             fig = px.bar(df, x="PlannedDate", color="Truck Kennzeichen", barmode='group', facet_col="DeliveryDepot")
-#             fig.update_layout(showlegend=False)
-#             fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
-#             #remove timespamp from xaxis
-#             fig.update_xaxes(tickformat='%d.%m.%Y')
-#             fig.layout.xaxis.type = 'category'
-#             #remove empty subplots
-#             fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
-#             fig.update_layout(margin = dict(t=50, l=25, r=25, b=25))
+def expanderTruckAuslastung(df):
+        def figPalTruckAuslastung(df):
+            # Create a bar chart of 'Picks Gesamt' grouped by delivery Depot and stacked by sum Vortag and Verladedatum
+            df = df.groupby(["DeliveryDepot","PlannedDate","Truck Kennzeichen"])["Fertige Paletten"].sum().reset_index()
+            fig = px.bar(df, x="PlannedDate", color="Truck Kennzeichen", barmode='group', facet_col="DeliveryDepot")
+            fig.update_layout(showlegend=False)
+            fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
+            #remove timespamp from xaxis
+            fig.update_xaxes(tickformat='%d.%m.%Y')
+            fig.layout.xaxis.type = 'category'
+            #remove empty subplots
+            fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+            fig.update_layout(margin = dict(t=50, l=25, r=25, b=25))
 
-#             st.plotly_chart(fig, use_container_width=True)
-#             #plotly sum of stacked bar
+            st.plotly_chart(fig, use_container_width=True)
+            #plotly sum of stacked bar
 
-#         with st.expander('Linehauls', expanded=False):
-#             figPalTruckAuslastung(df)
+        with st.expander('Linehauls', expanded=False):
+            figPalTruckAuslastung(df)
 
 def expanderFehlverladungen(df,dfIssues):
 
@@ -870,7 +880,11 @@ def expanderFehlverladungen(df,dfIssues):
         #st.write('Anteil Fehlverladungen: ',anteilFehlverladungen,'%')
     with st.expander('Fehlverladungen', expanded=True):
         figFehlverladungenGesamt(df,dfIssues)
+        
 
+
+def expanderKundenVerhalten(df):
+    pass
 #main function ###########################################
 
 
@@ -884,9 +898,7 @@ def ddsPage():
         dfLT22 = pd.read_parquet('Data/upload/lt22.parquet')
         df = pd.read_parquet('Data/appData/dfOrAnalyse_Page.parquet')
         dfIssues = sql.sql_datenTabelleLaden('Issues')
-
         return df, dfLT22, dfIssues
-    
     df, dfLT22, dfIssues = load_data()
     #drop rows with 0 values in df['Picks Gesamt']
     df = df[df['Picks Gesamt'] != 0]
@@ -896,27 +908,21 @@ def ddsPage():
     img_strip = img_strip.resize((1000, 15))     
     st.title('SuperDepot Datenanalyse')
     st.image(img_strip, use_column_width=True, caption='',)     
-    depot = st.multiselect('Depot', ['Stuttgart','Leipzig'], ['Stuttgart' ,'Leipzig'])
+    depot = st.multiselect('Depot', ['Stuttgart','Hannover','Bielefeld','Hamburg','Leipzig'], ['Stuttgart' ,'Leipzig'])
     df = df[df['DeliveryDepot'].isin(depot)]
 
     df, dfLT22, dfIssues = dateFilterdfOr(df,dfLT22,dfIssues)
    
     expanderFigGesamtPicks(df,dfLT22)
+    expanderPicksLager(df,dfLT22)
+    expanderTruckAuslastung(df)
     expanderFehlverladungen(df, dfIssues)
-    #expanderPicksLager(df,dfLT22)
-    # #expanderTruckAuslastung(df)
-
-
-
-
-
     sel_reload = st.button('Reload Data',key='reloadAnalyse')
     if sel_reload == True:
-        st.cache_data.clear()
         dfOr = sql.sql_datenTabelleLaden('prod_Kundenbestellungen')
-        #dfHannover = pd.read_parquet('Data/appData/dfDe55.parquet')
+        dfHannover = pd.read_parquet('Data/appData/dfDe55.parquet')
         dfLT22 = pd.read_parquet('Data/upload/lt22.parquet')        
-        df = berechneAlleDepots(dfOr)
+        df = berechneAlleDepots(dfOr, dfHannover)
         df = berechne_dfOr_Pickdauer(df,dfLT22)
         #df to parquet
         df.to_parquet('Data/appData/dfOrAnalyse_Page.parquet')

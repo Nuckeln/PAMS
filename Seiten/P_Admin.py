@@ -135,11 +135,11 @@ class Admin:
 
     def page():
         df=SQL.sql_datenTabelleLaden(SQL.tabelleUser)      
-        Admin.zeigeDFOrderLines() 
-        Admin.uploadExcel() 
-        Admin.checkDB()
-        Admin.SqlDownload()
-        Admin.userLöschen(df)    
-        Admin.UserAnlegen(df)
+        # Admin.zeigeDFOrderLines() 
+        # Admin.uploadExcel() 
+        # Admin.checkDB()
+        # Admin.SqlDownload()
+        # Admin.userLöschen(df)    
+        # Admin.UserAnlegen(df)
         Admin.zeigeDFOrder()
-        Admin.showOrderDatenGo()
+        # Admin.showOrderDatenGo()
