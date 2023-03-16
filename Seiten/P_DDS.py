@@ -202,8 +202,8 @@ def expanderFigGesamtPicks(df,dflt22):
     
             st.plotly_chart(fig,use_container_width=True)
 
-            if tabelle == 'Ja':
-                st.write(df)
+            if tabelle == True:
+                st.dataframe(df)
                     
         def figMap(df,tabelle):
             df = df.groupby(['DeliveryDepot','latitude','longitude']).agg({'Picks Gesamt':'sum'}).reset_index()
@@ -844,6 +844,7 @@ def expanderFehlverladungen(df,dfIssues):
             "#e72582"  # Pink
         ]        
         fig2 = px.pie(dfIsFehler, values='Anzahl', names='Typ', title='Fehlerarten')
+
         fig2.update_traces(textposition='inside', textinfo='percent+label')
         fig2.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
         fig2.update_traces(marker=dict(colors=colors))
@@ -852,7 +853,8 @@ def expanderFehlverladungen(df,dfIssues):
         # OTIF 
         hundertProzent = 100
         anteilFehlverladungen = round((dfIsFehler['Anzahl'].sum()/anz_lieferscheine)*100,2)
-        fig3 = go.Figure(data=[go.Pie(labels=['Fehlerhafte Lieferrungen','Fehlerfreie LS'], values=[anteilFehlverladungen,hundertProzent-anteilFehlverladungen])])
+        i = dfIsFehler['Anzahl'].sum()
+        fig3 = go.Figure(data=[go.Pie(labels=['Fehlerhafte Lieferrungen','Fehlerfreie Lieferungen'], values=[anteilFehlverladungen,hundertProzent-anteilFehlverladungen])])
         fig3.update_layout(title_text='OTIF in Anzahl Lieferscheine im Zeitraum')
         fig3.update_traces(textposition='inside', textinfo='percent+label')
         fig3.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
@@ -863,9 +865,13 @@ def expanderFehlverladungen(df,dfIssues):
         col1, col2 = st.columns(2)
         with col1:
             st.plotly_chart(fig3, use_container_width=True)
+            st.write(f'Anzahl Fehler =  {i}')
+            st.write(f'Anzahl Lieferscheine =  {anz_lieferscheine}')
+
         with col2:
             st.plotly_chart(fig2, use_container_width=True)
         figTimelineFehler(dfcopy,dfIssuescopy)
+
     
         #st.write('Anteil Fehlverladungen: ',anteilFehlverladungen,'%')
     with st.expander('Fehlverladungen', expanded=True):
@@ -902,6 +908,7 @@ def ddsPage():
     df, dfLT22, dfIssues = dateFilterdfOr(df,dfLT22,dfIssues)
    
     expanderFigGesamtPicks(df,dfLT22)
+    
     expanderFehlverladungen(df, dfIssues)
     #expanderPicksLager(df,dfLT22)
     # #expanderTruckAuslastung(df)
