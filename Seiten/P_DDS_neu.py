@@ -690,10 +690,6 @@ def expanderFehlverladungen(df,dfIssues):
 
 #main function ###########################################
 
-
-
-
-
 def ddsPage():
     # load data
     @st.cache_data

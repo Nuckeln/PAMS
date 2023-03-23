@@ -47,6 +47,7 @@ class SAPWM:
     morgen = heute + datetime.timedelta(days=4)
     heute_minus_10_tage =  datetime.timedelta(days=30)
 
+    @st.cache_data
     def loadDF():
         heute = datetime.date.today()
         # heute plus 4 Tage
@@ -70,11 +71,16 @@ class SAPWM:
     def datenUpload():
         with st.expander('Stellplatzdaten Updaten', expanded=False):
             uploaded_file = st.file_uploader("Bitte die Stellplatzdaten hochladen", type="xlsx")
-            if uploaded_file is not None:
-                # save file to Data/appData
-                uploaded_file.save('Data/appData/Stellplatzdaten.xlsx')
-                st.balloons()
-                st.experimental_rerun()
+            if st.button("Daten Update"):
+                if uploaded_file is not None:
+                    # save file to Data/appData
+                    df = pd.read_excel(uploaded_file,header=3)
+                    df.to_parquet('Data/appData/Stellplatzdaten.parquet')
+                    st.balloons()
+                    uploaded_file = None
+                    st.success('Stellplatzdaten erfolgreich hochgeladen')
+                else:
+                    st.warning('Keine Datei hochgeladen')
 
     def datenLadenBIN():
         #df = pd.read_excel(uploaded_file,header=3)

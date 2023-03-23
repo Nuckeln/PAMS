@@ -56,6 +56,7 @@ class Daten_Update:
                     df = pd.read_excel(sel_upload)
                     DA.sapLt22DatenBerechnen(df)
                     st.balloons()
+                    sel_upload = None
                     st.success("Daten erfolgreich geupdated")
                 else:
                     st.warning("Bitte Datei auswählen")
