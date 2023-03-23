@@ -11,7 +11,7 @@ from Seiten.P_SAP_WM import SAPWM
 from Seiten.P_Admin import Admin
 from Seiten.P_Daten_Update import Daten_Update
 from Seiten.P_Fehlverladungen import fehlverladungenPage
-from Seiten.P_DDS import ddsPage
+from Seiten.P_DDS_neu import ddsPage
 from Seiten.P_Infocenter import Infocenter
 from Seiten.P_SAP_PicksMA import LoadPageSapPicksMA
 from Seiten.P_Wartung import Wartung
