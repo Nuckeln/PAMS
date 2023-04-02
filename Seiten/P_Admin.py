@@ -175,12 +175,12 @@ class Admin:
 
     def page():
         df=SQL.sql_datenTabelleLaden('user')      
-        #Admin.Azure()
+        Admin.Azure()
         Admin.erstelleDB()
+        Admin.SqlDownload()
         # Admin.zeigeDFOrderLines() 
         # Admin.uploadExcel() 
         # Admin.checkDB()
-        Admin.SqlDownload()
         # Admin.userLöschen(df)    
         # Admin.UserAnlegen(df)
         #Admin.zeigeDFOrder()

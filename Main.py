@@ -9,7 +9,7 @@ from Seiten.P_Live import LIVE
 from Seiten.P_Nachschub import SAPWM
 #from Seiten.P_Forecast import *
 from Seiten.P_Admin import Admin
-from Seiten.P_Daten_Update import Daten_Update
+from Seiten.P_Mitarbeiter import Daten_Update
 from Seiten.P_Fehlverladungen import fehlverladungenPage
 from Seiten.P_DDS_neu import ddsPage
 from Seiten.P_Infocenter import Infocenter
@@ -80,7 +80,7 @@ img = Image.open('Data/img/logo.png', mode='r')
 def berechtigung():
     if st.session_state.rechte == 1:
         #admin Vollzugriff
-        return ["Live Status",'Datenanalyse','SAP Bewegungsdaten','Nachschub','Fehlverladungen','Daten Updaten','Admin','Infocenter','Wartung','Einstellungen']
+        return ["Live Status",'Datenanalyse','SAP Bewegungsdaten','Nachschub','Fehlverladungen','Mitarbeiterdaten','Admin']
     # else:
     #     return ['Wartung']
     elif st.session_state.rechte == 2:
@@ -133,7 +133,7 @@ if authentication_status == True:
         SAPWM.sap_wm_page()
     if sel_main_m == 'Infocenter':
         Infocenter.page()
-    if sel_main_m == 'Daten Updaten':
+    if sel_main_m == 'Mitarbeiterdaten':
         Daten_Update.page()
 
 

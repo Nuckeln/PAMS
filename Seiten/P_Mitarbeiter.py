@@ -30,7 +30,7 @@ class Daten_Update:
                 else:
                     oneid = int(oneid)
                     df = pd.concat([df, pd.DataFrame([[mitarbeitername, oneid, funktion, firma, fachbereich, aktiv]], columns=['Name', 'One ID', 'Funktion', 'Unternehmen', 'Fachbereich', 'Status'])], ignore_index=True)                        #SQL.sql_updateTabelle( tabellenName=SQL.tabellemitarbeiter ,df=df)
-                    SQL.sql_updateTabelle( tabellenName=SQL.tabellemitarbeiter ,df=df)
+                    SQL.sql_updateTabelle('Mitarbeiter' ,df=df)
                     st.success("Mitarbeiter wurde angelegt")
                     #rerun script
                     st.experimental_rerun()
@@ -40,7 +40,7 @@ class Daten_Update:
             if löschen:
                     df = df[df['Name'] != selMitarbeiter]
                     df = df.reset_index(drop=True)
-                    SQL.sql_updateTabelle( tabellenName=SQL.tabellemitarbeiter ,df=df)
+                    SQL.sql_updateTabelle('Mitarbeiter' ,df=df)
                     st.experimental_rerun()
     
 
@@ -62,7 +62,7 @@ class Daten_Update:
                     st.warning("Bitte Datei auswählen")
 
     def page():
-        df = SQL.sql_datenTabelleLaden(SQL.tabellemitarbeiter)
+        df = SQL.sql_datenTabelleLaden('Mitarbeiter')
        
         Daten_Update.mitarbeiterPflegen(df)
         st.dataframe(df)

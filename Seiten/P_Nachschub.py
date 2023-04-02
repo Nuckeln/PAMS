@@ -53,7 +53,13 @@ class SAPWM:
 
     @st.cache_data
     def loadDF():
-        df = SQL.sql_datenTabelleLaden('OrderDatenLines')
+        file_name = 'dfTabele.csv'
+        file = Data_Class.AzureStorage.get_blob_file(file_name)
+        print(file)
+        df = pd.read_csv(BytesIO(file))
+        # MaterialNumber to int
+        df['MaterialNumber'] = df['MaterialNumber'].astype(str)
+        #df = SQL.sql_datenTabelleLaden('OrderDatenLines')
         return df    
     def menueLaden():
         selected2 = option_menu(None, ["Stellplatzverwaltung", "Zugriffe SN/TN "],
@@ -105,12 +111,15 @@ class SAPWM:
         with col1:
             seldate = st.date_input('Datum')
         with col2:
-            sel_range = st.slider('Wähle einen Bedarfszeitraum', min_value=1, max_value=30, value=5, step=1)
+            sel_range = st.slider('Wähle einen Bedarfszeitraum', min_value=1, max_value=14, value=5, step=1)
             sel_range = SAPWM.heute - datetime.timedelta(days=sel_range)
             
         #-- Bedarf letzte 7 Tage ermitteln und Df für Figur erstellen
         dfBedarfSKU = SAPWM.FilterNachDatum(sel_range,SAPWM.heute,dfOrders)
         dfFig = dfBedarfSKU.groupby(['MaterialNumber','PlannedDate','Picks OUT']).size().reset_index(name='Picks CS')
+        #-- Stellplatzdaten mit Bedarf zusammenführen-----
+        #MaterialNumber to int
+        dfFig['MaterialNumber'] = dfFig['MaterialNumber'].astype(str)
         dfFig = dfFig.merge(dfBIN, how='left', left_on='MaterialNumber', right_on='MATNR')
         dfBedarfSKU = dfBedarfSKU.groupby(['MaterialNumber']).sum().reset_index()
 
@@ -123,6 +132,8 @@ class SAPWM:
             dfBedarfSKU['Bedarf über Zeitraum'] = dfBedarfSKU['Picks CS']
             dfBedarfSKU = dfBedarfSKU[['MaterialNumber','Bedarf über Zeitraum']]
             dfOrders = dfOrders.merge(dfBedarfSKU, how='left', left_on='MaterialNumber', right_on='MaterialNumber')
+            dfOrders['MaterialNumber'] = dfOrders['MaterialNumber'].astype(str)
+
             dfOrders = dfOrders.merge(dfBIN, how='left', left_on='MaterialNumber', right_on='MATNR')
             dfOrders = dfOrders.fillna('Kein Stellplatz')
             dfOrders['Bedarf über Zeitraum'] = dfOrders['Bedarf über Zeitraum']#.astype(int)
