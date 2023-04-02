@@ -4,16 +4,17 @@ import pandas as pd
 import numpy as np
 import extract_msg
 from streamlit_option_menu import option_menu
+import Data_Class.AzureStorage as Azure
 
-from Data_Class.SQL import datenLadenFehlverladungen , datenSpeichernFehlverladungen
+from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 import datetime
 
 
 def fehlverladungSQL():
-    df = datenLadenFehlverladungen()
+    df = SQL.sql_datenTabelleLaden('issues')
     return df
 def menueLaden():
-    selected2 = option_menu(None, ["Fehlverladung Erfassen",'Fehlverladung Bearbeiten'],
+    selected2 = option_menu(None, ["Fehlverladung Erfassen",'Fehlverladung Bearbeiten', "Fehlverladung Löschen"],
     icons=['house', 'cloud-upload', "list-task"], 
     menu_icon="cast", default_index=0, orientation="horizontal")
     return selected2   
@@ -89,26 +90,21 @@ def fehlverladungErfassen(df):
 
             if speichern:
                 st.write("Fehlverladung wurde gespeichert")
+                file_name = ""
                 if mail is not None:
-                    mailpath1 = 'Data/temp/' + mail.name
-                    with open(mailpath1,
-                                'wb') as f:
-                            f.write(mail.getbuffer())
-                            mailpath = (str(mailpath1))
-                            st.write(mailpath)
+                    mailpath = '' + mail.name
+                    file_name = Azure.upload_file_to_blob_storage(mailpath, mail,'SD-Issues')
+                
+                filename2 = ""
                 if uploadAndere is not None:
-                    uploadverpath1 = 'Data/temp/' + uploadAndere.name
-                    with open(uploadverpath1,
-                                'wb') as f:
-                            f.write(uploadAndere.getbuffer())
-                            uploadverpath = (str(uploadverpath1))
-                            st.write(uploadverpath)
+                    uploadverpath = '' + uploadAndere.name
+                    filename2 = Azure.upload_file_to_blob_storage(uploadverpath, uploadAndere,'SD-Issues')
                 
                 id = np.random.randint(10000,99999)
-                dfnew = pd.DataFrame({'ID': [id], 'Bereich': [bereich], 'AD oder OP': [adop], 'Status': [status], 'Kurzbeschreibung': [kurztext], 'Gemeldet von': [gemledetvon], 'Kunde oder Endmarkt': [kunde], 'Verursacher': [verursacher], 'Gespräch durchgeführt?': [gesp], 'Verladedatum': [verladedatum], 'Meldedatum': [meldeDatum], 'Typ': [typ], 'Lieferschein': [leiferschein], 'PO': [po], 'Menge': [menge], 'Einheit': [einheit], 'Mail': [mailpath], 'Upload': [uploadverpath], 'Maßnahme': [maßnahme], 'Beschreibung': [beschreibung]})
+                dfnew = pd.DataFrame({'ID': [id], 'Bereich': [bereich], 'AD oder OP': [adop], 'Status': [status], 'Kurzbeschreibung': [kurztext], 'Gemeldet von': [gemledetvon], 'Kunde oder Endmarkt': [kunde], 'Verursacher': [verursacher], 'Gespräch durchgeführt?': [gesp], 'Verladedatum': [verladedatum], 'Meldedatum': [meldeDatum], 'Typ': [typ], 'Lieferschein': [leiferschein], 'PO': [po], 'Menge': [menge], 'Einheit': [einheit], 'Mail': [file_name], 'Upload': [filename2], 'Maßnahme': [maßnahme], 'Beschreibung': [beschreibung]})
                 
                 dfnew = pd.concat([df, dfnew], ignore_index=True)
-                datenSpeichernFehlverladungen(dfnew)
+                SQL.sql_updateTabelle('issues',dfnew)
 
     
     st.dataframe(df)
@@ -209,7 +205,7 @@ def fehlverladungBearbeiten(df):
                                         'Beschreibung': [beschreibung]})
                 # save to DB and update
                 dfnew = pd.concat([df1, dfnew], ignore_index=True)
-                datenSpeichernFehlverladungen(dfnew)
+                SQL.sql_updateTabelle('issues',dfnew)
                 
     st.dataframe(df1)
 
@@ -224,7 +220,7 @@ def fehlverladungAnzeigen(df):
     with col2:
         if st.button("Löschen"):
             df1 = dfbestand[dfbestand['ID'] != selid]
-            datenSpeichernFehlverladungen(df1)
+            SQL.sql_updateTabelle('issues',df1)
             st.write("Fehlverladung wurde gelöscht")
             #reload
             
@@ -306,15 +302,32 @@ def fehlverladungAnzeigen(df):
         mailAnzeigen(mail)        
     fehlverladungImDetail(selid)
 
+def fehlverladungLoeschen(df):
+    st.dataframe(df, use_container_width=True, height=160)
+    dfbestand = df   
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        selid = st.selectbox('ID',dfbestand['ID'])
+        df = dfbestand[dfbestand['ID'] == selid]
+    with col2:
+        if st.button("Löschen"):
+            df1 = dfbestand[dfbestand['ID'] != selid]
+            SQL.sql_updateTabelle('issues',df1)
+            st.write("Fehlverladung wurde gelöscht")
+            #reload
 
 def fehlverladungenPage():
-    df = datenLadenFehlverladungen()
+    df = SQL.sql_datenTabelleLaden('issues')
     selected2 = menueLaden()
     if selected2 == 'Fehlverladung Erfassen':
         fehlverladungErfassen(df)
     elif selected2 == 'Fehlverladung Bearbeiten':
          df = filterFehlverladungen(df)
          fehlverladungBearbeiten(df)
+    elif selected2 == 'Fehlverladung Löschen':
+            df = filterFehlverladungen(df)
+            fehlverladungLoeschen(df)
     # elif selected2 == 'Fehlverladung Anzeigen':
     #      df = filterFehlverladungen(df)
     #      fehlverladungAnzeigen(df)

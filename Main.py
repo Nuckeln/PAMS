@@ -6,7 +6,7 @@ from PIL import Image # Bilder
 #Eigene Klassen
 from Seiten.P_UserLogin import Login
 from Seiten.P_Live import LIVE
-from Seiten.P_SAP_WM import SAPWM
+from Seiten.P_Nachschub import SAPWM
 #from Seiten.P_Forecast import *
 from Seiten.P_Admin import Admin
 from Seiten.P_Daten_Update import Daten_Update
@@ -85,11 +85,11 @@ def berechtigung():
     #     return ['Wartung']
     elif st.session_state.rechte == 2:
         # Manager
-        return ["Live Status",'Datenanalyse','SAP Bewegungsdaten','Nachschub','Daten Updaten','Einstellungen']
+        return ["Live Status",'Datenanalyse','SAP Bewegungsdaten','Nachschub']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 
-        return ["Live Status",'Datenanalyse','Nachschub','Fehlverladungen']
+        return ["Live Status",'Datenanalyse','Nachschub',]
     
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd

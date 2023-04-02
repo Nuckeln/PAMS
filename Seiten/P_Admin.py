@@ -3,9 +3,10 @@ import pandas as pd
 
 from Data_Class.DB_Daten_SAP import DatenAgregieren as DA
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
-import Data_Class.DB_Daten_Agg as DB
+
 import streamlit_authenticator as stauth
 import datetime
+import Data_Class.AzureStorage
 
 class Admin:
 
@@ -110,7 +111,20 @@ class Admin:
             # gestern = heute - datetime.timedelta(days=1)
             # dfLines = DB.DatenAgregieren.orderDatenLines(heute , gestern)
             # st.dataframe(dfLines)
-
+    def erstelleDB():
+        with st.expander("Datenbank Erstellen", expanded=True):
+            name = st.text_input("Datenbank Name")
+            df = st.file_uploader("Upload Excel", type=["xlsx"])
+            if df is not None:
+                df = pd.read_excel(df)
+                st.dataframe(df)
+            if st.button("Erstellen"):
+                if df is not None:
+                    SQL.sql_createTable(name,df)
+                    st.success("Datenbank wurde erfolgreich erstellt")
+                else:
+                    st.warning("Keine Datenbank angelegt")
+                st.experimental_rerun()
     def checkDB():
         with st.expander("Datenbank Check", expanded=True):
             if st.button("Check"):
@@ -130,16 +144,44 @@ class Admin:
     def showOrderDatenGo():
         with st.expander("Bestellungen", expanded=True):
             DB.UpdateDaten.neuUpdate()
-            
-       
+
+    def Azure():    
+
+        def downloadFilesFromBlob():
+            st.warning('Datei in Blob Donwloaden vorher Filenamewählen!!!')
+            Data_Class.AzureStorage.st_Azure_downloadBtn()
+
+        def showDateinBlob():
+            st.warning('Zeige alle Dateien in Blob')
+            df = SQL.sql_datenTabelleLaden('AzureStorage')
+            st.dataframe(df)
+        def löschealleFiles():
+            Data_Class.AzureStorage.st_Azure_deleteBtn()
+        def ladeFileinBlob():
+            df = SQL.sql_datenTabelleLaden('AzureStorage')
+            st.warning('Datei in Blob laden vorher die Anwendung auswählen!!!')
+            anwendugen = df['anwendung'].unique()
+            sel_anwendung = st.selectbox('Anwendung',anwendugen)
+
+
+            Data_Class.AzureStorage.st_Azure_uploadBtn(sel_anwendung)
+
+
+        with st.expander("Azure", expanded=True):
+            downloadFilesFromBlob()
+            ladeFileinBlob()
+            showDateinBlob()
+            löschealleFiles()
 
     def page():
-        df=SQL.sql_datenTabelleLaden(SQL.tabelleUser)      
+        df=SQL.sql_datenTabelleLaden('user')      
+        #Admin.Azure()
+        Admin.erstelleDB()
         # Admin.zeigeDFOrderLines() 
         # Admin.uploadExcel() 
         # Admin.checkDB()
-        # Admin.SqlDownload()
+        Admin.SqlDownload()
         # Admin.userLöschen(df)    
         # Admin.UserAnlegen(df)
-        Admin.zeigeDFOrder()
-        # Admin.showOrderDatenGo()
+        #Admin.zeigeDFOrder()
+       # Admin.showOrderDatenGo()

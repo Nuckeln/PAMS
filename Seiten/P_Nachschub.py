@@ -6,8 +6,12 @@ import datetime
 import st_aggrid as ag
 import plotly_express as px
 from streamlit_option_menu import option_menu
-from Data_Class.DB_Daten_Agg import DatenAgregieren as DA
-from Data_Class.SQL import createnewTable, sql_datenLadenMLGT
+from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
+import Data_Class.AzureStorage
+import Data_Class.SQL
+from io import BytesIO
+
+
 
 
 #TODO: Nehme 
@@ -49,12 +53,7 @@ class SAPWM:
 
     @st.cache_data
     def loadDF():
-        heute = datetime.date.today()
-        # heute plus 4 Tage
-        heute_plus_4_tage = SAPWM.morgen
-        heute_minus_10_tage = SAPWM.morgen - datetime.timedelta(days=30)
-        df = DA.orderDatenLines(
-            heute_minus_10_tage, heute_plus_4_tage)
+        df = SQL.sql_datenTabelleLaden('OrderDatenLines')
         return df    
     def menueLaden():
         selected2 = option_menu(None, ["Stellplatzverwaltung", "Zugriffe SN/TN "],
@@ -70,30 +69,34 @@ class SAPWM:
     
     def datenUpload():
         with st.expander('Stellplatzdaten Updaten', expanded=False):
-            uploaded_file = st.file_uploader("Bitte die Stellplatzdaten hochladen", type="xlsx")
-            if st.button("Daten Update"):
-                if uploaded_file is not None:
-                    # save file to Data/appData
-                    df = pd.read_excel(uploaded_file,header=3)
-                    df.to_parquet('Data/appData/Stellplatzdaten.parquet')
-                    st.balloons()
-                    uploaded_file = None
-                    st.success('Stellplatzdaten erfolgreich hochgeladen')
-                else:
-                    st.warning('Keine Datei hochgeladen')
+            Data_Class.AzureStorage.st_Azure_uploadBtn('Nachschub')
+            
+            
 
     def datenLadenBIN():
-        #df = pd.read_excel(uploaded_file,header=3)
-        #df = sql_datenLadenMLGT()
-        df = pd.read_excel('Data/appData/Stellplatzdaten.xlsx',header=3)
-        return df
+        file = SQL.sql_datenTabelleLaden('AzureStorage')
+        #serch last entry Nachschub[anwendung] == Nachschub and get filename
+        filename = file[file['anwendung'] == 'Nachschub']
+        filename = filename.sort_values(by=['dateTime'], ascending=False)
+        file_name = filename.iloc[0]['filename']
+        filenameOrg = filename.iloc[0]['filenameorg']
+        # add filename to a string
+        file_name = file_name.lower()
+
+        file = Data_Class.AzureStorage.get_blob_file(file_name)
+        df = pd.read_excel(BytesIO(file), engine='openpyxl', header=3)
+
+        return df, filenameOrg
+
+
          
     def pageStellplatzverwaltung():
         dfOrders = SAPWM.loadDF()
         SAPWM.datenUpload()
 
         #----- Lade Stellplatzdaten -----
-        dfBIN = SAPWM.datenLadenBIN()
+        dfBIN, filenameOrg = SAPWM.datenLadenBIN()
+        st.write('Stellplatzdaten: ',filenameOrg)
         dfBIN['MATNR'] = dfBIN['MATNR'].astype(str)
         dfBIN['MATNR'] = dfBIN['MATNR'].str[:8]
 

@@ -5,7 +5,6 @@ import streamlit as st
 import plotly_express as px
 from streamlit_option_menu import option_menu
 
-from Data_Class.SQL import createnewTable, sql_datenLadenMLGT
 
 
 

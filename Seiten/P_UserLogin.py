@@ -1,6 +1,6 @@
 import streamlit as st
 import streamlit_authenticator as stauth
-from Data_Class.SQL import datenLadenUser
+from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 
 class Login:
     def __init__(self):
@@ -20,7 +20,7 @@ class Login:
         # Initialize the 'rechte' attribute of session_state.
         #st.session_state.rechte = None
 
-        df = datenLadenUser()
+        df = SQL.sql_datenTabelleLaden('user')
         self.usernames = df['username'].tolist()
         self.names = df['name'].tolist()
         self.passwords = df['password'].tolist()
