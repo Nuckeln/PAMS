@@ -145,6 +145,7 @@ class SAPWM:
             dfOrders = dfOrders[['MaterialNumber','SapOrderNumber','Bedarf über Zeitraum','Bedarf gewählter Tag','PlannedDate' ,'LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM']]
         # Tn1 rausfiltern 
             dfOrders = dfOrders[dfOrders.LGTYP != 'TN1']
+            dfOrders = dfOrders[dfOrders['Bedarf gewählter Tag'] != 0]
             return dfOrders
         
         def bedarfOut(dfBedarfSKU,dfOrders):
@@ -163,6 +164,7 @@ class SAPWM:
             dfOrders = dfOrders[['MaterialNumber','SapOrderNumber','Bedarf über Zeitraum','Bedarf gewählter Tag','PlannedDate' ,'LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM']]
         # Tn1 rausfiltern 
             dfOrders = dfOrders[dfOrders.LGTYP != 'SN1']
+            dfOrders = dfOrders[dfOrders['Bedarf gewählter Tag'] != 0]
             # groupby 
 
             return dfOrders
