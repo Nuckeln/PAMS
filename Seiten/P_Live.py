@@ -413,7 +413,7 @@ class LIVE:
     def PageTagesReport():
 
         pd.set_option("display.precision", 2)
-        sar.st_autorefresh(interval=24000)
+        sar.st_autorefresh(interval=48000)
         col1, col2, col3 = st.columns(3)
         with col1:
             lastUpdate = SQL_TabellenLadenBearbeiten.sql_datenTabelleLaden('prod_KundenbestellungenUpdateTime')
