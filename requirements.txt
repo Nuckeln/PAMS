@@ -11,7 +11,7 @@ Pillow==9.4.0
 plotly==5.10.0
 plotly_express==0.4.1
 pyarrow==9.0.0
-pyodbc==4.0.34
+pyodbc==4.0.38
 pytz==2022.2.1
 requests==2.28.1
 SQLAlchemy==1.4.43
