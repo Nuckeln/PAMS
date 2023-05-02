@@ -719,14 +719,10 @@ def ddsPage():
     expanderFehlverladungen(df, dfIssues)
 
 
-
-
-
     sel_reload = st.button('Reload Data',key='reloadAnalyse')
     if sel_reload == True:
         st.cache_data.clear()
         dfOr = sql.sql_datenTabelleLaden('prod_Kundenbestellungen')
-        #dfHannover = pd.read_parquet('Data/appData/dfDe55.parquet')
         dfLT22 = pd.read_parquet('Data/upload/lt22.parquet')        
         df = berechneAlleDepots(dfOr)
         df = berechne_dfOr_Pickdauer(df,dfLT22)

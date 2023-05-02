@@ -172,12 +172,13 @@ class Admin:
             ladeFileinBlob()
             showDateinBlob()
             löschealleFiles()
-
     def page():
         df=SQL.sql_datenTabelleLaden('user')      
+
         Admin.Azure()
         Admin.erstelleDB()
         Admin.SqlDownload()
+
         # Admin.zeigeDFOrderLines() 
         # Admin.uploadExcel() 
         # Admin.checkDB()

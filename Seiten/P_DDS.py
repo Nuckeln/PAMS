@@ -910,11 +910,6 @@ def ddsPage():
     expanderFigGesamtPicks(df,dfLT22)
     
     expanderFehlverladungen(df, dfIssues)
-    #expanderPicksLager(df,dfLT22)
-    # #expanderTruckAuslastung(df)
-
-
-
 
 
     sel_reload = st.button('Reload Data',key='reloadAnalyse')
