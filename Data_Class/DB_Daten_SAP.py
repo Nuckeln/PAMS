@@ -9,10 +9,9 @@ from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 class DatenAgregieren():
 
     def sapLt22DatenBerechnen(dflt22):
-        #dflt22 = pd.read_excel('Data/upload/lt22.xlsx')
         dfStammdaten = SQL.sql_Stammdaten()
-        dfOrders = SQL.sql_datenTabelleLaden(SQL.tabelle_DepotDEBYKNOrders)
-        dfMitarbeiter = SQL.sql_datenTabelleLaden(SQL.tabellemitarbeiter)
+        dfOrders = SQL.sql_datenTabelleLaden('business_depotDEBYKN-DepotDEBYKNOrders')
+        dfMitarbeiter = SQL.sql_datenTabelleLaden('Mitarbeiter')
         dflt22.set_index('Transfer Order Number', inplace=True)
 
         # Weil ich nunmal ein Excel Idiot bi

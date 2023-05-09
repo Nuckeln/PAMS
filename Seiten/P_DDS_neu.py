@@ -692,7 +692,7 @@ def expanderFehlverladungen(df,dfIssues):
 
 def ddsPage():
     # load data
-    @st.cache_data
+    #@st.cache_data
     def load_data():
         dfLT22 = pd.read_parquet('Data/upload/lt22.parquet')
         df = pd.read_parquet('Data/appData/dfOrAnalyse_Page.parquet')
@@ -721,13 +721,16 @@ def ddsPage():
 
     sel_reload = st.button('Reload Data',key='reloadAnalyse')
     if sel_reload == True:
-        st.cache_data.clear()
+        #st.cache_data.clear()
         dfOr = sql.sql_datenTabelleLaden('prod_Kundenbestellungen')
         dfLT22 = pd.read_parquet('Data/upload/lt22.parquet')        
         df = berechneAlleDepots(dfOr)
-        df = berechne_dfOr_Pickdauer(df,dfLT22)
+        
+        #df = berechne_dfOr_Pickdauer(df,dfLT22)
         #df to parquet
         df.to_parquet('Data/appData/dfOrAnalyse_Page.parquet')
+        df.to_csv('Data/appData/dfOrAnalyse_Page.csv')
+        print('Data reloaded')
         st.success('Data reloaded')
 
       
