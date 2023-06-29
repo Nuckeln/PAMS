@@ -168,10 +168,10 @@ def pageLaufwegDN():
             if row['Datapoints'] != 0:
                 ax.text(row['X'], row['Y'], str(row['Datapoints']), color='Black', weight='bold', fontsize=20)
         # Bearbeitungszeit ermitteln 
-        #dfZUgriffe_filtered['Confirmation time.1'] = pd.to_datetime(dfZUgriffe_filtered['Confirmation time.1'])
+        dfZUgriffe_filtered['Confirmation time.1'] = pd.to_datetime(dfZUgriffe_filtered['Confirmation time.1'])
         try:
-            kleinsteZeit = datetime.combine(date.today(), dfZUgriffe_filtered['Confirmation time.1'].max())
-            groessteZeit = datetime.combine(date.today(), dfZUgriffe_filtered['Confirmation time.1'].min())
+            kleinsteZeit =  dfZUgriffe_filtered['Confirmation time.1'].max()
+            groessteZeit = dfZUgriffe_filtered['Confirmation time.1'].min()
             bearbeitungszeit = kleinsteZeit - groessteZeit
         except:
             bearbeitungszeit = 'Keine Daten vorhanden'
