@@ -3,6 +3,7 @@ import datetime
 import pandas as pd
 import numpy as np
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
+from Data_Class.SQL_Neu import save_table_to_SQL
 
 ##TODO: SAFE BACKUP LT22 BEFORE ANYTHING
 
@@ -99,6 +100,7 @@ class DatenAgregieren():
         dflt22['Lieferschein'] = dflt22['DestBin'].apply(lambda x: dflt22.loc[dflt22['SuperDepot'] == True]['DestBin'].iloc[0])
 
         # save to parquet
+        dflt22.astype(str)
         dflt22.to_parquet('Data/upload/lt22.parquet')
 
         #PartnerNo

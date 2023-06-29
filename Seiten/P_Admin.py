@@ -4,11 +4,16 @@ import pandas as pd
 from Data_Class.DB_Daten_SAP import DatenAgregieren as DA
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 
+from Seiten.P_UserLogin import Login
+
 import streamlit_authenticator as stauth
 import datetime
 import Data_Class.AzureStorage
 
 class Admin:
+
+    def passwortÄndern():
+        Login.newPasswort_Admin(Login)
 
     def userLöschen(df):
 
@@ -178,6 +183,8 @@ class Admin:
         Admin.Azure()
         Admin.erstelleDB()
         Admin.SqlDownload()
+        Admin.UserAnlegen(df)
+        Admin.passwortÄndern()
 
         # Admin.zeigeDFOrderLines() 
         # Admin.uploadExcel() 

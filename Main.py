@@ -15,8 +15,9 @@ from Seiten.P_DDS_neu import ddsPage
 from Seiten.P_Infocenter import Infocenter
 from Seiten.P_SAP_PicksMA import LoadPageSapPicksMA
 from Seiten.P_Wartung import Wartung
+from Seiten.F_LaufwegLieferschein import pageLaufwegDN
 
-# Zum Ausführen
+# Zum Ausführenv
 #MAC#   streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
  
 # --- Set Global Page Configs ---
@@ -80,12 +81,12 @@ img = Image.open('Data/img/logo.png', mode='r')
 def berechtigung():
     if st.session_state.rechte == 1:
         #admin Vollzugriff
-        return ["Live Status",'Datenanalyse','SAP Bewegungsdaten','Nachschub','Fehlverladungen','Mitarbeiterdaten','Admin']
+        return ["Live Status",'Datenanalyse','Laufweg Lieferschein','SAP Bewegungsdaten','Nachschub','Fehlverladungen','Mitarbeiterdaten','Admin']
     # else:
     #     return ['Wartung']
     elif st.session_state.rechte == 2:
         # Manager
-        return ["Live Status",'Datenanalyse','SAP Bewegungsdaten','Nachschub','Mitarbeiterdaten','Fehlverladungen']
+        return ["Live Status",'Datenanalyse','Laufweg Lieferschein','Nachschub',]
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 
@@ -135,6 +136,8 @@ if authentication_status == True:
         Infocenter.page()
     if sel_main_m == 'Mitarbeiterdaten':
         Daten_Update.page()
+    if sel_main_m == 'Laufweg Lieferschein':
+        pageLaufwegDN()
 
 
 

@@ -412,6 +412,8 @@ class LIVE:
 
     def PageTagesReport():
 
+        if st.session_state['user'] == 'SuperDepot Team':
+            st.success('Willkommen im Tagesreport')
         pd.set_option("display.precision", 2)
         sar.st_autorefresh(interval=48000)
         col1, col2, col3 = st.columns(3)

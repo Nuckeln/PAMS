@@ -1,6 +1,7 @@
 import streamlit as st
 import streamlit_authenticator as stauth
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
+from Data_Class.SQL_Neu import updateTable
 
 class Login:
     def __init__(self):
@@ -52,6 +53,57 @@ class Login:
             # clear cookies
             #reload page
             st.experimental_rerun()
+
+    def newPasswort(self):
+        with st.expander("Passwort ändern",expanded=False):
+            df = SQL.sql_datenTabelleLaden('user')
+            self.usernames = df['username'].tolist()
+            self.names = df['name'].tolist()
+            self.passwords = df['password'].tolist()
+            self.funktionen = df['function'].tolist()
+            self.rechte = df['rechte'].tolist()
+            self.credentials = {"usernames":{}}
+
+            st.write('du Bist eingeloggt als: ', st.session_state.user)
+            st.write('dein Username ist: ', df.loc[df['name'] == st.session_state.user, 'username'].iloc[0])
+            st.write('deine Rechte sind: ', st.session_state.rechte)
+            st.write('deine Funktion ist: ', df.loc[df['name'] == st.session_state.user, 'function'].iloc[0])
+
+            neupassword = st.text_input("password",key='neus_password_anlegen')
+        
+            X = st.button("Speichere neues Passwort",key='speichere_neues_passwort')
+            if X:
+                pw = stauth.Hasher(neupassword)._hash(neupassword)
+                # replace password in df with new password
+                df.loc[df['name'] == st.session_state.user, 'password'] = pw
+                # update table with new password
+                
+                SQL.sql_updateTabelle(df,'user')
+                st.success("Passwort erfolgreich geändert! Bitte Logge dich aus")
+    def newPasswort_Admin(self):
+        with st.expander("Passwort ändern",expanded=False):
+            df = SQL.sql_datenTabelleLaden('user')
+            self.usernames = df['username'].tolist()
+            self.names = df['name'].tolist()
+            self.passwords = df['password'].tolist()
+            self.funktionen = df['function'].tolist()
+            self.rechte = df['rechte'].tolist()
+            self.credentials = {"usernames":{}}
+
+            sel_user = st.selectbox('Wähle User aus', self.names)
+
+            neupassword = st.text_input("password",key='neus_password_anlegen')
+        
+            X = st.button("Speichere neues Passwort",key='speichere_neues_passwort')
+            if X:
+                pw = stauth.Hasher(neupassword)._hash(neupassword)
+                # replace password in df with new password
+                df.loc[df['name'] == sel_user, 'password'] = pw
+                # update table with new password
+                
+                updateTable(df,'user')
+                st.success("Passwort erfolgreich geändert! Bitte Logge dich aus")                
+                # clear cookies
 
 
 

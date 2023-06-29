@@ -3,6 +3,7 @@ import pandas as pd
 
 from Data_Class.DB_Daten_SAP import DatenAgregieren as DA
 from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
+from Seiten.F_LaufwegLieferschein import pageLaufwegDN
 
 
 
@@ -42,7 +43,6 @@ class Daten_Update:
                     df = df.reset_index(drop=True)
                     SQL.sql_updateTabelle('Mitarbeiter' ,df=df)
                     st.experimental_rerun()
-    
 
     def datenUpdate():
         with st.expander('Bewegungsdaten LT22', expanded=True):
@@ -54,7 +54,12 @@ class Daten_Update:
                 if sel_upload is not None:
                     st.warning("Daten werden geupdated bitte auf die Ballons warten")
                     df = pd.read_excel(sel_upload)
+                    
                     DA.sapLt22DatenBerechnen(df)
+                    #change all columns to string
+                    df = df.astype(str)
+                    SQL.sql_createTable('Depot_SAP_LT22',df)
+                    
                     st.balloons()
                     sel_upload = None
                     st.success("Daten erfolgreich geupdated")
@@ -63,7 +68,7 @@ class Daten_Update:
 
     def page():
         df = SQL.sql_datenTabelleLaden('Mitarbeiter')
-       
+
         Daten_Update.mitarbeiterPflegen(df)
         st.dataframe(df)
         Daten_Update.datenUpdate()
