@@ -66,10 +66,10 @@ class Login:
 
             st.write('du Bist eingeloggt als: ', st.session_state.user)
             st.write('dein Username ist: ', df.loc[df['name'] == st.session_state.user, 'username'].iloc[0])
-            st.write('deine Rechte sind: ', st.session_state.rechte)
-            st.write('deine Funktion ist: ', df.loc[df['name'] == st.session_state.user, 'function'].iloc[0])
+            # st.write('deine Rechte sind: ', st.session_state.rechte)
+            # st.write('deine Funktion ist: ', df.loc[df['name'] == st.session_state.user, 'function'].iloc[0])
 
-            neupassword = st.text_input("password",key='neus_password_anlegen')
+            neupassword = st.text_input("neues password:",key='neus_password_anlegen')
         
             X = st.button("Speichere neues Passwort",key='speichere_neues_passwort')
             if X:

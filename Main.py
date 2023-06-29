@@ -76,7 +76,6 @@ st.write('<style>div.block-container{padding-top:0rem;}</style>', unsafe_allow_h
 
 img = Image.open('Data/img/logo.png', mode='r')
 
-##
 # ----- Config Main Menue -----
 def berechtigung():
     if st.session_state.rechte == 1:
@@ -84,7 +83,7 @@ def berechtigung():
         return ["Live Status",'Datenanalyse','Laufweg Lieferschein','SAP Bewegungsdaten','Nachschub','Fehlverladungen','Mitarbeiterdaten','Admin']
     # else:
     #     return ['Wartung']
-    elif st.session_state.rechte == 2:
+    elif st.session_state.rechte == 2: 
         # Manager
         return ["Live Status",'Datenanalyse','Laufweg Lieferschein','Nachschub',]
     
@@ -115,6 +114,7 @@ if authentication_status == True:
                 menu_icon='kanban-fill',
                 styles={'container':{'font':'Montserrat'}},)
             Login.authenticator.logout('Logout')
+            Login.newPasswort(Login)
         except:
             pass
 if authentication_status == True:

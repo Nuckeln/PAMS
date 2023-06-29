@@ -39,7 +39,7 @@ class Admin:
             if X:
                 pw = stauth.Hasher(neupassword)._hash(neupassword)
                 df = df.append({'name':neuname,'username':neuuser,'password':pw,'function':funktion,'rechte':rechte},ignore_index=True)
-                SQL.sql_updateTabelle(SQL.tabelleUser,df)
+                SQL.sql_updateTabelle('user',df)
                 st.success("User erfolgreich angelegt")
                 st.experimental_rerun()
     

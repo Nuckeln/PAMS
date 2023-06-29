@@ -181,13 +181,6 @@ def pageLaufwegDN():
         return fig, dfVisited, dfLager, bearbeitungszeit
 
 
-
-
-
-
-
-
-
     if sel_order == None:
         st.warning('Bitte wählen Sie einen Auftrag aus')
     # Zeigen Sie die Figur
