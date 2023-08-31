@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-from Data_Class.sql import read_table,save_table_to_SQL,return_table_names
+from Data_Class.SQL import read_table,save_table_to_SQL,return_table_names
 
 from Seiten.P_UserLogin import Login
 

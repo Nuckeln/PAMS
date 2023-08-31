@@ -7,7 +7,7 @@ from datetime import datetime
 
 import plotly.express as px
 
-from Data_Class.sql import read_table
+from Data_Class.SQL import read_table
 
 import plotly.graph_objs as go
 import plotly.subplots as sp

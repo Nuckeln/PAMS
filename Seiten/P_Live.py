@@ -9,7 +9,7 @@ import plotly.graph_objects as go
 
 
 from Data_Class.wetter.api import getWetterBayreuth
-from Data_Class.sql import read_table
+from Data_Class.SQL import read_table
 import matplotlib.pyplot as plt
 
 

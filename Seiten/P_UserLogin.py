@@ -2,7 +2,7 @@ import streamlit as st
 import streamlit_authenticator as stauth
 # from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
 # from Data_Class.SQL_Neu import updateTable
-from Data_Class.sql import read_table, updateTable
+from Data_Class.SQL import read_table, updateTable
 
 class Login:
     def __init__(self):

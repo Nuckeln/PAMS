@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-from Data_Class.sql import read_table
+from Data_Class.SQL import read_table
 
 # def convert_datetime_to_string(df):
 #     for column in df.columns:
