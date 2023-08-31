@@ -1,7 +1,8 @@
 import streamlit as st
 import streamlit_authenticator as stauth
-from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
-from Data_Class.SQL_Neu import updateTable
+# from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
+# from Data_Class.SQL_Neu import updateTable
+from Data_Class.sql import read_table, updateTable
 
 class Login:
     def __init__(self):
@@ -14,14 +15,13 @@ class Login:
         self.credentials = {}
         self.authenticator = None
         st.session_state = None
-        #st.session_state.rechte = None
 
 
     def Login(self):
         # Initialize the 'rechte' attribute of session_state.
-        #st.session_state.rechte = None
 
-        df = SQL.sql_datenTabelleLaden('user')
+
+        df = read_table('user')
         self.usernames = df['username'].tolist()
         self.names = df['name'].tolist()
         self.passwords = df['password'].tolist()
@@ -56,7 +56,7 @@ class Login:
 
     def newPasswort(self):
         with st.expander("Passwort ändern",expanded=False):
-            df = SQL.sql_datenTabelleLaden('user')
+            df = read_table('user')
             self.usernames = df['username'].tolist()
             self.names = df['name'].tolist()
             self.passwords = df['password'].tolist()
@@ -78,11 +78,11 @@ class Login:
                 df.loc[df['name'] == st.session_state.user, 'password'] = pw
                 # update table with new password
                 
-                SQL.sql_updateTabelle(df,'user')
+                updateTable(df,'user')
                 st.success("Passwort erfolgreich geändert! Bitte Logge dich aus")
     def newPasswort_Admin(self):
         with st.expander("Passwort ändern",expanded=False):
-            df = SQL.sql_datenTabelleLaden('user')
+            df = read_table('user')
             self.usernames = df['username'].tolist()
             self.names = df['name'].tolist()
             self.passwords = df['password'].tolist()

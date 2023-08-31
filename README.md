@@ -6,6 +6,12 @@ Auswertung und grafische Darstellung der Logistikprozesse am Standort sowie die 
 
 Paletten anzeigen ('')
 
+pipreqs "/Users/martinwolf/Python/PAMS 2.0"
+Successfully saved requirements file in   /Users/martinwolf/Python/PAMS 2.0/requirements.txt
+
+
+
+
 
 ## Code 
         Python 3.10.7

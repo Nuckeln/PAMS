@@ -6,22 +6,18 @@ from PIL import Image # Bilder
 #Eigene Klassen
 from Seiten.P_UserLogin import Login
 from Seiten.P_Live import LIVE
-from Seiten.P_Nachschub import SAPWM
-#from Seiten.P_Forecast import *
-from Seiten.P_Admin import Admin
-from Seiten.P_Mitarbeiter import Daten_Update
-from Seiten.P_Fehlverladungen import fehlverladungenPage
-from Seiten.P_DDS_neu import ddsPage
-from Seiten.P_Infocenter import Infocenter
-from Seiten.P_SAP_PicksMA import LoadPageSapPicksMA
-from Seiten.P_Wartung import Wartung
-from Seiten.F_LaufwegLieferschein import pageLaufwegDN
+from Seiten.P_Report import reportPage
+from Seiten.P_Admin import adminPage
+from Seiten.P_User_Reports import pageUserReport
 
 # Zum Ausführenv
-#MAC#   streamlit run "/Users/martinwolf/Python/Superdepot Reporting/Main.py"
+#MAC#   streamlit run "/Users/martinwolf/Python/PAMS 2.0/main.py"
  
 # --- Set Global Page Configs ---
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="expanded")
+if 'key' not in st.session_state:
+    st.session_state['key'] = 'value'
+
 
 hide_streamlit_style = """
                 <style>
@@ -63,7 +59,7 @@ hide_streamlit_style = """
                      padding-left: 5rem;
                      padding-right: 5rem;
                  }
-             .css-1d391kg {
+                .css-1d391kg {
                      padding-top: 0rem;
                      padding-right: 1rem;
                      padding-bottom: 3.5rem;
@@ -74,22 +70,24 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 st.write('<style>div.block-container{padding-top:0rem;}</style>', unsafe_allow_html=True)
 
+
+# ----- Config Main Menue -----
 img = Image.open('Data/img/logo.png', mode='r')
 
 # ----- Config Main Menue -----
 def berechtigung():
     if st.session_state.rechte == 1:
         #admin Vollzugriff
-        return ["Live Status",'Datenanalyse','Laufweg Lieferschein','SAP Bewegungsdaten','Nachschub','Fehlverladungen','Mitarbeiterdaten','Admin']
+        return ["Live Status",'Reports','User Reports','Admin']
     # else:
     #     return ['Wartung']
     elif st.session_state.rechte == 2: 
         # Manager
-        return ["Live Status",'Datenanalyse','Laufweg Lieferschein','Nachschub',]
+        return ["Live Status",'Reports','User Reports','Admin']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 
-        return ["Live Status",'Datenanalyse','Nachschub',]
+        return ["Live Status",'Reports',]
     
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd
@@ -120,24 +118,9 @@ if authentication_status == True:
 if authentication_status == True:
     if sel_main_m == 'Live Status':
         LIVE.PageTagesReport()
-    if sel_main_m == 'Wartung':
-        Wartung.page()
-    if sel_main_m == 'Admin': 
-        Admin.page()
-    if sel_main_m == 'Fehlverladungen':
-        fehlverladungenPage()
-    if sel_main_m == 'Datenanalyse':
-        ddsPage()
-    if sel_main_m == 'SAP Bewegungsdaten':
-        LoadPageSapPicksMA.mitarbeiterPage()
-    if sel_main_m == 'Nachschub':
-        SAPWM.sap_wm_page()
-    if sel_main_m == 'Infocenter':
-        Infocenter.page()
-    if sel_main_m == 'Mitarbeiterdaten':
-        Daten_Update.page()
-    if sel_main_m == 'Laufweg Lieferschein':
-        pageLaufwegDN()
-
-
-
+    if sel_main_m == 'Reports':
+         reportPage()   
+    if sel_main_m == 'User Reports':
+        pageUserReport()
+    if sel_main_m == 'Admin':
+        adminPage() 

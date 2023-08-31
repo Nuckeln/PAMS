@@ -50,7 +50,6 @@ def upload_file_to_blob_storage(filename, file_object, herkunft):
     sql.addtoTable('AzureStorage',df)
     return filename
 
-
 def get_blob_list():
     SAS_TOKEN = "sp=racwdl&st=2023-03-01T13:54:27Z&se=2039-02-28T21:54:27Z&spr=https&sv=2021-06-08&sr=c&sig=eaUtdKd2%2F5W320pmME3B8FiCO4dGrznbBIvGywnIMtE%3D"
     CONTAINER_URL = "https://batstorppnecmesprdclrs03.blob.core.windows.net/superdepotreporting-attachments"
@@ -69,7 +68,6 @@ def get_blob_list():
     
     return filesImSpeicher
 
-
 def get_blob_file(name):
     SAS_TOKEN = "sp=racwdl&st=2023-03-01T13:54:27Z&se=2039-02-28T21:54:27Z&spr=https&sv=2021-06-08&sr=c&sig=eaUtdKd2%2F5W320pmME3B8FiCO4dGrznbBIvGywnIMtE%3D"
     CONTAINER_URL = "https://batstorppnecmesprdclrs03.blob.core.windows.net/superdepotreporting-attachments"
@@ -84,7 +82,6 @@ def get_blob_file(name):
     # Return the blob content as a file object
     if response.status_code == 200:
         return response.content
-
 
 def lösche_blob_files():
     SAS_TOKEN = "sp=racwdl&st=2023-03-01T13:54:27Z&se=2039-02-28T21:54:27Z&spr=https&sv=2021-06-08&sr=c&sig=eaUtdKd2%2F5W320pmME3B8FiCO4dGrznbBIvGywnIMtE%3D"
@@ -102,7 +99,6 @@ def lösche_blob_files():
         response = requests.delete(delete_blob_url)
         print(response)
     
-
 def st_Azure_downloadBtn():
     '''erstellt einen Download Button für die Dateien mit Selectbox im Blob Storage'''
     sel_Datei = st.selectbox('Dateien auswählen', get_blob_list())
@@ -122,6 +118,7 @@ def st_Azure_uploadBtn(herkunft):
         else:
             st.error('Keine Datei ausgewählt')
     return filename
+
 def st_Azure_deleteBtn():
     '''erstellt einen Delete Button für den Blob Storage'''
     if st.button('Delete'):

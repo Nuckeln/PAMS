@@ -5,7 +5,7 @@ from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, DataReturnMode
 class sel_DataFrameAG:
 
 
-    def AG_Select_Grid(df: pd.DataFrame, height_value: int,keyname:str) -> pd.DataFrame:
+    def AG_Select_Grid(df: pd.DataFrame, height_value: int,keyname:str) -> str:
             '''
             Erstellt ein AG-Grid und gibt von der ausgewählten Zeile den wert aus der Row[1] als string.
             
