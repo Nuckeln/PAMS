@@ -2,6 +2,7 @@
 import streamlit as st # Streamlit Web App Framework
 from streamlit_option_menu import option_menu # pip install streamlit-option-menu # CSS Style für Main Menu # https://icons.getbootstrap.com
 from PIL import Image # Bilder
+import logging # Logging
 
 #Eigene Klassen
 from Seiten.P_UserLogin import Login
@@ -10,6 +11,15 @@ from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
 from Seiten.P_User_Reports import pageUserReport
 from Data_Class.SQL import read_table, updateTable
+
+
+# Logging Konfiguration
+logging.basicConfig(filename='pams_app.log', level=logging.INFO,
+                    format='%(asctime)s:%(levelname)s:%(message)s')
+
+# Log-Eintrag für den Start der App
+logging.info('App gestartet')
+
 
 # Zum Ausführenv
 #MAC#   streamlit run "/Users/martinwolf/Python/PAMS 2.0/main.py"
@@ -99,6 +109,8 @@ def berechtigung():
 # ----- Login -----
 authentication_status = None
 authentication_status = Login.Login(self=Login)
+logging.info(f'Authentifizierungsstatus: {authentication_status}')
+
 if authentication_status == True:
     with st.sidebar: 
         try:
@@ -117,9 +129,12 @@ if authentication_status == True:
 if authentication_status == True:
     if sel_main_m == 'Live Status':
         LIVE.PageTagesReport()
+        logging.info('User läd Seite Live Status')
     if sel_main_m == 'Reports':
          reportPage()   
     if sel_main_m == 'User Reports':
         pageUserReport()
+        logging.info('User läd Seite User Reports')
     if sel_main_m == 'Admin':
         adminPage() 
+        logging.info('User läd Seite Admin')
