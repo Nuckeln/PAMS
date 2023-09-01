@@ -92,3 +92,7 @@ def pageUserReport():
         st.pyplot(fig)
         fig = plotAsWeek(df)
         st.pyplot(fig)
+        
+    if st.button('Neu Laden'):
+        st.cache_data.clear()
+        st.experimental_rerun()

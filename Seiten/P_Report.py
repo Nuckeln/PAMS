@@ -339,6 +339,10 @@ def reportPage():
         if 'Fehler Total nach Art' in sel_filterIssues:
             figIssuesTotal(dfIssues,show_in_day_Week,show_tables)
 
+    if st.button('Daten vom Server neu laden'):
+        st.cache_data.clear()
+        #rerun page
+        st.experimental_rerun()
 
 
 
