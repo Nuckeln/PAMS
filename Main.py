@@ -112,6 +112,8 @@ authentication_status = Login.Login(self=Login)
 logging.info(f'Authentifizierungsstatus: {authentication_status}')
 
 if authentication_status == True:
+    user = st.session_state.user
+    logging.info(f'User: {user}')
     with st.sidebar: 
         try:
             st.image(img)

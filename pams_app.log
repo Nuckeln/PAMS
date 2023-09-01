@@ -1,0 +1,29 @@
+2023-09-01 21:07:28,007:INFO:App gestartet
+2023-09-01 21:07:44,115:INFO:App gestartet
+2023-09-01 21:07:45,088:INFO:Authentifizierungsstatus: None
+2023-09-01 21:07:45,735:INFO:App gestartet
+2023-09-01 21:07:46,505:INFO:Authentifizierungsstatus: True
+2023-09-01 21:07:50,856:INFO:User läd Seite Live Status
+2023-09-01 21:07:51,823:INFO:App gestartet
+2023-09-01 21:07:52,582:INFO:Authentifizierungsstatus: True
+2023-09-01 21:08:09,024:INFO:App gestartet
+2023-09-01 21:08:09,839:INFO:Authentifizierungsstatus: True
+2023-09-01 21:11:51,102:INFO:App gestartet
+2023-09-01 21:11:52,092:INFO:Authentifizierungsstatus: True
+2023-09-01 21:11:57,783:INFO:User läd Seite User Reports
+2023-09-01 21:12:03,855:INFO:App gestartet
+2023-09-01 21:12:04,688:INFO:Authentifizierungsstatus: True
+2023-09-01 21:12:08,897:INFO:User läd Seite Live Status
+2023-09-01 21:12:56,973:INFO:App gestartet
+2023-09-01 21:12:57,762:INFO:Authentifizierungsstatus: True
+2023-09-01 21:12:57,762:INFO:User ist Authentifiziert
+2023-09-01 21:13:01,636:INFO:User läd Seite Live Status
+2023-09-01 21:13:27,446:INFO:App gestartet
+2023-09-01 21:13:28,326:INFO:Authentifizierungsstatus: None
+2023-09-01 21:13:28,945:INFO:App gestartet
+2023-09-01 21:13:29,784:INFO:Authentifizierungsstatus: True
+2023-09-01 21:13:29,784:INFO:User: Martin
+2023-09-01 21:13:33,827:INFO:User läd Seite Live Status
+2023-09-01 21:13:35,527:INFO:App gestartet
+2023-09-01 21:13:36,592:INFO:Authentifizierungsstatus: True
+2023-09-01 21:13:36,592:INFO:User: Martin
