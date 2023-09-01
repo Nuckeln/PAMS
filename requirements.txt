@@ -11,4 +11,6 @@ streamlit_authenticator==0.2.2
 streamlit_autorefresh==1.0.1
 streamlit_option_menu==0.3.6
 pyodbc
+openpyxl
+st-annotated-text
 

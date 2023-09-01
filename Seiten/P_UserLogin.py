@@ -4,6 +4,11 @@ import streamlit_authenticator as stauth
 # from Data_Class.SQL_Neu import updateTable
 from Data_Class.SQL import read_table, updateTable
 
+
+
+if 'key' not in st.session_state:
+    st.session_state['key'] = 'value'
+    
 class Login:
     def __init__(self):
         self.usernames = []
@@ -16,8 +21,10 @@ class Login:
         self.authenticator = None
         st.session_state = None
 
-
+        authentication_status = None
     def Login(self):
+        if 'key' not in st.session_state:
+            st.session_state['key'] = 'value'
         # Initialize the 'rechte' attribute of session_state.
 
 
@@ -28,6 +35,7 @@ class Login:
         self.funktionen = df['function'].tolist()
         self.rechte = df['rechte'].tolist()
         self.credentials = {"usernames":{}}
+        authentication_status = None
 
         # Extract the values from the DataFrame and add them to the 'credentials' dictionary.
         for uname,name,pwd,funktion,rechte in zip(self.usernames,self.names,self.passwords,self.funktionen,self.rechte):

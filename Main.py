@@ -9,14 +9,13 @@ from Seiten.P_Live import LIVE
 from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
 from Seiten.P_User_Reports import pageUserReport
+from Data_Class.SQL import read_table, updateTable
 
 # Zum Ausführenv
 #MAC#   streamlit run "/Users/martinwolf/Python/PAMS 2.0/main.py"
  
 # --- Set Global Page Configs ---
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="expanded")
-if 'key' not in st.session_state:
-    st.session_state['key'] = 'value'
 
 
 hide_streamlit_style = """
@@ -98,7 +97,7 @@ def berechtigung():
         return ["Live Status"]
 
 # ----- Login -----
-
+authentication_status = None
 authentication_status = Login.Login(self=Login)
 if authentication_status == True:
     with st.sidebar: 
