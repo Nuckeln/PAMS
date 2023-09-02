@@ -65,27 +65,21 @@ def filterDate(df: pd,dfIssues: pd):
         if sel_filter == 'Woche':
             #sort df by Woche
             dfWeek = df['Woche'].unique()
-            dfWeek = np.sort(dfWeek)
-            #search max in dfWeek
-            index = np.where(dfWeek == dfWeek.max())
-            #select last week
-            maxWeek = dfWeek[index[0][0]]
-            #select last week
-
-            st.write('Die letzte Woche ist: ', maxWeek)
-            sel_weekRange = st.selectbox('Wähle Woche', dfWeek)
+            dfWeek_sorted = sorted(dfWeek, key=lambda x: (x.split('.')[1], x.split('.')[0]), reverse=True)
+            sel_weekRange = st.selectbox('Wähle Woche', dfWeek_sorted)
             df = df[df['Woche'] == sel_weekRange]
 
         if sel_filter == 'Monat':
-            dfMonth = df['Monat'].unique()
-            dfMonth = np.sort(dfMonth)
-            #search max in dfWeek
-            index = np.where(dfMonth == dfMonth.max())
-            #select last week
-            sel_monthRange = dfMonth[index[0][0]]
+            #sort df by PlannedDate acciending
+            df2 = df.sort_values(by=['PlannedDate'], ascending=False)
+            #select unique values in column Monat
+            dfMonth = df2['Monat'].unique()
+            dfMonth_sorted = sorted(dfMonth, key=lambda x: (x.split('.')[1], x.split('.')[0]), reverse=True)
+
 
             
-            sel_monthRange = st.selectbox('Wähle Monat', dfMonth)
+            
+            sel_monthRange = st.selectbox('Wähle Monat', dfMonth_sorted)
             df = df[df['Monat'] == sel_monthRange]
 
     #to datetime

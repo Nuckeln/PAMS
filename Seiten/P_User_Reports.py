@@ -1,6 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
+from Data_Class.st_AgGridCheckBox import createAGgrid_withCheckbox
+from datetime import datetime
 
 from Data_Class.SQL import read_table
 
@@ -26,6 +28,81 @@ def load_data():
     df = read_table('PAMS_SAP_Orders_Header_LT22')
     dfItems = read_table('PAMS_SAP_Orders_Items_LT22')  
     return df, dfItems
+
+def filterDate(df: pd,dfItems: pd):
+    df.PlannedDate = pd.to_datetime(df.PlannedDate)
+    df['Packtag'] = df.PlannedDate.dt.strftime('%d.%m.%Y')
+    df['Packtag'] = df['Packtag'].astype(str)
+
+    df['Wochentag'] = df['PlannedDate'].dt.strftime('%A')
+    df['Woche'] = df['PlannedDate'].dt.strftime('%V.%Y')
+    df['Monat'] = df['PlannedDate'].dt.strftime('%m.%Y')
+    df.PlannedDate = df.PlannedDate.dt.strftime('%d.%m.%Y')
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        sel_filter = st.radio(
+        "Filtern nach:",
+        ["Monat", "Woche" ],
+        key="visibility",
+        horizontal=True)       
+
+    with col2:
+        if sel_filter == 'Zeitraum':
+            start_date = st.date_input('Start Date')
+            with col3:
+                end_date = st.date_input('End Date')
+            df.PlannedDate = pd.to_datetime(df.PlannedDate)
+
+            df = df[(df['PlannedDate'] > start_date) & (df['PlannedDate'] <= end_date)]
+
+        if sel_filter == 'Woche':
+            #sort df by Woche
+            dfWeek = df['Woche'].unique()
+            dfWeek_sorted = sorted(dfWeek, key=lambda x: (x.split('.')[1], x.split('.')[0]), reverse=True)
+            sel_weekRange = st.selectbox('Wähle Woche', dfWeek_sorted)
+            df = df[df['Woche'] == sel_weekRange]
+
+        if sel_filter == 'Monat':
+            #sort df by PlannedDate acciending
+            df2 = df.sort_values(by=['PlannedDate'], ascending=False)
+            #select unique values in column Monat
+            dfMonth = df2['Monat'].unique()
+            dfMonth_sorted = sorted(dfMonth, key=lambda x: (x.split('.')[1], x.split('.')[0]), reverse=True)
+
+
+            
+            
+            sel_monthRange = st.selectbox('Wähle Monat', dfMonth_sorted)
+            df = df[df['Monat'] == sel_monthRange]
+
+    #to datetime
+    try:
+        sel_day_max = df['PlannedDate'].max()
+        sel_day_max = datetime.strptime(sel_day_max, '%d.%m.%Y')
+        sel_day_min = df['PlannedDate'].min()
+        sel_day_min = datetime.strptime(sel_day_min, '%d.%m.%Y')
+       #dfItems = dfItems[(dfItems['PlannedDate'] >= sel_day_min) & (dfItems['PlannedDate'] <= sel_day_max)]
+    except:
+        pass
+    #to datetime
+
+#    st.write('Von', sel_day_min, 'bis', sel_day_max)
+    # filter dfIssues
+    col1, col2 = st.columns(2)
+    with col1:
+        tabelle = st.checkbox('Tabellen einblenden')
+    with col2:
+        sel_Day_week = st.radio("Zeige in: ", ["Tagen", "Wochen"], key="zeigeIn", horizontal=True)
+    if sel_Day_week == 'Wochen':
+        sel_Day_week = 'Woche'
+    if sel_Day_week == 'Tagen':
+        sel_Day_week = 'PlannedDate'
+    return df, dfItems, tabelle, sel_Day_week
+
+
+
 
 def plotAsDay(grouped_data: pd.DataFrame):
     grouped_data = grouped_data[grouped_data['PickDurationMinutes_Karton'].notnull()]
@@ -67,10 +144,13 @@ def plotAsWeek(grouped_data):
 
 def plot_User_Picks(df, dfItems):
 
-
-    st.data_editor(df,key='df')
+    sel = createAGgrid_withCheckbox(df, 300, 'df')
+    st.write(sel)
     st.data_editor(dfItems,key='dfItems')
     
+
+
+
 
 def savecal_data():
     data , bewegung_df= cal_data()
@@ -79,19 +159,17 @@ def savecal_data():
 
 
 def pageUserReport():
-    df, dfItems = load_data()
-    if st.button('Berechnung'):
-        savecal_data()
-    
+    df, dfItems = load_data()    
+    df, dfItems,tabelle, sel_Day_week = filterDate(df, dfItems)
 
     with st.expander("Picks Mitarbeiter",expanded=True):
         plot_User_Picks(df, dfItems)
-    with st.expander("Value strean mapping",expanded=False):
+    # with st.expander("Value strean mapping",expanded=False):
         
-        fig = plotAsDay(df)
-        st.pyplot(fig)
-        fig = plotAsWeek(df)
-        st.pyplot(fig)
+    #     fig = plotAsDay(df)
+    #     st.pyplot(fig)
+    #     fig = plotAsWeek(df)
+    #     st.pyplot(fig)
         
     if st.button('Neu Laden'):
         st.cache_data.clear()
