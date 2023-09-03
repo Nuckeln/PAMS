@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 from Data_Class.st_AgGridCheckBox import createAGgrid_withCheckbox
+from Data_Class.MMSQL_connection import read_Table_by_Date
 from datetime import datetime
 
 from Data_Class.SQL import read_table
@@ -26,10 +27,9 @@ from Data_Class.SQL import read_table
 st.cache_data
 def load_data():
     df = read_table('PAMS_SAP_Orders_Header_LT22')
-    dfItems = read_table('PAMS_SAP_Orders_Items_LT22')  
-    return df, dfItems
+    return df
 
-def filterDate(df: pd,dfItems: pd):
+def filterDate(df: pd):
     df.PlannedDate = pd.to_datetime(df.PlannedDate)
     df['Packtag'] = df.PlannedDate.dt.strftime('%d.%m.%Y')
     df['Packtag'] = df['Packtag'].astype(str)
@@ -77,16 +77,18 @@ def filterDate(df: pd,dfItems: pd):
             sel_monthRange = st.selectbox('Wähle Monat', dfMonth_sorted)
             df = df[df['Monat'] == sel_monthRange]
 
+    
+    
     #to datetime
-    try:
-        sel_day_max = df['PlannedDate'].max()
-        sel_day_max = datetime.strptime(sel_day_max, '%d.%m.%Y')
-        sel_day_min = df['PlannedDate'].min()
-        sel_day_min = datetime.strptime(sel_day_min, '%d.%m.%Y')
-       #dfItems = dfItems[(dfItems['PlannedDate'] >= sel_day_min) & (dfItems['PlannedDate'] <= sel_day_max)]
-    except:
-        pass
-    #to datetime
+    sel_day_max = df['PlannedDate'].max()
+    sel_day_max = datetime.strptime(sel_day_max, '%d.%m.%Y')
+    sel_day_min = df['PlannedDate'].min()
+    sel_day_min = datetime.strptime(sel_day_min, '%d.%m.%Y')
+    #filter dfItems by sel_day_max and sel_day_min 
+    dfItems = read_Table_by_Date(sel_day_min, sel_day_max, 'PAMS_SAP_Orders_Items_LT22','PickDateTime')
+#to datetime
+    #dfItems['PickDateTime'] = pd.to_datetime(dfItems['PickDateTime'], format='%Y-%m-%d %H:%M:%S')  
+    
 
 #    st.write('Von', sel_day_min, 'bis', sel_day_max)
     # filter dfIssues
@@ -100,8 +102,6 @@ def filterDate(df: pd,dfItems: pd):
     if sel_Day_week == 'Tagen':
         sel_Day_week = 'PlannedDate'
     return df, dfItems, tabelle, sel_Day_week
-
-
 
 
 def plotAsDay(grouped_data: pd.DataFrame):
@@ -143,33 +143,37 @@ def plotAsWeek(grouped_data):
     return plt.show()
 
 def plot_User_Picks(df, dfItems):
-
+    st.radio('Nach:', ['Mitarbeiter', 'Lieferscheine'])
     sel = createAGgrid_withCheckbox(df, 300, 'df')
     st.write(sel)
     st.data_editor(dfItems,key='dfItems')
-    
+    # #plot by Mitarbeiter.count PickDateTime
+    # fig = plt.figure(figsize=(15, 8))
+    # dfItems.groupby('Name').count()['PickDateTime'].plot(kind='bar', ax=plt.gca())
+    # plt.title("Picks per Minute by Planned Date")
+    # plt.xlabel("Planned Week and Year")
+    # plt.ylabel("Picks per Minute")
+    # plt.legend(title="Categories")
+    # plt.grid(True)
+    # plt.xticks(rotation=45)
+    # #show plot
+    # st.pyplot(fig)
 
 
-
-
-def savecal_data():
-    data , bewegung_df= cal_data()
-    bewegung_df.to_csv('dataBew.csv', sep=';')
-    data.to_csv('data.csv', sep=';')
 
 
 def pageUserReport():
-    df, dfItems = load_data()    
-    df, dfItems,tabelle, sel_Day_week = filterDate(df, dfItems)
+    df = load_data()    
+    df, dfItems,tabelle, sel_Day_week = filterDate(df)
 
     with st.expander("Picks Mitarbeiter",expanded=True):
         plot_User_Picks(df, dfItems)
-    # with st.expander("Value strean mapping",expanded=False):
+    with st.expander("Value strean mapping",expanded=False):
         
-    #     fig = plotAsDay(df)
-    #     st.pyplot(fig)
-    #     fig = plotAsWeek(df)
-    #     st.pyplot(fig)
+        fig = plotAsDay(df)
+        st.pyplot(fig)
+        # fig = plotAsWeek(df)
+        # st.pyplot(fig)
         
     if st.button('Neu Laden'):
         st.cache_data.clear()
