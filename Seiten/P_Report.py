@@ -162,8 +162,8 @@ def figPicksGesamtnachTagUndVerfügbarkeit(df,tabelle,show_in_day_Week):
     df['Lieferschein erhalten'] = df['Lieferschein erhalten'].fillna(df['PlannedDate'])
     df['Lieferschein erhalten'] = pd.to_datetime(df['Lieferschein erhalten'])   
     df['Lieferschein erhalten'] = df['Lieferschein erhalten'].dt.strftime('%d.%m.%Y')
-    df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
-    df['PlannedDate'] = df['PlannedDate'].dt.strftime('%d.%m.%Y')
+
+    #df['PlannedDate'] = df['PlannedDate'].dt.strftime('%d.%m.%Y')
     df.loc[df['Lieferschein erhalten'] < df['PlannedDate'], 'Verfügbarkeit'] = 'Vortag'
     df.loc[df['Lieferschein erhalten'] >= df['PlannedDate'], 'Verfügbarkeit'] = 'Verladedatum'
     df['Picks Gesamt'] = pd.to_numeric(df['Picks Gesamt'], errors='coerce')
@@ -199,41 +199,29 @@ def fig_Picksgesamt_kategorie(df, tabelle, show_in_day_Week):
     df['Picks Paletten'] = pd.to_numeric(df['Picks Paletten'], errors='coerce')
 
     df = df.groupby([show_in_day_Week]).agg({'Picks Karton':'sum', 'Picks Stangen':'sum', 'Picks Paletten':'sum'}).reset_index()
+    title = "<b>Picks nach Katergorie: </b> <span style='color:#ef7d00'>Stangen</span> / <span style='color:#0F2B63'>Karton</span> / <span style='color:#4FAF46'>Paletten</span>"
 
-    fig = go.Figure()
-    fig.add_trace(go.Bar(x=df[show_in_day_Week], y=df['Picks Karton'], name='Karton',marker_color='#0e2b63'))
-    fig.add_trace(go.Bar(x=df[show_in_day_Week], y=df['Picks Stangen'], name='Stangen',marker_color='#ef7d00'))
-    fig.add_trace(go.Bar(x=df[show_in_day_Week], y=df['Picks Paletten'], name='Paletten',marker_color='#50af47'))
-    fig.update_traces(marker_color='#50af47', selector=dict(name='Picks Stangen'))
-    fig.update_traces(marker_color='#ef7d00', selector=dict(name='Picks Karton'))
-    fig.update_traces(marker_color='#0e2b63', selector=dict(name='Picks Paletten'))    
-    # Stapelbare Balken einstellen
-    fig.update_layout(barmode='stack', title_text="Picks Gesamt DE30 nach Kategorie", title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", height=700)
-    
-    # Summe jedes Balkens als Text über dem Balken hinzufügen
-    agg_data = df.groupby(show_in_day_Week, as_index=False).agg({"Picks Karton": lambda x: pd.to_numeric(x, errors="coerce").sum(),
-                                                                  "Picks Stangen": lambda x: pd.to_numeric(x, errors="coerce").sum(),
-                                                                  "Picks Paletten": lambda x: pd.to_numeric(x, errors="coerce").sum()})
-    
-    annotations = [
-        {"x": x, "y": total * 1.05, "text": f"{total:.0f}", "showarrow": False}
-        for x, total in agg_data[[show_in_day_Week, 'Picks Paletten']].values
-    ]
-    annotations.extend([
-        {"x": x, "y": total * 1.05, "text": f"{total:.0f}", "showarrow": False}
-        for x, total in agg_data[[show_in_day_Week, 'Picks Stangen']].values
-    ])
-    annotations.extend([
-        {"x": x, "y": total * 1.05, "text": f"{total:.0f}", "showarrow": False}
-        for x, total in agg_data[[show_in_day_Week, 'Picks Karton']].values
-    ])
-    
-    fig.update_layout(annotations=annotations)
+    figPicksBySAPOrder = px.bar(df, y=['Picks Karton','Picks Paletten','Picks Stangen'], title=title,height=600)
+    figPicksBySAPOrder.update_traces(marker_color='#0F2B63', selector=dict(name='Picks Karton'))
+    figPicksBySAPOrder.update_traces(marker_color='#4FAF46', selector=dict(name='Picks Paletten'))
+    figPicksBySAPOrder.update_traces(marker_color='#ef7d00', selector=dict(name='Picks Stangen'))
+    figPicksBySAPOrder.update_layout(showlegend=False)
+    figPicksBySAPOrder.layout.xaxis.tickangle = 70
+
+    figPicksBySAPOrder.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
+    figPicksBySAPOrder.update_traces(text=df['Picks Karton'], selector=dict(name='Picks Karton'),textposition='inside')
+    figPicksBySAPOrder.update_traces(text=df['Picks Paletten'], selector=dict(name='Picks Paletten'),textposition='inside')
+    figPicksBySAPOrder.update_traces(text=df['Picks Stangen'], selector=dict(name='Picks Stangen'),textposition='inside')
+    #hide xaxis title and ticks
+    figPicksBySAPOrder.update_xaxes(showticklabels=False)
+    #disable index
+    figPicksBySAPOrder.update_yaxes(title_text='')
+    figPicksBySAPOrder.update_xaxes(title_text='')
 
 
     
     # Diagramm und Datentabelle in Streamlit anzeigen
-    st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
+    st.plotly_chart(figPicksBySAPOrder, use_container_width=True,config={'displayModeBar': False})
     if tabelle == True:
          st.dataframe(df)
 
