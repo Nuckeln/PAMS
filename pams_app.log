@@ -572,3 +572,1517 @@
 2023-09-03 22:28:12,598:INFO:App gestartet
 2023-09-03 22:28:13,488:INFO:Authentifizierungsstatus: True
 2023-09-03 22:28:13,488:INFO:User: Martin
+2023-09-03 22:33:20,153:INFO:App gestartet
+2023-09-03 22:33:21,077:INFO:Authentifizierungsstatus: True
+2023-09-03 22:33:21,077:INFO:User: Martin
+2023-09-03 22:33:25,377:INFO:User läd Seite User Reports
+2023-09-03 22:33:36,603:INFO:App gestartet
+2023-09-03 22:33:37,472:INFO:Authentifizierungsstatus: True
+2023-09-03 22:33:37,472:INFO:User: Martin
+2023-09-03 22:33:39,978:INFO:App gestartet
+2023-09-03 22:33:40,992:INFO:Authentifizierungsstatus: True
+2023-09-03 22:33:40,992:INFO:User: Martin
+2023-09-03 22:33:41,774:INFO:App gestartet
+2023-09-03 22:33:42,545:INFO:Authentifizierungsstatus: None
+2023-09-03 22:33:42,651:INFO:App gestartet
+2023-09-03 22:33:43,504:INFO:Authentifizierungsstatus: None
+2023-09-03 22:33:49,772:INFO:App gestartet
+2023-09-03 22:33:51,125:INFO:Authentifizierungsstatus: True
+2023-09-03 22:33:51,125:INFO:User: SuperDepot Team
+2023-09-03 22:33:51,208:INFO:App gestartet
+2023-09-03 22:33:52,023:INFO:Authentifizierungsstatus: True
+2023-09-03 22:33:52,024:INFO:User: SuperDepot Team
+2023-09-03 22:33:52,061:INFO:App gestartet
+2023-09-03 22:33:52,599:INFO:App gestartet
+2023-09-03 22:33:53,730:INFO:Authentifizierungsstatus: True
+2023-09-03 22:33:53,731:INFO:User: SuperDepot Team
+2023-09-03 22:33:58,415:INFO:User läd Seite Live Status
+2023-09-03 22:33:58,462:INFO:App gestartet
+2023-09-03 22:33:58,600:INFO:App gestartet
+2023-09-03 22:33:59,382:INFO:Authentifizierungsstatus: True
+2023-09-03 22:33:59,382:INFO:User: SuperDepot Team
+2023-09-03 22:34:03,589:INFO:User läd Seite Live Status
+2023-09-03 22:34:05,839:INFO:App gestartet
+2023-09-03 22:34:06,796:INFO:Authentifizierungsstatus: True
+2023-09-03 22:34:06,797:INFO:User: SuperDepot Team
+2023-09-03 22:34:11,455:INFO:User läd Seite Live Status
+2023-09-03 22:34:56,286:INFO:App gestartet
+2023-09-03 22:34:58,022:INFO:Authentifizierungsstatus: True
+2023-09-03 22:34:58,022:INFO:User: SuperDepot Team
+2023-09-03 22:35:02,371:INFO:User läd Seite Live Status
+2023-09-03 22:35:48,017:INFO:App gestartet
+2023-09-03 22:35:51,868:INFO:Authentifizierungsstatus: True
+2023-09-03 22:35:51,869:INFO:User: SuperDepot Team
+2023-09-03 22:35:55,737:INFO:User läd Seite Live Status
+2023-09-03 22:36:41,385:INFO:App gestartet
+2023-09-03 22:36:42,347:INFO:Authentifizierungsstatus: True
+2023-09-03 22:36:42,347:INFO:User: SuperDepot Team
+2023-09-03 22:36:46,249:INFO:User läd Seite Live Status
+2023-09-03 22:37:31,805:INFO:App gestartet
+2023-09-03 22:37:32,752:INFO:Authentifizierungsstatus: True
+2023-09-03 22:37:32,752:INFO:User: SuperDepot Team
+2023-09-03 22:37:37,156:INFO:User läd Seite Live Status
+2023-09-03 22:38:22,684:INFO:App gestartet
+2023-09-03 22:38:23,567:INFO:Authentifizierungsstatus: True
+2023-09-03 22:38:23,570:INFO:User: SuperDepot Team
+2023-09-03 22:38:27,745:INFO:User läd Seite Live Status
+2023-09-03 22:39:12,997:INFO:App gestartet
+2023-09-03 22:39:14,219:INFO:Authentifizierungsstatus: True
+2023-09-03 22:39:14,219:INFO:User: SuperDepot Team
+2023-09-03 22:39:18,108:INFO:User läd Seite Live Status
+2023-09-03 22:40:03,707:INFO:App gestartet
+2023-09-03 22:40:04,603:INFO:Authentifizierungsstatus: True
+2023-09-03 22:40:04,604:INFO:User: SuperDepot Team
+2023-09-03 22:40:08,573:INFO:User läd Seite Live Status
+2023-09-03 22:40:54,131:INFO:App gestartet
+2023-09-03 22:40:54,940:INFO:Authentifizierungsstatus: True
+2023-09-03 22:40:54,940:INFO:User: SuperDepot Team
+2023-09-03 22:40:59,346:INFO:User läd Seite Live Status
+2023-09-03 22:41:44,475:INFO:App gestartet
+2023-09-03 22:41:45,350:INFO:Authentifizierungsstatus: True
+2023-09-03 22:41:45,351:INFO:User: SuperDepot Team
+2023-09-03 22:41:49,127:INFO:User läd Seite Live Status
+2023-09-03 22:42:34,949:INFO:App gestartet
+2023-09-03 22:42:35,759:INFO:Authentifizierungsstatus: True
+2023-09-03 22:42:35,760:INFO:User: SuperDepot Team
+2023-09-03 22:42:42,327:INFO:User läd Seite Live Status
+2023-09-03 22:43:26,186:INFO:App gestartet
+2023-09-03 22:43:27,267:INFO:Authentifizierungsstatus: True
+2023-09-03 22:43:27,268:INFO:User: SuperDepot Team
+2023-09-03 22:43:31,640:INFO:User läd Seite Live Status
+2023-09-03 22:45:29,343:INFO:App gestartet
+2023-09-03 22:45:30,535:INFO:Authentifizierungsstatus: True
+2023-09-03 22:45:30,535:INFO:User: SuperDepot Team
+2023-09-03 22:45:35,187:INFO:User läd Seite Live Status
+2023-09-03 23:01:20,910:INFO:App gestartet
+2023-09-03 23:01:21,887:INFO:Authentifizierungsstatus: True
+2023-09-03 23:01:21,888:INFO:User: SuperDepot Team
+2023-09-03 23:01:25,490:INFO:User läd Seite Live Status
+2023-09-03 23:02:11,943:INFO:App gestartet
+2023-09-03 23:02:12,944:INFO:Authentifizierungsstatus: True
+2023-09-03 23:02:12,944:INFO:User: SuperDepot Team
+2023-09-03 23:02:16,586:INFO:User läd Seite Live Status
+2023-09-03 23:03:02,941:INFO:App gestartet
+2023-09-03 23:03:03,846:INFO:Authentifizierungsstatus: True
+2023-09-03 23:03:03,847:INFO:User: SuperDepot Team
+2023-09-03 23:03:07,485:INFO:User läd Seite Live Status
+2023-09-03 23:03:53,747:INFO:App gestartet
+2023-09-03 23:03:54,583:INFO:Authentifizierungsstatus: True
+2023-09-03 23:03:54,584:INFO:User: SuperDepot Team
+2023-09-03 23:03:58,222:INFO:User läd Seite Live Status
+2023-09-03 23:04:44,616:INFO:App gestartet
+2023-09-03 23:04:45,494:INFO:Authentifizierungsstatus: True
+2023-09-03 23:04:45,494:INFO:User: SuperDepot Team
+2023-09-03 23:04:49,135:INFO:User läd Seite Live Status
+2023-09-03 23:05:35,566:INFO:App gestartet
+2023-09-03 23:05:36,356:INFO:Authentifizierungsstatus: True
+2023-09-03 23:05:36,357:INFO:User: SuperDepot Team
+2023-09-03 23:05:40,152:INFO:User läd Seite Live Status
+2023-09-03 23:06:26,449:INFO:App gestartet
+2023-09-03 23:06:27,365:INFO:Authentifizierungsstatus: True
+2023-09-03 23:06:27,365:INFO:User: SuperDepot Team
+2023-09-03 23:06:31,068:INFO:User läd Seite Live Status
+2023-09-03 23:07:17,333:INFO:App gestartet
+2023-09-03 23:07:18,262:INFO:Authentifizierungsstatus: True
+2023-09-03 23:07:18,263:INFO:User: SuperDepot Team
+2023-09-03 23:07:22,273:INFO:User läd Seite Live Status
+2023-09-03 23:08:08,171:INFO:App gestartet
+2023-09-03 23:08:09,043:INFO:Authentifizierungsstatus: True
+2023-09-03 23:08:09,044:INFO:User: SuperDepot Team
+2023-09-03 23:08:12,616:INFO:User läd Seite Live Status
+2023-09-03 23:08:59,023:INFO:App gestartet
+2023-09-03 23:08:59,848:INFO:Authentifizierungsstatus: True
+2023-09-03 23:08:59,849:INFO:User: SuperDepot Team
+2023-09-03 23:09:03,508:INFO:User läd Seite Live Status
+2023-09-03 23:09:49,907:INFO:App gestartet
+2023-09-03 23:09:51,059:INFO:Authentifizierungsstatus: True
+2023-09-03 23:09:51,060:INFO:User: SuperDepot Team
+2023-09-03 23:09:54,562:INFO:User läd Seite Live Status
+2023-09-03 23:10:41,088:INFO:App gestartet
+2023-09-03 23:10:41,969:INFO:Authentifizierungsstatus: True
+2023-09-03 23:10:41,969:INFO:User: SuperDepot Team
+2023-09-03 23:10:45,747:INFO:User läd Seite Live Status
+2023-09-03 23:11:32,108:INFO:App gestartet
+2023-09-03 23:11:32,963:INFO:Authentifizierungsstatus: True
+2023-09-03 23:11:32,963:INFO:User: SuperDepot Team
+2023-09-03 23:11:36,958:INFO:User läd Seite Live Status
+2023-09-03 23:12:23,214:INFO:App gestartet
+2023-09-03 23:12:24,083:INFO:Authentifizierungsstatus: True
+2023-09-03 23:12:24,084:INFO:User: SuperDepot Team
+2023-09-03 23:12:27,657:INFO:User läd Seite Live Status
+2023-09-03 23:13:14,029:INFO:App gestartet
+2023-09-03 23:13:14,918:INFO:Authentifizierungsstatus: True
+2023-09-03 23:13:14,918:INFO:User: SuperDepot Team
+2023-09-03 23:13:18,644:INFO:User läd Seite Live Status
+2023-09-03 23:14:04,994:INFO:App gestartet
+2023-09-03 23:14:05,944:INFO:Authentifizierungsstatus: True
+2023-09-03 23:14:05,944:INFO:User: SuperDepot Team
+2023-09-03 23:14:09,757:INFO:User läd Seite Live Status
+2023-09-03 23:14:55,842:INFO:App gestartet
+2023-09-03 23:14:56,626:INFO:Authentifizierungsstatus: True
+2023-09-03 23:14:56,626:INFO:User: SuperDepot Team
+2023-09-03 23:15:00,090:INFO:User läd Seite Live Status
+2023-09-03 23:15:46,490:INFO:App gestartet
+2023-09-03 23:15:47,367:INFO:Authentifizierungsstatus: True
+2023-09-03 23:15:47,368:INFO:User: SuperDepot Team
+2023-09-03 23:15:50,900:INFO:User läd Seite Live Status
+2023-09-03 23:16:37,419:INFO:App gestartet
+2023-09-03 23:16:38,251:INFO:Authentifizierungsstatus: True
+2023-09-03 23:16:38,252:INFO:User: SuperDepot Team
+2023-09-03 23:16:41,783:INFO:User läd Seite Live Status
+2023-09-03 23:17:28,246:INFO:App gestartet
+2023-09-03 23:17:29,171:INFO:Authentifizierungsstatus: True
+2023-09-03 23:17:29,172:INFO:User: SuperDepot Team
+2023-09-03 23:17:32,907:INFO:User läd Seite Live Status
+2023-09-03 23:18:19,024:INFO:App gestartet
+2023-09-03 23:18:19,844:INFO:Authentifizierungsstatus: True
+2023-09-03 23:18:19,845:INFO:User: SuperDepot Team
+2023-09-03 23:18:23,399:INFO:User läd Seite Live Status
+2023-09-03 23:19:09,642:INFO:App gestartet
+2023-09-03 23:19:10,570:INFO:Authentifizierungsstatus: True
+2023-09-03 23:19:10,571:INFO:User: SuperDepot Team
+2023-09-03 23:19:14,102:INFO:User läd Seite Live Status
+2023-09-03 23:20:00,605:INFO:App gestartet
+2023-09-03 23:20:01,445:INFO:Authentifizierungsstatus: True
+2023-09-03 23:20:01,447:INFO:User: SuperDepot Team
+2023-09-03 23:20:05,153:INFO:User läd Seite Live Status
+2023-09-03 23:20:51,563:INFO:App gestartet
+2023-09-03 23:20:52,405:INFO:Authentifizierungsstatus: True
+2023-09-03 23:20:52,405:INFO:User: SuperDepot Team
+2023-09-03 23:20:55,980:INFO:User läd Seite Live Status
+2023-09-03 23:21:42,431:INFO:App gestartet
+2023-09-03 23:21:43,345:INFO:Authentifizierungsstatus: True
+2023-09-03 23:21:43,346:INFO:User: SuperDepot Team
+2023-09-03 23:21:46,971:INFO:User läd Seite Live Status
+2023-09-03 23:22:33,212:INFO:App gestartet
+2023-09-03 23:22:34,131:INFO:Authentifizierungsstatus: True
+2023-09-03 23:22:34,131:INFO:User: SuperDepot Team
+2023-09-03 23:22:37,768:INFO:User läd Seite Live Status
+2023-09-03 23:23:24,114:INFO:App gestartet
+2023-09-03 23:23:24,926:INFO:Authentifizierungsstatus: True
+2023-09-03 23:23:24,926:INFO:User: SuperDepot Team
+2023-09-03 23:23:28,665:INFO:User läd Seite Live Status
+2023-09-03 23:24:15,090:INFO:App gestartet
+2023-09-03 23:24:15,925:INFO:Authentifizierungsstatus: True
+2023-09-03 23:24:15,925:INFO:User: SuperDepot Team
+2023-09-03 23:24:19,514:INFO:User läd Seite Live Status
+2023-09-03 23:25:05,806:INFO:App gestartet
+2023-09-03 23:25:06,685:INFO:Authentifizierungsstatus: True
+2023-09-03 23:25:06,685:INFO:User: SuperDepot Team
+2023-09-03 23:25:10,322:INFO:User läd Seite Live Status
+2023-09-03 23:25:56,694:INFO:App gestartet
+2023-09-03 23:25:57,552:INFO:Authentifizierungsstatus: True
+2023-09-03 23:25:57,552:INFO:User: SuperDepot Team
+2023-09-03 23:26:01,116:INFO:User läd Seite Live Status
+2023-09-03 23:26:47,762:INFO:App gestartet
+2023-09-03 23:26:48,564:INFO:Authentifizierungsstatus: True
+2023-09-03 23:26:48,565:INFO:User: SuperDepot Team
+2023-09-03 23:26:52,082:INFO:User läd Seite Live Status
+2023-09-03 23:27:38,424:INFO:App gestartet
+2023-09-03 23:27:39,298:INFO:Authentifizierungsstatus: True
+2023-09-03 23:27:39,299:INFO:User: SuperDepot Team
+2023-09-03 23:27:42,932:INFO:User läd Seite Live Status
+2023-09-03 23:28:29,107:INFO:App gestartet
+2023-09-03 23:28:29,928:INFO:Authentifizierungsstatus: True
+2023-09-03 23:28:29,931:INFO:User: SuperDepot Team
+2023-09-03 23:28:33,691:INFO:User läd Seite Live Status
+2023-09-03 23:29:20,185:INFO:App gestartet
+2023-09-03 23:29:21,123:INFO:Authentifizierungsstatus: True
+2023-09-03 23:29:21,123:INFO:User: SuperDepot Team
+2023-09-03 23:29:24,819:INFO:User läd Seite Live Status
+2023-09-03 23:30:11,195:INFO:App gestartet
+2023-09-03 23:30:12,121:INFO:Authentifizierungsstatus: True
+2023-09-03 23:30:12,121:INFO:User: SuperDepot Team
+2023-09-03 23:30:15,623:INFO:User läd Seite Live Status
+2023-09-03 23:31:02,029:INFO:App gestartet
+2023-09-03 23:31:02,908:INFO:Authentifizierungsstatus: True
+2023-09-03 23:31:02,908:INFO:User: SuperDepot Team
+2023-09-03 23:31:06,750:INFO:User läd Seite Live Status
+2023-09-03 23:31:52,808:INFO:App gestartet
+2023-09-03 23:31:53,633:INFO:Authentifizierungsstatus: True
+2023-09-03 23:31:53,633:INFO:User: SuperDepot Team
+2023-09-03 23:31:57,246:INFO:User läd Seite Live Status
+2023-09-03 23:32:43,731:INFO:App gestartet
+2023-09-03 23:32:44,609:INFO:Authentifizierungsstatus: True
+2023-09-03 23:32:44,610:INFO:User: SuperDepot Team
+2023-09-03 23:32:48,278:INFO:User läd Seite Live Status
+2023-09-03 23:33:34,451:INFO:App gestartet
+2023-09-03 23:33:35,352:INFO:Authentifizierungsstatus: True
+2023-09-03 23:33:35,352:INFO:User: SuperDepot Team
+2023-09-03 23:33:38,900:INFO:User läd Seite Live Status
+2023-09-03 23:34:25,404:INFO:App gestartet
+2023-09-03 23:34:26,279:INFO:Authentifizierungsstatus: True
+2023-09-03 23:34:26,280:INFO:User: SuperDepot Team
+2023-09-03 23:34:29,810:INFO:User läd Seite Live Status
+2023-09-03 23:35:16,325:INFO:App gestartet
+2023-09-03 23:35:17,233:INFO:Authentifizierungsstatus: True
+2023-09-03 23:35:17,233:INFO:User: SuperDepot Team
+2023-09-03 23:35:21,960:INFO:User läd Seite Live Status
+2023-09-03 23:36:07,155:INFO:App gestartet
+2023-09-03 23:36:08,075:INFO:Authentifizierungsstatus: True
+2023-09-03 23:36:08,076:INFO:User: SuperDepot Team
+2023-09-03 23:36:11,611:INFO:User läd Seite Live Status
+2023-09-03 23:36:58,024:INFO:App gestartet
+2023-09-03 23:36:58,950:INFO:Authentifizierungsstatus: True
+2023-09-03 23:36:58,951:INFO:User: SuperDepot Team
+2023-09-03 23:37:02,574:INFO:User läd Seite Live Status
+2023-09-03 23:38:42,466:INFO:App gestartet
+2023-09-03 23:38:43,359:INFO:Authentifizierungsstatus: True
+2023-09-03 23:38:43,360:INFO:User: SuperDepot Team
+2023-09-03 23:38:46,966:INFO:User läd Seite Live Status
+2023-09-03 23:39:33,509:INFO:App gestartet
+2023-09-03 23:39:34,549:INFO:Authentifizierungsstatus: True
+2023-09-03 23:39:34,549:INFO:User: SuperDepot Team
+2023-09-03 23:39:38,215:INFO:User läd Seite Live Status
+2023-09-03 23:40:25,157:INFO:App gestartet
+2023-09-03 23:40:26,092:INFO:Authentifizierungsstatus: True
+2023-09-03 23:40:26,093:INFO:User: SuperDepot Team
+2023-09-03 23:40:29,564:INFO:User läd Seite Live Status
+2023-09-03 23:41:16,110:INFO:App gestartet
+2023-09-03 23:41:16,942:INFO:Authentifizierungsstatus: True
+2023-09-03 23:41:16,942:INFO:User: SuperDepot Team
+2023-09-03 23:41:20,659:INFO:User läd Seite Live Status
+2023-09-03 23:42:07,292:INFO:App gestartet
+2023-09-03 23:42:08,207:INFO:Authentifizierungsstatus: True
+2023-09-03 23:42:08,208:INFO:User: SuperDepot Team
+2023-09-03 23:42:11,795:INFO:User läd Seite Live Status
+2023-09-03 23:42:58,181:INFO:App gestartet
+2023-09-03 23:42:59,133:INFO:Authentifizierungsstatus: True
+2023-09-03 23:42:59,133:INFO:User: SuperDepot Team
+2023-09-03 23:43:02,703:INFO:User läd Seite Live Status
+2023-09-03 23:43:49,094:INFO:App gestartet
+2023-09-03 23:43:50,009:INFO:Authentifizierungsstatus: True
+2023-09-03 23:43:50,010:INFO:User: SuperDepot Team
+2023-09-03 23:43:53,610:INFO:User läd Seite Live Status
+2023-09-03 23:44:40,071:INFO:App gestartet
+2023-09-03 23:44:40,872:INFO:Authentifizierungsstatus: True
+2023-09-03 23:44:40,873:INFO:User: SuperDepot Team
+2023-09-03 23:44:44,366:INFO:User läd Seite Live Status
+2023-09-03 23:45:58,966:INFO:App gestartet
+2023-09-03 23:45:59,871:INFO:Authentifizierungsstatus: True
+2023-09-03 23:45:59,873:INFO:User: SuperDepot Team
+2023-09-03 23:46:03,458:INFO:User läd Seite Live Status
+2023-09-03 23:46:50,043:INFO:App gestartet
+2023-09-03 23:46:50,834:INFO:Authentifizierungsstatus: True
+2023-09-03 23:46:50,835:INFO:User: SuperDepot Team
+2023-09-03 23:46:54,622:INFO:User läd Seite Live Status
+2023-09-03 23:47:40,779:INFO:App gestartet
+2023-09-03 23:47:41,763:INFO:Authentifizierungsstatus: True
+2023-09-03 23:47:41,763:INFO:User: SuperDepot Team
+2023-09-03 23:47:45,426:INFO:User läd Seite Live Status
+2023-09-03 23:48:31,763:INFO:App gestartet
+2023-09-03 23:48:32,615:INFO:Authentifizierungsstatus: True
+2023-09-03 23:48:32,616:INFO:User: SuperDepot Team
+2023-09-03 23:48:36,341:INFO:User läd Seite Live Status
+2023-09-03 23:49:23,314:INFO:App gestartet
+2023-09-03 23:49:24,237:INFO:Authentifizierungsstatus: True
+2023-09-03 23:49:24,237:INFO:User: SuperDepot Team
+2023-09-03 23:49:27,867:INFO:User läd Seite Live Status
+2023-09-03 23:50:14,340:INFO:App gestartet
+2023-09-03 23:50:15,214:INFO:Authentifizierungsstatus: True
+2023-09-03 23:50:15,215:INFO:User: SuperDepot Team
+2023-09-03 23:50:18,740:INFO:User läd Seite Live Status
+2023-09-03 23:51:05,099:INFO:App gestartet
+2023-09-03 23:51:05,910:INFO:Authentifizierungsstatus: True
+2023-09-03 23:51:05,910:INFO:User: SuperDepot Team
+2023-09-03 23:51:09,538:INFO:User läd Seite Live Status
+2023-09-03 23:51:55,859:INFO:App gestartet
+2023-09-03 23:51:56,833:INFO:Authentifizierungsstatus: True
+2023-09-03 23:51:56,834:INFO:User: SuperDepot Team
+2023-09-03 23:52:00,366:INFO:User läd Seite Live Status
+2023-09-03 23:52:46,638:INFO:App gestartet
+2023-09-03 23:52:47,492:INFO:Authentifizierungsstatus: True
+2023-09-03 23:52:47,493:INFO:User: SuperDepot Team
+2023-09-03 23:52:51,131:INFO:User läd Seite Live Status
+2023-09-04 00:10:02,782:INFO:App gestartet
+2023-09-04 00:10:03,851:INFO:Authentifizierungsstatus: True
+2023-09-04 00:10:03,851:INFO:User: SuperDepot Team
+2023-09-04 00:10:07,708:INFO:User läd Seite Live Status
+2023-09-04 00:10:53,605:INFO:App gestartet
+2023-09-04 00:10:54,576:INFO:Authentifizierungsstatus: True
+2023-09-04 00:10:54,576:INFO:User: SuperDepot Team
+2023-09-04 00:10:58,332:INFO:User läd Seite Live Status
+2023-09-04 00:11:44,522:INFO:App gestartet
+2023-09-04 00:11:45,425:INFO:Authentifizierungsstatus: True
+2023-09-04 00:11:45,426:INFO:User: SuperDepot Team
+2023-09-04 00:11:48,977:INFO:User läd Seite Live Status
+2023-09-04 00:12:35,353:INFO:App gestartet
+2023-09-04 00:12:36,267:INFO:Authentifizierungsstatus: True
+2023-09-04 00:12:36,268:INFO:User: SuperDepot Team
+2023-09-04 00:12:39,863:INFO:User läd Seite Live Status
+2023-09-04 00:13:26,421:INFO:App gestartet
+2023-09-04 00:13:27,293:INFO:Authentifizierungsstatus: True
+2023-09-04 00:13:27,294:INFO:User: SuperDepot Team
+2023-09-04 00:13:30,826:INFO:User läd Seite Live Status
+2023-09-04 00:14:26,387:INFO:App gestartet
+2023-09-04 00:14:27,231:INFO:Authentifizierungsstatus: True
+2023-09-04 00:14:27,232:INFO:User: SuperDepot Team
+2023-09-04 00:14:30,773:INFO:User läd Seite Live Status
+2023-09-04 00:15:17,526:INFO:App gestartet
+2023-09-04 00:15:18,502:INFO:Authentifizierungsstatus: True
+2023-09-04 00:15:18,502:INFO:User: SuperDepot Team
+2023-09-04 00:15:23,165:INFO:User läd Seite Live Status
+2023-09-04 00:16:08,655:INFO:App gestartet
+2023-09-04 00:16:09,554:INFO:Authentifizierungsstatus: True
+2023-09-04 00:16:09,554:INFO:User: SuperDepot Team
+2023-09-04 00:16:13,129:INFO:User läd Seite Live Status
+2023-09-04 00:16:59,645:INFO:App gestartet
+2023-09-04 00:17:00,579:INFO:Authentifizierungsstatus: True
+2023-09-04 00:17:00,579:INFO:User: SuperDepot Team
+2023-09-04 00:17:04,257:INFO:User läd Seite Live Status
+2023-09-04 00:17:50,644:INFO:App gestartet
+2023-09-04 00:17:51,499:INFO:Authentifizierungsstatus: True
+2023-09-04 00:17:51,499:INFO:User: SuperDepot Team
+2023-09-04 00:17:55,243:INFO:User läd Seite Live Status
+2023-09-04 00:18:41,362:INFO:App gestartet
+2023-09-04 00:18:42,230:INFO:Authentifizierungsstatus: True
+2023-09-04 00:18:42,231:INFO:User: SuperDepot Team
+2023-09-04 00:18:45,797:INFO:User läd Seite Live Status
+2023-09-04 00:19:32,100:INFO:App gestartet
+2023-09-04 00:19:32,951:INFO:Authentifizierungsstatus: True
+2023-09-04 00:19:32,951:INFO:User: SuperDepot Team
+2023-09-04 00:19:36,855:INFO:User läd Seite Live Status
+2023-09-04 00:20:23,207:INFO:App gestartet
+2023-09-04 00:20:24,044:INFO:Authentifizierungsstatus: True
+2023-09-04 00:20:24,045:INFO:User: SuperDepot Team
+2023-09-04 00:20:27,752:INFO:User läd Seite Live Status
+2023-09-04 00:21:14,137:INFO:App gestartet
+2023-09-04 00:21:14,959:INFO:Authentifizierungsstatus: True
+2023-09-04 00:21:14,959:INFO:User: SuperDepot Team
+2023-09-04 00:21:18,649:INFO:User läd Seite Live Status
+2023-09-04 00:22:04,822:INFO:App gestartet
+2023-09-04 00:22:06,000:INFO:Authentifizierungsstatus: True
+2023-09-04 00:22:06,000:INFO:User: SuperDepot Team
+2023-09-04 00:22:09,749:INFO:User läd Seite Live Status
+2023-09-04 00:22:56,252:INFO:App gestartet
+2023-09-04 00:22:57,130:INFO:Authentifizierungsstatus: True
+2023-09-04 00:22:57,130:INFO:User: SuperDepot Team
+2023-09-04 00:23:00,673:INFO:User läd Seite Live Status
+2023-09-04 00:23:47,233:INFO:App gestartet
+2023-09-04 00:23:48,018:INFO:Authentifizierungsstatus: True
+2023-09-04 00:23:48,019:INFO:User: SuperDepot Team
+2023-09-04 00:23:51,511:INFO:User läd Seite Live Status
+2023-09-04 00:24:38,059:INFO:App gestartet
+2023-09-04 00:24:38,940:INFO:Authentifizierungsstatus: True
+2023-09-04 00:24:38,940:INFO:User: SuperDepot Team
+2023-09-04 00:24:42,503:INFO:User läd Seite Live Status
+2023-09-04 00:40:28,906:INFO:App gestartet
+2023-09-04 00:40:29,813:INFO:Authentifizierungsstatus: True
+2023-09-04 00:40:29,814:INFO:User: SuperDepot Team
+2023-09-04 00:40:33,465:INFO:User läd Seite Live Status
+2023-09-04 00:41:20,087:INFO:App gestartet
+2023-09-04 00:41:21,031:INFO:Authentifizierungsstatus: True
+2023-09-04 00:41:21,032:INFO:User: SuperDepot Team
+2023-09-04 00:41:24,498:INFO:User läd Seite Live Status
+2023-09-04 00:42:11,024:INFO:App gestartet
+2023-09-04 00:42:11,888:INFO:Authentifizierungsstatus: True
+2023-09-04 00:42:11,889:INFO:User: SuperDepot Team
+2023-09-04 00:42:15,677:INFO:User läd Seite Live Status
+2023-09-04 00:43:01,911:INFO:App gestartet
+2023-09-04 00:43:02,875:INFO:Authentifizierungsstatus: True
+2023-09-04 00:43:02,875:INFO:User: SuperDepot Team
+2023-09-04 00:43:06,430:INFO:User läd Seite Live Status
+2023-09-04 00:43:52,983:INFO:App gestartet
+2023-09-04 00:43:53,755:INFO:Authentifizierungsstatus: True
+2023-09-04 00:43:53,756:INFO:User: SuperDepot Team
+2023-09-04 00:43:57,249:INFO:User läd Seite Live Status
+2023-09-04 00:44:43,657:INFO:App gestartet
+2023-09-04 00:44:44,529:INFO:Authentifizierungsstatus: True
+2023-09-04 00:44:44,530:INFO:User: SuperDepot Team
+2023-09-04 00:44:48,120:INFO:User läd Seite Live Status
+2023-09-04 01:01:11,321:INFO:App gestartet
+2023-09-04 01:01:12,272:INFO:Authentifizierungsstatus: True
+2023-09-04 01:01:12,272:INFO:User: SuperDepot Team
+2023-09-04 01:01:15,816:INFO:User läd Seite Live Status
+2023-09-04 01:02:02,548:INFO:App gestartet
+2023-09-04 01:02:03,384:INFO:Authentifizierungsstatus: True
+2023-09-04 01:02:03,385:INFO:User: SuperDepot Team
+2023-09-04 01:02:07,315:INFO:User läd Seite Live Status
+2023-09-04 01:02:53,449:INFO:App gestartet
+2023-09-04 01:02:54,361:INFO:Authentifizierungsstatus: True
+2023-09-04 01:02:54,361:INFO:User: SuperDepot Team
+2023-09-04 01:02:58,011:INFO:User läd Seite Live Status
+2023-09-04 01:03:44,393:INFO:App gestartet
+2023-09-04 01:03:45,230:INFO:Authentifizierungsstatus: True
+2023-09-04 01:03:45,230:INFO:User: SuperDepot Team
+2023-09-04 01:03:48,940:INFO:User läd Seite Live Status
+2023-09-04 01:04:35,356:INFO:App gestartet
+2023-09-04 01:04:36,132:INFO:Authentifizierungsstatus: True
+2023-09-04 01:04:36,132:INFO:User: SuperDepot Team
+2023-09-04 01:04:39,763:INFO:User läd Seite Live Status
+2023-09-04 01:21:26,738:INFO:App gestartet
+2023-09-04 01:21:27,690:INFO:Authentifizierungsstatus: True
+2023-09-04 01:21:27,691:INFO:User: SuperDepot Team
+2023-09-04 01:21:35,281:INFO:User läd Seite Live Status
+2023-09-04 01:22:33,697:INFO:App gestartet
+2023-09-04 01:22:34,691:INFO:Authentifizierungsstatus: True
+2023-09-04 01:22:34,692:INFO:User: SuperDepot Team
+2023-09-04 01:22:38,273:INFO:User läd Seite Live Status
+2023-09-04 01:23:24,767:INFO:App gestartet
+2023-09-04 01:23:25,696:INFO:Authentifizierungsstatus: True
+2023-09-04 01:23:25,697:INFO:User: SuperDepot Team
+2023-09-04 01:23:29,236:INFO:User läd Seite Live Status
+2023-09-04 01:24:15,667:INFO:App gestartet
+2023-09-04 01:24:16,604:INFO:Authentifizierungsstatus: True
+2023-09-04 01:24:16,604:INFO:User: SuperDepot Team
+2023-09-04 01:24:20,131:INFO:User läd Seite Live Status
+2023-09-04 01:25:06,612:INFO:App gestartet
+2023-09-04 01:25:07,509:INFO:Authentifizierungsstatus: True
+2023-09-04 01:25:07,509:INFO:User: SuperDepot Team
+2023-09-04 01:25:11,133:INFO:User läd Seite Live Status
+2023-09-04 01:25:57,598:INFO:App gestartet
+2023-09-04 01:25:58,451:INFO:Authentifizierungsstatus: True
+2023-09-04 01:25:58,452:INFO:User: SuperDepot Team
+2023-09-04 01:26:01,959:INFO:User läd Seite Live Status
+2023-09-04 01:26:49,653:INFO:App gestartet
+2023-09-04 01:26:50,465:INFO:Authentifizierungsstatus: True
+2023-09-04 01:26:50,465:INFO:User: SuperDepot Team
+2023-09-04 01:26:54,267:INFO:User läd Seite Live Status
+2023-09-04 01:27:40,642:INFO:App gestartet
+2023-09-04 01:27:41,588:INFO:Authentifizierungsstatus: True
+2023-09-04 01:27:41,589:INFO:User: SuperDepot Team
+2023-09-04 01:27:45,202:INFO:User läd Seite Live Status
+2023-09-04 01:28:31,772:INFO:App gestartet
+2023-09-04 01:28:32,727:INFO:Authentifizierungsstatus: True
+2023-09-04 01:28:32,727:INFO:User: SuperDepot Team
+2023-09-04 01:28:36,608:INFO:User läd Seite Live Status
+2023-09-04 01:29:22,783:INFO:App gestartet
+2023-09-04 01:29:23,712:INFO:Authentifizierungsstatus: True
+2023-09-04 01:29:23,714:INFO:User: SuperDepot Team
+2023-09-04 01:29:27,208:INFO:User läd Seite Live Status
+2023-09-04 01:30:13,709:INFO:App gestartet
+2023-09-04 01:30:14,564:INFO:Authentifizierungsstatus: True
+2023-09-04 01:30:14,565:INFO:User: SuperDepot Team
+2023-09-04 01:30:18,247:INFO:User läd Seite Live Status
+2023-09-04 01:31:05,135:INFO:App gestartet
+2023-09-04 01:31:05,970:INFO:Authentifizierungsstatus: True
+2023-09-04 01:31:05,970:INFO:User: SuperDepot Team
+2023-09-04 01:31:09,616:INFO:User läd Seite Live Status
+2023-09-04 01:31:56,814:INFO:App gestartet
+2023-09-04 01:31:57,735:INFO:Authentifizierungsstatus: True
+2023-09-04 01:31:57,736:INFO:User: SuperDepot Team
+2023-09-04 01:32:01,339:INFO:User läd Seite Live Status
+2023-09-04 01:32:47,829:INFO:App gestartet
+2023-09-04 01:32:48,724:INFO:Authentifizierungsstatus: True
+2023-09-04 01:32:48,725:INFO:User: SuperDepot Team
+2023-09-04 01:32:52,864:INFO:User läd Seite Live Status
+2023-09-04 01:33:38,763:INFO:App gestartet
+2023-09-04 01:33:39,664:INFO:Authentifizierungsstatus: True
+2023-09-04 01:33:39,665:INFO:User: SuperDepot Team
+2023-09-04 01:33:43,313:INFO:User läd Seite Live Status
+2023-09-04 01:49:32,887:INFO:App gestartet
+2023-09-04 01:49:33,799:INFO:Authentifizierungsstatus: True
+2023-09-04 01:49:33,800:INFO:User: SuperDepot Team
+2023-09-04 01:49:37,435:INFO:User läd Seite Live Status
+2023-09-04 01:50:23,736:INFO:App gestartet
+2023-09-04 01:50:24,721:INFO:Authentifizierungsstatus: True
+2023-09-04 01:50:24,721:INFO:User: SuperDepot Team
+2023-09-04 01:50:28,298:INFO:User läd Seite Live Status
+2023-09-04 01:51:14,549:INFO:App gestartet
+2023-09-04 01:51:15,486:INFO:Authentifizierungsstatus: True
+2023-09-04 01:51:15,487:INFO:User: SuperDepot Team
+2023-09-04 01:51:19,014:INFO:User läd Seite Live Status
+2023-09-04 01:52:05,693:INFO:App gestartet
+2023-09-04 01:52:06,513:INFO:Authentifizierungsstatus: True
+2023-09-04 01:52:06,513:INFO:User: SuperDepot Team
+2023-09-04 01:52:10,270:INFO:User läd Seite Live Status
+2023-09-04 01:52:56,262:INFO:App gestartet
+2023-09-04 01:52:57,164:INFO:Authentifizierungsstatus: True
+2023-09-04 01:52:57,164:INFO:User: SuperDepot Team
+2023-09-04 01:53:00,910:INFO:User läd Seite Live Status
+2023-09-04 02:08:53,896:INFO:App gestartet
+2023-09-04 02:08:54,844:INFO:Authentifizierungsstatus: True
+2023-09-04 02:08:54,845:INFO:User: SuperDepot Team
+2023-09-04 02:08:58,648:INFO:User läd Seite Live Status
+2023-09-04 02:09:45,016:INFO:App gestartet
+2023-09-04 02:09:45,925:INFO:Authentifizierungsstatus: True
+2023-09-04 02:09:45,926:INFO:User: SuperDepot Team
+2023-09-04 02:09:49,556:INFO:User läd Seite Live Status
+2023-09-04 02:10:36,314:INFO:App gestartet
+2023-09-04 02:10:37,136:INFO:Authentifizierungsstatus: True
+2023-09-04 02:10:37,137:INFO:User: SuperDepot Team
+2023-09-04 02:10:40,573:INFO:User läd Seite Live Status
+2023-09-04 02:11:26,859:INFO:App gestartet
+2023-09-04 02:11:27,757:INFO:Authentifizierungsstatus: True
+2023-09-04 02:11:27,758:INFO:User: SuperDepot Team
+2023-09-04 02:11:31,431:INFO:User läd Seite Live Status
+2023-09-04 02:12:17,620:INFO:App gestartet
+2023-09-04 02:12:18,390:INFO:Authentifizierungsstatus: True
+2023-09-04 02:12:18,390:INFO:User: SuperDepot Team
+2023-09-04 02:12:21,965:INFO:User läd Seite Live Status
+2023-09-04 02:13:08,042:INFO:App gestartet
+2023-09-04 02:13:08,844:INFO:Authentifizierungsstatus: True
+2023-09-04 02:13:08,844:INFO:User: SuperDepot Team
+2023-09-04 02:13:12,470:INFO:User läd Seite Live Status
+2023-09-04 02:13:58,995:INFO:App gestartet
+2023-09-04 02:13:59,904:INFO:Authentifizierungsstatus: True
+2023-09-04 02:13:59,905:INFO:User: SuperDepot Team
+2023-09-04 02:14:03,663:INFO:User läd Seite Live Status
+2023-09-04 02:14:50,098:INFO:App gestartet
+2023-09-04 02:14:51,021:INFO:Authentifizierungsstatus: True
+2023-09-04 02:14:51,022:INFO:User: SuperDepot Team
+2023-09-04 02:14:55,428:INFO:User läd Seite Live Status
+2023-09-04 02:15:40,735:INFO:App gestartet
+2023-09-04 02:15:41,588:INFO:Authentifizierungsstatus: True
+2023-09-04 02:15:41,588:INFO:User: SuperDepot Team
+2023-09-04 02:15:45,250:INFO:User läd Seite Live Status
+2023-09-04 02:16:31,536:INFO:App gestartet
+2023-09-04 02:16:32,348:INFO:Authentifizierungsstatus: True
+2023-09-04 02:16:32,349:INFO:User: SuperDepot Team
+2023-09-04 02:16:36,050:INFO:User läd Seite Live Status
+2023-09-04 02:17:22,297:INFO:App gestartet
+2023-09-04 02:17:23,137:INFO:Authentifizierungsstatus: True
+2023-09-04 02:17:23,137:INFO:User: SuperDepot Team
+2023-09-04 02:17:26,771:INFO:User läd Seite Live Status
+2023-09-04 02:18:13,042:INFO:App gestartet
+2023-09-04 02:18:13,933:INFO:Authentifizierungsstatus: True
+2023-09-04 02:18:13,934:INFO:User: SuperDepot Team
+2023-09-04 02:18:17,563:INFO:User läd Seite Live Status
+2023-09-04 02:19:04,024:INFO:App gestartet
+2023-09-04 02:19:04,838:INFO:Authentifizierungsstatus: True
+2023-09-04 02:19:04,838:INFO:User: SuperDepot Team
+2023-09-04 02:19:08,799:INFO:User läd Seite Live Status
+2023-09-04 02:19:55,150:INFO:App gestartet
+2023-09-04 02:19:55,927:INFO:Authentifizierungsstatus: True
+2023-09-04 02:19:55,927:INFO:User: SuperDepot Team
+2023-09-04 02:19:59,392:INFO:User läd Seite Live Status
+2023-09-04 02:20:45,686:INFO:App gestartet
+2023-09-04 02:20:46,699:INFO:Authentifizierungsstatus: True
+2023-09-04 02:20:46,700:INFO:User: SuperDepot Team
+2023-09-04 02:20:50,326:INFO:User läd Seite Live Status
+2023-09-04 02:21:36,970:INFO:App gestartet
+2023-09-04 02:21:37,897:INFO:Authentifizierungsstatus: True
+2023-09-04 02:21:37,898:INFO:User: SuperDepot Team
+2023-09-04 02:21:41,501:INFO:User läd Seite Live Status
+2023-09-04 02:22:27,956:INFO:App gestartet
+2023-09-04 02:22:28,764:INFO:Authentifizierungsstatus: True
+2023-09-04 02:22:28,766:INFO:User: SuperDepot Team
+2023-09-04 02:22:32,314:INFO:User läd Seite Live Status
+2023-09-04 02:23:18,712:INFO:App gestartet
+2023-09-04 02:23:19,581:INFO:Authentifizierungsstatus: True
+2023-09-04 02:23:19,582:INFO:User: SuperDepot Team
+2023-09-04 02:23:23,231:INFO:User läd Seite Live Status
+2023-09-04 02:24:09,439:INFO:App gestartet
+2023-09-04 02:24:10,266:INFO:Authentifizierungsstatus: True
+2023-09-04 02:24:10,267:INFO:User: SuperDepot Team
+2023-09-04 02:24:13,815:INFO:User läd Seite Live Status
+2023-09-04 02:25:00,567:INFO:App gestartet
+2023-09-04 02:25:01,455:INFO:Authentifizierungsstatus: True
+2023-09-04 02:25:01,455:INFO:User: SuperDepot Team
+2023-09-04 02:25:05,089:INFO:User läd Seite Live Status
+2023-09-04 02:25:51,268:INFO:App gestartet
+2023-09-04 02:25:52,136:INFO:Authentifizierungsstatus: True
+2023-09-04 02:25:52,137:INFO:User: SuperDepot Team
+2023-09-04 02:25:55,566:INFO:User läd Seite Live Status
+2023-09-04 02:26:42,082:INFO:App gestartet
+2023-09-04 02:26:42,942:INFO:Authentifizierungsstatus: True
+2023-09-04 02:26:42,943:INFO:User: SuperDepot Team
+2023-09-04 02:26:46,591:INFO:User läd Seite Live Status
+2023-09-04 02:27:33,148:INFO:App gestartet
+2023-09-04 02:27:34,098:INFO:Authentifizierungsstatus: True
+2023-09-04 02:27:34,099:INFO:User: SuperDepot Team
+2023-09-04 02:27:40,496:INFO:User läd Seite Live Status
+2023-09-04 02:28:24,176:INFO:App gestartet
+2023-09-04 02:28:25,256:INFO:Authentifizierungsstatus: True
+2023-09-04 02:28:25,257:INFO:User: SuperDepot Team
+2023-09-04 02:28:28,919:INFO:User läd Seite Live Status
+2023-09-04 02:29:15,146:INFO:App gestartet
+2023-09-04 02:29:16,037:INFO:Authentifizierungsstatus: True
+2023-09-04 02:29:16,037:INFO:User: SuperDepot Team
+2023-09-04 02:29:19,589:INFO:User läd Seite Live Status
+2023-09-04 02:30:06,399:INFO:App gestartet
+2023-09-04 02:30:07,315:INFO:Authentifizierungsstatus: True
+2023-09-04 02:30:07,316:INFO:User: SuperDepot Team
+2023-09-04 02:30:10,922:INFO:User läd Seite Live Status
+2023-09-04 02:30:57,202:INFO:App gestartet
+2023-09-04 02:30:58,089:INFO:Authentifizierungsstatus: True
+2023-09-04 02:30:58,089:INFO:User: SuperDepot Team
+2023-09-04 02:31:01,876:INFO:User läd Seite Live Status
+2023-09-04 02:31:48,287:INFO:App gestartet
+2023-09-04 02:31:49,176:INFO:Authentifizierungsstatus: True
+2023-09-04 02:31:49,176:INFO:User: SuperDepot Team
+2023-09-04 02:31:52,767:INFO:User läd Seite Live Status
+2023-09-04 02:32:39,187:INFO:App gestartet
+2023-09-04 02:32:40,056:INFO:Authentifizierungsstatus: True
+2023-09-04 02:32:40,056:INFO:User: SuperDepot Team
+2023-09-04 02:32:43,751:INFO:User läd Seite Live Status
+2023-09-04 02:33:29,911:INFO:App gestartet
+2023-09-04 02:33:30,783:INFO:Authentifizierungsstatus: True
+2023-09-04 02:33:30,783:INFO:User: SuperDepot Team
+2023-09-04 02:33:34,647:INFO:User läd Seite Live Status
+2023-09-04 02:34:20,709:INFO:App gestartet
+2023-09-04 02:34:21,516:INFO:Authentifizierungsstatus: True
+2023-09-04 02:34:21,516:INFO:User: SuperDepot Team
+2023-09-04 02:34:25,151:INFO:User läd Seite Live Status
+2023-09-04 02:35:11,426:INFO:App gestartet
+2023-09-04 02:35:12,267:INFO:Authentifizierungsstatus: True
+2023-09-04 02:35:12,268:INFO:User: SuperDepot Team
+2023-09-04 02:35:15,896:INFO:User läd Seite Live Status
+2023-09-04 02:36:02,236:INFO:App gestartet
+2023-09-04 02:36:03,157:INFO:Authentifizierungsstatus: True
+2023-09-04 02:36:03,158:INFO:User: SuperDepot Team
+2023-09-04 02:36:06,787:INFO:User läd Seite Live Status
+2023-09-04 02:36:53,447:INFO:App gestartet
+2023-09-04 02:36:54,390:INFO:Authentifizierungsstatus: True
+2023-09-04 02:36:54,391:INFO:User: SuperDepot Team
+2023-09-04 02:36:57,997:INFO:User läd Seite Live Status
+2023-09-04 02:37:44,459:INFO:App gestartet
+2023-09-04 02:37:45,222:INFO:Authentifizierungsstatus: True
+2023-09-04 02:37:45,223:INFO:User: SuperDepot Team
+2023-09-04 02:37:48,726:INFO:User läd Seite Live Status
+2023-09-04 02:38:35,032:INFO:App gestartet
+2023-09-04 02:38:36,010:INFO:Authentifizierungsstatus: True
+2023-09-04 02:38:36,010:INFO:User: SuperDepot Team
+2023-09-04 02:38:39,487:INFO:User läd Seite Live Status
+2023-09-04 02:54:51,231:INFO:App gestartet
+2023-09-04 02:54:53,313:INFO:Authentifizierungsstatus: True
+2023-09-04 02:54:53,314:INFO:User: SuperDepot Team
+2023-09-04 02:54:56,973:INFO:User läd Seite Live Status
+2023-09-04 02:55:43,022:INFO:App gestartet
+2023-09-04 02:55:44,008:INFO:Authentifizierungsstatus: True
+2023-09-04 02:55:44,009:INFO:User: SuperDepot Team
+2023-09-04 02:55:47,684:INFO:User läd Seite Live Status
+2023-09-04 02:56:34,149:INFO:App gestartet
+2023-09-04 02:56:35,118:INFO:Authentifizierungsstatus: True
+2023-09-04 02:56:35,119:INFO:User: SuperDepot Team
+2023-09-04 02:56:38,886:INFO:User läd Seite Live Status
+2023-09-04 02:57:25,416:INFO:App gestartet
+2023-09-04 02:57:26,271:INFO:Authentifizierungsstatus: True
+2023-09-04 02:57:26,271:INFO:User: SuperDepot Team
+2023-09-04 02:57:29,863:INFO:User läd Seite Live Status
+2023-09-04 02:58:16,281:INFO:App gestartet
+2023-09-04 02:58:17,098:INFO:Authentifizierungsstatus: True
+2023-09-04 02:58:17,099:INFO:User: SuperDepot Team
+2023-09-04 02:58:20,779:INFO:User läd Seite Live Status
+2023-09-04 02:59:06,987:INFO:App gestartet
+2023-09-04 02:59:08,153:INFO:Authentifizierungsstatus: True
+2023-09-04 02:59:08,153:INFO:User: SuperDepot Team
+2023-09-04 02:59:11,999:INFO:User läd Seite Live Status
+2023-09-04 02:59:58,415:INFO:App gestartet
+2023-09-04 02:59:59,202:INFO:Authentifizierungsstatus: True
+2023-09-04 02:59:59,202:INFO:User: SuperDepot Team
+2023-09-04 03:00:02,886:INFO:User läd Seite Live Status
+2023-09-04 03:00:49,089:INFO:App gestartet
+2023-09-04 03:00:50,249:INFO:Authentifizierungsstatus: True
+2023-09-04 03:00:50,249:INFO:User: SuperDepot Team
+2023-09-04 03:00:53,807:INFO:User läd Seite Live Status
+2023-09-04 03:01:40,162:INFO:App gestartet
+2023-09-04 03:01:41,087:INFO:Authentifizierungsstatus: True
+2023-09-04 03:01:41,088:INFO:User: SuperDepot Team
+2023-09-04 03:01:44,818:INFO:User läd Seite Live Status
+2023-09-04 03:02:31,711:INFO:App gestartet
+2023-09-04 03:02:32,539:INFO:Authentifizierungsstatus: True
+2023-09-04 03:02:32,540:INFO:User: SuperDepot Team
+2023-09-04 03:02:36,196:INFO:User läd Seite Live Status
+2023-09-04 03:03:22,464:INFO:App gestartet
+2023-09-04 03:03:23,325:INFO:Authentifizierungsstatus: True
+2023-09-04 03:03:23,325:INFO:User: SuperDepot Team
+2023-09-04 03:03:27,326:INFO:User läd Seite Live Status
+2023-09-04 03:04:13,763:INFO:App gestartet
+2023-09-04 03:04:14,679:INFO:Authentifizierungsstatus: True
+2023-09-04 03:04:14,680:INFO:User: SuperDepot Team
+2023-09-04 03:04:18,289:INFO:User läd Seite Live Status
+2023-09-04 03:05:04,733:INFO:App gestartet
+2023-09-04 03:05:05,540:INFO:Authentifizierungsstatus: True
+2023-09-04 03:05:05,541:INFO:User: SuperDepot Team
+2023-09-04 03:05:09,271:INFO:User läd Seite Live Status
+2023-09-04 03:05:55,591:INFO:App gestartet
+2023-09-04 03:05:56,438:INFO:Authentifizierungsstatus: True
+2023-09-04 03:05:56,438:INFO:User: SuperDepot Team
+2023-09-04 03:05:59,986:INFO:User läd Seite Live Status
+2023-09-04 03:06:46,485:INFO:App gestartet
+2023-09-04 03:06:47,359:INFO:Authentifizierungsstatus: True
+2023-09-04 03:06:47,360:INFO:User: SuperDepot Team
+2023-09-04 03:06:50,916:INFO:User läd Seite Live Status
+2023-09-04 03:07:37,506:INFO:App gestartet
+2023-09-04 03:07:38,424:INFO:Authentifizierungsstatus: True
+2023-09-04 03:07:38,424:INFO:User: SuperDepot Team
+2023-09-04 03:07:42,175:INFO:User läd Seite Live Status
+2023-09-04 03:08:28,687:INFO:App gestartet
+2023-09-04 03:08:29,554:INFO:Authentifizierungsstatus: True
+2023-09-04 03:08:29,555:INFO:User: SuperDepot Team
+2023-09-04 03:08:33,152:INFO:User läd Seite Live Status
+2023-09-04 03:13:57,233:INFO:App gestartet
+2023-09-04 03:13:58,150:INFO:Authentifizierungsstatus: True
+2023-09-04 03:13:58,151:INFO:User: SuperDepot Team
+2023-09-04 03:14:01,699:INFO:User läd Seite Live Status
+2023-09-04 03:14:48,289:INFO:App gestartet
+2023-09-04 03:14:49,112:INFO:Authentifizierungsstatus: True
+2023-09-04 03:14:49,113:INFO:User: SuperDepot Team
+2023-09-04 03:14:52,517:INFO:User läd Seite Live Status
+2023-09-04 03:15:39,354:INFO:App gestartet
+2023-09-04 03:15:40,156:INFO:Authentifizierungsstatus: True
+2023-09-04 03:15:40,157:INFO:User: SuperDepot Team
+2023-09-04 03:15:43,604:INFO:User läd Seite Live Status
+2023-09-04 03:16:29,876:INFO:App gestartet
+2023-09-04 03:16:30,715:INFO:Authentifizierungsstatus: True
+2023-09-04 03:16:30,715:INFO:User: SuperDepot Team
+2023-09-04 03:16:34,277:INFO:User läd Seite Live Status
+2023-09-04 03:17:20,687:INFO:App gestartet
+2023-09-04 03:17:21,598:INFO:Authentifizierungsstatus: True
+2023-09-04 03:17:21,599:INFO:User: SuperDepot Team
+2023-09-04 03:17:25,729:INFO:User läd Seite Live Status
+2023-09-04 03:33:38,537:INFO:App gestartet
+2023-09-04 03:33:39,489:INFO:Authentifizierungsstatus: True
+2023-09-04 03:33:39,490:INFO:User: SuperDepot Team
+2023-09-04 03:33:43,073:INFO:User läd Seite Live Status
+2023-09-04 03:34:29,521:INFO:App gestartet
+2023-09-04 03:34:30,329:INFO:Authentifizierungsstatus: True
+2023-09-04 03:34:30,329:INFO:User: SuperDepot Team
+2023-09-04 03:34:33,976:INFO:User läd Seite Live Status
+2023-09-04 03:35:20,500:INFO:App gestartet
+2023-09-04 03:35:21,360:INFO:Authentifizierungsstatus: True
+2023-09-04 03:35:21,361:INFO:User: SuperDepot Team
+2023-09-04 03:35:24,906:INFO:User läd Seite Live Status
+2023-09-04 03:36:11,803:INFO:App gestartet
+2023-09-04 03:36:12,665:INFO:Authentifizierungsstatus: True
+2023-09-04 03:36:12,666:INFO:User: SuperDepot Team
+2023-09-04 03:36:19,355:INFO:User läd Seite Live Status
+2023-09-04 03:37:02,509:INFO:App gestartet
+2023-09-04 03:37:03,417:INFO:Authentifizierungsstatus: True
+2023-09-04 03:37:03,417:INFO:User: SuperDepot Team
+2023-09-04 03:37:07,042:INFO:User läd Seite Live Status
+2023-09-04 03:37:54,404:INFO:App gestartet
+2023-09-04 03:37:55,212:INFO:Authentifizierungsstatus: True
+2023-09-04 03:37:55,213:INFO:User: SuperDepot Team
+2023-09-04 03:37:58,827:INFO:User läd Seite Live Status
+2023-09-04 03:38:45,473:INFO:App gestartet
+2023-09-04 03:38:46,346:INFO:Authentifizierungsstatus: True
+2023-09-04 03:38:46,347:INFO:User: SuperDepot Team
+2023-09-04 03:38:49,991:INFO:User läd Seite Live Status
+2023-09-04 03:39:36,426:INFO:App gestartet
+2023-09-04 03:39:37,256:INFO:Authentifizierungsstatus: True
+2023-09-04 03:39:37,257:INFO:User: SuperDepot Team
+2023-09-04 03:39:40,749:INFO:User läd Seite Live Status
+2023-09-04 03:40:27,203:INFO:App gestartet
+2023-09-04 03:40:28,021:INFO:Authentifizierungsstatus: True
+2023-09-04 03:40:28,021:INFO:User: SuperDepot Team
+2023-09-04 03:40:31,592:INFO:User läd Seite Live Status
+2023-09-04 03:41:18,409:INFO:App gestartet
+2023-09-04 03:41:19,196:INFO:Authentifizierungsstatus: True
+2023-09-04 03:41:19,197:INFO:User: SuperDepot Team
+2023-09-04 03:41:23,039:INFO:User läd Seite Live Status
+2023-09-04 03:42:09,196:INFO:App gestartet
+2023-09-04 03:42:10,084:INFO:Authentifizierungsstatus: True
+2023-09-04 03:42:10,084:INFO:User: SuperDepot Team
+2023-09-04 03:42:13,804:INFO:User läd Seite Live Status
+2023-09-04 03:42:59,955:INFO:App gestartet
+2023-09-04 03:43:00,834:INFO:Authentifizierungsstatus: True
+2023-09-04 03:43:00,835:INFO:User: SuperDepot Team
+2023-09-04 03:43:04,528:INFO:User läd Seite Live Status
+2023-09-04 03:43:50,823:INFO:App gestartet
+2023-09-04 03:43:51,637:INFO:Authentifizierungsstatus: True
+2023-09-04 03:43:51,637:INFO:User: SuperDepot Team
+2023-09-04 03:43:55,268:INFO:User läd Seite Live Status
+2023-09-04 03:44:41,593:INFO:App gestartet
+2023-09-04 03:44:42,549:INFO:Authentifizierungsstatus: True
+2023-09-04 03:44:42,549:INFO:User: SuperDepot Team
+2023-09-04 03:44:46,210:INFO:User läd Seite Live Status
+2023-09-04 03:45:32,708:INFO:App gestartet
+2023-09-04 03:45:33,903:INFO:Authentifizierungsstatus: True
+2023-09-04 03:45:33,904:INFO:User: SuperDepot Team
+2023-09-04 03:45:37,575:INFO:User läd Seite Live Status
+2023-09-04 03:46:24,048:INFO:App gestartet
+2023-09-04 03:46:24,887:INFO:Authentifizierungsstatus: True
+2023-09-04 03:46:24,888:INFO:User: SuperDepot Team
+2023-09-04 03:46:28,432:INFO:User läd Seite Live Status
+2023-09-04 03:47:14,737:INFO:App gestartet
+2023-09-04 03:47:15,534:INFO:Authentifizierungsstatus: True
+2023-09-04 03:47:15,536:INFO:User: SuperDepot Team
+2023-09-04 03:47:19,247:INFO:User läd Seite Live Status
+2023-09-04 03:48:06,302:INFO:App gestartet
+2023-09-04 03:48:07,198:INFO:Authentifizierungsstatus: True
+2023-09-04 03:48:07,198:INFO:User: SuperDepot Team
+2023-09-04 03:48:11,840:INFO:User läd Seite Live Status
+2023-09-04 03:48:57,308:INFO:App gestartet
+2023-09-04 03:48:58,182:INFO:Authentifizierungsstatus: True
+2023-09-04 03:48:58,184:INFO:User: SuperDepot Team
+2023-09-04 03:49:01,938:INFO:User läd Seite Live Status
+2023-09-04 03:49:48,086:INFO:App gestartet
+2023-09-04 03:49:48,958:INFO:Authentifizierungsstatus: True
+2023-09-04 03:49:48,958:INFO:User: SuperDepot Team
+2023-09-04 03:49:52,600:INFO:User läd Seite Live Status
+2023-09-04 03:50:38,873:INFO:App gestartet
+2023-09-04 03:50:39,691:INFO:Authentifizierungsstatus: True
+2023-09-04 03:50:39,692:INFO:User: SuperDepot Team
+2023-09-04 03:50:43,330:INFO:User läd Seite Live Status
+2023-09-04 03:51:30,020:INFO:App gestartet
+2023-09-04 03:51:30,918:INFO:Authentifizierungsstatus: True
+2023-09-04 03:51:30,919:INFO:User: SuperDepot Team
+2023-09-04 03:51:34,562:INFO:User läd Seite Live Status
+2023-09-04 03:52:21,011:INFO:App gestartet
+2023-09-04 03:52:21,900:INFO:Authentifizierungsstatus: True
+2023-09-04 03:52:21,901:INFO:User: SuperDepot Team
+2023-09-04 03:52:25,522:INFO:User läd Seite Live Status
+2023-09-04 03:53:11,875:INFO:App gestartet
+2023-09-04 03:53:12,756:INFO:Authentifizierungsstatus: True
+2023-09-04 03:53:12,757:INFO:User: SuperDepot Team
+2023-09-04 03:53:16,383:INFO:User läd Seite Live Status
+2023-09-04 03:54:02,774:INFO:App gestartet
+2023-09-04 03:54:03,610:INFO:Authentifizierungsstatus: True
+2023-09-04 03:54:03,610:INFO:User: SuperDepot Team
+2023-09-04 03:54:07,257:INFO:User läd Seite Live Status
+2023-09-04 03:54:54,360:INFO:App gestartet
+2023-09-04 03:54:55,230:INFO:Authentifizierungsstatus: True
+2023-09-04 03:54:55,230:INFO:User: SuperDepot Team
+2023-09-04 03:54:59,050:INFO:User läd Seite Live Status
+2023-09-04 03:55:45,621:INFO:App gestartet
+2023-09-04 03:55:46,420:INFO:Authentifizierungsstatus: True
+2023-09-04 03:55:46,421:INFO:User: SuperDepot Team
+2023-09-04 03:55:50,096:INFO:User läd Seite Live Status
+2023-09-04 03:56:36,423:INFO:App gestartet
+2023-09-04 03:56:37,255:INFO:Authentifizierungsstatus: True
+2023-09-04 03:56:37,255:INFO:User: SuperDepot Team
+2023-09-04 03:56:40,925:INFO:User läd Seite Live Status
+2023-09-04 03:57:28,832:INFO:App gestartet
+2023-09-04 03:57:29,739:INFO:Authentifizierungsstatus: True
+2023-09-04 03:57:29,740:INFO:User: SuperDepot Team
+2023-09-04 03:57:33,283:INFO:User läd Seite Live Status
+2023-09-04 03:58:19,782:INFO:App gestartet
+2023-09-04 03:58:20,545:INFO:Authentifizierungsstatus: True
+2023-09-04 03:58:20,545:INFO:User: SuperDepot Team
+2023-09-04 03:58:24,202:INFO:User läd Seite Live Status
+2023-09-04 03:59:10,604:INFO:App gestartet
+2023-09-04 03:59:11,477:INFO:Authentifizierungsstatus: True
+2023-09-04 03:59:11,477:INFO:User: SuperDepot Team
+2023-09-04 03:59:15,048:INFO:User läd Seite Live Status
+2023-09-04 04:00:01,582:INFO:App gestartet
+2023-09-04 04:00:02,463:INFO:Authentifizierungsstatus: True
+2023-09-04 04:00:02,464:INFO:User: SuperDepot Team
+2023-09-04 04:00:06,874:INFO:User läd Seite Live Status
+2023-09-04 04:00:52,576:INFO:App gestartet
+2023-09-04 04:00:53,543:INFO:Authentifizierungsstatus: True
+2023-09-04 04:00:53,543:INFO:User: SuperDepot Team
+2023-09-04 04:00:57,177:INFO:User läd Seite Live Status
+2023-09-04 04:01:43,469:INFO:App gestartet
+2023-09-04 04:01:44,368:INFO:Authentifizierungsstatus: True
+2023-09-04 04:01:44,369:INFO:User: SuperDepot Team
+2023-09-04 04:01:48,099:INFO:User läd Seite Live Status
+2023-09-04 04:02:34,488:INFO:App gestartet
+2023-09-04 04:02:35,276:INFO:Authentifizierungsstatus: True
+2023-09-04 04:02:35,276:INFO:User: SuperDepot Team
+2023-09-04 04:02:39,121:INFO:User läd Seite Live Status
+2023-09-04 04:03:25,334:INFO:App gestartet
+2023-09-04 04:03:26,286:INFO:Authentifizierungsstatus: True
+2023-09-04 04:03:26,286:INFO:User: SuperDepot Team
+2023-09-04 04:03:29,989:INFO:User läd Seite Live Status
+2023-09-04 04:04:16,300:INFO:App gestartet
+2023-09-04 04:04:17,098:INFO:Authentifizierungsstatus: True
+2023-09-04 04:04:17,098:INFO:User: SuperDepot Team
+2023-09-04 04:04:20,823:INFO:User läd Seite Live Status
+2023-09-04 04:05:07,331:INFO:App gestartet
+2023-09-04 04:05:08,224:INFO:Authentifizierungsstatus: True
+2023-09-04 04:05:08,225:INFO:User: SuperDepot Team
+2023-09-04 04:05:11,946:INFO:User läd Seite Live Status
+2023-09-04 04:05:58,091:INFO:App gestartet
+2023-09-04 04:05:58,948:INFO:Authentifizierungsstatus: True
+2023-09-04 04:05:58,948:INFO:User: SuperDepot Team
+2023-09-04 04:06:02,636:INFO:User läd Seite Live Status
+2023-09-04 04:06:49,104:INFO:App gestartet
+2023-09-04 04:06:49,910:INFO:Authentifizierungsstatus: True
+2023-09-04 04:06:49,911:INFO:User: SuperDepot Team
+2023-09-04 04:06:55,167:INFO:User läd Seite Live Status
+2023-09-04 04:07:39,660:INFO:App gestartet
+2023-09-04 04:07:40,548:INFO:Authentifizierungsstatus: True
+2023-09-04 04:07:40,549:INFO:User: SuperDepot Team
+2023-09-04 04:07:44,061:INFO:User läd Seite Live Status
+2023-09-04 04:08:30,519:INFO:App gestartet
+2023-09-04 04:08:31,374:INFO:Authentifizierungsstatus: True
+2023-09-04 04:08:31,374:INFO:User: SuperDepot Team
+2023-09-04 04:08:35,279:INFO:User läd Seite Live Status
+2023-09-04 04:09:21,391:INFO:App gestartet
+2023-09-04 04:09:22,246:INFO:Authentifizierungsstatus: True
+2023-09-04 04:09:22,247:INFO:User: SuperDepot Team
+2023-09-04 04:09:25,808:INFO:User läd Seite Live Status
+2023-09-04 04:10:12,204:INFO:App gestartet
+2023-09-04 04:10:13,125:INFO:Authentifizierungsstatus: True
+2023-09-04 04:10:13,126:INFO:User: SuperDepot Team
+2023-09-04 04:10:16,717:INFO:User läd Seite Live Status
+2023-09-04 04:11:03,174:INFO:App gestartet
+2023-09-04 04:11:04,035:INFO:Authentifizierungsstatus: True
+2023-09-04 04:11:04,036:INFO:User: SuperDepot Team
+2023-09-04 04:11:07,621:INFO:User läd Seite Live Status
+2023-09-04 04:11:54,284:INFO:App gestartet
+2023-09-04 04:11:55,122:INFO:Authentifizierungsstatus: True
+2023-09-04 04:11:55,123:INFO:User: SuperDepot Team
+2023-09-04 04:11:58,772:INFO:User läd Seite Live Status
+2023-09-04 04:12:45,337:INFO:App gestartet
+2023-09-04 04:12:46,217:INFO:Authentifizierungsstatus: True
+2023-09-04 04:12:46,218:INFO:User: SuperDepot Team
+2023-09-04 04:12:49,809:INFO:User läd Seite Live Status
+2023-09-04 04:13:36,396:INFO:App gestartet
+2023-09-04 04:13:37,246:INFO:Authentifizierungsstatus: True
+2023-09-04 04:13:37,246:INFO:User: SuperDepot Team
+2023-09-04 04:13:40,725:INFO:User läd Seite Live Status
+2023-09-04 04:14:27,336:INFO:App gestartet
+2023-09-04 04:14:28,225:INFO:Authentifizierungsstatus: True
+2023-09-04 04:14:28,225:INFO:User: SuperDepot Team
+2023-09-04 04:14:32,022:INFO:User läd Seite Live Status
+2023-09-04 04:15:18,266:INFO:App gestartet
+2023-09-04 04:15:19,106:INFO:Authentifizierungsstatus: True
+2023-09-04 04:15:19,106:INFO:User: SuperDepot Team
+2023-09-04 04:15:22,706:INFO:User läd Seite Live Status
+2023-09-04 04:16:09,058:INFO:App gestartet
+2023-09-04 04:16:10,031:INFO:Authentifizierungsstatus: True
+2023-09-04 04:16:10,032:INFO:User: SuperDepot Team
+2023-09-04 04:16:13,728:INFO:User läd Seite Live Status
+2023-09-04 04:17:00,120:INFO:App gestartet
+2023-09-04 04:17:01,024:INFO:Authentifizierungsstatus: True
+2023-09-04 04:17:01,024:INFO:User: SuperDepot Team
+2023-09-04 04:17:04,670:INFO:User läd Seite Live Status
+2023-09-04 04:17:51,103:INFO:App gestartet
+2023-09-04 04:17:51,925:INFO:Authentifizierungsstatus: True
+2023-09-04 04:17:51,926:INFO:User: SuperDepot Team
+2023-09-04 04:17:55,496:INFO:User läd Seite Live Status
+2023-09-04 04:18:41,836:INFO:App gestartet
+2023-09-04 04:18:42,750:INFO:Authentifizierungsstatus: True
+2023-09-04 04:18:42,751:INFO:User: SuperDepot Team
+2023-09-04 04:18:46,380:INFO:User läd Seite Live Status
+2023-09-04 04:19:33,047:INFO:App gestartet
+2023-09-04 04:19:33,929:INFO:Authentifizierungsstatus: True
+2023-09-04 04:19:33,929:INFO:User: SuperDepot Team
+2023-09-04 04:19:37,570:INFO:User läd Seite Live Status
+2023-09-04 04:20:23,800:INFO:App gestartet
+2023-09-04 04:20:24,681:INFO:Authentifizierungsstatus: True
+2023-09-04 04:20:24,682:INFO:User: SuperDepot Team
+2023-09-04 04:20:29,261:INFO:User läd Seite Live Status
+2023-09-04 04:21:14,501:INFO:App gestartet
+2023-09-04 04:21:15,372:INFO:Authentifizierungsstatus: True
+2023-09-04 04:21:15,372:INFO:User: SuperDepot Team
+2023-09-04 04:21:19,048:INFO:User läd Seite Live Status
+2023-09-04 04:22:06,774:INFO:App gestartet
+2023-09-04 04:22:07,709:INFO:Authentifizierungsstatus: True
+2023-09-04 04:22:07,709:INFO:User: SuperDepot Team
+2023-09-04 04:22:11,261:INFO:User läd Seite Live Status
+2023-09-04 04:22:57,609:INFO:App gestartet
+2023-09-04 04:22:58,564:INFO:Authentifizierungsstatus: True
+2023-09-04 04:22:58,565:INFO:User: SuperDepot Team
+2023-09-04 04:23:02,239:INFO:User läd Seite Live Status
+2023-09-04 04:23:48,405:INFO:App gestartet
+2023-09-04 04:23:49,252:INFO:Authentifizierungsstatus: True
+2023-09-04 04:23:49,253:INFO:User: SuperDepot Team
+2023-09-04 04:23:52,834:INFO:User läd Seite Live Status
+2023-09-04 04:24:39,238:INFO:App gestartet
+2023-09-04 04:24:40,026:INFO:Authentifizierungsstatus: True
+2023-09-04 04:24:40,026:INFO:User: SuperDepot Team
+2023-09-04 04:24:43,519:INFO:User läd Seite Live Status
+2023-09-04 04:25:29,808:INFO:App gestartet
+2023-09-04 04:25:30,667:INFO:Authentifizierungsstatus: True
+2023-09-04 04:25:30,667:INFO:User: SuperDepot Team
+2023-09-04 04:25:34,509:INFO:User läd Seite Live Status
+2023-09-04 04:26:20,849:INFO:App gestartet
+2023-09-04 04:26:21,745:INFO:Authentifizierungsstatus: True
+2023-09-04 04:26:21,745:INFO:User: SuperDepot Team
+2023-09-04 04:26:25,292:INFO:User läd Seite Live Status
+2023-09-04 04:27:11,606:INFO:App gestartet
+2023-09-04 04:27:12,601:INFO:Authentifizierungsstatus: True
+2023-09-04 04:27:12,602:INFO:User: SuperDepot Team
+2023-09-04 04:27:16,360:INFO:User läd Seite Live Status
+2023-09-04 04:28:02,479:INFO:App gestartet
+2023-09-04 04:28:03,441:INFO:Authentifizierungsstatus: True
+2023-09-04 04:28:03,442:INFO:User: SuperDepot Team
+2023-09-04 04:28:07,081:INFO:User läd Seite Live Status
+2023-09-04 04:28:53,312:INFO:App gestartet
+2023-09-04 04:28:54,133:INFO:Authentifizierungsstatus: True
+2023-09-04 04:28:54,133:INFO:User: SuperDepot Team
+2023-09-04 04:28:57,796:INFO:User läd Seite Live Status
+2023-09-04 04:29:44,255:INFO:App gestartet
+2023-09-04 04:29:45,195:INFO:Authentifizierungsstatus: True
+2023-09-04 04:29:45,195:INFO:User: SuperDepot Team
+2023-09-04 04:29:48,752:INFO:User läd Seite Live Status
+2023-09-04 04:30:35,632:INFO:App gestartet
+2023-09-04 04:30:36,531:INFO:Authentifizierungsstatus: True
+2023-09-04 04:30:36,532:INFO:User: SuperDepot Team
+2023-09-04 04:30:40,230:INFO:User läd Seite Live Status
+2023-09-04 04:31:26,639:INFO:App gestartet
+2023-09-04 04:31:27,629:INFO:Authentifizierungsstatus: True
+2023-09-04 04:31:27,629:INFO:User: SuperDepot Team
+2023-09-04 04:31:31,458:INFO:User läd Seite Live Status
+2023-09-04 04:32:17,587:INFO:App gestartet
+2023-09-04 04:32:18,428:INFO:Authentifizierungsstatus: True
+2023-09-04 04:32:18,429:INFO:User: SuperDepot Team
+2023-09-04 04:32:21,893:INFO:User läd Seite Live Status
+2023-09-04 04:33:08,384:INFO:App gestartet
+2023-09-04 04:33:09,310:INFO:Authentifizierungsstatus: True
+2023-09-04 04:33:09,311:INFO:User: SuperDepot Team
+2023-09-04 04:33:13,079:INFO:User läd Seite Live Status
+2023-09-04 04:33:59,297:INFO:App gestartet
+2023-09-04 04:34:00,153:INFO:Authentifizierungsstatus: True
+2023-09-04 04:34:00,153:INFO:User: SuperDepot Team
+2023-09-04 04:34:03,737:INFO:User läd Seite Live Status
+2023-09-04 04:34:50,184:INFO:App gestartet
+2023-09-04 04:34:51,060:INFO:Authentifizierungsstatus: True
+2023-09-04 04:34:51,060:INFO:User: SuperDepot Team
+2023-09-04 04:34:54,727:INFO:User läd Seite Live Status
+2023-09-04 04:35:40,966:INFO:App gestartet
+2023-09-04 04:35:41,839:INFO:Authentifizierungsstatus: True
+2023-09-04 04:35:41,840:INFO:User: SuperDepot Team
+2023-09-04 04:35:45,413:INFO:User läd Seite Live Status
+2023-09-04 04:36:31,723:INFO:App gestartet
+2023-09-04 04:36:32,659:INFO:Authentifizierungsstatus: True
+2023-09-04 04:36:32,659:INFO:User: SuperDepot Team
+2023-09-04 04:36:36,411:INFO:User läd Seite Live Status
+2023-09-04 04:37:22,611:INFO:App gestartet
+2023-09-04 04:37:23,499:INFO:Authentifizierungsstatus: True
+2023-09-04 04:37:23,499:INFO:User: SuperDepot Team
+2023-09-04 04:37:27,043:INFO:User läd Seite Live Status
+2023-09-04 04:38:13,524:INFO:App gestartet
+2023-09-04 04:38:14,298:INFO:Authentifizierungsstatus: True
+2023-09-04 04:38:14,298:INFO:User: SuperDepot Team
+2023-09-04 04:38:17,847:INFO:User läd Seite Live Status
+2023-09-04 04:39:04,045:INFO:App gestartet
+2023-09-04 04:39:04,929:INFO:Authentifizierungsstatus: True
+2023-09-04 04:39:04,930:INFO:User: SuperDepot Team
+2023-09-04 04:39:08,542:INFO:User läd Seite Live Status
+2023-09-04 04:39:54,925:INFO:App gestartet
+2023-09-04 04:39:55,820:INFO:Authentifizierungsstatus: True
+2023-09-04 04:39:55,820:INFO:User: SuperDepot Team
+2023-09-04 04:39:59,387:INFO:User läd Seite Live Status
+2023-09-04 04:40:45,644:INFO:App gestartet
+2023-09-04 04:40:46,481:INFO:Authentifizierungsstatus: True
+2023-09-04 04:40:46,481:INFO:User: SuperDepot Team
+2023-09-04 04:40:50,175:INFO:User läd Seite Live Status
+2023-09-04 04:41:36,803:INFO:App gestartet
+2023-09-04 04:41:37,691:INFO:Authentifizierungsstatus: True
+2023-09-04 04:41:37,691:INFO:User: SuperDepot Team
+2023-09-04 04:41:44,216:INFO:User läd Seite Live Status
+2023-09-04 04:42:30,587:INFO:App gestartet
+2023-09-04 04:42:31,354:INFO:Authentifizierungsstatus: True
+2023-09-04 04:42:31,354:INFO:User: SuperDepot Team
+2023-09-04 04:42:35,052:INFO:User läd Seite Live Status
+2023-09-04 04:43:21,398:INFO:App gestartet
+2023-09-04 04:43:22,253:INFO:Authentifizierungsstatus: True
+2023-09-04 04:43:22,254:INFO:User: SuperDepot Team
+2023-09-04 04:43:25,943:INFO:User läd Seite Live Status
+2023-09-04 05:00:19,544:INFO:App gestartet
+2023-09-04 05:00:20,456:INFO:Authentifizierungsstatus: True
+2023-09-04 05:00:20,458:INFO:User: SuperDepot Team
+2023-09-04 05:00:24,208:INFO:User läd Seite Live Status
+2023-09-04 05:01:10,360:INFO:App gestartet
+2023-09-04 05:01:11,208:INFO:Authentifizierungsstatus: True
+2023-09-04 05:01:11,208:INFO:User: SuperDepot Team
+2023-09-04 05:01:14,953:INFO:User läd Seite Live Status
+2023-09-04 05:02:01,544:INFO:App gestartet
+2023-09-04 05:02:02,375:INFO:Authentifizierungsstatus: True
+2023-09-04 05:02:02,375:INFO:User: SuperDepot Team
+2023-09-04 05:02:06,881:INFO:User läd Seite Live Status
+2023-09-04 05:18:35,316:INFO:App gestartet
+2023-09-04 05:18:36,276:INFO:Authentifizierungsstatus: True
+2023-09-04 05:18:36,276:INFO:User: SuperDepot Team
+2023-09-04 05:18:39,972:INFO:User läd Seite Live Status
+2023-09-04 05:19:26,539:INFO:App gestartet
+2023-09-04 05:19:27,400:INFO:Authentifizierungsstatus: True
+2023-09-04 05:19:27,400:INFO:User: SuperDepot Team
+2023-09-04 05:19:31,324:INFO:User läd Seite Live Status
+2023-09-04 05:20:17,317:INFO:App gestartet
+2023-09-04 05:20:18,168:INFO:Authentifizierungsstatus: True
+2023-09-04 05:20:18,169:INFO:User: SuperDepot Team
+2023-09-04 05:20:21,704:INFO:User läd Seite Live Status
+2023-09-04 05:36:36,300:INFO:App gestartet
+2023-09-04 05:36:37,177:INFO:Authentifizierungsstatus: True
+2023-09-04 05:36:37,178:INFO:User: SuperDepot Team
+2023-09-04 05:36:40,790:INFO:User läd Seite Live Status
+2023-09-04 05:37:27,202:INFO:App gestartet
+2023-09-04 05:37:28,037:INFO:Authentifizierungsstatus: True
+2023-09-04 05:37:28,038:INFO:User: SuperDepot Team
+2023-09-04 05:37:31,621:INFO:User läd Seite Live Status
+2023-09-04 05:38:18,192:INFO:App gestartet
+2023-09-04 05:38:19,072:INFO:Authentifizierungsstatus: True
+2023-09-04 05:38:19,072:INFO:User: SuperDepot Team
+2023-09-04 05:38:22,739:INFO:User läd Seite Live Status
+2023-09-04 05:39:08,963:INFO:App gestartet
+2023-09-04 05:39:09,858:INFO:Authentifizierungsstatus: True
+2023-09-04 05:39:09,858:INFO:User: SuperDepot Team
+2023-09-04 05:39:13,551:INFO:User läd Seite Live Status
+2023-09-04 05:39:59,926:INFO:App gestartet
+2023-09-04 05:40:00,769:INFO:Authentifizierungsstatus: True
+2023-09-04 05:40:00,770:INFO:User: SuperDepot Team
+2023-09-04 05:40:04,327:INFO:User läd Seite Live Status
+2023-09-04 05:55:59,909:INFO:App gestartet
+2023-09-04 05:56:00,816:INFO:Authentifizierungsstatus: True
+2023-09-04 05:56:00,816:INFO:User: SuperDepot Team
+2023-09-04 05:56:04,337:INFO:User läd Seite Live Status
+2023-09-04 05:56:50,653:INFO:App gestartet
+2023-09-04 05:56:51,504:INFO:Authentifizierungsstatus: True
+2023-09-04 05:56:51,504:INFO:User: SuperDepot Team
+2023-09-04 05:56:55,067:INFO:User läd Seite Live Status
+2023-09-04 05:57:41,698:INFO:App gestartet
+2023-09-04 05:57:42,559:INFO:Authentifizierungsstatus: True
+2023-09-04 05:57:42,559:INFO:User: SuperDepot Team
+2023-09-04 05:57:46,141:INFO:User läd Seite Live Status
+2023-09-04 05:58:33,416:INFO:App gestartet
+2023-09-04 05:58:34,425:INFO:Authentifizierungsstatus: True
+2023-09-04 05:58:34,426:INFO:User: SuperDepot Team
+2023-09-04 05:58:37,894:INFO:User läd Seite Live Status
+2023-09-04 05:59:24,343:INFO:App gestartet
+2023-09-04 05:59:25,177:INFO:Authentifizierungsstatus: True
+2023-09-04 05:59:25,177:INFO:User: SuperDepot Team
+2023-09-04 05:59:28,841:INFO:User läd Seite Live Status
+2023-09-04 06:00:15,463:INFO:App gestartet
+2023-09-04 06:00:16,348:INFO:Authentifizierungsstatus: True
+2023-09-04 06:00:16,349:INFO:User: SuperDepot Team
+2023-09-04 06:00:19,990:INFO:User läd Seite Live Status
+2023-09-04 06:01:06,083:INFO:App gestartet
+2023-09-04 06:01:06,941:INFO:Authentifizierungsstatus: True
+2023-09-04 06:01:06,941:INFO:User: SuperDepot Team
+2023-09-04 06:01:10,712:INFO:User läd Seite Live Status
+2023-09-04 06:01:56,958:INFO:App gestartet
+2023-09-04 06:01:57,874:INFO:Authentifizierungsstatus: True
+2023-09-04 06:01:57,875:INFO:User: SuperDepot Team
+2023-09-04 06:02:01,449:INFO:User läd Seite Live Status
+2023-09-04 06:02:47,745:INFO:App gestartet
+2023-09-04 06:02:48,654:INFO:Authentifizierungsstatus: True
+2023-09-04 06:02:48,654:INFO:User: SuperDepot Team
+2023-09-04 06:02:52,305:INFO:User läd Seite Live Status
+2023-09-04 06:03:38,739:INFO:App gestartet
+2023-09-04 06:03:39,617:INFO:Authentifizierungsstatus: True
+2023-09-04 06:03:39,618:INFO:User: SuperDepot Team
+2023-09-04 06:03:43,185:INFO:User läd Seite Live Status
+2023-09-04 06:04:29,536:INFO:App gestartet
+2023-09-04 06:04:30,406:INFO:Authentifizierungsstatus: True
+2023-09-04 06:04:30,407:INFO:User: SuperDepot Team
+2023-09-04 06:04:34,180:INFO:User läd Seite Live Status
+2023-09-04 06:20:41,529:INFO:App gestartet
+2023-09-04 06:20:42,427:INFO:Authentifizierungsstatus: True
+2023-09-04 06:20:42,427:INFO:User: SuperDepot Team
+2023-09-04 06:20:46,087:INFO:User läd Seite Live Status
+2023-09-04 06:21:32,370:INFO:App gestartet
+2023-09-04 06:21:33,291:INFO:Authentifizierungsstatus: True
+2023-09-04 06:21:33,292:INFO:User: SuperDepot Team
+2023-09-04 06:21:36,998:INFO:User läd Seite Live Status
+2023-09-04 06:22:23,977:INFO:App gestartet
+2023-09-04 06:22:24,874:INFO:Authentifizierungsstatus: True
+2023-09-04 06:22:24,874:INFO:User: SuperDepot Team
+2023-09-04 06:22:28,346:INFO:User läd Seite Live Status
+2023-09-04 06:23:14,622:INFO:App gestartet
+2023-09-04 06:23:15,438:INFO:Authentifizierungsstatus: True
+2023-09-04 06:23:15,438:INFO:User: SuperDepot Team
+2023-09-04 06:23:19,133:INFO:User läd Seite Live Status
+2023-09-04 06:24:05,990:INFO:App gestartet
+2023-09-04 06:24:06,836:INFO:Authentifizierungsstatus: True
+2023-09-04 06:24:06,837:INFO:User: SuperDepot Team
+2023-09-04 06:24:10,353:INFO:User läd Seite Live Status
+2023-09-04 06:24:57,094:INFO:App gestartet
+2023-09-04 06:24:57,924:INFO:Authentifizierungsstatus: True
+2023-09-04 06:24:57,924:INFO:User: SuperDepot Team
+2023-09-04 06:25:01,920:INFO:User läd Seite Live Status
+2023-09-04 06:25:48,407:INFO:App gestartet
+2023-09-04 06:25:49,221:INFO:Authentifizierungsstatus: True
+2023-09-04 06:25:49,222:INFO:User: SuperDepot Team
+2023-09-04 06:25:52,745:INFO:User läd Seite Live Status
+2023-09-04 06:26:39,231:INFO:App gestartet
+2023-09-04 06:26:40,065:INFO:Authentifizierungsstatus: True
+2023-09-04 06:26:40,065:INFO:User: SuperDepot Team
+2023-09-04 06:26:43,551:INFO:User läd Seite Live Status
+2023-09-04 06:27:29,891:INFO:App gestartet
+2023-09-04 06:27:30,732:INFO:Authentifizierungsstatus: True
+2023-09-04 06:27:30,733:INFO:User: SuperDepot Team
+2023-09-04 06:27:34,878:INFO:User läd Seite Live Status
+2023-09-04 06:28:21,175:INFO:App gestartet
+2023-09-04 06:28:22,041:INFO:Authentifizierungsstatus: True
+2023-09-04 06:28:22,042:INFO:User: SuperDepot Team
+2023-09-04 06:28:25,668:INFO:User läd Seite Live Status
+2023-09-04 06:29:12,118:INFO:App gestartet
+2023-09-04 06:29:13,022:INFO:Authentifizierungsstatus: True
+2023-09-04 06:29:13,023:INFO:User: SuperDepot Team
+2023-09-04 06:29:16,793:INFO:User läd Seite Live Status
+2023-09-04 06:30:03,268:INFO:App gestartet
+2023-09-04 06:30:04,120:INFO:Authentifizierungsstatus: True
+2023-09-04 06:30:04,120:INFO:User: SuperDepot Team
+2023-09-04 06:30:07,758:INFO:User läd Seite Live Status
+2023-09-04 06:30:55,219:INFO:App gestartet
+2023-09-04 06:30:56,028:INFO:Authentifizierungsstatus: True
+2023-09-04 06:30:56,028:INFO:User: SuperDepot Team
+2023-09-04 06:30:59,554:INFO:User läd Seite Live Status
+2023-09-04 06:31:45,627:INFO:App gestartet
+2023-09-04 06:31:46,452:INFO:Authentifizierungsstatus: True
+2023-09-04 06:31:46,453:INFO:User: SuperDepot Team
+2023-09-04 06:31:50,119:INFO:User läd Seite Live Status
+2023-09-04 06:32:36,365:INFO:App gestartet
+2023-09-04 06:32:37,215:INFO:Authentifizierungsstatus: True
+2023-09-04 06:32:37,216:INFO:User: SuperDepot Team
+2023-09-04 06:32:40,881:INFO:User läd Seite Live Status
+2023-09-04 06:33:27,166:INFO:App gestartet
+2023-09-04 06:33:28,099:INFO:Authentifizierungsstatus: True
+2023-09-04 06:33:28,100:INFO:User: SuperDepot Team
+2023-09-04 06:42:10,755:INFO:User läd Seite Live Status
+2023-09-04 06:42:23,336:INFO:App gestartet
+2023-09-04 06:42:24,148:INFO:Authentifizierungsstatus: True
+2023-09-04 06:42:24,149:INFO:User: SuperDepot Team
+2023-09-04 06:42:27,855:INFO:User läd Seite Live Status
+2023-09-04 06:43:14,036:INFO:App gestartet
+2023-09-04 06:43:14,993:INFO:Authentifizierungsstatus: True
+2023-09-04 06:43:14,994:INFO:User: SuperDepot Team
+2023-09-04 06:43:18,567:INFO:User läd Seite Live Status
+2023-09-04 06:44:05,046:INFO:App gestartet
+2023-09-04 06:44:05,958:INFO:Authentifizierungsstatus: True
+2023-09-04 06:44:05,959:INFO:User: SuperDepot Team
+2023-09-04 06:44:09,459:INFO:User läd Seite Live Status
+2023-09-04 06:44:55,937:INFO:App gestartet
+2023-09-04 06:44:56,813:INFO:Authentifizierungsstatus: True
+2023-09-04 06:44:56,814:INFO:User: SuperDepot Team
+2023-09-04 06:45:00,520:INFO:User läd Seite Live Status
+2023-09-04 06:45:46,823:INFO:App gestartet
+2023-09-04 06:45:47,713:INFO:Authentifizierungsstatus: True
+2023-09-04 06:45:47,714:INFO:User: SuperDepot Team
+2023-09-04 06:45:51,387:INFO:User läd Seite Live Status
+2023-09-04 06:46:38,011:INFO:App gestartet
+2023-09-04 06:46:38,873:INFO:Authentifizierungsstatus: True
+2023-09-04 06:46:38,874:INFO:User: SuperDepot Team
+2023-09-04 06:46:42,402:INFO:User läd Seite Live Status
+2023-09-04 06:47:29,554:INFO:App gestartet
+2023-09-04 06:47:30,437:INFO:Authentifizierungsstatus: True
+2023-09-04 06:47:30,437:INFO:User: SuperDepot Team
+2023-09-04 06:47:34,123:INFO:User läd Seite Live Status
+2023-09-04 06:55:41,198:INFO:App gestartet
+2023-09-04 06:55:42,068:INFO:Authentifizierungsstatus: True
+2023-09-04 06:55:42,068:INFO:User: SuperDepot Team
+2023-09-04 06:55:45,849:INFO:User läd Seite Live Status
+2023-09-04 06:56:32,202:INFO:App gestartet
+2023-09-04 06:56:33,053:INFO:Authentifizierungsstatus: True
+2023-09-04 06:56:33,053:INFO:User: SuperDepot Team
+2023-09-04 06:56:36,921:INFO:User läd Seite Live Status
+2023-09-04 06:57:23,263:INFO:App gestartet
+2023-09-04 06:57:24,082:INFO:Authentifizierungsstatus: True
+2023-09-04 06:57:24,082:INFO:User: SuperDepot Team
+2023-09-04 06:57:27,548:INFO:User läd Seite Live Status
+2023-09-04 06:58:14,084:INFO:App gestartet
+2023-09-04 06:58:14,945:INFO:Authentifizierungsstatus: True
+2023-09-04 06:58:14,945:INFO:User: SuperDepot Team
+2023-09-04 06:58:18,500:INFO:User läd Seite Live Status
+2023-09-04 06:59:04,753:INFO:App gestartet
+2023-09-04 06:59:05,586:INFO:Authentifizierungsstatus: True
+2023-09-04 06:59:05,587:INFO:User: SuperDepot Team
+2023-09-04 06:59:09,199:INFO:User läd Seite Live Status
+2023-09-04 06:59:55,437:INFO:App gestartet
+2023-09-04 06:59:56,266:INFO:Authentifizierungsstatus: True
+2023-09-04 06:59:56,266:INFO:User: SuperDepot Team
+2023-09-04 07:00:01,012:INFO:User läd Seite Live Status
+2023-09-04 07:00:46,536:INFO:App gestartet
+2023-09-04 07:00:47,419:INFO:Authentifizierungsstatus: True
+2023-09-04 07:00:47,419:INFO:User: SuperDepot Team
+2023-09-04 07:00:51,237:INFO:User läd Seite Live Status
+2023-09-04 07:01:37,192:INFO:App gestartet
+2023-09-04 07:01:38,186:INFO:Authentifizierungsstatus: True
+2023-09-04 07:01:38,187:INFO:User: SuperDepot Team
+2023-09-04 07:01:41,916:INFO:User läd Seite Live Status
+2023-09-04 07:02:28,195:INFO:App gestartet
+2023-09-04 07:02:29,029:INFO:Authentifizierungsstatus: True
+2023-09-04 07:02:29,030:INFO:User: SuperDepot Team
+2023-09-04 07:02:32,696:INFO:User läd Seite Live Status
+2023-09-04 07:03:18,995:INFO:App gestartet
+2023-09-04 07:03:19,780:INFO:Authentifizierungsstatus: True
+2023-09-04 07:03:19,781:INFO:User: SuperDepot Team
+2023-09-04 07:03:23,386:INFO:User läd Seite Live Status
+2023-09-04 07:04:56,265:INFO:App gestartet
+2023-09-04 07:04:57,141:INFO:Authentifizierungsstatus: True
+2023-09-04 07:04:57,142:INFO:User: SuperDepot Team
+2023-09-04 07:05:06,915:INFO:User läd Seite Live Status
+2023-09-04 07:05:50,117:INFO:App gestartet
+2023-09-04 07:05:51,062:INFO:Authentifizierungsstatus: True
+2023-09-04 07:05:51,063:INFO:User: SuperDepot Team
+2023-09-04 07:05:54,748:INFO:User läd Seite Live Status
+2023-09-04 07:06:40,960:INFO:App gestartet
+2023-09-04 07:06:44,872:INFO:Authentifizierungsstatus: True
+2023-09-04 07:06:44,872:INFO:User: SuperDepot Team
+2023-09-04 07:06:48,934:INFO:User läd Seite Live Status
+2023-09-04 07:07:36,466:INFO:App gestartet
+2023-09-04 07:07:37,357:INFO:Authentifizierungsstatus: True
+2023-09-04 07:07:37,357:INFO:User: SuperDepot Team
+2023-09-04 07:07:40,877:INFO:User läd Seite Live Status
+2023-09-04 07:08:27,369:INFO:App gestartet
+2023-09-04 07:08:28,241:INFO:Authentifizierungsstatus: True
+2023-09-04 07:08:28,242:INFO:User: SuperDepot Team
+2023-09-04 07:08:31,924:INFO:User läd Seite Live Status
+2023-09-04 07:09:18,899:INFO:App gestartet
+2023-09-04 07:09:19,733:INFO:Authentifizierungsstatus: True
+2023-09-04 07:09:19,734:INFO:User: SuperDepot Team
+2023-09-04 07:09:23,386:INFO:User läd Seite Live Status
+2023-09-04 07:10:09,641:INFO:App gestartet
+2023-09-04 07:10:10,564:INFO:Authentifizierungsstatus: True
+2023-09-04 07:10:10,564:INFO:User: SuperDepot Team
+2023-09-04 07:10:14,222:INFO:User läd Seite Live Status
+2023-09-04 07:11:00,486:INFO:App gestartet
+2023-09-04 07:11:01,315:INFO:Authentifizierungsstatus: True
+2023-09-04 07:11:01,316:INFO:User: SuperDepot Team
+2023-09-04 07:11:04,937:INFO:User läd Seite Live Status
+2023-09-04 07:11:51,107:INFO:App gestartet
+2023-09-04 07:11:51,970:INFO:Authentifizierungsstatus: True
+2023-09-04 07:11:51,971:INFO:User: SuperDepot Team
+2023-09-04 07:11:55,546:INFO:User läd Seite Live Status
+2023-09-04 07:12:41,971:INFO:App gestartet
+2023-09-04 07:12:42,779:INFO:Authentifizierungsstatus: True
+2023-09-04 07:12:42,780:INFO:User: SuperDepot Team
+2023-09-04 07:12:46,310:INFO:User läd Seite Live Status
+2023-09-04 07:13:32,542:INFO:App gestartet
+2023-09-04 07:13:33,475:INFO:Authentifizierungsstatus: True
+2023-09-04 07:13:33,476:INFO:User: SuperDepot Team
+2023-09-04 07:13:37,099:INFO:User läd Seite Live Status
+2023-09-04 07:14:23,476:INFO:App gestartet
+2023-09-04 07:14:24,303:INFO:Authentifizierungsstatus: True
+2023-09-04 07:14:24,304:INFO:User: SuperDepot Team
+2023-09-04 07:14:28,187:INFO:User läd Seite Live Status
+2023-09-04 07:15:14,217:INFO:App gestartet
+2023-09-04 07:15:15,061:INFO:Authentifizierungsstatus: True
+2023-09-04 07:15:15,061:INFO:User: SuperDepot Team
+2023-09-04 07:15:18,796:INFO:User läd Seite Live Status
+2023-09-04 07:32:51,293:INFO:App gestartet
+2023-09-04 07:32:52,185:INFO:Authentifizierungsstatus: True
+2023-09-04 07:32:52,186:INFO:User: SuperDepot Team
+2023-09-04 07:32:55,908:INFO:User läd Seite Live Status
+2023-09-04 07:33:42,082:INFO:App gestartet
+2023-09-04 07:33:43,007:INFO:Authentifizierungsstatus: True
+2023-09-04 07:33:43,008:INFO:User: SuperDepot Team
+2023-09-04 07:33:46,689:INFO:User läd Seite Live Status
+2023-09-04 07:34:32,992:INFO:App gestartet
+2023-09-04 07:34:33,877:INFO:Authentifizierungsstatus: True
+2023-09-04 07:34:33,878:INFO:User: SuperDepot Team
+2023-09-04 07:34:37,471:INFO:User läd Seite Live Status
+2023-09-04 07:35:24,008:INFO:App gestartet
+2023-09-04 07:35:24,835:INFO:Authentifizierungsstatus: True
+2023-09-04 07:35:24,836:INFO:User: SuperDepot Team
+2023-09-04 07:35:28,434:INFO:User läd Seite Live Status
+2023-09-04 07:36:14,834:INFO:App gestartet
+2023-09-04 07:36:15,735:INFO:Authentifizierungsstatus: True
+2023-09-04 07:36:15,736:INFO:User: SuperDepot Team
+2023-09-04 07:36:19,393:INFO:User läd Seite Live Status
+2023-09-04 07:37:05,829:INFO:App gestartet
+2023-09-04 07:37:06,684:INFO:Authentifizierungsstatus: True
+2023-09-04 07:37:06,684:INFO:User: SuperDepot Team
+2023-09-04 07:37:10,335:INFO:User läd Seite Live Status
+2023-09-04 07:37:56,577:INFO:App gestartet
+2023-09-04 07:37:57,430:INFO:Authentifizierungsstatus: True
+2023-09-04 07:37:57,430:INFO:User: SuperDepot Team
+2023-09-04 07:38:01,011:INFO:User läd Seite Live Status
+2023-09-04 07:38:47,458:INFO:App gestartet
+2023-09-04 07:38:48,296:INFO:Authentifizierungsstatus: True
+2023-09-04 07:38:48,296:INFO:User: SuperDepot Team
+2023-09-04 07:38:51,830:INFO:User läd Seite Live Status
+2023-09-04 07:39:38,103:INFO:App gestartet
+2023-09-04 07:39:38,914:INFO:Authentifizierungsstatus: True
+2023-09-04 07:39:38,914:INFO:User: SuperDepot Team
+2023-09-04 07:39:42,576:INFO:User läd Seite Live Status
+2023-09-04 07:40:28,949:INFO:App gestartet
+2023-09-04 07:40:29,779:INFO:Authentifizierungsstatus: True
+2023-09-04 07:40:29,779:INFO:User: SuperDepot Team
+2023-09-04 07:40:33,433:INFO:User läd Seite Live Status
+2023-09-04 07:42:43,589:INFO:App gestartet
+2023-09-04 07:42:44,492:INFO:Authentifizierungsstatus: True
+2023-09-04 07:42:44,493:INFO:User: SuperDepot Team
+2023-09-04 07:42:48,058:INFO:User läd Seite Live Status
+2023-09-04 07:43:34,315:INFO:App gestartet
+2023-09-04 07:43:35,114:INFO:Authentifizierungsstatus: True
+2023-09-04 07:43:35,115:INFO:User: SuperDepot Team
+2023-09-04 07:43:38,817:INFO:User läd Seite Live Status
+2023-09-04 07:44:25,154:INFO:App gestartet
+2023-09-04 07:44:26,036:INFO:Authentifizierungsstatus: True
+2023-09-04 07:44:26,036:INFO:User: SuperDepot Team
+2023-09-04 07:44:29,603:INFO:User läd Seite Live Status
+2023-09-04 07:45:45,892:INFO:App gestartet
+2023-09-04 07:45:46,843:INFO:Authentifizierungsstatus: True
+2023-09-04 07:45:46,844:INFO:User: SuperDepot Team
+2023-09-04 07:45:50,640:INFO:User läd Seite Live Status
+2023-09-04 07:47:28,393:INFO:App gestartet
+2023-09-04 08:37:37,499:INFO:App gestartet
+2023-09-04 08:37:38,453:INFO:Authentifizierungsstatus: None
+2023-09-04 08:37:39,203:INFO:App gestartet
+2023-09-04 08:37:40,022:INFO:Authentifizierungsstatus: True
+2023-09-04 08:37:40,022:INFO:User: SuperDepot Team
+2023-09-04 08:37:43,567:INFO:User läd Seite Live Status
+2023-09-04 08:38:32,135:INFO:App gestartet
+2023-09-04 08:38:33,090:INFO:Authentifizierungsstatus: True
+2023-09-04 08:38:33,092:INFO:User: SuperDepot Team
+2023-09-04 08:38:36,494:INFO:User läd Seite Live Status
+2023-09-04 08:39:22,581:INFO:App gestartet
+2023-09-04 08:39:23,381:INFO:Authentifizierungsstatus: True
+2023-09-04 08:39:23,381:INFO:User: SuperDepot Team
+2023-09-04 08:39:26,963:INFO:User läd Seite Live Status
+2023-09-04 08:40:12,876:INFO:App gestartet
+2023-09-04 08:40:13,738:INFO:Authentifizierungsstatus: True
+2023-09-04 08:40:13,739:INFO:User: SuperDepot Team
+2023-09-04 08:40:17,314:INFO:User läd Seite Live Status
+2023-09-04 08:41:03,274:INFO:App gestartet
+2023-09-04 08:41:04,129:INFO:Authentifizierungsstatus: True
+2023-09-04 08:41:04,130:INFO:User: SuperDepot Team
+2023-09-04 08:41:07,585:INFO:User läd Seite Live Status
+2023-09-04 08:41:53,603:INFO:App gestartet
+2023-09-04 08:41:54,417:INFO:Authentifizierungsstatus: True
+2023-09-04 08:41:54,417:INFO:User: SuperDepot Team
+2023-09-04 08:41:57,926:INFO:User läd Seite Live Status
+2023-09-04 08:42:43,929:INFO:App gestartet
+2023-09-04 08:42:44,819:INFO:Authentifizierungsstatus: True
+2023-09-04 08:42:44,820:INFO:User: SuperDepot Team
+2023-09-04 08:42:48,277:INFO:User läd Seite Live Status
+2023-09-04 08:43:34,264:INFO:App gestartet
+2023-09-04 08:43:35,114:INFO:Authentifizierungsstatus: True
+2023-09-04 08:43:35,114:INFO:User: SuperDepot Team
+2023-09-04 08:43:38,583:INFO:User läd Seite Live Status
+2023-09-04 08:44:24,611:INFO:App gestartet
+2023-09-04 08:44:25,531:INFO:Authentifizierungsstatus: True
+2023-09-04 08:44:25,531:INFO:User: SuperDepot Team
+2023-09-04 08:44:29,140:INFO:User läd Seite Live Status
+2023-09-04 08:45:15,239:INFO:App gestartet
+2023-09-04 08:45:16,064:INFO:Authentifizierungsstatus: True
+2023-09-04 08:45:16,066:INFO:User: SuperDepot Team
+2023-09-04 08:45:19,596:INFO:User läd Seite Live Status
+2023-09-04 08:46:17,635:INFO:App gestartet
+2023-09-04 08:46:18,531:INFO:Authentifizierungsstatus: True
+2023-09-04 08:46:18,532:INFO:User: SuperDepot Team
+2023-09-04 08:46:21,929:INFO:User läd Seite Live Status
+2023-09-04 08:47:10,382:INFO:App gestartet
+2023-09-04 08:47:11,331:INFO:Authentifizierungsstatus: True
+2023-09-04 08:47:11,331:INFO:User: SuperDepot Team
+2023-09-04 08:47:14,807:INFO:User läd Seite Live Status
+2023-09-04 08:48:05,711:INFO:App gestartet
+2023-09-04 08:48:06,537:INFO:Authentifizierungsstatus: True
+2023-09-04 08:48:06,538:INFO:User: SuperDepot Team
+2023-09-04 08:48:09,927:INFO:User läd Seite Live Status
+2023-09-04 08:48:56,720:INFO:App gestartet
+2023-09-04 08:48:57,627:INFO:Authentifizierungsstatus: True
+2023-09-04 08:48:57,627:INFO:User: SuperDepot Team
+2023-09-04 08:49:01,257:INFO:User läd Seite Live Status
+2023-09-04 08:49:58,136:INFO:App gestartet
+2023-09-04 08:49:59,090:INFO:Authentifizierungsstatus: True
+2023-09-04 08:49:59,090:INFO:User: SuperDepot Team
+2023-09-04 08:50:03,285:INFO:User läd Seite Live Status
+2023-09-04 08:51:51,478:INFO:App gestartet
+2023-09-04 08:51:52,375:INFO:Authentifizierungsstatus: None
+2023-09-04 08:52:03,373:INFO:App gestartet
+2023-09-04 08:52:04,150:INFO:Authentifizierungsstatus: True
+2023-09-04 08:52:04,151:INFO:User: SuperDepot Team
+2023-09-04 08:52:07,489:INFO:User läd Seite Live Status
+2023-09-04 08:52:11,145:INFO:App gestartet
+2023-09-04 08:52:11,892:INFO:Authentifizierungsstatus: True
+2023-09-04 08:52:11,892:INFO:User: SuperDepot Team
+2023-09-04 08:52:12,650:INFO:App gestartet
+2023-09-04 08:52:13,346:INFO:Authentifizierungsstatus: None
+2023-09-04 08:52:13,466:INFO:App gestartet
+2023-09-04 08:52:14,151:INFO:Authentifizierungsstatus: None
+2023-09-04 15:37:40,717:INFO:App gestartet
+2023-09-04 15:37:52,613:INFO:App gestartet
+2023-09-04 15:37:53,549:INFO:Authentifizierungsstatus: None
+2023-09-04 15:37:54,145:INFO:App gestartet
+2023-09-04 15:37:54,958:INFO:Authentifizierungsstatus: None
+2023-09-04 15:38:03,688:INFO:App gestartet
+2023-09-04 15:38:04,792:INFO:Authentifizierungsstatus: True
+2023-09-04 15:38:04,792:INFO:User: SuperDepot Team
+2023-09-04 15:38:04,868:INFO:App gestartet
+2023-09-04 15:38:05,607:INFO:Authentifizierungsstatus: True
+2023-09-04 15:38:05,607:INFO:User: SuperDepot Team
+2023-09-04 15:38:05,641:INFO:App gestartet
+2023-09-04 15:38:06,304:INFO:Authentifizierungsstatus: True
+2023-09-04 15:38:06,304:INFO:User: SuperDepot Team
+2023-09-04 15:38:09,998:INFO:User läd Seite Live Status
+2023-09-04 15:38:10,518:INFO:App gestartet
+2023-09-04 15:38:10,736:INFO:App gestartet
+2023-09-04 15:38:11,489:INFO:Authentifizierungsstatus: True
+2023-09-04 15:38:11,489:INFO:User: SuperDepot Team
+2023-09-04 15:38:14,947:INFO:User läd Seite Live Status
+2023-09-04 15:38:21,875:INFO:App gestartet
+2023-09-04 15:38:22,797:INFO:Authentifizierungsstatus: True
+2023-09-04 15:38:22,798:INFO:User: SuperDepot Team
+2023-09-04 15:38:26,389:INFO:User läd Seite Live Status
+2023-09-04 15:39:12,321:INFO:App gestartet
+2023-09-04 15:39:13,174:INFO:Authentifizierungsstatus: True
+2023-09-04 15:39:13,174:INFO:User: SuperDepot Team
+2023-09-04 15:39:16,855:INFO:User läd Seite Live Status
