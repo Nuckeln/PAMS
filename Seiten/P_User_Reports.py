@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.express as px
 import streamlit as st
 from Data_Class.st_AgGridCheckBox import createAGgrid_withCheckbox
 from Data_Class.MMSQL_connection import read_Table_by_Date
@@ -144,21 +145,81 @@ def plotAsWeek(grouped_data):
 
 def plot_User_Picks(df, dfItems):
     st.radio('Nach:', ['Mitarbeiter', 'Lieferscheine'])
-    sel = createAGgrid_withCheckbox(df, 300, 'df')
-    st.write(sel)
-    st.data_editor(dfItems,key='dfItems')
-    # #plot by Mitarbeiter.count PickDateTime
-    # fig = plt.figure(figsize=(15, 8))
-    # dfItems.groupby('Name').count()['PickDateTime'].plot(kind='bar', ax=plt.gca())
-    # plt.title("Picks per Minute by Planned Date")
-    # plt.xlabel("Planned Week and Year")
-    # plt.ylabel("Picks per Minute")
-    # plt.legend(title="Categories")
-    # plt.grid(True)
-    # plt.xticks(rotation=45)
-    # #show plot
-    # st.pyplot(fig)
+    #sel = createAGgrid_withCheckbox(df, 300, 'df')
+    #st.write(sel)
 
+    dfItems = dfItems[dfItems['Source target qty'].astype(float) > 0]
+    dfItems['Source target qty'] = dfItems['Source target qty'].astype(float)
+    dfItems['OUT'] = dfItems['OUT'].astype(float)
+    dfItems['CS'] = dfItems['CS'].astype(float)
+    dfItems['PAL'] = dfItems['PAL'].astype(float)
+
+    dfItems['In_Karton'] = dfItems.apply(
+    lambda row: (row['Source target qty'] * row['OUT']) / row['CS'] 
+    if (row['Alternative Unit of Measure'] == 'OUT' and row['Art'] == 'Mastercase') 
+    else None, 
+    axis=1
+    )
+    #if none then 0
+    dfItems['In_Karton'] = dfItems['In_Karton'].fillna(0)
+    dfItems['In_PAL'] = dfItems.apply(
+    lambda row: (row['Source target qty'] * row['OUT']) / row['PAL'] 
+    if (row['Alternative Unit of Measure'] == 'OUT' and row['Art'] == 'Pallet')
+    else None, 
+    axis=1
+    )
+    #if none then 0
+    dfItems['In_PAL'] = dfItems['In_PAL'].fillna(0)
+    
+    dfItems.loc[(dfItems['Art'] == 'Outer') & (dfItems['Alternative Unit of Measure'] == 'OUT'), 'In_Stangen'] = dfItems['Source target qty']
+    dfItems['In_Stangen'] = dfItems['In_Stangen'].fillna(0)
+    #sum of all to PickQty
+    dfItems['PickQty'] = dfItems['In_Karton'] + dfItems['In_PAL'] + dfItems['In_Stangen']
+
+
+    # str PickDateTime to string YYYY-MM-DD
+    dfItems['PickDate'] = dfItems['PickDateTime'].str[:10]
+
+    #plot PickQty by Mitarbeiter per PickDateTime
+    
+    dfItems_grouped = dfItems.groupby(['PickDate', 'Name']).sum()[['PickQty','In_Karton', 'In_PAL', 'In_Stangen']]
+
+    title = ''#"<b>Picks nach Katergorie: </b> <span style='color:#ef7d00'>Stangen</span> / <span style='color:#0F2B63'>Karton</span> / <span style='color:#4FAF46'>Paletten</span>"
+
+    fig_dfItems_grouped = px.bar(dfItems_grouped, x=dfItems_grouped.index.get_level_values(0), y=dfItems_grouped['PickQty'], color=dfItems_grouped.index.get_level_values(1), title=title, barmode='stack')
+    fig_dfItems_grouped.update_layout(
+        xaxis_title="Datum",
+        yaxis_title="Picks",
+        font_family="Montserrat",
+        font_color="#0F2B63",
+        title_font_family="Montserrat",
+        title_font_color="#0F2B63",
+        legend_title_font_color="#0F2B63",
+        legend_title_text='Mitarbeiter',
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ),
+        showlegend=True
+    )
+    fig_dfItems_grouped.update_traces(marker_color='#0F2B63', selector=dict(name='In_Karton'))
+    fig_dfItems_grouped.update_traces(marker_color='#4FAF46', selector=dict(name='In_PAL'))
+    fig_dfItems_grouped.update_traces(marker_color='#ef7d00', selector=dict(name='In_Stangen'))
+    fig_dfItems_grouped.layout.xaxis.tickangle = 70
+    st.plotly_chart(fig_dfItems_grouped, use_container_width=True,config={'displayModeBar': False})
+
+
+
+
+
+
+    st.dataframe(dfItems_grouped)
+
+    st.data_editor(dfItems,key='dfItems')
+    
 
 
 
