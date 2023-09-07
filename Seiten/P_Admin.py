@@ -8,6 +8,7 @@ from Seiten.P_UserLogin import Login
 
 import streamlit_authenticator as stauth
 import datetime
+import os
 
 
 def aktualisier_Issues_Table():
@@ -245,6 +246,12 @@ def adminPage():
     aktualisier_Issues_Table()    
     show_All_Databases()
     mitarbeiterPflegen()
+
+    try:
+        a = os.environ['SQLAZURECONNSTR_DbConnection']
+        st.write(a)
+    except:
+        st.error('Keine Azure Connection')
 
     #Admin.Azure()
     # Admin.erstelleDB()
