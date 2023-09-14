@@ -73,8 +73,6 @@ def mitarbeiterPflegen():
         st.data_editor(df)
 
 
-
-
 def passwortÄndern():
     Login.newPasswort_Admin(Login)
 

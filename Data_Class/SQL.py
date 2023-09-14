@@ -1,7 +1,9 @@
 from sqlalchemy import create_engine
 import pandas as pd
 from sqlalchemy import text
+import os
 
+#credentials = os.environ['SQLAZURECONNSTR_DbConnection']
 
 def return_table_names():
     server = "batsql-pp-ne-cmes-prod-10.database.windows.net"
