@@ -248,15 +248,15 @@ def plot_User_Picks(df, dfItems):
 
 def laufweg_showPlot(sel_order, dfLager, dfZUgriffe):
     dfZUgriffe = dfZUgriffe[dfZUgriffe['Source Storage Type'] == 'SN1']
-    dfZUgriffe_filtered = dfZUgriffe[dfZUgriffe['Dest.Storage Bin'] == sel_order]
-    dfZUgriffe_filtered = dfZUgriffe_filtered.sort_values(by='Confirmation time.1')
+    dfZUgriffe_filtered = dfZUgriffe
+    #dfZUgriffe_filtered = dfZUgriffe[dfZUgriffe['SapOrderNumber'] == sel_order['SapOrderNumber']]
     #reset index
     dfZUgriffe_filtered = dfZUgriffe_filtered.reset_index(drop=True)
     try:
         st.subheader('Lagerzugriffe für Storage section SN1 in DN: '+sel_order)
     except:
         pass
-    st.dataframe(dfZUgriffe_filtered,height=250)
+    dfZUgriffe_filtered = dfZUgriffe_filtered.sort_values(by='PickDateTime')
 
     def gangwechsel(df):
         # Create an empty list to store the new rows
@@ -301,7 +301,7 @@ def laufweg_showPlot(sel_order, dfLager, dfZUgriffe):
     
     # Fügen Sie die Spalte Laufweg hinzu
     dfZUgriffe_filtered   = gangwechsel(dfZUgriffe_filtered)
-
+    st.dataframe(dfZUgriffe_filtered,height=250)
     # übergebe Laufweg in dfLager
     #dfZUgriffe_filtered_sorted = dfZUgriffe_filtered.sort_values('Source Storage Bin')
     dfZUgriffe_filtered['Laufweg'] = range(1, len(dfZUgriffe_filtered) + 1)
@@ -377,10 +377,10 @@ def laufweg_showPlot(sel_order, dfLager, dfZUgriffe):
         if row['Datapoints'] != 0:
             ax.text(row['X'], row['Y'], str(row['Datapoints']), color='Black', weight='bold', fontsize=20)
     # Bearbeitungszeit ermitteln 
-    dfZUgriffe_filtered['Confirmation time.1'] = pd.to_datetime(dfZUgriffe_filtered['Confirmation time.1'])
+    dfZUgriffe_filtered['PickDateTime'] = pd.to_datetime(dfZUgriffe_filtered['PickDateTime'])
     try:
-        kleinsteZeit =  dfZUgriffe_filtered['Confirmation time.1'].max()
-        groessteZeit = dfZUgriffe_filtered['Confirmation time.1'].min()
+        kleinsteZeit =  dfZUgriffe_filtered['PickDateTime'].max()
+        groessteZeit = dfZUgriffe_filtered['PickDateTime'].min()
         bearbeitungszeit = kleinsteZeit - groessteZeit
     except:
         bearbeitungszeit = 'Keine Daten vorhanden'
@@ -400,7 +400,7 @@ def pageUserReport():
     #Filter UI erstellen und dataframes nach Datum filtern
     sel_filter, start_date, end_date, sel_weekRange, sel_monthRange, tabelle, sel_Day_week = filterDateUI(df,dfWeek_sorted, dfMonth_sorted)
     df, dfItems,dfOrders = filter_dataframe(df, sel_filter, start_date, end_date, sel_weekRange, sel_monthRange)
-
+    dfLaufweg = dfItems
     # Trennlinie darstellen  
     img_strip = Image.open('Data/img/strip.png')   
     img_strip = img_strip.resize((1000, 15))     
@@ -421,9 +421,11 @@ def pageUserReport():
                 dfItems = dfItems[dfItems['Name'].isin(sel_mitarbeiter)]      
                 check =  st.form_submit_button(label='Anzeigen')
     if sel_view_MA_DN == 'Laufweg':
-        sel_order = AG_Select_Grid(dfOrders, 200, 'DN')
+        sel_order = AG_Select_Grid(df, 200, 'DN')
+        dfLaufweg = dfLaufweg[dfLaufweg['Dest.Storage Bin'] == '3202038793']
         dfLager = pd.read_excel('Data/appData/LagerNeu.xlsx')
-        laufweg_showPlot(sel_order, dfLager, dfItems)
+        figLaufweg, dfVisited, dfLager, bearbeitungszeit = laufweg_showPlot(sel_order, dfLager, dfLaufweg)
+        st.pyplot(figLaufweg)
     if sel_view_MA_DN == 'value stream':
         fig = value_plotAsDay(df)
         st.pyplot(fig)

@@ -108,11 +108,9 @@ def AG_Select_Grid(df: pd.DataFrame, height_value: int,keyname:str) -> str:
             allow_unsafe_jscode=True,
             key=keyname,
         )
-        #hide index
 
-
-        # Wert aus Spalte 0 der ausgewählten Zeile ausgeben
+        
         if response['selected_rows']:
             selected_row = response['selected_rows'][0]
-            col_name = df.columns[3]  # Name der Spalte 0
+            col_name = df.columns[0]  # Name der Spalte 0
             return (f"{selected_row[col_name]}")

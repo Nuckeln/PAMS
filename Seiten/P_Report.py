@@ -274,7 +274,7 @@ def figFehlerVsLieferscheine(dfIssues,df,show_tables,show_in_day_Week):
         fig1.update_layout(annotations=[dict(text=f"LS: {sumOfOrders} \n Fehler: {sumOfIssues}", showarrow=False, font_size=16)], showlegend=False)
 
         # Erstelle Tortendiagramm für Fehler nach Art
-        fig2 = go.Figure(data=[go.Pie(labels=dfIssues.Art, values=dfIssues.Anzahl, hole=.3)])
+        fig2 = go.Figure(data=[go.Pie(labels=dfIssues.Art, values=dfIssues.Anzahl, hole=.3, textinfo='label+percent', texttemplate='%{label}: %{percent}')])
         fig2.update_traces(marker_colors=BATColurs)
         fig2.update_layout(title_text="Fehler nach Art", title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", height=700)
 
