@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import plotly.express as px
 import streamlit as st
@@ -10,27 +11,7 @@ from PIL import Image
 
 from Data_Class.SQL import read_table
 
-
-
-
-# def convert_datetime_to_string(df):
-#     for column in df.columns:
-#         if pd.api.types.is_datetime64_any_dtype(df[column]):
-#             df[column] = df[column].dt.strftime('%Y-%m-%d %H:%M:%S')
-#     return df
-
-# def convert_string_to_datetime(df, datetime_format='%Y-%m-%d %H:%M:%S'):
-#     for column in df.columns:
-#         if df[column].dtype == "object":
-#             try:
-#                 df[column] = pd.to_datetime(df[column], format=datetime_format)
-#             except ValueError:
-#                 print(f"Could not convert column {column} to datetime")
-#                 # Wenn die Umwandlung für die gesamte Spalte nicht funktioniert, 
-#                 # lassen wir die Spalte unverändert
-#                 continue
-#     return df
-st.cache_data
+@st.cache_data
 def load_data():
     df = read_table('PAMS_SAP_Orders_Header_LT22')
     df['Picks Gesamt'] = df['Picks Karton'] + df['Picks Stangen'] + df['Picks Paletten']
@@ -77,7 +58,6 @@ def filterDateUI(df: pd,dfWeek_sorted: list, dfMonth_sorted: list):
             #sort df by Woche
             sel_weekRange = st.selectbox('Wähle Woche', dfWeek_sorted)
 
-
         if sel_filter == 'Monat':
             #sort df by PlannedDate acciending  
             sel_monthRange = st.selectbox('Wähle Monat', dfMonth_sorted)
@@ -91,7 +71,11 @@ def filterDateUI(df: pd,dfWeek_sorted: list, dfMonth_sorted: list):
         sel_Day_week = 'Woche'
     if sel_Day_week == 'Tagen':
         sel_Day_week = 'PlannedDate'
-
+    if start_date or end_date == None:
+        # min date in dfPlannedDate
+        start_date = df['PlannedDate'].max()
+        # max date in dfPlannedDate
+        end_date = df['PlannedDate'].min()
     
     
     return sel_filter, start_date, end_date, sel_weekRange, sel_monthRange, tabelle, sel_Day_week
@@ -247,9 +231,8 @@ def plot_User_Picks(df, dfItems):
     
 
 def laufweg_showPlot(sel_order, dfLager, dfZUgriffe):
-    dfZUgriffe = dfZUgriffe[dfZUgriffe['Source Storage Type'] == 'SN1']
+
     dfZUgriffe_filtered = dfZUgriffe
-    #dfZUgriffe_filtered = dfZUgriffe[dfZUgriffe['SapOrderNumber'] == sel_order['SapOrderNumber']]
     #reset index
     dfZUgriffe_filtered = dfZUgriffe_filtered.reset_index(drop=True)
     try:
@@ -301,7 +284,6 @@ def laufweg_showPlot(sel_order, dfLager, dfZUgriffe):
     
     # Fügen Sie die Spalte Laufweg hinzu
     dfZUgriffe_filtered   = gangwechsel(dfZUgriffe_filtered)
-    st.dataframe(dfZUgriffe_filtered,height=250)
     # übergebe Laufweg in dfLager
     #dfZUgriffe_filtered_sorted = dfZUgriffe_filtered.sort_values('Source Storage Bin')
     dfZUgriffe_filtered['Laufweg'] = range(1, len(dfZUgriffe_filtered) + 1)
@@ -420,12 +402,38 @@ def pageUserReport():
                 #filter dfItems by sel_mitarbeiter  
                 dfItems = dfItems[dfItems['Name'].isin(sel_mitarbeiter)]      
                 check =  st.form_submit_button(label='Anzeigen')
+    
+    
+    
+    
+    
     if sel_view_MA_DN == 'Laufweg':
-        sel_order = AG_Select_Grid(df, 200, 'DN')
-        dfLaufweg = dfLaufweg[dfLaufweg['Dest.Storage Bin'] == '3202038793']
+        
+        dfOrders = dfOrders[['SapOrderNumber', 'PlannedDate','Picks Karton','DeliveryDepot','PartnerName']]
+        # filter dfOrders Picks Karton > 5 
+        dfOrders = dfOrders[dfOrders['Picks Karton'].astype(float) > 5]
         dfLager = pd.read_excel('Data/appData/LagerNeu.xlsx')
+
+        
+        sel_order = AG_Select_Grid(dfOrders, 200, 'DN')
+        dfLaufweg = dfLaufweg[dfLaufweg['Source Storage Type'] == 'SN1']
+        dfLaufweg = dfLaufweg[dfLaufweg['Dest.Storage Bin'] == sel_order]
+
         figLaufweg, dfVisited, dfLager, bearbeitungszeit = laufweg_showPlot(sel_order, dfLager, dfLaufweg)
         st.pyplot(figLaufweg)
+
+        st.data_editor(dfLaufweg,key='dfLaufweg')
+
+
+
+
+
+
+
+
+
+
+
     if sel_view_MA_DN == 'value stream':
         fig = value_plotAsDay(df)
         st.pyplot(fig)
