@@ -7,6 +7,7 @@ from Data_Class.st_AgGridCheckBox import AG_Select_Grid
 from Data_Class.MMSQL_connection import read_Table_by_Date
 from Data_Class.st_int_to_textbox import checkboxes_in_Col
 from datetime import datetime
+from datetime import timedelta
 from PIL import Image
 
 from Data_Class.SQL import read_table
@@ -49,10 +50,16 @@ def filterDateUI(df: pd,dfWeek_sorted: list, dfMonth_sorted: list):
 
     with col2:
         if sel_filter == 'Zeitraum':
-            start_date = st.date_input('Start Date')
-            with col3:
-                end_date = st.date_input('End Date')
+            heute = datetime.now()
+            letzteWoche = datetime.now() - timedelta(days=7)
 
+            start_date = st.date_input('Start Date',letzteWoche)
+            #change format to dd.mm.yyyy
+            start_date = start_date.strftime('%d.%m.%Y')
+            with col3:
+                
+                end_date = st.date_input('End Date', heute)
+                end_date = end_date.strftime('%d.%m.%Y')
         if sel_filter == 'Woche':
 
             #sort df by Woche
@@ -79,19 +86,11 @@ def filterDateUI(df: pd,dfWeek_sorted: list, dfMonth_sorted: list):
     
     
     return sel_filter, start_date, end_date, sel_weekRange, sel_monthRange, tabelle, sel_Day_week
-st.cache_data
+@st.cache_data
 def filter_dataframe(df: pd, sel_filter: str, start_date: str, end_date: str, sel_weekRange: str, sel_monthRange: str):
 
     if sel_filter == 'Zeitraum':
-        #df.PlannedDate = pd.to_datetime(df.PlannedDate)
-        #start_date to string
-        start_date = start_date.strftime('%d.%m.%Y')
-
-        #end_date to datetime
-        end_date = end_date.strftime('%d.%m.%Y')
-
-        df = df[(df['PlannedDate'] > start_date) & (df['PlannedDate'] <= end_date)]
-        
+        st.warning('Nicht Implementiert')
     if sel_filter == 'Woche':
         #sort df by Woche
         df = df[df['Woche'] == sel_weekRange]
@@ -99,9 +98,6 @@ def filter_dataframe(df: pd, sel_filter: str, start_date: str, end_date: str, se
     if sel_filter == 'Monat':
         #sort df by PlannedDate acciending  
         df = df[df['Monat'] == sel_monthRange]
-
-
-
     #to datetime
     sel_day_max = df['PlannedDate'].max()
     sel_day_max = datetime.strptime(sel_day_max, '%d.%m.%Y')
@@ -403,10 +399,6 @@ def pageUserReport():
                 dfItems = dfItems[dfItems['Name'].isin(sel_mitarbeiter)]      
                 check =  st.form_submit_button(label='Anzeigen')
     
-    
-    
-    
-    
     if sel_view_MA_DN == 'Laufweg':
         
         dfOrders = dfOrders[['SapOrderNumber', 'PlannedDate','Picks Karton','DeliveryDepot','PartnerName']]
@@ -423,16 +415,6 @@ def pageUserReport():
         st.pyplot(figLaufweg)
 
         st.data_editor(dfLaufweg,key='dfLaufweg')
-
-
-
-
-
-
-
-
-
-
 
     if sel_view_MA_DN == 'value stream':
         fig = value_plotAsDay(df)
