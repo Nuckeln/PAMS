@@ -291,6 +291,7 @@ def figFehlerVsLieferscheine(dfIssues,df,show_tables,show_in_day_Week):
             st.dataframe(dfIssuesOriginal)
 
 
+
 ###Show Page###
 
 def reportPage():
@@ -320,6 +321,7 @@ def reportPage():
             figFehlerVsLieferscheine(dfIssues,df,show_tables,show_in_day_Week)
         if 'Fehler Total nach Art' in sel_filterIssues:
             figIssuesTotal(dfIssues,show_in_day_Week,show_tables)
+
 
     if st.button('Daten vom Server neu laden'):
         st.cache_data.clear()

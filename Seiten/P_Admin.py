@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 
 from Data_Class.SQL import read_table,save_table_to_SQL,return_table_names
+from Data_Class.MMSQL_connection import save_Table
 
 from Seiten.P_UserLogin import Login
 
@@ -88,7 +89,9 @@ def userLöschen(df):
                 st.success("User erfolgreich gelöscht")
                 st.experimental_rerun()
             
-def UserAnlegen(df):            
+
+def UserAnlegen():      
+    df = read_table('user')      
     with st.form("User Anlegen"):
         neuname = st.text_input("name (Anzeigename)",key='name_anlegen')
         neuuser = st.text_input("user (login Name)",key='user_anlegen')
@@ -99,10 +102,12 @@ def UserAnlegen(df):
         X = st.form_submit_button("Speichern")
         if X:
             pw = stauth.Hasher(neupassword)._hash(neupassword)
-            df = df.append({'name':neuname,'username':neuuser,'password':pw,'function':funktion,'rechte':rechte},ignore_index=True)
-            SQL.sql_updateTabelle('user',df)
+            new_data = {'name': neuname, 'username': neuuser, 'password': pw, 'function': funktion, 'rechte': rechte}
+            df = pd.concat([df, pd.DataFrame(new_data, index=[0])], ignore_index=True)
+            save_Table(df,'user')
             st.success("User erfolgreich angelegt")
             st.experimental_rerun()
+
 
 def zeigeDFOrder():
     with st.expander("Bestellungen", expanded=True):
@@ -244,6 +249,7 @@ def adminPage():
     aktualisier_Issues_Table()    
     show_All_Databases()
     mitarbeiterPflegen()
+    UserAnlegen()
 
     try:
         a = os.environ['SQLAZURECONNSTR_DbConnection']

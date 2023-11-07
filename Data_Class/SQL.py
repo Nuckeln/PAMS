@@ -24,7 +24,7 @@ def return_table_names():
 
 
 
-def save_table_to_SQL(df: pd.DataFrame, table_name: str, batch_size: int = 1000):
+def save_table_to_SQL(df: pd.DataFrame, table_name: str, batch_size: int = 10):
     server = "batsql-pp-ne-cmes-prod-10.database.windows.net"
     database = "batsdb-pp-ne-prod-reporting_SuperDepot"
     username = "batedp-cmes-prod-reportinguser"

@@ -383,6 +383,8 @@ class LIVE:
         dfOffen = df[df['Fertiggestellt'] == '0']
         dfFertig = df[df['Fertiggestellt'] != '0']
         dfFertig['Fertiggestellt'] = pd.to_datetime(dfFertig['Fertiggestellt'], format='%Y-%m-%d %H:%M:%S.%f%z')
+        #add two hours to Feritggestellt
+        #dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'] + pd.to_timedelta('2:00:00')
         #drop utc
         dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'].dt.tz_localize(None)
         dfFertig['InTime'] = (dfFertig['Fertiggestellt'] < dfFertig['PlannedDate'])
@@ -398,7 +400,7 @@ class LIVE:
         #sort by Fertiggestellt
         dfFertig = dfFertig.sort_values(by=['Fertiggestellt'], ascending=True)
         #Create Plotly Chart
-        title = "<b>Lieferschien in Deadline Fertiggestellt  </b> <span style='color:#4FAF46'>ja</span> / <span style='color:#E72482'>nein</span>"
+        title = "<b>Lieferschein in Deadline Fertiggestellt  </b> <span style='color:#4FAF46'>ja</span> / <span style='color:#E72482'>nein</span>"
 
         fig = px.bar(dfFertig, x='Fertiggestellt', y="Picks Gesamt", color="InTime", hover_data=['PartnerName','Fertig um','SapOrderNumber','DeliveryDepot'],height=600, title=title)
         #if in Time 1 set to green else to red
