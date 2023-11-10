@@ -10,6 +10,7 @@ from Seiten.P_Live import LIVE
 from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
 from Seiten.P_User_Reports import pageUserReport
+from Seiten.P_Forecast import main as pageForecast
 from Data_Class.SQL import read_table, updateTable
 
 
@@ -87,24 +88,24 @@ img = Image.open('Data/img/logo.png', mode='r')
 def berechtigung():
     if st.session_state.rechte == 1:
         #admin Vollzugriff
-        return ["Live Status",'Reports','User Reports','Admin']
+        return ["Live Status",'Reports','User Reports','Forecast','Admin']
     # else:
     #     return ['Wartung']
     elif st.session_state.rechte == 2: 
         # Manager
-        return ["Live Status",'Reports','User Reports','Admin']
+        return ["Live Status",'Reports','User Reports','Admin', 'Forecast']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 
-        return ["Live Status",'Reports',]
+        return ["Live Status",'Reports','Forecast']
     
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd
-        return ["Live Status"]
+        return ["Live Status",'Forecast']
         # Lager
     
     elif st.session_state.rechte == 5:
-        return ["Live Status"]
+        return ["Live Status",'Forecast']
 
 # ----- Login -----
 authentication_status = None
@@ -140,3 +141,6 @@ if authentication_status == True:
     if sel_main_m == 'Admin':
         adminPage() 
         logging.info('User läd Seite Admin')
+    if sel_main_m == 'Forecast':
+        pageForecast()
+        logging.info('User läd Seite Forecast')
