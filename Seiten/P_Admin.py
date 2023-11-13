@@ -6,10 +6,13 @@ from Data_Class.SQL import read_table,save_table_to_SQL,return_table_names
 from Data_Class.MMSQL_connection import save_Table
 
 from Seiten.P_UserLogin import Login
+from streamlit_option_menu import option_menu 
 
 import streamlit_authenticator as stauth
 import datetime
 import os
+
+
 
 
 def aktualisier_Issues_Table():
@@ -33,6 +36,28 @@ def show_All_Databases():
         df = read_table(sel_Table)
         st.dataframe(df)
 
+def berechtigungen_anzeigen():
+#    data = {
+#         '1': ["Live Status", 'Reports', 'User Reports', 'Forecast', 'Admin'],
+#         '2': ["Live Status", 'Reports', 'User Reports', 'Admin', 'Forecast'],
+#         '3': ["Live Status", 'Reports', 'Forecast', None, None],
+#         '4': ["Live Status", 'Forecast', None, None, None],
+#         '5': ["Live Status", 'Forecast', None, None, None]
+#     }
+#     df = pd.DataFrame(data)
+#     df.to_csv('Data/appData/berechtigungen_user.csv')
+    df = pd.read_csv('Data/appData/berechtigungen_user.csv',index_col=0)
+    with st.expander('Berechtigungen'):
+        col1, col2 = st.columns(2)
+        with col1:
+            st.data_editor(df)
+            if st.button('Speichern'):
+                df.to_csv('Data/appData/berechtigungen_user.csv')
+                st.success('Berechtigungen wurden gespeichert')
+                st.experimental_rerun()
+        with col2:
+            df_user = read_table('user')
+            st.dataframe(df_user)
 
 def mitarbeiterPflegen():
     df = read_table('Mitarbeiter')
@@ -250,6 +275,7 @@ def adminPage():
     show_All_Databases()
     mitarbeiterPflegen()
     UserAnlegen()
+    berechtigungen_anzeigen()
 
     try:
         a = os.environ['SQLAZURECONNSTR_DbConnection']

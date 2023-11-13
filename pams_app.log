@@ -4435,3 +4435,332 @@
 2023-11-10 08:25:59,058:INFO:App gestartet
 2023-11-10 09:08:19,705:INFO:App gestartet
 2023-11-10 09:24:36,385:INFO:App gestartet
+2023-11-10 09:34:39,253:INFO:App gestartet
+2023-11-10 09:44:18,481:INFO:App gestartet
+2023-11-13 09:28:52,420:INFO:App gestartet
+2023-11-13 09:29:01,019:INFO:App gestartet
+2023-11-13 09:29:31,064:INFO:App gestartet
+2023-11-13 09:29:34,032:INFO:Authentifizierungsstatus: None
+2023-11-13 09:29:34,180:INFO:App gestartet
+2023-11-13 09:29:34,911:INFO:Authentifizierungsstatus: True
+2023-11-13 09:29:34,911:INFO:User: Martin
+2023-11-13 09:29:37,138:INFO:App gestartet
+2023-11-13 09:29:38,289:INFO:Authentifizierungsstatus: True
+2023-11-13 09:29:38,289:INFO:User: Martin
+2023-11-13 09:29:46,056:INFO:User läd Seite Admin
+2023-11-13 09:37:26,951:INFO:App gestartet
+2023-11-13 09:37:27,759:INFO:Authentifizierungsstatus: True
+2023-11-13 09:37:27,759:INFO:User: Martin
+2023-11-13 09:37:49,571:INFO:App gestartet
+2023-11-13 09:37:50,405:INFO:Authentifizierungsstatus: True
+2023-11-13 09:37:50,405:INFO:User: Martin
+2023-11-13 09:38:53,546:INFO:App gestartet
+2023-11-13 09:38:54,405:INFO:Authentifizierungsstatus: True
+2023-11-13 09:38:54,406:INFO:User: Martin
+2023-11-13 09:38:59,767:INFO:User läd Seite Admin
+2023-11-13 09:40:03,547:INFO:App gestartet
+2023-11-13 09:40:04,410:INFO:Authentifizierungsstatus: True
+2023-11-13 09:40:04,411:INFO:User: Martin
+2023-11-13 09:40:09,707:INFO:User läd Seite Admin
+2023-11-13 09:40:59,696:INFO:App gestartet
+2023-11-13 09:41:00,580:INFO:Authentifizierungsstatus: True
+2023-11-13 09:41:00,580:INFO:User: Martin
+2023-11-13 09:41:05,961:INFO:User läd Seite Admin
+2023-11-13 09:41:30,886:INFO:App gestartet
+2023-11-13 09:41:31,781:INFO:Authentifizierungsstatus: True
+2023-11-13 09:41:31,781:INFO:User: Martin
+2023-11-13 09:41:38,544:INFO:User läd Seite Admin
+2023-11-13 10:05:26,473:INFO:App gestartet
+2023-11-13 10:05:26,497:INFO:App gestartet
+2023-11-13 10:05:27,515:INFO:Authentifizierungsstatus: True
+2023-11-13 10:05:27,515:INFO:User: Martin
+2023-11-13 10:20:49,148:INFO:User läd Seite Admin
+2023-11-13 10:34:49,521:INFO:App gestartet
+2023-11-13 10:34:50,376:INFO:Authentifizierungsstatus: True
+2023-11-13 10:34:50,376:INFO:User: Martin
+2023-11-13 10:34:54,523:INFO:User läd Seite Live Status
+2023-11-13 10:35:40,089:INFO:App gestartet
+2023-11-13 10:35:40,968:INFO:Authentifizierungsstatus: True
+2023-11-13 10:35:40,969:INFO:User: Martin
+2023-11-13 10:35:44,489:INFO:User läd Seite Live Status
+2023-11-13 10:36:30,632:INFO:App gestartet
+2023-11-13 10:36:31,525:INFO:Authentifizierungsstatus: True
+2023-11-13 10:36:31,526:INFO:User: Martin
+2023-11-13 10:36:35,026:INFO:User läd Seite Live Status
+2023-11-13 10:37:06,657:INFO:App gestartet
+2023-11-13 10:37:07,494:INFO:Authentifizierungsstatus: True
+2023-11-13 10:37:07,494:INFO:User: Martin
+2023-11-13 10:37:11,106:INFO:User läd Seite Live Status
+2023-11-13 10:37:57,136:INFO:App gestartet
+2023-11-13 10:37:58,010:INFO:Authentifizierungsstatus: True
+2023-11-13 10:37:58,011:INFO:User: Martin
+2023-11-13 10:38:01,729:INFO:User läd Seite Live Status
+2023-11-13 10:38:47,685:INFO:App gestartet
+2023-11-13 10:38:48,608:INFO:Authentifizierungsstatus: True
+2023-11-13 10:38:48,610:INFO:User: Martin
+2023-11-13 10:38:52,239:INFO:User läd Seite Live Status
+2023-11-13 10:39:38,275:INFO:App gestartet
+2023-11-13 10:39:39,072:INFO:Authentifizierungsstatus: True
+2023-11-13 10:39:39,072:INFO:User: Martin
+2023-11-13 10:39:42,540:INFO:User läd Seite Live Status
+2023-11-13 10:40:28,752:INFO:App gestartet
+2023-11-13 10:40:29,582:INFO:Authentifizierungsstatus: True
+2023-11-13 10:40:29,582:INFO:User: Martin
+2023-11-13 10:40:33,144:INFO:User läd Seite Live Status
+2023-11-13 10:41:19,577:INFO:App gestartet
+2023-11-13 10:41:20,442:INFO:Authentifizierungsstatus: True
+2023-11-13 10:41:20,443:INFO:User: Martin
+2023-11-13 10:41:24,085:INFO:User läd Seite Live Status
+2023-11-13 10:42:11,544:INFO:App gestartet
+2023-11-13 10:42:12,421:INFO:Authentifizierungsstatus: True
+2023-11-13 10:42:12,422:INFO:User: Martin
+2023-11-13 10:42:16,173:INFO:User läd Seite Live Status
+2023-11-13 10:43:03,536:INFO:App gestartet
+2023-11-13 10:43:04,353:INFO:Authentifizierungsstatus: True
+2023-11-13 10:43:04,354:INFO:User: Martin
+2023-11-13 10:43:08,033:INFO:User läd Seite Live Status
+2023-11-13 10:43:55,568:INFO:App gestartet
+2023-11-13 10:43:56,649:INFO:Authentifizierungsstatus: True
+2023-11-13 10:43:56,650:INFO:User: Martin
+2023-11-13 10:44:00,174:INFO:User läd Seite Live Status
+2023-11-13 10:44:47,535:INFO:App gestartet
+2023-11-13 10:44:48,408:INFO:Authentifizierungsstatus: True
+2023-11-13 10:44:48,408:INFO:User: Martin
+2023-11-13 10:44:51,935:INFO:User läd Seite Live Status
+2023-11-13 10:45:39,553:INFO:App gestartet
+2023-11-13 10:45:40,359:INFO:Authentifizierungsstatus: True
+2023-11-13 10:45:40,359:INFO:User: Martin
+2023-11-13 10:45:44,602:INFO:User läd Seite Live Status
+2023-11-13 10:46:31,558:INFO:App gestartet
+2023-11-13 10:46:32,445:INFO:Authentifizierungsstatus: True
+2023-11-13 10:46:32,445:INFO:User: Martin
+2023-11-13 10:46:36,062:INFO:User läd Seite Live Status
+2023-11-13 10:47:23,543:INFO:App gestartet
+2023-11-13 10:47:36,513:INFO:Authentifizierungsstatus: True
+2023-11-13 10:47:36,515:INFO:User: Martin
+2023-11-13 10:47:45,259:INFO:User läd Seite Live Status
+2023-11-13 10:48:27,543:INFO:App gestartet
+2023-11-13 10:48:28,390:INFO:Authentifizierungsstatus: True
+2023-11-13 10:48:28,390:INFO:User: Martin
+2023-11-13 10:48:32,107:INFO:User läd Seite Live Status
+2023-11-13 10:49:19,542:INFO:App gestartet
+2023-11-13 10:49:20,697:INFO:Authentifizierungsstatus: True
+2023-11-13 10:49:20,698:INFO:User: Martin
+2023-11-13 10:49:24,243:INFO:User läd Seite Live Status
+2023-11-13 10:50:11,542:INFO:App gestartet
+2023-11-13 10:50:12,710:INFO:Authentifizierungsstatus: True
+2023-11-13 10:50:12,711:INFO:User: Martin
+2023-11-13 10:50:16,527:INFO:User läd Seite Live Status
+2023-11-13 10:51:03,547:INFO:App gestartet
+2023-11-13 10:51:05,059:INFO:Authentifizierungsstatus: True
+2023-11-13 10:51:05,059:INFO:User: Martin
+2023-11-13 10:51:09,894:INFO:User läd Seite Live Status
+2023-11-13 10:51:56,540:INFO:App gestartet
+2023-11-13 10:51:57,649:INFO:Authentifizierungsstatus: True
+2023-11-13 10:51:57,650:INFO:User: Martin
+2023-11-13 10:52:01,628:INFO:User läd Seite Live Status
+2023-11-13 10:52:48,538:INFO:App gestartet
+2023-11-13 10:52:49,450:INFO:Authentifizierungsstatus: True
+2023-11-13 10:52:49,450:INFO:User: Martin
+2023-11-13 10:52:53,235:INFO:User läd Seite Live Status
+2023-11-13 10:53:40,542:INFO:App gestartet
+2023-11-13 10:53:41,462:INFO:Authentifizierungsstatus: True
+2023-11-13 10:53:41,462:INFO:User: Martin
+2023-11-13 10:53:45,039:INFO:User läd Seite Live Status
+2023-11-13 10:54:32,542:INFO:App gestartet
+2023-11-13 10:54:33,423:INFO:Authentifizierungsstatus: True
+2023-11-13 10:54:33,424:INFO:User: Martin
+2023-11-13 10:54:37,003:INFO:User läd Seite Live Status
+2023-11-13 10:55:24,543:INFO:App gestartet
+2023-11-13 10:55:25,440:INFO:Authentifizierungsstatus: True
+2023-11-13 10:55:25,441:INFO:User: Martin
+2023-11-13 10:55:29,099:INFO:User läd Seite Live Status
+2023-11-13 10:56:16,541:INFO:App gestartet
+2023-11-13 10:56:18,656:INFO:Authentifizierungsstatus: True
+2023-11-13 10:56:18,656:INFO:User: Martin
+2023-11-13 10:56:22,289:INFO:User läd Seite Live Status
+2023-11-13 10:57:09,538:INFO:App gestartet
+2023-11-13 10:57:10,340:INFO:Authentifizierungsstatus: True
+2023-11-13 10:57:10,341:INFO:User: Martin
+2023-11-13 10:57:13,925:INFO:User läd Seite Live Status
+2023-11-13 10:58:01,545:INFO:App gestartet
+2023-11-13 10:58:02,416:INFO:Authentifizierungsstatus: True
+2023-11-13 10:58:02,417:INFO:User: Martin
+2023-11-13 10:58:06,835:INFO:User läd Seite Live Status
+2023-11-13 10:58:54,541:INFO:App gestartet
+2023-11-13 10:58:55,549:INFO:Authentifizierungsstatus: True
+2023-11-13 10:58:55,550:INFO:User: Martin
+2023-11-13 10:58:59,197:INFO:User läd Seite Live Status
+2023-11-13 10:59:46,541:INFO:App gestartet
+2023-11-13 10:59:47,461:INFO:Authentifizierungsstatus: True
+2023-11-13 10:59:47,461:INFO:User: Martin
+2023-11-13 10:59:51,259:INFO:User läd Seite Live Status
+2023-11-13 11:00:38,540:INFO:App gestartet
+2023-11-13 11:00:39,641:INFO:Authentifizierungsstatus: True
+2023-11-13 11:00:39,641:INFO:User: Martin
+2023-11-13 11:00:43,958:INFO:User läd Seite Live Status
+2023-11-13 11:01:30,542:INFO:App gestartet
+2023-11-13 11:01:31,567:INFO:Authentifizierungsstatus: True
+2023-11-13 11:01:31,568:INFO:User: Martin
+2023-11-13 11:01:35,288:INFO:User läd Seite Live Status
+2023-11-13 11:02:22,541:INFO:App gestartet
+2023-11-13 11:02:23,639:INFO:Authentifizierungsstatus: True
+2023-11-13 11:02:23,639:INFO:User: Martin
+2023-11-13 11:02:27,208:INFO:User läd Seite Live Status
+2023-11-13 11:02:57,033:INFO:App gestartet
+2023-11-13 11:02:57,849:INFO:Authentifizierungsstatus: True
+2023-11-13 11:02:57,849:INFO:User: Martin
+2023-11-13 11:03:01,893:INFO:User läd Seite Live Status
+2023-11-13 11:03:48,543:INFO:App gestartet
+2023-11-13 11:03:49,382:INFO:Authentifizierungsstatus: True
+2023-11-13 11:03:49,382:INFO:User: Martin
+2023-11-13 11:03:53,193:INFO:User läd Seite Live Status
+2023-11-13 11:04:40,548:INFO:App gestartet
+2023-11-13 11:04:41,461:INFO:Authentifizierungsstatus: True
+2023-11-13 11:04:41,462:INFO:User: Martin
+2023-11-13 11:04:45,569:INFO:User läd Seite Live Status
+2023-11-13 11:05:32,548:INFO:App gestartet
+2023-11-13 11:05:33,461:INFO:Authentifizierungsstatus: True
+2023-11-13 11:05:33,462:INFO:User: Martin
+2023-11-13 11:05:37,335:INFO:User läd Seite Live Status
+2023-11-13 11:06:24,547:INFO:App gestartet
+2023-11-13 11:06:28,750:INFO:Authentifizierungsstatus: True
+2023-11-13 11:06:28,750:INFO:User: Martin
+2023-11-13 11:06:32,983:INFO:User läd Seite Live Status
+2023-11-13 11:07:19,549:INFO:App gestartet
+2023-11-13 11:07:20,413:INFO:Authentifizierungsstatus: True
+2023-11-13 11:07:20,414:INFO:User: Martin
+2023-11-13 11:07:24,430:INFO:User läd Seite Live Status
+2023-11-13 11:08:11,547:INFO:App gestartet
+2023-11-13 11:08:12,479:INFO:Authentifizierungsstatus: True
+2023-11-13 11:08:12,481:INFO:User: Martin
+2023-11-13 11:08:16,185:INFO:User läd Seite Live Status
+2023-11-13 11:09:03,560:INFO:App gestartet
+2023-11-13 11:09:04,605:INFO:Authentifizierungsstatus: True
+2023-11-13 11:09:04,605:INFO:User: Martin
+2023-11-13 11:09:08,462:INFO:User läd Seite Live Status
+2023-11-13 11:09:55,540:INFO:App gestartet
+2023-11-13 11:09:56,354:INFO:Authentifizierungsstatus: True
+2023-11-13 11:09:56,354:INFO:User: Martin
+2023-11-13 11:10:00,662:INFO:User läd Seite Live Status
+2023-11-13 11:10:47,547:INFO:App gestartet
+2023-11-13 11:10:48,441:INFO:Authentifizierungsstatus: True
+2023-11-13 11:10:48,441:INFO:User: Martin
+2023-11-13 11:10:52,156:INFO:User läd Seite Live Status
+2023-11-13 11:11:39,544:INFO:App gestartet
+2023-11-13 11:11:40,352:INFO:Authentifizierungsstatus: True
+2023-11-13 11:11:40,352:INFO:User: Martin
+2023-11-13 11:11:44,410:INFO:User läd Seite Live Status
+2023-11-13 11:12:31,545:INFO:App gestartet
+2023-11-13 11:12:32,477:INFO:Authentifizierungsstatus: True
+2023-11-13 11:12:32,478:INFO:User: Martin
+2023-11-13 11:12:36,510:INFO:User läd Seite Live Status
+2023-11-13 11:13:23,544:INFO:App gestartet
+2023-11-13 11:13:24,399:INFO:Authentifizierungsstatus: True
+2023-11-13 11:13:24,399:INFO:User: Martin
+2023-11-13 11:13:28,006:INFO:User läd Seite Live Status
+2023-11-13 11:14:15,548:INFO:App gestartet
+2023-11-13 11:14:16,566:INFO:Authentifizierungsstatus: True
+2023-11-13 11:14:16,566:INFO:User: Martin
+2023-11-13 11:14:20,204:INFO:User läd Seite Live Status
+2023-11-13 11:15:07,551:INFO:App gestartet
+2023-11-13 11:15:08,413:INFO:Authentifizierungsstatus: True
+2023-11-13 11:15:08,414:INFO:User: Martin
+2023-11-13 11:15:12,189:INFO:User läd Seite Live Status
+2023-11-13 11:15:59,547:INFO:App gestartet
+2023-11-13 11:16:00,437:INFO:Authentifizierungsstatus: True
+2023-11-13 11:16:00,438:INFO:User: Martin
+2023-11-13 11:16:04,656:INFO:User läd Seite Live Status
+2023-11-13 11:16:51,545:INFO:App gestartet
+2023-11-13 11:16:52,393:INFO:Authentifizierungsstatus: True
+2023-11-13 11:16:52,393:INFO:User: Martin
+2023-11-13 11:16:56,004:INFO:User läd Seite Live Status
+2023-11-13 11:17:43,546:INFO:App gestartet
+2023-11-13 11:17:44,450:INFO:Authentifizierungsstatus: True
+2023-11-13 11:17:44,451:INFO:User: Martin
+2023-11-13 11:17:48,217:INFO:User läd Seite Live Status
+2023-11-13 11:18:35,545:INFO:App gestartet
+2023-11-13 11:18:36,386:INFO:Authentifizierungsstatus: True
+2023-11-13 11:18:36,387:INFO:User: Martin
+2023-11-13 11:18:39,945:INFO:User läd Seite Live Status
+2023-11-13 11:18:44,147:INFO:App gestartet
+2023-11-13 11:18:44,224:INFO:App gestartet
+2023-11-13 11:18:45,542:INFO:Authentifizierungsstatus: True
+2023-11-13 11:18:45,542:INFO:User: Martin
+2023-11-13 11:19:26,539:INFO:User läd Seite Live Status
+2023-11-13 11:19:53,259:INFO:App gestartet
+2023-11-13 11:19:54,486:INFO:Authentifizierungsstatus: True
+2023-11-13 11:19:54,486:INFO:User: Martin
+2023-11-13 11:19:58,269:INFO:User läd Seite Live Status
+2023-11-13 11:20:45,253:INFO:App gestartet
+2023-11-13 11:20:46,134:INFO:Authentifizierungsstatus: True
+2023-11-13 11:20:46,135:INFO:User: Martin
+2023-11-13 11:20:49,507:INFO:User läd Seite Live Status
+2023-11-13 11:21:37,255:INFO:App gestartet
+2023-11-13 11:21:38,179:INFO:Authentifizierungsstatus: True
+2023-11-13 11:21:38,179:INFO:User: Martin
+2023-11-13 11:21:41,358:INFO:User läd Seite Live Status
+2023-11-13 11:22:29,264:INFO:App gestartet
+2023-11-13 11:22:30,140:INFO:Authentifizierungsstatus: True
+2023-11-13 11:22:30,140:INFO:User: Martin
+2023-11-13 11:22:33,451:INFO:User läd Seite Live Status
+2023-11-13 11:23:21,256:INFO:App gestartet
+2023-11-13 11:23:22,072:INFO:Authentifizierungsstatus: True
+2023-11-13 11:23:22,072:INFO:User: Martin
+2023-11-13 11:23:25,491:INFO:User läd Seite Live Status
+2023-11-13 11:24:13,259:INFO:App gestartet
+2023-11-13 11:24:14,064:INFO:Authentifizierungsstatus: True
+2023-11-13 11:24:14,064:INFO:User: Martin
+2023-11-13 11:24:17,336:INFO:User läd Seite Live Status
+2023-11-13 11:25:05,256:INFO:App gestartet
+2023-11-13 11:25:06,116:INFO:Authentifizierungsstatus: True
+2023-11-13 11:25:06,117:INFO:User: Martin
+2023-11-13 11:25:09,439:INFO:User läd Seite Live Status
+2023-11-13 11:25:57,255:INFO:App gestartet
+2023-11-13 11:25:58,140:INFO:Authentifizierungsstatus: True
+2023-11-13 11:25:58,140:INFO:User: Martin
+2023-11-13 11:26:01,448:INFO:User läd Seite Live Status
+2023-11-13 11:26:49,255:INFO:App gestartet
+2023-11-13 11:26:50,087:INFO:Authentifizierungsstatus: True
+2023-11-13 11:26:50,089:INFO:User: Martin
+2023-11-13 11:26:53,406:INFO:User läd Seite Live Status
+2023-11-13 11:27:41,264:INFO:App gestartet
+2023-11-13 11:27:42,180:INFO:Authentifizierungsstatus: True
+2023-11-13 11:27:42,180:INFO:User: Martin
+2023-11-13 11:27:45,558:INFO:User läd Seite Live Status
+2023-11-13 11:28:33,255:INFO:App gestartet
+2023-11-13 11:28:34,051:INFO:Authentifizierungsstatus: True
+2023-11-13 11:28:34,052:INFO:User: Martin
+2023-11-13 11:28:37,337:INFO:User läd Seite Live Status
+2023-11-13 11:29:25,261:INFO:App gestartet
+2023-11-13 11:29:26,113:INFO:Authentifizierungsstatus: True
+2023-11-13 11:29:26,113:INFO:User: Martin
+2023-11-13 11:29:29,668:INFO:User läd Seite Live Status
+2023-11-13 11:30:17,266:INFO:App gestartet
+2023-11-13 11:30:18,902:INFO:Authentifizierungsstatus: True
+2023-11-13 11:30:18,902:INFO:User: Martin
+2023-11-13 11:30:22,308:INFO:User läd Seite Live Status
+2023-11-13 11:31:10,260:INFO:App gestartet
+2023-11-13 11:31:11,099:INFO:Authentifizierungsstatus: True
+2023-11-13 11:31:11,099:INFO:User: Martin
+2023-11-13 11:31:14,626:INFO:User läd Seite Live Status
+2023-11-13 11:32:02,266:INFO:App gestartet
+2023-11-13 11:32:03,133:INFO:Authentifizierungsstatus: True
+2023-11-13 11:32:03,133:INFO:User: Martin
+2023-11-13 11:32:06,655:INFO:User läd Seite Live Status
+2023-11-13 11:32:54,257:INFO:App gestartet
+2023-11-13 11:32:55,126:INFO:Authentifizierungsstatus: True
+2023-11-13 11:32:55,126:INFO:User: Martin
+2023-11-13 11:32:58,540:INFO:User läd Seite Live Status
+2023-11-13 11:33:46,266:INFO:App gestartet
+2023-11-13 11:33:47,126:INFO:Authentifizierungsstatus: True
+2023-11-13 11:33:47,126:INFO:User: Martin
+2023-11-13 11:33:50,561:INFO:User läd Seite Live Status
+2023-11-13 11:34:38,324:INFO:App gestartet
+2023-11-13 11:34:39,514:INFO:Authentifizierungsstatus: True
+2023-11-13 11:34:39,514:INFO:User: Martin
+2023-11-13 11:34:46,432:INFO:User läd Seite Admin
+2023-11-13 11:34:52,858:INFO:App gestartet
+2023-11-13 11:34:53,674:INFO:Authentifizierungsstatus: True
+2023-11-13 11:34:53,675:INFO:User: Martin
+2023-11-13 11:34:57,179:INFO:User läd Seite Live Status
