@@ -11,6 +11,7 @@ from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
 from Seiten.P_User_Reports import pageUserReport
 from Seiten.P_Forecast import main as pageForecast
+from Seiten.P_Nachschub import SAPWM 
 from Data_Class.SQL import read_table, updateTable
 
 
@@ -88,16 +89,16 @@ img = Image.open('Data/img/logo.png', mode='r')
 def berechtigung():
     if st.session_state.rechte == 1:
         #admin Vollzugriff
-        return ["Live Status",'Reports','User Reports','Forecast','Admin']
+        return ["Live Status",'Reports','User Reports','Forecast','Admin', 'Lagerverwaltung']
     # else:
     #     return ['Wartung']
     elif st.session_state.rechte == 2: 
         # Manager
-        return ["Live Status",'Reports','User Reports','Admin', 'Forecast']
+        return ["Live Status",'Reports','User Reports','Admin', 'Forecast','Lagerverwaltung']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 
-        return ["Live Status",'Reports','Forecast']
+        return ["Live Status",'Reports','Forecast','Lagerverwaltung']
     
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd
@@ -144,3 +145,5 @@ if authentication_status == True:
     if sel_main_m == 'Forecast':
         pageForecast()
         logging.info('User läd Seite Forecast')
+    if sel_main_m == 'Lagerverwaltung':
+        SAPWM.seite()

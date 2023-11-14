@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 import uuid
 import streamlit as st
-from Data_Class.SQL import SQL_TabellenLadenBearbeiten as sql
+from Data_Class.MMSQL_connection import read_Table, save_Table
 
 
 def upload_file_to_blob_storage(filename, file_object, herkunft):
@@ -47,7 +47,7 @@ def upload_file_to_blob_storage(filename, file_object, herkunft):
     df = pd.DataFrame({'filename': [filename], 'filenameorg': [filenameorg], 'user': [user], 'anwendung':herkunft, 'dateTime': [pd.Timestamp.now()]})
     #sql.sql_createTable('AzureStorage',df2)
     #sql.sql_createTable('AzureStorage',df)
-    sql.addtoTable('AzureStorage',df)
+    save_Table(df,'AzureStorage')
     return filename
 
 def get_blob_list():

@@ -10,8 +10,9 @@ pipreqs "/Users/martinwolf/Python/PAMS 2.0"
 Successfully saved requirements file in   /Users/martinwolf/Python/PAMS 2.0/requirements.txt
 
 
+Check if SKU in DFOrder if not stWarning Stammdaten 
 
-
+LS 3202491346
 
 ## Code 
         Python 3.10.7
