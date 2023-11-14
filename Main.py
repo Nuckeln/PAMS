@@ -11,7 +11,7 @@ from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
 from Seiten.P_User_Reports import pageUserReport
 from Seiten.P_Forecast import main as pageForecast
-from Seiten.P_Nachschub import SAPWM 
+from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Data_Class.SQL import read_table, updateTable
 
 
@@ -146,4 +146,4 @@ if authentication_status == True:
         pageForecast()
         logging.info('User läd Seite Forecast')
     if sel_main_m == 'Lagerverwaltung':
-        SAPWM.seite()
+        pageStellplatzverwaltung()
