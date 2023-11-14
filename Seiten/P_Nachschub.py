@@ -13,33 +13,33 @@ from io import BytesIO
 
 
 
-class figSAPWM:       
+# class figSAPWM:       
 
-    def fig_SN1(df):
-        df = df[df.LGTYP != 'TN1']
-        anzZugrBIN15min = df.groupby(['LGPLA','MaterialNumber']).size().reset_index(name='Anzahl Zugriffe SKU/BIN')
-        # create a heatmap with the numbers of LGPLA x = quantity of LGPLA
-        # sort the values
-        anzZugrBIN15min = anzZugrBIN15min.sort_values(by=['Anzahl Zugriffe SKU/BIN'], ascending=False)
-        fig = px.bar(anzZugrBIN15min, x='LGPLA', y='Anzahl Zugriffe SKU/BIN', color='Anzahl Zugriffe SKU/BIN',hover_data=['MaterialNumber'])
-        fig.update(layout_coloraxis_showscale=False)
-        fig.update_layout(yaxis=dict(visible=False))
-        return fig
+#     def fig_SN1(df):
+#         df = df[df.LGTYP != 'TN1']
+#         anzZugrBIN15min = df.groupby(['LGPLA','MaterialNumber']).size().reset_index(name='Anzahl Zugriffe SKU/BIN')
+#         # create a heatmap with the numbers of LGPLA x = quantity of LGPLA
+#         # sort the values
+#         anzZugrBIN15min = anzZugrBIN15min.sort_values(by=['Anzahl Zugriffe SKU/BIN'], ascending=False)
+#         fig = px.bar(anzZugrBIN15min, x='LGPLA', y='Anzahl Zugriffe SKU/BIN', color='Anzahl Zugriffe SKU/BIN',hover_data=['MaterialNumber'])
+#         fig.update(layout_coloraxis_showscale=False)
+#         fig.update_layout(yaxis=dict(visible=False))
+#         return fig
 
-    def fig_TN1(df):
-        # TODO Wenn SKU gewählt dann Hervorheben mit Rot 
+#     def fig_TN1(df):
+#         # TODO Wenn SKU gewählt dann Hervorheben mit Rot 
 
-        df = df[df.LGTYP != 'SN1']
-        anzZugrBIN15min = df.groupby(['LGPLA','MaterialNumber']).size().reset_index(name='Anzahl Zugriffe SKU/BIN')
-        # create a heatmap with the numbers of LGPLA x = quantity of LGPLA
-        # sort the values
-        anzZugrBIN15min = anzZugrBIN15min.sort_values(by=['Anzahl Zugriffe SKU/BIN'], ascending=False)
-        fig = px.bar(anzZugrBIN15min, x='LGPLA', y='Anzahl Zugriffe SKU/BIN', color='Anzahl Zugriffe SKU/BIN',hover_data=['MaterialNumber'])
-        #remove colur bar
-        fig.update(layout_coloraxis_showscale=False)
-        #fig.update_layout(yaxis=dict(visible=False))
+#         df = df[df.LGTYP != 'SN1']
+#         anzZugrBIN15min = df.groupby(['LGPLA','MaterialNumber']).size().reset_index(name='Anzahl Zugriffe SKU/BIN')
+#         # create a heatmap with the numbers of LGPLA x = quantity of LGPLA
+#         # sort the values
+#         anzZugrBIN15min = anzZugrBIN15min.sort_values(by=['Anzahl Zugriffe SKU/BIN'], ascending=False)
+#         fig = px.bar(anzZugrBIN15min, x='LGPLA', y='Anzahl Zugriffe SKU/BIN', color='Anzahl Zugriffe SKU/BIN',hover_data=['MaterialNumber'])
+#         #remove colur bar
+#         fig.update(layout_coloraxis_showscale=False)
+#         #fig.update_layout(yaxis=dict(visible=False))
         
-        return fig
+#         return fig
 
 class SAPWM:
 
@@ -108,6 +108,7 @@ class SAPWM:
             sel_range = SAPWM.heute - datetime.timedelta(days=sel_range)
             
         #-- Bedarf letzte 7 Tage ermitteln und Df für Figur erstellen
+        dfOrg = dfBedarfSKU.copy()
         dfBedarfSKU = SAPWM.FilterNachDatum(sel_range,SAPWM.heute,dfOrders)
         #drop all columns except MaterialNumber PlannedDate, CorrospondingOuters. CorrospondingMasterCases, SaporderNumber
         dfBedarfSKU['MaterialNumber'] = dfBedarfSKU['MaterialNumber'].astype(str)
@@ -129,19 +130,24 @@ class SAPWM:
         dfBedarfSKU['LGPLA_TN'] = dfBedarfSKU['LGPLA_TN'].fillna('Kein Stellplatz in TN1')
         # Fill None in LGPLA with 'Kein Stellplatz'
         dfBedarfSKU = dfBedarfSKU[['MaterialNumber','PlannedDate','CorrespondingOuters','CorrespondingMastercases','SapOrderNumber','LGPLA_SN','LGTYP_SN','LGTYP_TN','LGPLA_TN']]
-        st.dataframe(dfBedarfSKU)
+
         
-        with st.expander('Nicht Gepflegte SKUs',expanded=True):
+        with st.expander('Nicht Gepflegte SKUs',expanded=False):
             df_nichtGepflegt_SN = dfBedarfSKU[dfBedarfSKU['LGPLA_SN'] == 'Kein Stellplatz in SN1']
             # drop duplicates in MaterialNumber
             df_nichtGepflegt_SN = df_nichtGepflegt_SN.drop_duplicates(subset=['MaterialNumber'])
             df_nichtGepflegt_TN = dfBedarfSKU[dfBedarfSKU['LGPLA_TN'] == 'Kein Stellplatz in TN1']
             # drop duplicates in MaterialNumber
             df_nichtGepflegt_TN = df_nichtGepflegt_TN.drop_duplicates(subset=['MaterialNumber'])
+            st.warning('Nicht gepflegte SKUs in SN1')
             st.dataframe(df_nichtGepflegt_SN)
+            st.warning('Nicht gepflegte SKUs in TN1')
             st.dataframe(df_nichtGepflegt_TN)
 
-        with st.expander('Kartonbedarf SN1',expanded=True):
+        with st.expander('Alle Bestellpositionen',expanded=False):
+            st.data_editor(dfBedarfSKU, key='my_editorALL')
+
+        with st.expander('Kartonbedarf SN1',expanded=False):
             # filter CorrospondingMastercases > 0
             dfBedarfSKU_SN = dfBedarfSKU[dfBedarfSKU['CorrespondingMastercases'] > 0]
             # drop PlannedDate and SapOrderNumber
@@ -156,7 +162,7 @@ class SAPWM:
             fig.update_layout(yaxis=dict(visible=False))
             st.plotly_chart(fig, use_container_width=True)
             
-        with st.expander('Stangenbedarf TN1',expanded=True):
+        with st.expander('Stangenbedarf TN1',expanded=False):
             # filter CorrospondingMastercases > 0
             dfBedarfSKU_TN = dfBedarfSKU[dfBedarfSKU['CorrespondingOuters'] > 0]
             # drop PlannedDate and SapOrderNumber
@@ -171,72 +177,15 @@ class SAPWM:
             fig.update_layout(yaxis=dict(visible=False))
             st.plotly_chart(fig, use_container_width=True)
 
-#            st.plotly_chart(fig, use_container_width=True)
-
-    #     with st.expander('Stangenbedarf TN1', expanded=True):
-    #         dfKarton = bedarfOut(dfBedarfSKU,dfOrders)
-    #         ag.AgGrid(dfKarton,height=400)
-    #         fig2 = figSAPWM.fig_TN1(dfFig)
-    #         st.plotly_chart(fig2, use_container_width=True)
-
-
-    #     dfFig = dfBedarfSKU.groupby(['MaterialNumber','PlannedDate','Picks OUT']).size().reset_index(name='Picks CS')
-
-    #     #-- Stellplatzdaten mit Bedarf zusammenführen-----
-    #     #MaterialNumber to int
-    #     dfBedarfSKU = dfBedarfSKU.groupby(['MaterialNumber']).sum().reset_index()
-
-    #     #-- Filter nach Datum
-    #     if seldate:
-    #         dfOrders = SAPWM.FilterNachDatum(seldate,seldate,dfOrders)
-
-    #     def bedarfCS(dfBedarfSKU,dfOrders):
-    #             #--- Stellplatzdaten mit Bedarf zusammenführen-----
-    #         dfBedarfSKU['Bedarf über Zeitraum'] = dfBedarfSKU['Picks CS']
-    #         dfBedarfSKU = dfBedarfSKU[['MaterialNumber','Bedarf über Zeitraum']]
-    #         dfOrders = dfOrders.merge(dfBedarfSKU, how='left', left_on='MaterialNumber', right_on='MaterialNumber')
-    #         dfOrders['MaterialNumber'] = dfOrders['MaterialNumber'].astype(str)
-
-    #         dfOrders = dfOrders.merge(dfBIN, how='left', left_on='MaterialNumber', right_on='MATNR')
-    #         dfOrders = dfOrders.fillna('Kein Stellplatz')
-    #         dfOrders['Bedarf über Zeitraum'] = dfOrders['Bedarf über Zeitraum']#.astype(int)
-    #         #------drop unnötige Spalten -----
-    #         dfOrders = dfOrders[['MaterialNumber','SapOrderNumber','Bedarf über Zeitraum','PlannedDate' ,'Picks CS','LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM']]
-    #         dfOrders['LGPLA'] = dfOrders['LGPLA'].astype(str)
-    #         dfOrders = dfOrders.rename(columns={'Picks CS': 'Bedarf gewählter Tag'})
-    #         dfOrders = dfOrders.groupby(['MaterialNumber','SapOrderNumber','Bedarf über Zeitraum','PlannedDate' ,'LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM'])['Bedarf gewählter Tag'].sum().reset_index()
-    #         dfOrders = dfOrders[['MaterialNumber','SapOrderNumber','Bedarf über Zeitraum','Bedarf gewählter Tag','PlannedDate' ,'LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM']]
-    #     # SN1 rausfiltern 
-    #         dfOrders = dfOrders[dfOrders.LGTYP != 'TN1']
-    #         dfOrders = dfOrders[dfOrders['Bedarf gewählter Tag'] != 0]
-
-    #         return dfOrders
-        
-    #     def bedarfOut(dfBedarfSKU,dfOrders):
-    #             #--- Stellplatzdaten mit Bedarf zusammenführen-----
-    #         dfBedarfSKU['Bedarf über Zeitraum'] = dfBedarfSKU['Picks OUT']
-    #         dfBedarfSKU = dfBedarfSKU[['MaterialNumber','Bedarf über Zeitraum']]
-    #         dfOrders = dfOrders.merge(dfBedarfSKU, how='left', left_on='MaterialNumber', right_on='MaterialNumber')
-    #         dfOrders = dfOrders.merge(dfBIN, how='left', left_on='MaterialNumber', right_on='MATNR')
-    #         dfOrders = dfOrders.fillna('Kein Stellplatz')
-    #         dfOrders['Bedarf über Zeitraum'] = dfOrders['Bedarf über Zeitraum']#.astype(int)
-    #         #------drop unnötige Spalten -----
-    #         dfOrders = dfOrders[['MaterialNumber','SapOrderNumber','Bedarf über Zeitraum','PlannedDate' ,'Picks OUT','LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM']]
-    #         dfOrders['LGPLA'] = dfOrders['LGPLA'].astype(str)
-    #         dfOrders = dfOrders.rename(columns={'Picks OUT': 'Bedarf gewählter Tag'})
-    #         dfOrders = dfOrders.groupby(['MaterialNumber','SapOrderNumber','Bedarf über Zeitraum','PlannedDate' ,'LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM'])['Bedarf gewählter Tag'].sum().reset_index()
-    #         dfOrders = dfOrders[['MaterialNumber','SapOrderNumber','Bedarf über Zeitraum','Bedarf gewählter Tag','PlannedDate' ,'LGPLA', 'LPMIN' ,'LPMAX' ,'LGTYP', 'LGNUM']]
-    #     # Tn1 rausfiltern 
-    #         dfOrders = dfOrders[dfOrders.LGTYP != 'SN1']
-    #         dfOrders = dfOrders[dfOrders['Bedarf gewählter Tag'] != 0]
-    #         return dfOrders
-
-    #     dfBedarfSKU = dfBedarfSKU.groupby(['MaterialNumber']).sum().reset_index()
-
-
+        with st.expander('Rohdaten',expanded=False):
+            st.data_editor(dfOrg, key='my_editorRohdaten')
     def seite():
 
         SAPWM.pageStellplatzverwaltung()
+        if st.button('Daten vom Server neu laden'):
+            st.cache_data.clear()
+            #rerun page
+            st.experimental_rerun()
 
             
 
