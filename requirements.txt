@@ -14,4 +14,4 @@ streamlit-aggrid
 pyodbc
 openpyxl
 st-annotated-text
-
+seaborn
