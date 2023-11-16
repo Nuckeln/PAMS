@@ -193,7 +193,7 @@ def pageStellplatzverwaltung():
             st.dataframe(df_nichtGepflegt_TN)
     if kartonbedarf:
         with st.expander('Kartonbedarf SN1',expanded=True):
-            st.error('Die Frequenz anzahl Bestellpositionen mit darstellen und die Gesamtmenge Tag / gewählter Zeitraum')
+         
             # filter CorrospondingMastercases > 0
             dfBedarfSKU_SN = dfBedarfSKU[dfBedarfSKU['CorrespondingMastercases'] > 0]
             # Lieferscheine = Zähle MaterialNumber in dfBedarfSKU_SN
