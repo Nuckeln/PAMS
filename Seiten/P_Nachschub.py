@@ -233,7 +233,13 @@ def pageStellplatzverwaltung():
             dfBedarfSKU_TN = dfBedarfSKU_TN.groupby(['MaterialNumber','LGPLA_TN']).sum().reset_index()
             # sort by CorrespondingMastercases
             dfBedarfSKU_TN = dfBedarfSKU_TN.sort_values(by=['CorrespondingOuters'], ascending=False)
+            material_daily_count_sku2 = dfBedarfSKU.groupby(['MaterialNumber', 'PlannedDate']).size().unstack(fill_value=0)
 
+            # Umwandeln der Gruppierung in einen DataFrame
+            material_daily_count_sku_df2 = material_daily_count_sku2.reset_index()
+
+            # Zusammenführen des Ergebnisses mit dfBedarfSKU_SN
+            dfBedarfSKU_TN = pd.merge(dfBedarfSKU_TN, material_daily_count_sku_df2, on="MaterialNumber", how="left")
             #dfBedarfSKU_TN = pd.merge(dfBedarfSKU_TN, df_alleVerbotenenSKU, how='left', left_on='MaterialNumber', right_on='MaterialNumber')
 
 
