@@ -12,6 +12,10 @@ from io import BytesIO
 from PIL import Image
 
 
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
 
 
 heute = datetime.date.today()
@@ -52,11 +56,13 @@ def untersagte_sku_TN(masterdata,dfBIN):
     df_verbot = df_verbot[['MATNR','LGPLA']] 
     #save dfVerbot
     df_verbot.to_csv('Data/df_verbot.csv', index=False)
-    
+    return df
 
 @st.cache_data
 def loadDF():
     df = read_Table('OrderDatenLines')
+    if df.empty:
+        df = pd.read_csv('Data/df_orderlines.csv')
     masterdata = read_Table('data_materialmaster_Duplicate_InternationalArticleNumber')
     # filter only rows where IsDeleted == 0 and isReturn == 0
     ##TODO 
@@ -73,12 +79,9 @@ def loadDF():
 
     file = Data_Class.AzureStorage.get_blob_file(file_name)
     dfBIN = pd.read_excel(BytesIO(file), engine='openpyxl', header=3)
-    untersagte_sku_TN(masterdata,dfBIN)       
+    df_alleVerbotenenSKU = untersagte_sku_TN(masterdata,dfBIN)       
 
-
-
-
-    return df, masterdata,dfBIN, filenameOrg
+    return df, masterdata,dfBIN, filenameOrg,df_alleVerbotenenSKU
     
 def menueLaden():
     selected2 = option_menu(None, ["Stellplatzverwaltung", "Zugriffe SN/TN "],
@@ -102,7 +105,7 @@ def datenUpload(masterdata,dfBIN):
     
         
 def pageStellplatzverwaltung():
-    dfOrders,masterdata,dfBIN, filenameOrg = loadDF()
+    dfOrders,masterdata,dfBIN, filenameOrg, df_alleVerbotenenSKU= loadDF()
     #st.data_editor(dfOrders)
 
     datenUpload(masterdata,dfBIN)
@@ -157,71 +160,143 @@ def pageStellplatzverwaltung():
 
     dfBedarfSKU, dfOrg, dfBIN_TN, dfBIN_SN = berechnungen(dfBedarfSKU)
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
     with col1:
         nichtgepflegteSKU = st.toggle('Nicht gepflegte SKUs', key='nichtgepflegteSKU')
     with col2:
         stangenbedarf = st.toggle('Stangenbedarf', key='stangenbedarf')
     with col3:
         kartonbedarf = st.toggle('Kartonbedarf', key='kartonbedarf')
+    with col4:
+        heatmap = st.toggle('Heatmap', key='heatmap')
     img_strip = Image.open('Data/img/strip.png')   
     img_strip = img_strip.resize((1000, 15))     
     st.image(img_strip, use_column_width=True, caption='',)     
 
     #----- Filter nach Stellplatz -----                              
+    if nichtgepflegteSKU:
+        with st.expander('Nicht Gepflegte SKUs',expanded=True):
+            df_nichtGepflegt_SN = dfBedarfSKU[dfBedarfSKU['LGPLA_SN'] == 'Kein Stellplatz in SN1']
+            # drop duplicates in MaterialNumber
+            df_nichtGepflegt_SN = df_nichtGepflegt_SN.drop_duplicates(subset=['MaterialNumber'])
+            df_nichtGepflegt_TN = dfBedarfSKU[dfBedarfSKU['LGPLA_TN'] == 'Kein Stellplatz in TN1']
+            # drop duplicates in MaterialNumber
+            df_nichtGepflegt_TN = df_nichtGepflegt_TN.drop_duplicates(subset=['MaterialNumber'])
+            st.warning('Nicht gepflegte SKUs in SN1')
+            #sort by CorrespondingMastercases
+            df_nichtGepflegt_SN = df_nichtGepflegt_SN.sort_values(by=['CorrespondingMastercases'], ascending=False)
+            st.dataframe(df_nichtGepflegt_SN)
+            st.warning('Nicht gepflegte SKUs in TN1')
+            df_nichtGepflegt_TN = pd.merge(df_nichtGepflegt_TN, df_alleVerbotenenSKU, how='left', left_on='MaterialNumber', right_on='MaterialNumber')
+            #sort by CorrespondingMastercases
+            df_nichtGepflegt_TN = df_nichtGepflegt_TN.sort_values(by=['CorrespondingOuters'], ascending=False)
+            st.dataframe(df_nichtGepflegt_TN)
+    if kartonbedarf:
+        with st.expander('Kartonbedarf SN1',expanded=True):
+            st.error('Die Frequenz anzahl Bestellpositionen mit darstellen und die Gesamtmenge Tag / gewählter Zeitraum')
+            # filter CorrospondingMastercases > 0
+            dfBedarfSKU_SN = dfBedarfSKU[dfBedarfSKU['CorrespondingMastercases'] > 0]
+            # Lieferscheine = Zähle MaterialNumber in dfBedarfSKU_SN
 
-    with st.expander('Nicht Gepflegte SKUs',expanded=False):
-        df_nichtGepflegt_SN = dfBedarfSKU[dfBedarfSKU['LGPLA_SN'] == 'Kein Stellplatz in SN1']
-        # drop duplicates in MaterialNumber
-        df_nichtGepflegt_SN = df_nichtGepflegt_SN.drop_duplicates(subset=['MaterialNumber'])
-        df_nichtGepflegt_TN = dfBedarfSKU[dfBedarfSKU['LGPLA_TN'] == 'Kein Stellplatz in TN1']
-        # drop duplicates in MaterialNumber
-        df_nichtGepflegt_TN = df_nichtGepflegt_TN.drop_duplicates(subset=['MaterialNumber'])
-        st.warning('Nicht gepflegte SKUs in SN1')
-        st.dataframe(df_nichtGepflegt_SN)
-        st.warning('Nicht gepflegte SKUs in TN1')
-        st.dataframe(df_nichtGepflegt_TN)
+            # drop PlannedDate and SapOrderNumber
+            dfBedarfSKU_SN = dfBedarfSKU_SN[['MaterialNumber','CorrespondingMastercases','LGPLA_SN']]
+            # group by MaterialNumber and sum CorrespondingMastercases
+            dfBedarfSKU_SN = dfBedarfSKU_SN.groupby(['MaterialNumber','LGPLA_SN']).sum().reset_index()
+            # sort by CorrespondingMastercases
+            dfBedarfSKU_SN = dfBedarfSKU_SN.sort_values(by=['CorrespondingMastercases'], ascending=False)
 
-    with st.expander('Alle Bestellpositionen',expanded=False):
-        st.data_editor(dfBedarfSKU, key='my_editorALL')
+            # Count Positionen 
+            material_daily_count_sku = dfBedarfSKU.groupby(['MaterialNumber', 'PlannedDate']).size().unstack(fill_value=0)
 
-    with st.expander('Kartonbedarf SN1',expanded=False):
-        st.error('Die Frequenz anzahl Bestellpositionen mit darstellen und die Gesamtmenge Tag / gewählter Zeitraum')
-        # filter CorrospondingMastercases > 0
+            # Umwandeln der Gruppierung in einen DataFrame
+            material_daily_count_sku_df = material_daily_count_sku.reset_index()
+
+            # Zusammenführen des Ergebnisses mit dfBedarfSKU_SN
+            dfBedarfSKU_SN = pd.merge(dfBedarfSKU_SN, material_daily_count_sku_df, on="MaterialNumber", how="left")
+
+
+            st.data_editor(dfBedarfSKU_SN, key='my_editorSNBedarf')
+            #save to excel
+            dfBedarfSKU.to_excel('Data/dfBedarfSKU.xlsx', index=False)
+            fig = px.bar(dfBedarfSKU_SN, x='LGPLA_SN', y='CorrespondingMastercases', color='CorrespondingMastercases',hover_data=['MaterialNumber'])
+            fig.update(layout_coloraxis_showscale=False)
+            fig.update_layout(yaxis=dict(visible=False))
+            st.plotly_chart(fig, use_container_width=True)
+    if stangenbedarf:    
+        with st.expander('Stangenbedarf TN1',expanded=True):
+
+            # filter CorrospondingMastercases > 0
+            dfBedarfSKU_TN = dfBedarfSKU[dfBedarfSKU['CorrespondingOuters'] > 0]
+            # drop PlannedDate and SapOrderNumber
+            dfBedarfSKU_TN = dfBedarfSKU_TN[['MaterialNumber','CorrespondingOuters','LGPLA_TN']]
+            # group by MaterialNumber and sum CorrespondingMastercases
+            dfBedarfSKU_TN = dfBedarfSKU_TN.groupby(['MaterialNumber','LGPLA_TN']).sum().reset_index()
+            # sort by CorrespondingMastercases
+            dfBedarfSKU_TN = dfBedarfSKU_TN.sort_values(by=['CorrespondingOuters'], ascending=False)
+
+            #dfBedarfSKU_TN = pd.merge(dfBedarfSKU_TN, df_alleVerbotenenSKU, how='left', left_on='MaterialNumber', right_on='MaterialNumber')
+
+
+            st.data_editor(dfBedarfSKU_TN, key='my_editorTNBedarf')
+            fig = px.bar(dfBedarfSKU_TN, x='LGPLA_TN', y='CorrespondingOuters', color='CorrespondingOuters',hover_data=['MaterialNumber'])
+            fig.update(layout_coloraxis_showscale=False)
+            fig.update_layout(yaxis=dict(visible=False))
+            st.plotly_chart(fig, use_container_width=True)
+
+    def karton_heatmap(dfBedarf):
+
+        LagerNeu_path = 'Data/appData/LagerNeu.xlsx'
+        image_path = 'Data/appData/Lager.png'
+
+        LagerNeu = pd.read_excel(LagerNeu_path)
+
+        # Bereinigen Sie die LagerNeu DataFrame
+        LagerNeu_clean = LagerNeu.drop(columns=[col for col in LagerNeu if col.startswith('Unnamed:')])
+
+        # Zusammenführen der DataFrames basierend auf dem Lagerplatz
+        merged_data = pd.merge(dfBedarf, LagerNeu_clean, left_on='LGPLA_SN', right_on='Stellplatz', how='left')
+
+        # Entfernen von Zeilen ohne Koordinaten
+        heatmap_data = merged_data.dropna(subset=['X', 'Y'])
+
+        # Normalisierung der 'CorrespondingMastercases'
+        max_cases = heatmap_data['CorrespondingMastercases'].max()
+        heatmap_data['NormalizedCases'] = heatmap_data['CorrespondingMastercases'] / max_cases
+
+        # Funktion zur Zuweisung von Farben basierend auf normalisierten Fällen
+        def get_color(value):
+            return plt.cm.hot(value)
+
+        # Laden des Lagerbildes
+        warehouse_image = Image.open(image_path)
+
+        # Erstellen des Plots
+        plt.figure(figsize=(16, 8))
+        plt.imshow(warehouse_image)
+
+        # Heatmap über das Lagerbild legen
+        for index, row in heatmap_data.iterrows():
+            plt.gca().add_patch(plt.Rectangle((row['X'], row['Y']), 100, 100, color=get_color(row['NormalizedCases']), alpha=0.5))
+            
+            # Beschriftung hinzufügen über den Blöcken
+            plt.text(row['X'], row['Y'] + 1, str(row['CorrespondingMastercases']), color='white', fontfamily='Montserrat', fontsize=12)
+
+        plt.axis('off')
+        fig = plt.gcf()
+        st.pyplot(fig)
+
+
+    if heatmap:
         dfBedarfSKU_SN = dfBedarfSKU[dfBedarfSKU['CorrespondingMastercases'] > 0]
+        # Lieferscheine = Zähle MaterialNumber in dfBedarfSKU_SN
+        dfBedarfSKU_SN['Lieferscheine'] = dfBedarfSKU_SN.groupby('MaterialNumber')['MaterialNumber'].transform('count')
+
+        #dfBedarfSKU_SN['Lieferscheine'] = dfBedarfSKU.groupby(['MaterialNumber'])['MaterialNumber'].transform('count')
+
         # drop PlannedDate and SapOrderNumber
-        dfBedarfSKU_SN = dfBedarfSKU_SN[['MaterialNumber','CorrespondingMastercases','LGPLA_SN']]
-        # group by MaterialNumber and sum CorrespondingMastercases
-        dfBedarfSKU_SN = dfBedarfSKU_SN.groupby(['MaterialNumber','LGPLA_SN']).sum().reset_index()
-        # sort by CorrespondingMastercases
-        dfBedarfSKU_SN = dfBedarfSKU_SN.sort_values(by=['CorrespondingMastercases'], ascending=False)
-        st.data_editor(dfBedarfSKU_SN, key='my_editorSNBedarf')
-        fig = px.bar(dfBedarfSKU_SN, x='LGPLA_SN', y='CorrespondingMastercases', color='CorrespondingMastercases',hover_data=['MaterialNumber'])
-        fig.update(layout_coloraxis_showscale=False)
-        fig.update_layout(yaxis=dict(visible=False))
-        st.plotly_chart(fig, use_container_width=True)
-        
-    with st.expander('Stangenbedarf TN1',expanded=False):
-        st.error('Die Verbotenen SKU noch Filtern!')  
-        # filter CorrospondingMastercases > 0
-        dfBedarfSKU_TN = dfBedarfSKU[dfBedarfSKU['CorrespondingOuters'] > 0]
-        # drop PlannedDate and SapOrderNumber
-        dfBedarfSKU_TN = dfBedarfSKU_TN[['MaterialNumber','CorrespondingOuters','LGPLA_TN']]
-        # group by MaterialNumber and sum CorrespondingMastercases
-        dfBedarfSKU_TN = dfBedarfSKU_TN.groupby(['MaterialNumber','LGPLA_TN']).sum().reset_index()
-        # sort by CorrespondingMastercases
-        dfBedarfSKU_TN = dfBedarfSKU_TN.sort_values(by=['CorrespondingOuters'], ascending=False)
-        st.data_editor(dfBedarfSKU_TN, key='my_editorTNBedarf')
-        fig = px.bar(dfBedarfSKU_TN, x='LGPLA_TN', y='CorrespondingOuters', color='CorrespondingOuters',hover_data=['MaterialNumber'])
-        fig.update(layout_coloraxis_showscale=False)
-        fig.update_layout(yaxis=dict(visible=False))
-        st.plotly_chart(fig, use_container_width=True)
-
-    with st.expander('Rohdaten',expanded=False):
-        st.data_editor(dfOrg, key='my_editorRohdaten')
-
-
-    if st.button('Daten vom Server neu laden'):
+        dfBedarfSKU_SN = dfBedarfSKU_SN[['MaterialNumber','CorrespondingMastercases','LGPLA_SN','Lieferscheine']]
+        karton_heatmap(dfBedarfSKU_SN)
+    if st.button('Aktualisieren'):
         st.cache_data.clear()
         #rerun page
         st.experimental_rerun()

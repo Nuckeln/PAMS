@@ -1,5 +1,6 @@
 # Python Module
 import streamlit as st # Streamlit Web App Framework
+import os
 from streamlit_option_menu import option_menu # pip install streamlit-option-menu # CSS Style für Main Menu # https://icons.getbootstrap.com
 from PIL import Image # Bilder
 import logging # Logging
@@ -15,6 +16,7 @@ from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Data_Class.SQL import read_table, updateTable
 
 
+
 # Logging Konfiguration
 logging.basicConfig(filename='pams_app.log', level=logging.INFO,
                     format='%(asctime)s:%(levelname)s:%(message)s')
@@ -22,7 +24,12 @@ logging.basicConfig(filename='pams_app.log', level=logging.INFO,
 # Log-Eintrag für den Start der App
 logging.info('App gestartet')
 
-
+def checkSystem():
+    try:
+        a = os.environ['SQLAZURECONNSTR_DbConnection']
+        return 'Dev System'
+    except:
+        return 'IDE System'
 # Zum Ausführenv
 #MAC#   streamlit run "/Users/martinwolf/Python/PAMS 2.0/main.py"
  
@@ -117,6 +124,8 @@ if authentication_status == True:
     user = st.session_state.user
     logging.info(f'User: {user}')
     with st.sidebar: 
+        check = checkSystem()
+        st.write(f'**{check}**')
         try:
             st.image(img)
         except:
