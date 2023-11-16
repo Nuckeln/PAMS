@@ -61,7 +61,24 @@ def loadDF():
     # filter only rows where IsDeleted == 0 and isReturn == 0
     ##TODO 
     df = df[(df['IsDeleted'] == 0) & (df['IsReturnDelivery'] == 0)]
-    return df, masterdata
+     
+    file = read_Table('AzureStorage')
+    #serch last entry Nachschub[anwendung] == Nachschub and get filename
+    filename = file[file['anwendung'] == 'Nachschub']
+    filename = filename.sort_values(by=['dateTime'], ascending=False)
+    file_name = filename.iloc[0]['filename']
+    filenameOrg = filename.iloc[0]['filenameorg']
+    # add filename to a string
+    file_name = file_name.lower()
+
+    file = Data_Class.AzureStorage.get_blob_file(file_name)
+    dfBIN = pd.read_excel(BytesIO(file), engine='openpyxl', header=3)
+    untersagte_sku_TN(masterdata,dfBIN)       
+
+
+
+
+    return df, masterdata,dfBIN, filenameOrg
     
 def menueLaden():
     selected2 = option_menu(None, ["Stellplatzverwaltung", "Zugriffe SN/TN "],
@@ -81,27 +98,13 @@ def FilterNachDatum(day1, day2, df):
 def datenUpload(masterdata,dfBIN):
     with st.expander('Stellplatzdaten Updaten', expanded=False):
         Data_Class.AzureStorage.st_Azure_uploadBtn('Nachschub')
-        untersagte_sku_TN(masterdata,dfBIN)        
+  
     
-def datenLadenBIN():
-    file = read_Table('AzureStorage')
-    #serch last entry Nachschub[anwendung] == Nachschub and get filename
-    filename = file[file['anwendung'] == 'Nachschub']
-    filename = filename.sort_values(by=['dateTime'], ascending=False)
-    file_name = filename.iloc[0]['filename']
-    filenameOrg = filename.iloc[0]['filenameorg']
-    # add filename to a string
-    file_name = file_name.lower()
-
-    file = Data_Class.AzureStorage.get_blob_file(file_name)
-    df = pd.read_excel(BytesIO(file), engine='openpyxl', header=3)
-
-    return df, filenameOrg
         
 def pageStellplatzverwaltung():
-    dfOrders,masterdata = loadDF()
+    dfOrders,masterdata,dfBIN, filenameOrg = loadDF()
     #st.data_editor(dfOrders)
-    dfBIN, filenameOrg = datenLadenBIN()
+
     datenUpload(masterdata,dfBIN)
 
     #----- Lade Stellplatzdaten -----
