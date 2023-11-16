@@ -9,15 +9,19 @@ from streamlit_option_menu import option_menu
 from Data_Class.MMSQL_connection import read_Table , save_Table
 import Data_Class.AzureStorage
 from io import BytesIO
+from PIL import Image
+
 
 
 
 heute = datetime.date.today()
 morgen = heute + datetime.timedelta(days=4)
 heute_minus_10_tage =  datetime.timedelta(days=30)
-def untersagte_sku_TN():
+
+def untersagte_sku_TN(masterdata,dfBIN):
     df = read_Table('data_materialmaster-MaterialMasterUnitOfMeasures')
     dfText = read_Table('MaterialMasterMaterialDescriptions')
+    masterdata = read_Table('data_materialmaster_Duplicate_InternationalArticleNumber')
 
     # filtere nur nicht leer in InternationalArticleNumber
     df = df[df['InternationalArticleNumber'].notna()]
@@ -27,11 +31,36 @@ def untersagte_sku_TN():
 
     # Filter nur Zeilen in denen es Duplikate in InternationalArticleNumber gibt
     df = df[df.duplicated(['Check'], keep=False)]
+
+
     save_Table(df, 'data_materialmaster_Duplicate_InternationalArticleNumber')
+    
+    #check if InternationalArticleNumber is in dfText
+    masterdata['MaterialNumber'] = masterdata['MaterialNumber'].str.replace('0000000000', '')
+    # filter dfBin by LPGTY == 'TN1'
+    dfBIN = dfBIN[dfBIN['LGTYP'] == 'TN1']
+    #Filter masterdata['UnitOfMeasure'] == 'OUT'
+    masterdata = masterdata[masterdata['UnitOfMeasure'] == 'OUT']
+    #MaterialNumber to float
+    masterdata['MaterialNumber'] = masterdata['MaterialNumber'].astype(float)
+    df_verbot = pd.merge(dfBIN, masterdata, how='inner', left_on='MATNR', right_on='MaterialNumber')
+    # filter is LGPLA_TN not None
+    df_verbot = df_verbot[df_verbot['LGPLA'].notna()]
+    # drop duplicates in MATNR
+    df_verbot = df_verbot.drop_duplicates(subset=['MATNR'])
+    # drop columns bis auf MATNR and LGPLA 
+    df_verbot = df_verbot[['MATNR','LGPLA']] 
+    #save dfVerbot
+    df_verbot.to_csv('Data/df_verbot.csv', index=False)
+    
+
 @st.cache_data
 def loadDF():
     df = read_Table('OrderDatenLines')
     masterdata = read_Table('data_materialmaster_Duplicate_InternationalArticleNumber')
+    # filter only rows where IsDeleted == 0 and isReturn == 0
+    ##TODO 
+    df = df[(df['IsDeleted'] == 0) & (df['IsReturnDelivery'] == 0)]
     return df, masterdata
     
 def menueLaden():
@@ -44,15 +73,15 @@ def FilterNachDatum(day1, day2, df):
     day1 = pd.to_datetime(day1).date()
     day2 = pd.to_datetime(day2).date()
     # filter date
-    df['PlannedDate'] = pd.to_datetime(df['PlannedDate']).dt.date
+    df['PlannedDate'] = pd.to_datetime(df['PlannedDate'], format="%d.%m.%Y").dt.date 
     df = df[(df['PlannedDate'] >= day1) & (df['PlannedDate'] <= day2)]
     df = df.astype(str)
     return df
 
-def datenUpload():
+def datenUpload(masterdata,dfBIN):
     with st.expander('Stellplatzdaten Updaten', expanded=False):
         Data_Class.AzureStorage.st_Azure_uploadBtn('Nachschub')
-        untersagte_sku_TN()        
+        untersagte_sku_TN(masterdata,dfBIN)        
     
 def datenLadenBIN():
     file = read_Table('AzureStorage')
@@ -72,10 +101,10 @@ def datenLadenBIN():
 def pageStellplatzverwaltung():
     dfOrders,masterdata = loadDF()
     #st.data_editor(dfOrders)
-    datenUpload()
+    dfBIN, filenameOrg = datenLadenBIN()
+    datenUpload(masterdata,dfBIN)
 
     #----- Lade Stellplatzdaten -----
-    dfBIN, filenameOrg = datenLadenBIN()
     st.write('Stellplatzdaten: ',filenameOrg)
     dfBIN['MATNR'] = dfBIN['MATNR'].astype(str)
     dfBIN['MATNR'] = dfBIN['MATNR'].str[:8]
@@ -88,6 +117,15 @@ def pageStellplatzverwaltung():
         sel_range = st.slider('Wähle einen Bedarfszeitraum', min_value=1, max_value=14, value=5, step=1)
         sel_range = heute - datetime.timedelta(days=sel_range)
     dfBedarfSKU = FilterNachDatum(sel_range,heute,dfOrders)
+    st.write('Bedarfszeitraum: ' + str(sel_range) + ' bis ' + str(heute))
+    verbot = pd.read_csv('Data/df_verbot.csv')
+    # if verbot nicht leer dann values aus MATNR und  st.warning('Verbotene SKUs in TN1' + MATNR)
+    if verbot.empty:
+        pass
+    else:
+        st.error('Verbotene SKUs in TN1! Sofort Korrigieren!')
+        st.dataframe(verbot)
+
     def berechnungen(dfBedarfSKU):
         #-- Bedarf letzte 7 Tage ermitteln und Df für Figur erstellen
         dfOrg = dfBedarfSKU.copy()
@@ -116,6 +154,17 @@ def pageStellplatzverwaltung():
 
     dfBedarfSKU, dfOrg, dfBIN_TN, dfBIN_SN = berechnungen(dfBedarfSKU)
 
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        nichtgepflegteSKU = st.toggle('Nicht gepflegte SKUs', key='nichtgepflegteSKU')
+    with col2:
+        stangenbedarf = st.toggle('Stangenbedarf', key='stangenbedarf')
+    with col3:
+        kartonbedarf = st.toggle('Kartonbedarf', key='kartonbedarf')
+    img_strip = Image.open('Data/img/strip.png')   
+    img_strip = img_strip.resize((1000, 15))     
+    st.image(img_strip, use_column_width=True, caption='',)     
+
     #----- Filter nach Stellplatz -----                              
 
     with st.expander('Nicht Gepflegte SKUs',expanded=False):
@@ -134,6 +183,7 @@ def pageStellplatzverwaltung():
         st.data_editor(dfBedarfSKU, key='my_editorALL')
 
     with st.expander('Kartonbedarf SN1',expanded=False):
+        st.error('Die Frequenz anzahl Bestellpositionen mit darstellen und die Gesamtmenge Tag / gewählter Zeitraum')
         # filter CorrospondingMastercases > 0
         dfBedarfSKU_SN = dfBedarfSKU[dfBedarfSKU['CorrespondingMastercases'] > 0]
         # drop PlannedDate and SapOrderNumber
@@ -149,6 +199,7 @@ def pageStellplatzverwaltung():
         st.plotly_chart(fig, use_container_width=True)
         
     with st.expander('Stangenbedarf TN1',expanded=False):
+        st.error('Die Verbotenen SKU noch Filtern!')  
         # filter CorrospondingMastercases > 0
         dfBedarfSKU_TN = dfBedarfSKU[dfBedarfSKU['CorrespondingOuters'] > 0]
         # drop PlannedDate and SapOrderNumber
@@ -166,21 +217,16 @@ def pageStellplatzverwaltung():
     with st.expander('Rohdaten',expanded=False):
         st.data_editor(dfOrg, key='my_editorRohdaten')
 
-    with st.expander('Verbotene SKUs',expanded=False):
-        masterdata['MaterialNumber'] = masterdata['MaterialNumber'].str.replace('0000000000', '')
-        #Filter masterdata['UnitOfMeasure'] == 'OUT'
-        df_verbot = pd.merge(dfBIN_TN, masterdata, how='inner', left_on='MATNR', right_on='MaterialNumber')
-        st.data_editor(df_verbot, key='my_editorStellplatzdaten')
-        st.dataframe(dfBIN_TN)
 
-
-def seite():
-
-    pageStellplatzverwaltung()
     if st.button('Daten vom Server neu laden'):
         st.cache_data.clear()
         #rerun page
         st.experimental_rerun()
+
+def seite():
+
+    pageStellplatzverwaltung()
+
 
         
 
