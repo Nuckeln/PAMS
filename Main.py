@@ -1,10 +1,9 @@
-# Python Module
-import streamlit as st # Streamlit Web App Framework
+#Python Module
+import streamlit as st
 import os
-from streamlit_option_menu import option_menu # pip install streamlit-option-menu # CSS Style für Main Menu # https://icons.getbootstrap.com
-from PIL import Image # Bilder
-import logging # Logging
-
+from streamlit_option_menu import option_menu 
+from PIL import Image 
+import logging 
 #Eigene Klassen
 from Seiten.P_UserLogin import Login
 from Seiten.P_Live import LIVE
@@ -13,8 +12,6 @@ from Seiten.P_Admin import adminPage
 from Seiten.P_User_Reports import pageUserReport
 from Seiten.P_Forecast import main as pageForecast
 from Seiten.P_Nachschub import pageStellplatzverwaltung
-from Data_Class.SQL import read_table, updateTable
-
 
 
 # Logging Konfiguration
@@ -40,8 +37,6 @@ def checkSystem():
  
 # --- Set Global Page Configs ---
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="expanded")
-
-
 hide_streamlit_style = """
                 <style>
                 @import url('https://fonts.googleapis.com/css?family=Montserrat');
@@ -92,8 +87,6 @@ hide_streamlit_style = """
                 </style>
                 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-#st.write('<style>div.block-container{padding-top:0rem;}</style>', unsafe_allow_html=True)
-
 
 # ----- Config Main Menue -----
 img = Image.open('Data/img/logo.png', mode='r')
