@@ -23,7 +23,7 @@ def aktualisier_Issues_Table():
             df = st.data_editor(df)
             if st.button('Hochladen'):
                 df['Datum eingetragen'] = df['Datum eingetragen'].astype(str)
-                save_table_to_SQL(df, 'PAMS_Issues')
+                save_Table(df, 'PAMS_Issues')
                 st.data_editor(df)
                 st.success('Issues wurden hochgeladen')
                 upload = None

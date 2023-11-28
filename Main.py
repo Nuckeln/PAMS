@@ -27,10 +27,15 @@ logging.info('App gestartet')
 def checkSystem():
     try:
         a = os.environ['SQLAZURECONNSTR_DbConnection']
-        return 'Dev System'
+        #if you found "pp" in the string, then it's a production environment
+        a = a.find("pp")
+        if a == -1:
+            return 'System: Test'
+        else:
+            return 'System: Produktiv'
     except:
-        return 'IDE System'
-# Zum Ausführenv
+        return 'System: Test'
+
 #MAC#   streamlit run "/Users/martinwolf/Python/PAMS 2.0/main.py"
  
 # --- Set Global Page Configs ---
@@ -83,10 +88,11 @@ hide_streamlit_style = """
                      padding-bottom: 3.5rem;
                      padding-left: 1rem;
                  }
+                 div.block-container{padding-top:0rem;}
                 </style>
                 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-st.write('<style>div.block-container{padding-top:0rem;}</style>', unsafe_allow_html=True)
+#st.write('<style>div.block-container{padding-top:0rem;}</style>', unsafe_allow_html=True)
 
 
 # ----- Config Main Menue -----
