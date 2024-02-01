@@ -95,7 +95,7 @@ class LIVE:
                     st.image(img_type, width=32)
                 with col2:
                     #green
-                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'')
+                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ')
                 with col3:
                     #red
                     annotated_text('',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
@@ -106,7 +106,7 @@ class LIVE:
                     st.image(img_type, width=32)
                 with col2:
                     #green
-                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"))
+                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ')
                 with col3:
                     #red
                     annotated_text('',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')                    
@@ -117,7 +117,7 @@ class LIVE:
                     st.image(img_type, width=32)
                 with col2:
                     #green
-                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'')
+                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ')
                 with col3:
                     #red
                     annotated_text('',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
@@ -157,17 +157,19 @@ class LIVE:
                     picks = df.loc[df['DeliveryDepot']==depot]
             
                     
+                    done__mastercase = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Karton'].sum()       
+                    done_outer = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Stangen'].sum()
+                    done_pallet = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Paletten'].sum()              
+                                       
+                    open_mastercase = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Karton'].sum()
+                    open_outer = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Stangen'].sum()
+                    open_pallet = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Paletten'].sum()                    
 
-                    done_outer = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Stangen'].sum()
-                    done_pallet = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Paletten'].sum()
-                    masterCase_Outer_Pal_Icoons('Outer' ,done_outer, done_pallet) 
                     
-                    open_mastercase = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Karton'].sum()
-                    done__mastercase = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Karton'].sum()
                     masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done__mastercase) 
         
-                    open_outer = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Stangen'].sum()
-                    open_pallet = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Paletten'].sum()
+                    masterCase_Outer_Pal_Icoons('Outer' ,done_outer, done_pallet) 
+
                     masterCase_Outer_Pal_Icoons('Pallet' ,open_outer, open_pallet)
         cols = st.columns(len(cities))  # Erstellen Sie eine Spalte für jedes Depot
 
