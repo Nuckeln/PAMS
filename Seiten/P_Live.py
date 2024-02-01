@@ -82,23 +82,27 @@ class LIVE:
             '''
             icon_path_mastercase = 'Data/appData/ico/mastercase_favicon.ico'
             icon_path_outer = 'Data/appData/ico/favicon_outer.ico'
-            icon_path_pallet = 'Data/appData/ico/pallet_favicon.ico'      
+            icon_path_pallet = 'Data/appData/ico/pallet_favicon.ico'   
+            icon_path_Delivery = 'Data/appData/ico/delivery-note.ico' 
+            icon_path_Sum = 'Data/appData/ico/summe.ico'
             img_mastercase = Image.open(icon_path_mastercase)
             img_outer = Image.open(icon_path_outer)
             img_pallet = Image.open(icon_path_pallet)
+            img_Delivery = Image.open(icon_path_Delivery)
+            icon_path_Sum = Image.open(icon_path_Sum)
             # ...
 
             if img_type == 'Outer':
                 img_type = img_outer
                 col1, col2, col3 = st.columns(3)
                 with col1:
-                    st.image(img_type, width=32)
+                    st.image(img_type, width=32,clamp=True)
                 with col2:
                     #green
                     annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ')
                 with col3:
                     #red
-                    annotated_text('',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
+                    annotated_text(annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
             if img_type == 'Mastercase':
                 img_type = img_mastercase
                 col1, col2, col3 = st.columns(3)
@@ -109,7 +113,7 @@ class LIVE:
                     annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ')
                 with col3:
                     #red
-                    annotated_text('',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')                    
+                    annotated_text(annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')                    
             elif img_type == 'Pallet':
                 img_type = img_pallet
                 col1, col2, col3 = st.columns(3)
@@ -120,39 +124,66 @@ class LIVE:
                     annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ')
                 with col3:
                     #red
+                    annotated_text(annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
+            elif img_type == 'Delivery':
+                img_type = img_Delivery
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.image(img_type, width=32)
+                with col2:
+                    #green
+                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ')
+                with col3:
+                    #red
+                    annotated_text(annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
+            elif img_type == 'Sum':
+                img_type = icon_path_Sum
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.image(img_type, width=32)
+                with col2:
+                    #green
+                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ')
+                with col3:
+                    #red
                     annotated_text('',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
-            
+        st.write('Mengen in Picks nach Kategorie:')    
         cities = [("Gesamt", ""), ("Stuttgart", "KNSTR"), ("Leipzig", "KNLEJ"), ("Hannover", "KNHAJ"), ("Bielefeld", "KNBFE")]
         cols = st.columns(len(cities))
         
         for i, (city, depot) in enumerate(cities):
             with cols[i]:
-                st.subheader(city)
-                if city == "Gesamt":
-                    picks = df
-                    pickges = df['Picks Gesamt'].sum()
-                    pickges = int(pickges)
-                    st.write(f"Gesamt Picks:  {pickges}")
-                    lieferscheine = df['SapOrderNumber'].nunique()
-                    st.write(f"Gesamt Lieferscheine:  {lieferscheine}")
-                    
-                else:
-                    picks = df.loc[df['DeliveryDepot']==depot]
-                    picks_gesamt = picks['Picks Gesamt'].sum()
-                    picks_offen = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Gesamt'].sum()
-                    picks_fertig = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Gesamt'].sum()
-                    st.write(f"Gesamt:  {picks_gesamt}")
-                    st.write(f"Offen:  {picks_offen}")
-                    st.write(f"Fertig:  {picks_fertig}")             
-
-        ##### Zweite Zeile #####
-        
+                st.markdown("""
+                    <style>
+                    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+                    </style>
+                    <h1 style='text-align: center; color: #0F2B63; font-family: Montserrat; font-weight: bold;'>{}</h1>
+                    """.format(city), unsafe_allow_html=True)    
         cols = st.columns(len(cities))  # Erstellen Sie eine Spalte für jedes Depot
         for i, (city, depot) in enumerate(cities):
             with cols[i]:
                 if city == "Gesamt":
-                    st.write('')
-                    st.write('')
+                    
+                    picks = df
+            
+                    count_SAP_open = picks[picks['AllSSCCLabelsPrinted']==0]['SapOrderNumber'].nunique()
+                    count_SAP_done = picks[picks['AllSSCCLabelsPrinted']==1]['SapOrderNumber'].nunique()
+                    
+                    done__mastercase = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Karton'].sum()       
+                    done_outer = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Stangen'].sum()
+                    done_pallet = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Paletten'].sum()              
+                                       
+                    open_mastercase = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Karton'].sum()
+                    open_outer = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Stangen'].sum()
+                    open_pallet = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Paletten'].sum()      
+                    picks_offen = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Gesamt'].sum()
+                    picks_fertig = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Gesamt'].sum()              
+
+                    masterCase_Outer_Pal_Icoons('Delivery' ,count_SAP_done, count_SAP_open)
+                    masterCase_Outer_Pal_Icoons('Outer' ,open_outer, done_outer) 
+                    masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done__mastercase) 
+                    masterCase_Outer_Pal_Icoons('Pallet' ,open_pallet, done_pallet)
+                    masterCase_Outer_Pal_Icoons('Sum' ,picks_fertig, picks_offen)
                 else:
                     picks = df.loc[df['DeliveryDepot']==depot]
             
@@ -164,13 +195,16 @@ class LIVE:
                     open_mastercase = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Karton'].sum()
                     open_outer = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Stangen'].sum()
                     open_pallet = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Paletten'].sum()                    
+                    picks_offen = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Gesamt'].sum()
+                    picks_fertig = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Gesamt'].sum()              
 
-                    
+                    masterCase_Outer_Pal_Icoons('Delivery' ,count_SAP_done, count_SAP_open)
+                    masterCase_Outer_Pal_Icoons('Outer' ,open_outer, done_outer ) 
                     masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done__mastercase) 
-        
-                    masterCase_Outer_Pal_Icoons('Outer' ,done_outer, done_pallet) 
+                    masterCase_Outer_Pal_Icoons('Pallet' ,open_pallet, done_pallet)
+                    masterCase_Outer_Pal_Icoons('Sum' ,picks_fertig, picks_offen)
+    
 
-                    masterCase_Outer_Pal_Icoons('Pallet' ,open_outer, open_pallet)
         cols = st.columns(len(cities))  # Erstellen Sie eine Spalte für jedes Depot
 
                 

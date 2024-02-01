@@ -33,7 +33,12 @@ def checkSystem():
  
 # --- Set Global Page Configs ---
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="expanded")
-
+hide_full_screen = '''
+<style>
+.element-container:nth-child(3) .overlayBtn {visibility: hidden;}
+.element-container:nth-child(12) .overlayBtn {visibility: hidden;}
+</style>
+'''
 
 hide_streamlit_style = """
                 <style>
@@ -85,7 +90,7 @@ hide_streamlit_style = """
                 </style>
                 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-
+st.markdown(hide_full_screen, unsafe_allow_html=True)
 # ----- Config Main Menue -----
 img = Image.open('Data/img/logo.png', mode='r')
 
