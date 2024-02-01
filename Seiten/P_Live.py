@@ -187,7 +187,10 @@ class LIVE:
                 else:
                     picks = df.loc[df['DeliveryDepot']==depot]
             
-                    
+                    count_SAP_open = picks[picks['AllSSCCLabelsPrinted']==0]['SapOrderNumber'].nunique()
+                    count_SAP_done = picks[picks['AllSSCCLabelsPrinted']==1]['SapOrderNumber'].nunique()
+                                        
+        
                     done__mastercase = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Karton'].sum()       
                     done_outer = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Stangen'].sum()
                     done_pallet = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Paletten'].sum()              
