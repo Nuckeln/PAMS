@@ -3,7 +3,7 @@ import streamlit as st
 import os
 from streamlit_option_menu import option_menu 
 from PIL import Image 
-import logging 
+
 #Eigene Klassen
 from Seiten.P_UserLogin import Login
 from Seiten.P_Live import LIVE
@@ -15,11 +15,7 @@ from Seiten.P_Nachschub import pageStellplatzverwaltung
 
 
 # Logging Konfiguration
-logging.basicConfig(filename='pams_app.log', level=logging.INFO,
-                    format='%(asctime)s:%(levelname)s:%(message)s')
 
-# Log-Eintrag für den Start der App
-logging.info('App gestartet')
 
 def checkSystem():
     try:
@@ -37,6 +33,8 @@ def checkSystem():
  
 # --- Set Global Page Configs ---
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="expanded")
+
+
 hide_streamlit_style = """
                 <style>
                 @import url('https://fonts.googleapis.com/css?family=Montserrat');
@@ -117,11 +115,11 @@ def berechtigung():
 # ----- Login -----
 authentication_status = None
 authentication_status = Login.Login(self=Login)
-logging.info(f'Authentifizierungsstatus: {authentication_status}')
+#logging.info(f'Authentifizierungsstatus: {authentication_status}')
 
 if authentication_status == True:
     user = st.session_state.user
-    logging.info(f'User: {user}')
+    #logging.info(f'User: {user}')
     with st.sidebar: 
         check = checkSystem()
         st.write(f'**{check}**')
@@ -141,17 +139,17 @@ if authentication_status == True:
 if authentication_status == True:
     if sel_main_m == 'Live Status':
         LIVE.PageTagesReport()
-        logging.info('User läd Seite Live Status')
+        #logging.info('User läd Seite Live Status')
     if sel_main_m == 'Reports':
          reportPage()   
     if sel_main_m == 'User Reports':
         pageUserReport()
-        logging.info('User läd Seite User Reports')
+        #logging.info('User läd Seite User Reports')
     if sel_main_m == 'Admin':
         adminPage() 
-        logging.info('User läd Seite Admin')
+        #logging.info('User läd Seite Admin')
     if sel_main_m == 'Forecast':
         pageForecast()
-        logging.info('User läd Seite Forecast')
+        #logging.info('User läd Seite Forecast')
     if sel_main_m == 'Lagerverwaltung':
         pageStellplatzverwaltung()
