@@ -23818,3 +23818,179 @@
 2024-02-01 01:23:04,110:INFO:Authentifizierungsstatus: True
 2024-02-01 01:23:04,110:INFO:User: Martin
 2024-02-01 01:23:07,284:INFO:User läd Seite Live Status
+2024-02-01 09:07:31,600:INFO:App gestartet
+2024-02-01 09:07:41,104:INFO:App gestartet
+2024-02-01 09:07:42,062:INFO:Authentifizierungsstatus: None
+2024-02-01 09:07:42,573:INFO:App gestartet
+2024-02-01 09:07:42,990:INFO:Authentifizierungsstatus: True
+2024-02-01 09:07:42,990:INFO:User: Martin
+2024-02-01 09:07:46,152:INFO:User läd Seite Live Status
+2024-02-01 09:08:35,078:INFO:App gestartet
+2024-02-01 09:08:35,950:INFO:Authentifizierungsstatus: True
+2024-02-01 09:08:35,950:INFO:User: Martin
+2024-02-01 09:08:39,145:INFO:User läd Seite Live Status
+2024-02-01 09:09:20,027:INFO:App gestartet
+2024-02-01 09:09:20,808:INFO:Authentifizierungsstatus: True
+2024-02-01 09:09:20,809:INFO:User: Martin
+2024-02-01 09:09:24,342:INFO:User läd Seite Live Status
+2024-02-01 09:09:52,823:INFO:App gestartet
+2024-02-01 09:09:53,622:INFO:Authentifizierungsstatus: True
+2024-02-01 09:09:53,622:INFO:User: Martin
+2024-02-01 09:09:57,181:INFO:User läd Seite Live Status
+2024-02-01 09:10:43,343:INFO:App gestartet
+2024-02-01 09:10:44,154:INFO:Authentifizierungsstatus: None
+2024-02-01 09:10:44,629:INFO:App gestartet
+2024-02-01 09:10:45,089:INFO:Authentifizierungsstatus: True
+2024-02-01 09:10:45,091:INFO:User: Martin
+2024-02-01 09:10:48,876:INFO:User läd Seite Live Status
+2024-02-01 09:12:04,481:INFO:App gestartet
+2024-02-01 09:12:05,326:INFO:Authentifizierungsstatus: True
+2024-02-01 09:12:05,326:INFO:User: Martin
+2024-02-01 09:12:08,443:INFO:User läd Seite Live Status
+2024-02-01 09:12:54,453:INFO:App gestartet
+2024-02-01 09:12:55,304:INFO:Authentifizierungsstatus: True
+2024-02-01 09:12:55,305:INFO:User: Martin
+2024-02-01 09:12:58,527:INFO:User läd Seite Live Status
+2024-02-01 09:13:45,501:INFO:App gestartet
+2024-02-01 09:13:46,348:INFO:Authentifizierungsstatus: True
+2024-02-01 09:13:46,349:INFO:User: Martin
+2024-02-01 09:13:49,751:INFO:User läd Seite Live Status
+2024-02-01 09:14:37,504:INFO:App gestartet
+2024-02-01 09:14:38,356:INFO:Authentifizierungsstatus: True
+2024-02-01 09:14:38,357:INFO:User: Martin
+2024-02-01 09:14:41,522:INFO:User läd Seite Live Status
+2024-02-01 09:15:29,510:INFO:App gestartet
+2024-02-01 09:15:30,309:INFO:Authentifizierungsstatus: True
+2024-02-01 09:15:30,309:INFO:User: Martin
+2024-02-01 09:15:33,680:INFO:User läd Seite Live Status
+2024-02-01 09:16:14,637:INFO:App gestartet
+2024-02-01 09:16:15,473:INFO:Authentifizierungsstatus: None
+2024-02-01 09:16:15,959:INFO:App gestartet
+2024-02-01 09:16:16,411:INFO:Authentifizierungsstatus: True
+2024-02-01 09:16:16,411:INFO:User: Martin
+2024-02-01 09:16:19,731:INFO:User läd Seite Live Status
+2024-02-01 09:17:08,465:INFO:App gestartet
+2024-02-01 09:17:09,292:INFO:Authentifizierungsstatus: True
+2024-02-01 09:17:09,293:INFO:User: Martin
+2024-02-01 09:17:12,692:INFO:User läd Seite Live Status
+2024-02-01 09:18:00,454:INFO:App gestartet
+2024-02-01 09:18:01,246:INFO:Authentifizierungsstatus: True
+2024-02-01 09:18:01,246:INFO:User: Martin
+2024-02-01 09:18:04,291:INFO:User läd Seite Live Status
+2024-02-01 09:18:52,469:INFO:App gestartet
+2024-02-01 09:18:53,347:INFO:Authentifizierungsstatus: True
+2024-02-01 09:18:53,347:INFO:User: Martin
+2024-02-01 09:18:56,742:INFO:User läd Seite Live Status
+2024-02-01 09:18:58,548:INFO:App gestartet
+2024-02-01 09:18:59,254:INFO:Authentifizierungsstatus: None
+2024-02-01 09:18:59,721:INFO:App gestartet
+2024-02-01 09:19:00,125:INFO:Authentifizierungsstatus: True
+2024-02-01 09:19:00,125:INFO:User: Martin
+2024-02-01 09:19:03,601:INFO:User läd Seite Live Status
+2024-02-01 09:19:51,780:INFO:App gestartet
+2024-02-01 09:19:52,542:INFO:Authentifizierungsstatus: True
+2024-02-01 09:19:52,543:INFO:User: Martin
+2024-02-01 09:19:56,030:INFO:User läd Seite Live Status
+2024-02-01 09:20:46,611:INFO:App gestartet
+2024-02-01 09:20:47,476:INFO:Authentifizierungsstatus: None
+2024-02-01 09:20:47,988:INFO:App gestartet
+2024-02-01 09:20:48,451:INFO:Authentifizierungsstatus: True
+2024-02-01 09:20:48,452:INFO:User: Martin
+2024-02-01 09:20:51,596:INFO:User läd Seite Live Status
+2024-02-01 09:21:39,758:INFO:App gestartet
+2024-02-01 09:21:40,547:INFO:Authentifizierungsstatus: True
+2024-02-01 09:21:40,547:INFO:User: Martin
+2024-02-01 09:21:43,768:INFO:User läd Seite Live Status
+2024-02-01 09:21:54,723:INFO:App gestartet
+2024-02-01 09:21:55,489:INFO:Authentifizierungsstatus: True
+2024-02-01 09:21:55,489:INFO:User: Martin
+2024-02-01 09:21:59,092:INFO:User läd Seite Live Status
+2024-02-01 09:22:45,039:INFO:App gestartet
+2024-02-01 09:22:45,838:INFO:Authentifizierungsstatus: True
+2024-02-01 09:22:45,838:INFO:User: Martin
+2024-02-01 09:22:48,840:INFO:User läd Seite Live Status
+2024-02-01 09:23:35,451:INFO:App gestartet
+2024-02-01 09:23:36,247:INFO:Authentifizierungsstatus: True
+2024-02-01 09:23:36,247:INFO:User: Martin
+2024-02-01 09:23:39,707:INFO:User läd Seite Live Status
+2024-02-01 09:23:48,331:INFO:App gestartet
+2024-02-01 09:23:49,052:INFO:Authentifizierungsstatus: True
+2024-02-01 09:23:49,052:INFO:User: Martin
+2024-02-01 09:23:52,677:INFO:User läd Seite Live Status
+2024-02-01 09:24:38,480:INFO:App gestartet
+2024-02-01 09:24:39,278:INFO:Authentifizierungsstatus: True
+2024-02-01 09:24:39,278:INFO:User: Martin
+2024-02-01 09:24:42,198:INFO:User läd Seite Live Status
+2024-02-01 09:25:28,432:INFO:App gestartet
+2024-02-01 09:25:29,267:INFO:Authentifizierungsstatus: True
+2024-02-01 09:25:29,268:INFO:User: Martin
+2024-02-01 09:25:32,548:INFO:User läd Seite Live Status
+2024-02-01 09:26:18,463:INFO:App gestartet
+2024-02-01 09:26:19,245:INFO:Authentifizierungsstatus: True
+2024-02-01 09:26:19,246:INFO:User: Martin
+2024-02-01 09:26:22,651:INFO:User läd Seite Live Status
+2024-02-01 09:27:09,449:INFO:App gestartet
+2024-02-01 09:27:10,334:INFO:Authentifizierungsstatus: True
+2024-02-01 09:27:10,334:INFO:User: Martin
+2024-02-01 09:27:13,846:INFO:User läd Seite Live Status
+2024-02-01 09:28:00,483:INFO:App gestartet
+2024-02-01 09:28:01,296:INFO:Authentifizierungsstatus: True
+2024-02-01 09:28:01,297:INFO:User: Martin
+2024-02-01 09:28:04,443:INFO:User läd Seite Live Status
+2024-02-01 09:28:38,548:INFO:App gestartet
+2024-02-01 09:28:39,340:INFO:Authentifizierungsstatus: True
+2024-02-01 09:28:39,340:INFO:User: Martin
+2024-02-01 09:28:42,993:INFO:User läd Seite Live Status
+2024-02-01 09:29:28,922:INFO:App gestartet
+2024-02-01 09:29:29,739:INFO:Authentifizierungsstatus: True
+2024-02-01 09:29:29,745:INFO:User: Martin
+2024-02-01 09:29:32,922:INFO:User läd Seite Live Status
+2024-02-01 09:30:19,208:INFO:App gestartet
+2024-02-01 09:30:20,022:INFO:Authentifizierungsstatus: True
+2024-02-01 09:30:20,023:INFO:User: Martin
+2024-02-01 09:30:22,949:INFO:User läd Seite Live Status
+2024-02-01 09:31:09,442:INFO:App gestartet
+2024-02-01 09:31:10,473:INFO:Authentifizierungsstatus: True
+2024-02-01 09:31:10,474:INFO:User: Martin
+2024-02-01 09:31:13,526:INFO:User läd Seite Live Status
+2024-02-01 09:32:01,460:INFO:App gestartet
+2024-02-01 09:32:02,235:INFO:Authentifizierungsstatus: True
+2024-02-01 09:32:02,235:INFO:User: Martin
+2024-02-01 09:32:05,604:INFO:User läd Seite Live Status
+2024-02-01 09:32:41,724:INFO:App gestartet
+2024-02-01 09:32:41,728:INFO:App gestartet
+2024-02-01 09:32:42,557:INFO:Authentifizierungsstatus: True
+2024-02-01 09:32:42,557:INFO:User: Martin
+2024-02-01 09:32:45,824:INFO:User läd Seite Live Status
+2024-02-01 09:34:01,702:INFO:App gestartet
+2024-02-01 09:34:02,537:INFO:Authentifizierungsstatus: True
+2024-02-01 09:34:02,539:INFO:User: Martin
+2024-02-01 09:45:40,941:INFO:User läd Seite Live Status
+2024-02-01 09:52:47,093:INFO:App gestartet
+2024-02-01 09:52:50,034:INFO:Authentifizierungsstatus: True
+2024-02-01 09:52:50,034:INFO:User: Martin
+2024-02-01 09:52:53,609:INFO:User läd Seite Live Status
+2024-02-01 09:53:41,053:INFO:App gestartet
+2024-02-01 09:53:41,869:INFO:Authentifizierungsstatus: True
+2024-02-01 09:53:41,869:INFO:User: Martin
+2024-02-01 09:53:44,643:INFO:App gestartet
+2024-02-01 09:53:44,721:INFO:App gestartet
+2024-02-01 09:53:45,228:INFO:Authentifizierungsstatus: True
+2024-02-01 09:53:45,229:INFO:User: Martin
+2024-02-01 09:53:48,140:INFO:User läd Seite Live Status
+2024-02-01 09:54:36,901:INFO:App gestartet
+2024-02-01 09:54:37,760:INFO:Authentifizierungsstatus: True
+2024-02-01 09:54:37,761:INFO:User: Martin
+2024-02-01 09:56:33,422:INFO:App gestartet
+2024-02-01 09:56:34,330:INFO:Authentifizierungsstatus: True
+2024-02-01 09:56:34,331:INFO:User: Martin
+2024-02-01 09:56:37,629:INFO:User läd Seite Live Status
+2024-02-01 09:57:25,417:INFO:App gestartet
+2024-02-01 09:57:26,256:INFO:Authentifizierungsstatus: True
+2024-02-01 09:57:26,257:INFO:User: Martin
+2024-02-01 09:57:29,563:INFO:App gestartet
+2024-02-01 09:57:30,049:INFO:Authentifizierungsstatus: None
+2024-02-01 09:57:30,537:INFO:App gestartet
+2024-02-01 09:57:31,033:INFO:Authentifizierungsstatus: True
+2024-02-01 09:57:31,034:INFO:User: Martin
+2024-02-01 09:57:34,363:INFO:User läd Seite Live Status

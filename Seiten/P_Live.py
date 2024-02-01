@@ -87,18 +87,8 @@ class LIVE:
             img_outer = Image.open(icon_path_outer)
             img_pallet = Image.open(icon_path_pallet)
             # ...
-            if img_type == 'Mastercase':
-                img_type = img_mastercase
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    st.image(img_type, width=32)
-                with col2:
-                    #green
-                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'')
-                with col3:
-                    #red
-                    annotated_text('',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
-            elif img_type == 'Outer':
+
+            if img_type == 'Outer':
                 img_type = img_outer
                 col1, col2, col3 = st.columns(3)
                 with col1:
@@ -109,6 +99,17 @@ class LIVE:
                 with col3:
                     #red
                     annotated_text('',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
+            if img_type == 'Mastercase':
+                img_type = img_mastercase
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.image(img_type, width=32)
+                with col2:
+                    #green
+                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"))
+                with col3:
+                    #red
+                    annotated_text('',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')                    
             elif img_type == 'Pallet':
                 img_type = img_pallet
                 col1, col2, col3 = st.columns(3)
@@ -155,14 +156,15 @@ class LIVE:
                 else:
                     picks = df.loc[df['DeliveryDepot']==depot]
             
-                    open_mastercase = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Karton'].sum()
-                    done__mastercase = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Karton'].sum()
-                    masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done__mastercase) 
                     
 
                     done_outer = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Stangen'].sum()
                     done_pallet = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Paletten'].sum()
                     masterCase_Outer_Pal_Icoons('Outer' ,done_outer, done_pallet) 
+                    
+                    open_mastercase = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Karton'].sum()
+                    done__mastercase = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Karton'].sum()
+                    masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done__mastercase) 
         
                     open_outer = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Stangen'].sum()
                     open_pallet = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Paletten'].sum()
@@ -488,7 +490,7 @@ class LIVE:
             domain = {'x': [0, 1], 'y': [0, 1]},
             value = completion_rate,
             mode = "gauge+number+delta",
-            title = {'text': "KNBFE Ziel (%)"},
+            title = {'text': "Bielefeld Ziel (%)"},
             delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
             gauge = {'axis': {'range': [0, 100], 'tickangle': -90},
                     'steps' : [
@@ -611,9 +613,10 @@ class LIVE:
         try:
             col34, col35, col36, col37 = st.columns(4)
             with col34:
-                LIVE.figTachoDiagrammPicksLei(dfOr)
-            with col35:
                 LIVE.figTachoDiagrammPicksStr(dfOr)
+            with col35:
+                LIVE.figTachoDiagrammPicksLei(dfOr)
+                
             with col36:
                 LIVE.figTachoDiagrammPicksStrHannover(dfOr)
             with col37:
