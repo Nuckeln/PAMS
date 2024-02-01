@@ -627,7 +627,7 @@ class LIVE:
         pd.set_option("display.precision", 2)
         sar.st_autorefresh(interval=48000)
         colhead1, colhead2 ,colhead3, colhead4 = st.columns(4)
-        with colhead3:
+        with colhead2:
             lastUpdate = read_table('prod_KundenbestellungenUpdateTime')
             lastUpdateDate = lastUpdate['time'].iloc[0]
             st.write('Letztes Update:')
@@ -637,9 +637,9 @@ class LIVE:
             sel_date = st.date_input('Datum', sel_date)   
             dfOr = LIVE.loadDF(sel_date,sel_date) 
 
-        with colhead2:
-            sel = st.multiselect('Depot  ', ['KNSTR','KNLEJ'],['KNSTR','KNLEJ'],key='choise Depot')
-            dfOr = dfOr[dfOr['DeliveryDepot'].isin(sel)]
+        # with colhead2:
+        #     sel = st.multiselect('Depot  ', ['KNSTR','KNLEJ'],['KNSTR','KNLEJ'],key='choise Depot')
+        #     #dfOr = dfOr[dfOr['DeliveryDepot'].isin(sel)]
             
         with colhead4:                
             LIVE.wetter()
