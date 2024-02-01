@@ -6,7 +6,7 @@ import streamlit_autorefresh as sar
 from PIL import Image
 import plotly_express as px
 import plotly.graph_objects as go
-
+from annotated_text import annotated_text, annotation
 
 from Data_Class.wetter.api import getWetterBayreuth
 from Data_Class.SQL import read_table
@@ -72,44 +72,107 @@ class LIVE:
         return df
      
     def columnsKennzahlen(df):
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            #---GesamtPicks---#
-            st.subheader("Gesamt")
-            pickges = df['Picks Gesamt'].sum()
-            pickges = int(pickges)
-            st.write(f"Gesamt Picks:  {pickges}")
-            #---PicksSTR---#
-            picksSTR = df.loc[df['DeliveryDepot']=='KNSTR']
-            picksSTR = picksSTR['Picks Gesamt'].sum()
-            picksSTR = int(picksSTR)
-            st.write(f"Gesamt Stuttgart:  {picksSTR}")
-            #---PicksLEJ---#
-            picksLEJ = df.loc[df['DeliveryDepot']=='KNLEJ']
-            picksLEJ = picksLEJ['Picks Gesamt'].sum()
-            picksLEJ = int(picksLEJ)
-            st.write(f"Gesamt Leipzig:  {picksLEJ}")
-            #---Lieferscheine---#            
-            lieferscheine = df['SapOrderNumber'].nunique()
-            st.write(f"Gesamt Lieferscheine:  {lieferscheine}")
-        with col2:
-            st.subheader("Offen")
-            df1 = df[df['AllSSCCLabelsPrinted']==0]
-            st.write(f"Offene Picks: {df1['Picks Gesamt'].sum()}")
-            st.write(f'Offen Leipzig: {df1.loc[df1["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()}')
-            st.write(f'Offen Stuttgart: {df1.loc[df1["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()}')
-            st.write(f"Offene Lieferscheine: {df1['SapOrderNumber'].nunique()}")
+        
+        def masterCase_Outer_Pal_Icoons(img_type,done_value,open_value):
+            '''Function to display the MasterCase, OuterCase and Pallet Icons in the Live Status Page
+            Args:
+                img_type (str): Type of Icon to display
+                done_value (int): Value of done picks
+                open_value (int): Value of open picks
+            '''
+            icon_path_mastercase = 'Data/appData/ico/mastercase_favicon.ico'
+            icon_path_outer = 'Data/appData/ico/favicon_outer.ico'
+            icon_path_pallet = 'Data/appData/ico/pallet_favicon.ico'      
+            img_mastercase = Image.open(icon_path_mastercase)
+            img_outer = Image.open(icon_path_outer)
+            img_pallet = Image.open(icon_path_pallet)
+            # ...
+            if img_type == 'Mastercase':
+                img_type = img_mastercase
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.image(img_type, width=32)
+                with col2:
+                    #green
+                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'')
+                with col3:
+                    #red
+                    annotated_text('',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
+            elif img_type == 'Outer':
+                img_type = img_outer
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.image(img_type, width=32)
+                with col2:
+                    #green
+                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'')
+                with col3:
+                    #red
+                    annotated_text('',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
+            elif img_type == 'Pallet':
+                img_type = img_pallet
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.image(img_type, width=32)
+                with col2:
+                    #green
+                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'')
+                with col3:
+                    #red
+                    annotated_text('',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
+            
+        cities = [("Gesamt", ""), ("Stuttgart", "KNSTR"), ("Leipzig", "KNLEJ"), ("Hannover", "KNHAJ"), ("Bielefeld", "KNBFE")]
+        cols = st.columns(len(cities))
+        
+        for i, (city, depot) in enumerate(cities):
+            with cols[i]:
+                st.subheader(city)
+                if city == "Gesamt":
+                    picks = df
+                    pickges = df['Picks Gesamt'].sum()
+                    pickges = int(pickges)
+                    st.write(f"Gesamt Picks:  {pickges}")
+                    lieferscheine = df['SapOrderNumber'].nunique()
+                    st.write(f"Gesamt Lieferscheine:  {lieferscheine}")
+                    
+                else:
+                    picks = df.loc[df['DeliveryDepot']==depot]
+                    picks_gesamt = picks['Picks Gesamt'].sum()
+                    picks_offen = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Gesamt'].sum()
+                    picks_fertig = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Gesamt'].sum()
+                    st.write(f"Gesamt:  {picks_gesamt}")
+                    st.write(f"Offen:  {picks_offen}")
+                    st.write(f"Fertig:  {picks_fertig}")             
 
-        with col3:
-            st.subheader("Fertig")
-            df2 = df[df['AllSSCCLabelsPrinted']==1]
-            st.write(f"Fertige Picks: {df2['Picks Gesamt'].sum()}")
-            st.write(f'Fertig Leipzig: {df2.loc[df2["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()}')
-            st.write(f'Fertig Stuttgart: {df2.loc[df2["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()}')
-            st.write(f"Fertige Lieferscheine: {df2['SapOrderNumber'].nunique()}")
+        ##### Zweite Zeile #####
+        
+        cols = st.columns(len(cities))  # Erstellen Sie eine Spalte für jedes Depot
+        for i, (city, depot) in enumerate(cities):
+            with cols[i]:
+                if city == "Gesamt":
+                    st.write('')
+                    st.write('')
+                else:
+                    picks = df.loc[df['DeliveryDepot']==depot]
+            
+                    open_mastercase = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Karton'].sum()
+                    done__mastercase = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Karton'].sum()
+                    masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done__mastercase) 
+                    
+
+                    done_outer = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Stangen'].sum()
+                    done_pallet = picks[picks['AllSSCCLabelsPrinted']==1]['Picks Paletten'].sum()
+                    masterCase_Outer_Pal_Icoons('Outer' ,done_outer, done_pallet) 
+        
+                    open_outer = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Stangen'].sum()
+                    open_pallet = picks[picks['AllSSCCLabelsPrinted']==0]['Picks Paletten'].sum()
+                    masterCase_Outer_Pal_Icoons('Pallet' ,open_outer, open_pallet)
+        cols = st.columns(len(cities))  # Erstellen Sie eine Spalte für jedes Depot
+
+                
 
 
-
+            
     ## Plotly Charts ###
     def Test2(df):
         sum_karton_offen = df['Picks Karton offen'].sum()
@@ -370,6 +433,80 @@ class LIVE:
 
             st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
 
+    def figTachoDiagrammPicksStrHannover(df):
+        df1 = df[df['AllSSCCLabelsPrinted']==0]
+        offenHan = df1.loc[df1["DeliveryDepot"] == "KNHAJ"]["Picks Gesamt"].sum()
+
+        df2 = df[df['AllSSCCLabelsPrinted']==1]
+        fertigHan = df2.loc[df2["DeliveryDepot"] == "KNHAJ"]["Picks Gesamt"].sum()
+
+        data = {'Offen': [offenHan],
+                'Fertig': [fertigHan]}
+        df = pd.DataFrame(data, index=['Hannover'])
+
+        # Berechnen Sie den Prozentsatz der abgeschlossenen Lieferungen
+        completion_rate = (fertigHan / (fertigHan + offenHan)) * 100
+
+        fig = go.Figure(go.Indicator(
+            domain = {'x': [0, 1], 'y': [0, 1]},
+            value = completion_rate,
+            mode = "gauge+number+delta",
+            title = {'text': "Hannover Ziel (%)"},
+            delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
+            gauge = {'axis': {'range': [0, 100], 'tickangle': -90},
+                    'steps' : [
+                        {'range': [0, 100], 'color': "#0F2B63"},
+                        ],
+
+                    'threshold' : {'line': {'color': "#E72482", 'width': 4}, 'thickness': 0.75, 'value': 100}}))
+        fig.update_traces(number_suffix=" %")
+        fig.update_traces(delta_suffix=" %")
+        fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
+        fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
+        fig.update_layout(title_text='')
+        fig.update_xaxes(title_text='')
+        fig.update_yaxes(title_text='')
+        fig.layout.xaxis.tickangle = 70
+
+        st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
+
+    def figTachoDiagrammPicksStrKNBFE(df):
+        df1 = df[df['AllSSCCLabelsPrinted']==0]
+        offenKNBFE = df1.loc[df1["DeliveryDepot"] == "KNBFE"]["Picks Gesamt"].sum()
+
+        df2 = df[df['AllSSCCLabelsPrinted']==1]
+        fertigKNBFE = df2.loc[df2["DeliveryDepot"] == "KNBFE"]["Picks Gesamt"].sum()
+
+        data = {'Offen': [offenKNBFE],
+                'Fertig': [fertigKNBFE]}
+        df = pd.DataFrame(data, index=['KNBFE'])
+
+        # Berechnen Sie den Prozentsatz der abgeschlossenen Lieferungen
+        completion_rate = (fertigKNBFE / (fertigKNBFE + offenKNBFE)) * 100
+
+        fig = go.Figure(go.Indicator(
+            domain = {'x': [0, 1], 'y': [0, 1]},
+            value = completion_rate,
+            mode = "gauge+number+delta",
+            title = {'text': "KNBFE Ziel (%)"},
+            delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
+            gauge = {'axis': {'range': [0, 100], 'tickangle': -90},
+                    'steps' : [
+                        {'range': [0, 100], 'color': "#0F2B63"},
+                        ],
+
+                    'threshold' : {'line': {'color': "#E72482", 'width': 4}, 'thickness': 0.75, 'value': 100}}))
+        fig.update_traces(number_suffix=" %")
+        fig.update_traces(delta_suffix=" %")
+        fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
+        fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
+        fig.update_layout(title_text='')
+        fig.update_xaxes(title_text='')
+        fig.update_yaxes(title_text='')
+        fig.layout.xaxis.tickangle = 70
+
+        st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
+
     def figUebermitteltInDeadline(df):        
         sel_deadStr = '14:00:00'
         sel_deadLej = '14:00:00'
@@ -472,30 +609,37 @@ class LIVE:
         LIVE.columnsKennzahlen(dfOr)
     
         try:
-            col34, col35 = st.columns(2)
+            col34, col35, col36, col37 = st.columns(4)
             with col34:
                 LIVE.figTachoDiagrammPicksLei(dfOr)
             with col35:
                 LIVE.figTachoDiagrammPicksStr(dfOr)
+            with col36:
+                LIVE.figTachoDiagrammPicksStrHannover(dfOr)
+            with col37:
+                LIVE.figTachoDiagrammPicksStrKNBFE(dfOr)
         except:
-             st.write('Keine Daten vorhanden')
+            st.write('Keine Daten vorhanden')
+
         try:
-                LIVE.fig_Status_nach_Katergorie(dfOr)
+            LIVE.fig_Status_nach_Katergorie(dfOr)
         except:
-                st.write('Keine Daten vorhanden')
+            st.write('Keine Daten vorhanden')
+
         try:
-                LIVE.figPicksKunde(dfOr)
+            LIVE.figPicksKunde(dfOr)
         except:
-                st.write('Keine Daten vorhanden')
+            st.write('Keine Daten vorhanden')
+
         try:
             LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr) 
         except:
-                st.write('Keine Daten vorhanden')
+            st.write('Keine Daten vorhanden')
+
         try:    
-                LIVE.figUebermitteltInDeadline(dfOr)
+            LIVE.figUebermitteltInDeadline(dfOr)
         except:
-                st.write('Keine Daten vorhanden, schreibweise beachtet?')
-        
+            st.write('Keine Daten vorhanden, schreibweise beachtet?')
         LIVE.downLoadTagesReport(dfOr)
         LIVE.tabelleAnzeigen(dfOr)
         #save df to csv

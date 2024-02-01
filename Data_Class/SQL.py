@@ -12,7 +12,7 @@ def return_table_names():
     password = "b2.5v^H!IKjetuXMVNvW"
 
     # Datenbankverbindung erstellen
-    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+18+for+SQL+Server')
+    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server')
 
     # Tabellennamen abrufen
     with engine.connect() as conn:
@@ -31,7 +31,7 @@ def save_table_to_SQL(df: pd.DataFrame, table_name: str, batch_size: int = 10):
     password = "b2.5v^H!IKjetuXMVNvW"
 
     # Datenbankverbindung erstellen
-    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+18+for+SQL+Server')
+    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server')
 
     # DataFrame in Chargen schreiben
     start = 0
@@ -50,7 +50,7 @@ def truncateTableAndSave(df: pd.DataFrame, table_name: str, batch_size: int = 10
     username = "batedp-cmes-prod-reportinguser"
     password = "b2.5v^H!IKjetuXMVNvW"
     
-    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+18+for+SQL+Server')
+    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server')
     engine.connect()
     engine.execute(f"TRUNCATE TABLE [{table_name}]")
     engine.dispose()
@@ -63,7 +63,7 @@ def loescheTable(table_name):
     username = "batedp-cmes-prod-reportinguser"
     password = "b2.5v^H!IKjetuXMVNvW"
     # Datenbankverbindung erstellen
-    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+18+for+SQL+Server')
+    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server')
 
     engine.connect()
     engine.execute(f"DROP TABLE [{table_name}]")
@@ -77,7 +77,7 @@ def read_table(table_name: str):
     username = "batedp-cmes-prod-reportinguser"
     password = "b2.5v^H!IKjetuXMVNvW"
     # Datenbankverbindung erstellen
-    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+18+for+SQL+Server')
+    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server')
     # SQL-Befehl laden der Tabelle
     query = f"SELECT * FROM [{table_name}]"
     # Datenframe aus der Datenbank laden
@@ -91,7 +91,7 @@ def updateTable(df: pd.DataFrame, table_name: str):
     username = "batedp-cmes-prod-reportinguser"
     password = "b2.5v^H!IKjetuXMVNvW"
     # Datenbankverbindung erstellen
-    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+18+for+SQL+Server')
+    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server')
     # SQL-Befehl laden der Tabelle
     df.to_sql(table_name, engine, if_exists='replace', index=False)
 
@@ -101,7 +101,7 @@ def read_MasterData():
     username = "batedp-cmes-prod-reportinguser"
     password = "b2.5v^H!IKjetuXMVNvW"
     # Datenbankverbindung erstellen
-    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+18+for+SQL+Server')
+    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server')
     # SQL-Befehl laden der Tabelle
     df = pd.read_sql('SELECT [UnitOfMeasure],[MaterialNumber],[Height],[Length],[Width], [NumeratorToBaseUnitOfMeasure], [DenominatorToBaseUnitOfMeasure] FROM [data_materialmaster-MaterialMasterUnitOfMeasures] WHERE [UnitOfMeasure] IN (\'CS\', \'OUT\', \'D97\')', engine)
     # Datenframe aus der Datenbank laden

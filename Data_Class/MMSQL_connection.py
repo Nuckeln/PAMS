@@ -18,7 +18,7 @@ class ConnectionSettings:
     password: str
     #driver: str = '{ODBC Driver 18 for SQL Server}'
     #driver: str = '{ODBC Driver 13 for SQL Server}'
-    driver: str = '{ODBC Driver 18 for SQL Server}'
+    driver: str = '{ODBC Driver 17 for SQL Server}'
     timeout: int = 30
 
 class AzureDbConnection:

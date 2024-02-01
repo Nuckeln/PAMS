@@ -10,6 +10,7 @@ from Data_Class.MMSQL_connection import read_Table , save_Table
 import Data_Class.AzureStorage
 from io import BytesIO
 from PIL import Image
+import xlrd
 
 
 import seaborn as sns
@@ -58,7 +59,7 @@ def untersagte_sku_TN(masterdata,dfBIN):
     df_verbot.to_csv('Data/df_verbot.csv', index=False)
     return df
 
-@st.cache_data
+#@st.cache_data
 def loadDF():
     df = read_Table('OrderDatenLines')
     if df.empty:
@@ -78,7 +79,11 @@ def loadDF():
     file_name = file_name.lower()
 
     file = Data_Class.AzureStorage.get_blob_file(file_name)
-    dfBIN = pd.read_excel(BytesIO(file), engine='openpyxl', header=3)
+    #dfBIN = pd.read_excel(BytesIO(file), engine='openpyxl', header=3)
+    dfBIN = pd.read_csv('/Users/martinwolf/Python/Spielplatz/TEST Kopie.txt', sep='\t', header=2)
+    dfBIN = dfBIN[dfBIN['MATNR'].notna()]   
+    
+    
     df_alleVerbotenenSKU = untersagte_sku_TN(masterdata,dfBIN)       
 
     return df, masterdata,dfBIN, filenameOrg,df_alleVerbotenenSKU
@@ -92,10 +97,20 @@ def menueLaden():
 def FilterNachDatum(day1, day2, df):
     day1 = pd.to_datetime(day1).date()
     day2 = pd.to_datetime(day2).date()
+    st.write('df in funktion')
+    st.write(day1)
+    st.write(day2)
+    st.data_editor(df)  
     # filter date
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'], format="%d.%m.%Y").dt.date 
     df = df[(df['PlannedDate'] >= day1) & (df['PlannedDate'] <= day2)]
     df = df.astype(str)
+
+    st.write('df fdsfgfdgsggdbdyfbdgnybnfgynbg fynbgv fsg')
+    st.write(df)
+    st.data_editor(df)  
+    # filter date   
+    
     return df
 
 def datenUpload(masterdata,dfBIN):
@@ -106,6 +121,7 @@ def datenUpload(masterdata,dfBIN):
         
 def pageStellplatzverwaltung():
     dfOrders,masterdata,dfBIN, filenameOrg, df_alleVerbotenenSKU= loadDF()
+
     #st.data_editor(dfOrders)
 
     datenUpload(masterdata,dfBIN)
@@ -122,7 +138,14 @@ def pageStellplatzverwaltung():
     with col2:
         sel_range = st.slider('Wähle einen Bedarfszeitraum', min_value=1, max_value=14, value=5, step=1)
         sel_range = heute - datetime.timedelta(days=sel_range)
+        
+    
+
     dfBedarfSKU = FilterNachDatum(sel_range,heute,dfOrders)
+
+    
+
+    
     st.write('Bedarfszeitraum: ' + str(sel_range) + ' bis ' + str(heute))
     verbot = pd.read_csv('Data/df_verbot.csv')
     # if verbot nicht leer dann values aus MATNR und  st.warning('Verbotene SKUs in TN1' + MATNR)
@@ -158,7 +181,8 @@ def pageStellplatzverwaltung():
 
         return dfBedarfSKU, dfOrg, dfBIN_TN, dfBIN_SN
 
-    dfBedarfSKU, dfOrg, dfBIN_TN, dfBIN_SN = berechnungen(dfBedarfSKU)
+    #dfBedarfSKU, dfOrg, dfBIN_TN, dfBIN_SN = berechnungen(dfBedarfSKU)
+    
 
     col1, col2, col3, col4 = st.columns(4)
     with col1:
@@ -172,6 +196,8 @@ def pageStellplatzverwaltung():
     img_strip = Image.open('Data/img/strip.png')   
     img_strip = img_strip.resize((1000, 15))     
     st.image(img_strip, use_column_width=True, caption='',)     
+    
+       
 
     #----- Filter nach Stellplatz -----                              
     if nichtgepflegteSKU:
