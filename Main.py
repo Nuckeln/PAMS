@@ -33,7 +33,7 @@ def checkSystem():
     except:
         return 'System: Test'
 
-#MAC#   streamlit run "/Users/martinwolf/Python/PAMS 2.0/main.py"
+#MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/Main.py"
  
 # --- Set Global Page Configs ---
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="expanded")

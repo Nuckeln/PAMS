@@ -10,7 +10,6 @@ from Data_Class.MMSQL_connection import read_Table , save_Table
 import Data_Class.AzureStorage
 from io import BytesIO
 from PIL import Image
-import xlrd
 
 
 import seaborn as sns
