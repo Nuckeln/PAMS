@@ -9,6 +9,7 @@ Paletten anzeigen ('')
 pipreqs "/Users/martinwolf/Python/PAMS 2.0"
 Successfully saved requirements file in   /Users/martinwolf/Python/PAMS 2.0/requirements.txt
 
+ll
 
 Check if SKU in DFOrder if not stWarning Stammdaten 
 
