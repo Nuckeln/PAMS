@@ -127,7 +127,7 @@ if authentication_status == True:
     #logging.info(f'User: {user}')
     with st.sidebar: 
         check = checkSystem()
-        st.write(f'**{check}**')
+        #st.write(f'**{check}**')
         try:
             st.image(img)
         except:
