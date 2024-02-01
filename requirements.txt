@@ -16,3 +16,4 @@ openpyxl
 st-annotated-text
 seaborn
 st-annotated-text==4.0.0
+scipy
