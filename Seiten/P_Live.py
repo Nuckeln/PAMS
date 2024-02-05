@@ -38,29 +38,31 @@ class LIVE:
         return dfOr
 
     def wetter():
-        df = getWetterBayreuth()
-        temp = df.loc[0,'Temp']
-        temp_max = df.loc[0,'Temp Max']
-        temp_min = df.loc[0,'Temp Min']
-        humidity = df.loc[0,'Humidity']
-        wind_speed = df.loc[0,'Wind Speed']
-        wind_degree = df.loc[0,'Wind Degree']
-        clouds = df.loc[0,'Clouds']
-        weather = df.loc[0,'Weather']
-        #temp to int
-        temp = int(temp)
-        st.write("Wetter in Bayreuth:")
-        if weather == "Clouds":
-            st.write("Bewölkt " + f"{ temp}" + "°C")
-        elif weather == "Rain":
-            st.write("Regen " + f"{ temp}" + "°C")
-        elif weather == "Clear":
-            st.write("Klar  " + f"{ temp}" + "°C")
-        elif weather == "Snow":
-            st.write("Schneefall " + f"{ temp}" + "°C")
-        else:
-            st.write("WTF " + f"{ temp}" + "°C")
-
+        try:
+            df = getWetterBayreuth()
+            temp = df.loc[0,'Temp']
+            temp_max = df.loc[0,'Temp Max']
+            temp_min = df.loc[0,'Temp Min']
+            humidity = df.loc[0,'Humidity']
+            wind_speed = df.loc[0,'Wind Speed']
+            wind_degree = df.loc[0,'Wind Degree']
+            clouds = df.loc[0,'Clouds']
+            weather = df.loc[0,'Weather']
+            #temp to int
+            temp = int(temp)
+            st.write("Wetter in Bayreuth:")
+            if weather == "Clouds":
+                st.write("Bewölkt " + f"{ temp}" + "°C")
+            elif weather == "Rain":
+                st.write("Regen " + f"{ temp}" + "°C")
+            elif weather == "Clear":
+                st.write("Klar  " + f"{ temp}" + "°C")
+            elif weather == "Snow":
+                st.write("Schneefall " + f"{ temp}" + "°C")
+            else:
+                st.write("WTF " + f"{ temp}" + "°C")
+        except:
+            st.write("Wetterdaten konnten nicht geladen werden")
     ## Filter für Live AllSSCCLabelsPrinted Func ###
     def FilterNachDatum(day1, day2,df):
         #df['PlannedDate'] = df['PlannedDate'].dt.strftime('%m/%d/%y')
