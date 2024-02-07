@@ -108,7 +108,7 @@ class LIVE:
                 with col2:
                     st.image(img_type, width=32)
                 with col1:
-                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#50af47", font_family="Montserrat"))
+                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
 
                             
             elif img_type == 'Pallet':
@@ -213,11 +213,7 @@ class LIVE:
     
 
         cols = st.columns(len(cities))  # Erstellen Sie eine Spalte für jedes Depot
-
-                
-
-
-            
+      
     ## Plotly Charts ###
     def Test2(df):
         sum_karton_offen = df['Picks Karton offen'].sum()
