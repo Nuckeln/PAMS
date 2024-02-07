@@ -96,7 +96,7 @@ class LIVE:
 
             if img_type == 'Outer':
                 img_type = img_outer
-                col1, col2, = st.columns(2)
+                col1, col2, = st.columns([0.3, 0.4])
                 with col2:
                     st.image(img_type, width=32,clamp=True)
                 with col1:
@@ -104,7 +104,7 @@ class LIVE:
 
             if img_type == 'Mastercase':
                 img_type = img_mastercase
-                col1, col2 = st.columns(2)
+                col1, col2 = st.columns([0.3, 0.4])
                 with col2:
                     st.image(img_type, width=32)
                 with col1:
@@ -113,7 +113,7 @@ class LIVE:
                             
             elif img_type == 'Pallet':
                 img_type = img_pallet
-                col1, col2 = st.columns(2,gap='small')
+                col1, col2 = st.columns([0.3, 0.4])
                 with col2:
                     st.image(img_type, width=32)
                 with col1:
@@ -122,7 +122,7 @@ class LIVE:
 
             elif img_type == 'Delivery':
                 img_type = img_Delivery
-                col1, col2, = st.columns(2)
+                col1, col2, = st.columns([0.3, 0.4])
                 with col2:
                     st.image(img_type, width=32)
                 with col1:
@@ -131,7 +131,7 @@ class LIVE:
                
             elif img_type == 'Sum':
                 img_type = icon_path_Sum
-                col1, col2  = st.columns(2)
+                col1, col2  = st.columns([0.3, 0.4])
                 with col2:
                     st.image(img_type, width=32)
                 with col1:
