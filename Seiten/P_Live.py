@@ -96,60 +96,51 @@ class LIVE:
 
             if img_type == 'Outer':
                 img_type = img_outer
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    st.image(img_type, width=32,clamp=True)
+                col1, col2, = st.columns(2)
                 with col2:
-                    #green
-                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ')
-                with col3:
-                    #red
-                    annotated_text(annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
+                    st.image(img_type, width=32,clamp=True)
+                with col1:
+                    annotated_text(annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
+
             if img_type == 'Mastercase':
                 img_type = img_mastercase
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    st.image(img_type, width=32)
+                col1, col2 = st.columns(2)
                 with col2:
-                    #green
-                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ')
-                with col3:
-                    #red
-                    annotated_text(annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')                    
+                    st.image(img_type, width=32)
+                with col1:
+                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#50af47", font_family="Montserrat"))
+
+                            
             elif img_type == 'Pallet':
                 img_type = img_pallet
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    st.image(img_type, width=32)
+                col1, col2 = st.columns(2,gap='small')
                 with col2:
+                    st.image(img_type, width=32)
+                with col1:
                     #green
-                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ')
-                with col3:
-                    #red
-                    annotated_text(annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
+                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
+
             elif img_type == 'Delivery':
                 img_type = img_Delivery
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    st.image(img_type, width=32)
+                col1, col2, = st.columns(2)
                 with col2:
+                    st.image(img_type, width=32)
+                with col1:
                     #green
-                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ')
-                with col3:
-                    #red
-                    annotated_text(annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
+                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
+               
             elif img_type == 'Sum':
                 img_type = icon_path_Sum
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    st.image(img_type, width=32)
+                col1, col2  = st.columns(2)
                 with col2:
+                    st.image(img_type, width=32)
+                with col1:
                     #green
-                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ')
-                with col3:
-                    #red
-                    annotated_text('',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"),'')
-        st.write('Mengen in Picks nach Kategorie:')    
+                    annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
+        
+        
+        
+        
         cities = [("Gesamt", ""), ("Stuttgart", "KNSTR"), ("Leipzig", "KNLEJ"), ("Hannover", "KNHAJ"), ("Bielefeld", "KNBFE")]
         cols = st.columns(len(cities))
         
@@ -159,8 +150,19 @@ class LIVE:
                     <style>
                     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
                     </style>
-                    <h1 style='text-align: center; color: #0F2B63; font-family: Montserrat; font-weight: bold;'>{}</h1>
-                    """.format(city), unsafe_allow_html=True)    
+                    <h1 style='text-align: left; color: #0F2B63; font-family: Montserrat; font-weight: bold;'>{}</h1>
+                    """.format(city), unsafe_allow_html=True)   
+                # Picks Gesamt of the Depot
+                if city == "Gesamt":
+                    sum_picks = df['Picks Gesamt'].sum()
+                    st.write(f"Summe Picks: {sum_picks}")
+                else:
+                    sum_picks = df.loc[df['DeliveryDepot']==depot]['Picks Gesamt'].sum()
+                    st.write(f"Summe Picks: {sum_picks}")
+                
+
+
+
         cols = st.columns(len(cities))  # Erstellen Sie eine Spalte für jedes Depot
         for i, (city, depot) in enumerate(cities):
             with cols[i]:
