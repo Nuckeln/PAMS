@@ -24,6 +24,8 @@ def load_data_CW():
     df_outbound.columns = df_outbound.iloc[0]
     # entferne die ersten 2 Zeilenx
     df_outbound = df_outbound[2:]
+    #df_inbound.columns = df_inbound.iloc[0]
+    #df_inbound = df_inbound[2:]
     return df_outbound, df_inbound
 
 @st.cache_data
@@ -47,7 +49,7 @@ def filter_data(df, date,useCol):
 
 def main():
     st.title('Ladeplan')
-    st.write('Hier können Sie den Ladeplan einsehen und bearbeiten.')
+
     sel_date = st.date_input('Datum', datetime.date.today())
     
     df_CW_out, df_CW_inb  = load_data_CW()

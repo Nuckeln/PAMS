@@ -10,6 +10,7 @@ from Data_Class.MMSQL_connection import read_Table , save_Table
 import Data_Class.AzureStorage
 from io import BytesIO
 from PIL import Image
+import json
 
 
 import seaborn as sns
@@ -61,31 +62,23 @@ def untersagte_sku_TN(masterdata,dfBIN):
 @st.cache_data
 def loadDF():
     df = read_Table('OrderDatenLines')
-    if df.empty:
-        df = pd.read_csv('Data/df_orderlines.csv')
+
     masterdata = read_Table('data_materialmaster_Duplicate_InternationalArticleNumber')
-    # filter only rows where IsDeleted == 0 and isReturn == 0
-    ##TODO 
+
     df = df[(df['IsDeleted'] == 0) & (df['IsReturnDelivery'] == 0)]
-     
-    file = read_Table('AzureStorage')
-    #serch last entry Nachschub[anwendung] == Nachschub and get filename
-    filename = file[file['anwendung'] == 'Nachschub']
-    filename = filename.sort_values(by=['dateTime'], ascending=False)
-    file_name = filename.iloc[0]['filename']
-    filenameOrg = filename.iloc[0]['filenameorg']
-    # add filename to a string
-    file_name = file_name.lower()
-
-    file = Data_Class.AzureStorage.get_blob_file(file_name)
+        
+    dfBIN = pd.read_excel("Data/appData/MLGT.xlsx",header=3)
     
-    dfBIN = pd.read_excel("MLGTP03.xlsx",header=3)
-    #dfBIN = pd.read_csv('/Users/martinwolf/Python/Spielplatz/TEST Kopie.txt', sep='\t', header=2)
     dfBIN = dfBIN[dfBIN['MATNR'].notna()]   
-    
-    
-    df_alleVerbotenenSKU = untersagte_sku_TN(masterdata,dfBIN)       
+    def read_single_value_from_file(file_path):
+        with open(file_path, 'r') as f:
+            data = f.read().strip()
+        return data
 
+    # Verwenden Sie die Funktion, um den Wert aus der Datei zu lesen
+    lastUpload = read_single_value_from_file('Data/appData/lastUpload.json')
+    filenameOrg = f"MLGT vom:{lastUpload}"
+    df_alleVerbotenenSKU = untersagte_sku_TN(masterdata,dfBIN)       
     return df, masterdata,dfBIN, filenameOrg,df_alleVerbotenenSKU
     
 def menueLaden():
@@ -97,10 +90,8 @@ def menueLaden():
 def FilterNachDatum(day1, day2, df):
     day1 = pd.to_datetime(day1).date()
     day2 = pd.to_datetime(day2).date()
-    st.write('df in funktion')
-    st.write(day1)
-    st.write(day2)
-    st.data_editor(df)  
+
+    #st.data_editor(df)  
     # filter date
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'], format="%d.%m.%Y").dt.date 
     df = df[(df['PlannedDate'] >= day1) & (df['PlannedDate'] <= day2)]
@@ -110,17 +101,38 @@ def FilterNachDatum(day1, day2, df):
 
 def datenUpload(masterdata,dfBIN):
     with st.expander('Stellplatzdaten Updaten', expanded=False):
-        #Data_Class.AzureStorage.st_Azure_uploadBtn('Nachschub')
+        org_file = 'Data/appData/MLGTP_org.xlsx'
+        date = datetime.date.today().strftime("%Y-%m-%d")
         selFile = st.file_uploader('Stellplatzdaten Updaten', type=['xlsx'])
-        
-  
+        col1 , col2 = st.columns(2)
+        with col1:
+            if st.button('Upload'):
+                if selFile is not None:
+                    st.write('Uploading...')
+                    # Speichern Sie die hochgeladene Datei unter einem neuen Namen und Pfad
+                    with open(f'Data/appData/MLGT.xlsx', 'wb') as f:
+                        f.write(selFile.getvalue())
+                        #save date in a locl json file
+                        with open('Data/appData/lastUpload.json', 'w') as f:
+                            f.write(date)
+                    st.write('Upload completed.')
+            else:
+                st.write('Keine Datei ausgewählt!')
+        with col2:            
+            if st.button('Restore Original'):
+                st.write('Restoring...')
+                with open(f'Data/appData/MLGTP_org.xlsx', 'wb') as f:
+                    f.write(org_file.getvalue())
+                st.write('Restore completed.')
+            
+            
+            
+
+    
     
         
 def pageStellplatzverwaltung():
     dfOrders,masterdata,dfBIN, filenameOrg, df_alleVerbotenenSKU= loadDF()
-
-    #st.data_editor(dfOrders)
-
     datenUpload(masterdata,dfBIN)
 
     #----- Lade Stellplatzdaten -----
@@ -145,6 +157,7 @@ def pageStellplatzverwaltung():
     
     st.write('Bedarfszeitraum: ' + str(sel_range) + ' bis ' + str(heute))
     st.data_editor(dfBedarfSKU)
+    
     verbot = pd.read_csv('Data/df_verbot.csv')
     # if verbot nicht leer dann values aus MATNR und  st.warning('Verbotene SKUs in TN1' + MATNR)
     if verbot.empty:
@@ -154,7 +167,7 @@ def pageStellplatzverwaltung():
         st.dataframe(verbot)
 
     def berechnungen(dfBedarfSKU):
-        st.data_editor(dfBIN)
+        #st.data_editor(dfBIN)
         #-- Bedarf letzte 7 Tage ermitteln und Df für Figur erstellen
         dfOrg = dfBedarfSKU.copy()
         #drop all columns except MaterialNumber PlannedDate, CorrospondingOuters. CorrospondingMasterCases, SaporderNumber
