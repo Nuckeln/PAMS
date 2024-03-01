@@ -38,14 +38,34 @@ def load_data_SFG():
 def anwesenheit():
      img = Image.open('Data/img/Mitarbeiter/micha.png', mode='r')
      st.image(img, width=200)
-     
-        
 
 #filter the data by Date
+def show_raw_data(df_CW_out, df_CW_inb, df_SFG):
+
+    st.write('Outbound CW')
+    st.dataframe(df_CW_out)
+    st.write('Inbound CW')
+    st.data_editor(df_CW_inb)
+    st.write('SFG')
+    st.data_editor(df_SFG)
+
+
 def filter_data(df, date,useCol):
     df[useCol] = df[useCol].astype('datetime64[ns]').dt.date
     df = df[df[useCol] == date]
     return df
+
+def show_DIET(df):
+    #load logo
+    img = Image.open('Data/img/DIET_LOGO.png', mode='r')
+    st.image(img, width=200)
+
+def show_domestic(df):
+    #load logo
+    img = Image.open('Data/img/Domestic_LOGO.png', mode='r')
+    st.image(img, width=200)
+    
+
 
 def main():
     st.title('Ladeplan')
@@ -54,14 +74,18 @@ def main():
     
     df_CW_out, df_CW_inb  = load_data_CW()
     df_SFG = load_data_SFG()
+    show_raw_data(df_CW_out, df_CW_inb, df_SFG)
     
-    anwesenheit()
+    col1, col2 = st.columns(2)
+    with col1:
+        show_domestic(df_CW_out)
+    with col2:
+        show_DIET(df_CW_out)
+    
+    
+    #anwesenheit()
     
     #df_SFG = filter_data(df_SFG,sel_date,'Ist Datum (Tatsächliche Anlieferung)')
     
     #st.data_editor  (df_CW)
-    st.write('Outbound CW')
-    st.dataframe(df_CW_out)
-    st.write('Inbound CW')
-    st.data_editor(df_CW_inb)
     

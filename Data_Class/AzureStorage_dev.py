@@ -37,8 +37,4 @@ def get_file_dev(name):
     #return as object
     return blob_content
 
-data = get_file_dev("CW_DDS.xlsm")
 
-df = pd.read_excel(BytesIO(data))
-
-print(df)
