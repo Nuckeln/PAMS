@@ -58,7 +58,7 @@ def untersagte_sku_TN(masterdata,dfBIN):
     df_verbot.to_csv('Data/df_verbot.csv', index=False)
     return df
 
-#@st.cache_data
+@st.cache_data
 def loadDF():
     df = read_Table('OrderDatenLines')
     if df.empty:
@@ -78,8 +78,9 @@ def loadDF():
     file_name = file_name.lower()
 
     file = Data_Class.AzureStorage.get_blob_file(file_name)
-    #dfBIN = pd.read_excel(BytesIO(file), engine='openpyxl', header=3)
-    dfBIN = pd.read_csv('/Users/martinwolf/Python/Spielplatz/TEST Kopie.txt', sep='\t', header=2)
+    
+    dfBIN = pd.read_excel("MLGTP03.xlsx",header=3)
+    #dfBIN = pd.read_csv('/Users/martinwolf/Python/Spielplatz/TEST Kopie.txt', sep='\t', header=2)
     dfBIN = dfBIN[dfBIN['MATNR'].notna()]   
     
     
@@ -104,17 +105,14 @@ def FilterNachDatum(day1, day2, df):
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'], format="%d.%m.%Y").dt.date 
     df = df[(df['PlannedDate'] >= day1) & (df['PlannedDate'] <= day2)]
     df = df.astype(str)
-
-    st.write('df fdsfgfdgsggdbdyfbdgnybnfgynbg fynbgv fsg')
-    st.write(df)
-    st.data_editor(df)  
     # filter date   
-    
     return df
 
 def datenUpload(masterdata,dfBIN):
     with st.expander('Stellplatzdaten Updaten', expanded=False):
-        Data_Class.AzureStorage.st_Azure_uploadBtn('Nachschub')
+        #Data_Class.AzureStorage.st_Azure_uploadBtn('Nachschub')
+        selFile = st.file_uploader('Stellplatzdaten Updaten', type=['xlsx'])
+        
   
     
         
@@ -146,6 +144,7 @@ def pageStellplatzverwaltung():
 
     
     st.write('Bedarfszeitraum: ' + str(sel_range) + ' bis ' + str(heute))
+    st.data_editor(dfBedarfSKU)
     verbot = pd.read_csv('Data/df_verbot.csv')
     # if verbot nicht leer dann values aus MATNR und  st.warning('Verbotene SKUs in TN1' + MATNR)
     if verbot.empty:
@@ -155,6 +154,7 @@ def pageStellplatzverwaltung():
         st.dataframe(verbot)
 
     def berechnungen(dfBedarfSKU):
+        st.data_editor(dfBIN)
         #-- Bedarf letzte 7 Tage ermitteln und Df für Figur erstellen
         dfOrg = dfBedarfSKU.copy()
         #drop all columns except MaterialNumber PlannedDate, CorrospondingOuters. CorrospondingMasterCases, SaporderNumber
@@ -180,7 +180,7 @@ def pageStellplatzverwaltung():
 
         return dfBedarfSKU, dfOrg, dfBIN_TN, dfBIN_SN
 
-    #dfBedarfSKU, dfOrg, dfBIN_TN, dfBIN_SN = berechnungen(dfBedarfSKU)
+    dfBedarfSKU, dfOrg, dfBIN_TN, dfBIN_SN = berechnungen(dfBedarfSKU)
     
 
     col1, col2, col3, col4 = st.columns(4)

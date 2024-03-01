@@ -297,6 +297,7 @@ class LIVE:
         st.pyplot(fig)
 
     def fig_Status_nach_Katergorie(df):
+        # Das Balkendiagram Teilt Fertige und Offene Gesamt Picks in Kategorien auf Karton, Paletten und Stangen aus 
             df = df.groupby(['AllSSCCLabelsPrinted'])[['Picks Karton','Picks Paletten','Picks Stangen']].sum().reset_index()        #set index to SapOrderNumber
             df['Picks Gesamt'] = df['Picks Karton'] + df['Picks Paletten'] + df['Picks Stangen']
             df['Picks Gesamt'] = df['Picks Gesamt'].round(0).astype(int)
@@ -322,7 +323,7 @@ class LIVE:
             figPicksBySAPOrder.update_traces(marker=dict(opacity=df['Transparency']))
             #passe y axis an von True zu "FERTIG" and False zu "OFFEN"
             #blende den titel auf der y axis aus
-            figPicksBySAPOrder.update_yaxes(ticktext=['Fertig','Offen'])
+            figPicksBySAPOrder.update_yaxes(ticktext=['Offen','Fertig'])
             figPicksBySAPOrder.update_yaxes(tickvals=[0,1])
             figPicksBySAPOrder.update_xaxes(showticklabels=False)
             figPicksBySAPOrder.update_yaxes(title_text='')

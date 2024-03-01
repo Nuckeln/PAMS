@@ -12,7 +12,7 @@ from Seiten.P_Admin import adminPage
 from Seiten.P_User_Reports import pageUserReport
 from Seiten.P_Forecast import main as pageForecast
 from Seiten.P_Nachschub import pageStellplatzverwaltung
-
+from Seiten.P_Ladeplan import main as pageLadeplan
 
 # Logging Konfiguration
 
@@ -98,7 +98,7 @@ img = Image.open('Data/img/logo.png', mode='r')
 def berechtigung():
     if st.session_state.rechte == 1:
         #admin Vollzugriff
-        return ["Live Status",'Reports','User Reports','Forecast','Admin', 'Lagerverwaltung']
+        return ["Live Status",'Ladeplan','Reports','User Reports','Forecast','Admin', 'Lagerverwaltung']
     # else:
     #     return ['Wartung']
     elif st.session_state.rechte == 2: 
@@ -158,3 +158,6 @@ if authentication_status == True:
         #logging.info('User läd Seite Forecast')
     if sel_main_m == 'Lagerverwaltung':
         pageStellplatzverwaltung()
+    if sel_main_m == 'Ladeplan':
+        pageLadeplan()        
+    
