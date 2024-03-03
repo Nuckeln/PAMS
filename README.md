@@ -4,6 +4,21 @@
 Auswertung und grafische Darstellung der Logistikprozesse am Standort sowie die Möglichkeit der Datenerfassung (z.B. Fehlverladungen)
 # ToDo 
 
+BAT FARBEN: ''' BAT Colurs
+#0e2b63 darkBlue
+#004f9f MidBlue
+#00b1eb LightBlue
+#ef7d00 Orange
+#ffbb00 Yellow
+#ffaf47 Green
+#afca0b lightGreen
+#5a328a Purple
+#^6 Pink
+'''
+
+
+
+
 Paletten anzeigen ('')
 
 pipreqs "/Users/martinwolf/Python/PAMS 2.0"

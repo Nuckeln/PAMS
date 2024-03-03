@@ -98,12 +98,12 @@ img = Image.open('Data/img/logo.png', mode='r')
 def berechtigung():
     if st.session_state.rechte == 1:
         #admin Vollzugriff
-        return ["Live Status",'Ladeplan','Reports','User Reports','Forecast','Admin', 'Lagerverwaltung']
+        return ["Live Status",'Ladeplan','Reports','User Reports','Forecast','Lagerverwaltung','Admin']
     # else:
     #     return ['Wartung']
     elif st.session_state.rechte == 2: 
         # Manager
-        return ["Live Status",'Reports','User Reports','Admin', 'Forecast','Lagerverwaltung']
+        return ["Live Status",'Reports','User Reports','Admin', 'Forecast']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 
