@@ -13,7 +13,7 @@ BAT FARBEN: ''' BAT Colurs
 #ffaf47 Green
 #afca0b lightGreen
 #5a328a Purple
-#^6 Pink
+#e72582 Pink
 '''
 
 

@@ -98,16 +98,16 @@ img = Image.open('Data/img/logo.png', mode='r')
 def berechtigung():
     if st.session_state.rechte == 1:
         #admin Vollzugriff
-        return ["Live Status",'Ladeplan','Reports','User Reports','Forecast','Lagerverwaltung','Admin']
+        return ['Depot Live Status',"Logistics Live Monitor",'Depot Reports','Warehouse Reports','Forecast','Lagerverwaltung','Admin']
     # else:
     #     return ['Wartung']
     elif st.session_state.rechte == 2: 
         # Manager
-        return ["Live Status",'Reports','User Reports','Admin', 'Forecast']
+        return ["Depot Live Status",'Logistics Live Monitor','Depot Reports','Warehouse Reports','Forecast','Lagerverwaltung']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 
-        return ["Live Status",'Reports','Forecast','Lagerverwaltung']
+        return ["Depot Live Status",'Depot Reports','Depot Forecast','Lagerverwaltung']
     
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd
@@ -142,12 +142,12 @@ if authentication_status == True:
         except:
             pass
 if authentication_status == True:
-    if sel_main_m == 'Live Status':
+    if sel_main_m == "Depot Live Status":
         LIVE.PageTagesReport()
         #logging.info('User läd Seite Live Status')
-    if sel_main_m == 'Reports':
+    if sel_main_m == 'Depot Reports':
          reportPage()   
-    if sel_main_m == 'User Reports':
+    if sel_main_m == 'Warehouse Reports':
         pageUserReport()
         #logging.info('User läd Seite User Reports')
     if sel_main_m == 'Admin':
@@ -158,6 +158,6 @@ if authentication_status == True:
         #logging.info('User läd Seite Forecast')
     if sel_main_m == 'Lagerverwaltung':
         pageStellplatzverwaltung()
-    if sel_main_m == 'Ladeplan':
+    if sel_main_m == 'Logistics Live Monitor':
         pageLadeplan()        
     

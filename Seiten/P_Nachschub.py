@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import datetime
+import time
 #from Data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
 #from Data_Class.DB_Daten_Agg import orderDatenAgg
 import st_aggrid as ag
@@ -115,28 +116,42 @@ def datenUpload(masterdata,dfBIN):
                         #save date in a locl json file
                         with open('Data/appData/lastUpload.json', 'w') as f:
                             f.write(date)
-                    st.write('Upload completed.')
+                    st.success('Upload erfolgreich')
+                    with st.spinner('Reload in 3 seconds...'):
+                        time.sleep(3)
+                        st.cache_data.clear()
+                        st.rerun()
             else:
-                st.write('Keine Datei ausgewählt!')
+                pass
         with col2:            
             if st.button('Restore Original'):
                 st.write('Restoring...')
-                with open(f'Data/appData/MLGTP_org.xlsx', 'wb') as f:
-                    f.write(org_file.getvalue())
-                st.write('Restore completed.')
-            
-            
-            
-
-    
-    
+                # erstelle eine Kopie von Data/appData/MLGTP_org.xlsx und speichere Sie als Data/appData/MLGTP.xlsx
+                with open(f'Data/appData/MLGT.xlsx', 'wb') as f:
+                    f.write(open(org_file, 'rb').read())
+                    #save date in a locl json file
+                    with open('Data/appData/lastUpload.json', 'w') as f:
+                        f.write(date)
+                with st.spinner('Reload in 3 seconds...'):
+                    time.sleep(3)
+                    st.cache_data.clear()
+                    st.rerun()
         
 def pageStellplatzverwaltung():
     dfOrders,masterdata,dfBIN, filenameOrg, df_alleVerbotenenSKU= loadDF()
     datenUpload(masterdata,dfBIN)
 
     #----- Lade Stellplatzdaten -----
-    st.write('Stellplatzdaten: ',filenameOrg)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write('Stellplatzdaten: ',filenameOrg)
+    with col2:
+        if  st.button('Reload', key='aktualisieren'):
+            with st.spinner('Reload in 3 seconds...'):
+                time.sleep(3)
+                st.cache_data.clear()
+                st.rerun()
+        
     dfBIN['MATNR'] = dfBIN['MATNR'].astype(str)
     dfBIN['MATNR'] = dfBIN['MATNR'].str[:8]
 

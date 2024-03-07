@@ -150,7 +150,7 @@ class LIVE:
                     <style>
                     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
                     </style>
-                    <h1 style='text-align: left; color: #0F2B63; font-family: Montserrat; font-weight: bold;'>{}</h1>
+                    <h2 style='text-align: left; color: #0F2B63; font-family: Montserrat; font-weight: bold;'>{}</h2>
                     """.format(city), unsafe_allow_html=True)   
                 # Picks Gesamt of the Depot
                 if city == "Gesamt":
