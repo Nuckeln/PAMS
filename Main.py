@@ -103,7 +103,7 @@ def berechtigung():
     #     return ['Wartung']
     elif st.session_state.rechte == 2: 
         # Manager
-        return ["Depot Live Status",'Logistics Live Monitor','Depot Reports','Warehouse Reports','Forecast','Lagerverwaltung']
+        return ["Depot Live Status",'Logistics Live Monitor','Depot Reports','Lagerverwaltung','Forecast']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 

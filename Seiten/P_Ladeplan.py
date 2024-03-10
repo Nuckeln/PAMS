@@ -12,7 +12,7 @@ import time
 
 from annotated_text import annotated_text, annotation
 from Data_Class.AzureStorage_dev import get_blob_list_dev, get_file_dev
-
+from Data_Class.MMSQL_connection import read_Table
 def rename_duplicate_columns(df):
     cols = pd.Series(df.columns)
     for dup in cols[cols.duplicated()].unique(): 
@@ -31,18 +31,20 @@ def rename_duplicate_values_in_first_row(df):
 def load_data_CW():
     try:
         data = get_file_dev("CW_SDDS.xlsm")
-        #save as csv to Data/con_backups/Quelle_PA_BLOBB
+        # #save as csv to Data/con_backups/Quelle_PA_BLOBB
         
         
-        df_outbound = pd.read_excel(BytesIO(data),sheet_name='Outbound_Monitor')
-        df_outbound.columns = df_outbound.iloc[0]
-        df_outbound = df_outbound[2:]
+        # df_outbound = pd.read_excel(BytesIO(data),sheet_name='Outbound_Monitor')
+        # df_outbound.columns = df_outbound.iloc[0]
+        # df_outbound = df_outbound[2:]
+        df_outbound = read_Table('PAMS_CW_SDDS_Outbound_Monitor')
         
         
         
-        df_inbound = pd.read_excel(BytesIO(data), sheet_name='Inbound_Monitor')       
-        df_inbound.columns = df_inbound.iloc[0]
-        df_inbound = df_inbound[2:]
+        # df_inbound = pd.read_excel(BytesIO(data), sheet_name='Inbound_Monitor')       
+        # df_inbound.columns = df_inbound.iloc[0]
+        # df_inbound = df_inbound[2:]
+        df_inbound = read_Table('PAMS_CW_SDDS_Inbound_Monitor')
 
         df_dds = get_file_dev('CW_DDS.xlsm')
         df_dds = pd.read_excel(BytesIO(df_dds), sheet_name='Logistik DE DDS')
@@ -70,14 +72,18 @@ def load_data_CW():
 def load_data_LC():
     try:
         data = get_file_dev("LC_SDDS.xlsm")
-        df_outbound = pd.read_excel(BytesIO(data),sheet_name='Outbound_Monitor')
-        df_outbound = rename_duplicate_values_in_first_row(df_outbound)  # Aktualisiere die Werte in der ersten Zeile von df_dds
-        df_outbound.columns = df_outbound.iloc[0]
-        df_outbound = df_outbound[1:]
-        #df_inbound = None
-        df_inbound = pd.read_excel(BytesIO(data), sheet_name='Inbound_Monitor')       
-        # df_inbound.columns = df_inbound.iloc[0]
-        df_inbound = df_inbound[2:]
+        # df_outbound = pd.read_excel(BytesIO(data),sheet_name='Outbound_Monitor')
+        # df_outbound = rename_duplicate_values_in_first_row(df_outbound)  # Aktualisiere die Werte in der ersten Zeile von df_dds
+        # df_outbound.columns = df_outbound.iloc[0]
+        # df_outbound = df_outbound[1:]
+        # #df_inbound = None
+        # df_inbound = pd.read_excel(BytesIO(data), sheet_name='Inbound_Monitor')       
+        # # df_inbound.columns = df_inbound.iloc[0]
+        # df_inbound = df_inbound[2:]
+        
+        df_outbound = read_Table('PAMS_LC_SDDS_Outbound_Monitor')
+        df_inbound = read_Table('PAMS_LC_SDDS_Inbound_Monitor')
+        
         df_dds = get_file_dev('LC_DDS.xlsm')
         #df_dds = None
         df_dds = pd.read_excel(BytesIO(df_dds), sheet_name='Logistik Bayreuth DDS')
@@ -109,15 +115,17 @@ def load_data_SFG():
     try:
         data = get_file_dev("SFG_SDDS.xlsx")
 
-        df_outbound = pd.read_excel(BytesIO(data),sheet_name='Outbound_Monitor')#,engine='openpyxl', sheet_name='Outbound_Monitor')
+        # df_outbound = pd.read_excel(BytesIO(data),sheet_name='Outbound_Monitor')#,engine='openpyxl', sheet_name='Outbound_Monitor')
 
-        df_outbound = rename_duplicate_values_in_first_row(df_outbound)  # Aktualisiere die Werte in der ersten Zeile von df_dds
-        df_outbound.columns = df_outbound.iloc[0]
-        df_outbound = df_outbound[2:]    
-        # #df_inbound = None
-        df_inbound = pd.read_excel(BytesIO(data), sheet_name='Inbound_Monitor',engine='openpyxl')       
-        # # df_inbound.columns = df_inbound.iloc[0]
-        df_inbound = df_inbound[2:]
+        # df_outbound = rename_duplicate_values_in_first_row(df_outbound)  # Aktualisiere die Werte in der ersten Zeile von df_dds
+        # df_outbound.columns = df_outbound.iloc[0]
+        # df_outbound = df_outbound[2:]    
+        # # #df_inbound = None
+        # df_inbound = pd.read_excel(BytesIO(data), sheet_name='Inbound_Monitor',engine='openpyxl')       
+        # # # df_inbound.columns = df_inbound.iloc[0]
+        # df_inbound = df_inbound[2:]
+        df_outbound = read_Table('PAMS_SFG_SDDS_Outbound_Monitor')
+        df_inbound = read_Table('PAMS_SFG_SDDS_Inbound_Monitor')
         df_dds = pd.read_excel(BytesIO(data), sheet_name='SFG_DDS 24',engine='openpyxl')  
 
         df_dds = df_dds.T
@@ -1154,7 +1162,7 @@ def main():
     img_strip = img_strip.resize((1000, 15))     
     st.image(img_strip, use_column_width=True, caption='',)   
 
-    
+
 
     df_CW_out, df_CW_inb, df_CW_dds  = load_data_CW()
     df_CW_out = filter_data(df_CW_out,sel_date,'Ist Datum')
