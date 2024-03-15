@@ -171,7 +171,7 @@ def pageStellplatzverwaltung():
 
     
     st.write('Bedarfszeitraum: ' + str(sel_range) + ' bis ' + str(heute))
-    st.data_editor(dfBedarfSKU)
+    #st.data_editor(dfBedarfSKU)
     
     verbot = pd.read_csv('Data/df_verbot.csv')
     # if verbot nicht leer dann values aus MATNR und  st.warning('Verbotene SKUs in TN1' + MATNR)

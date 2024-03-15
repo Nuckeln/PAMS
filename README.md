@@ -4,6 +4,8 @@
 Auswertung und grafische Darstellung der Logistikprozesse am Standort sowie die Möglichkeit der Datenerfassung (z.B. Fehlverladungen)
 # ToDo 
 
+Wenn LT22 Parser steht 
+![Alt text](todo/2024-03-13_12-34-54.png)
 BAT FARBEN: ''' BAT Colurs
 #0e2b63 darkBlue
 #004f9f MidBlue

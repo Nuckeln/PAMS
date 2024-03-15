@@ -225,6 +225,49 @@ def fig_Picksgesamt_kategorie(df, tabelle, show_in_day_Week):
     if tabelle == True:
          st.dataframe(df)
 
+def fig_trucks_Org(df, tabelle, show_in_day_Week):
+    dfOriginal = df
+    # Filter dfOriginal UnloadingListIdentifier is not none
+    dfOriginal = dfOriginal[dfOriginal['UnloadingListIdentifier'].notna()]
+    depots = ['KNSTR', 'KNLEJ', 'KNBFE', 'KNHAJ']
+
+    df = pd.DataFrame()
+    for depot in depots:
+        df1 = dfOriginal[dfOriginal['DeliveryDepot'] == depot]
+        df1['Picks Gesamt'] = df1['Picks Gesamt'].astype(float)
+        df1 = df1.groupby(['DeliveryDepot', 'PlannedDate']).agg({'UnloadingListIdentifier': 'nunique', 'Picks Gesamt': 'sum'}).reset_index()
+        df = pd.concat([df, df1])
+        
+    # ...
+
+    # Erstelle Balkendiagramm
+    fig = px.bar(df, x='PlannedDate', y='Picks Gesamt', color='DeliveryDepot', barmode='group',
+                title='LKW Pro Depot', height=600)
+
+    # Update trace colors
+    colors = ['#0e2b63','#004f9f','#ef7d00','#ffbb00']#,'#ffaf47','#afca0b','#5a328a','#e72582']
+    for color, depot in zip(colors, depots):
+        fig.update_traces(marker_color=color, selector=dict(DeliveryDepot=depot))
+
+    # Kombiniere 'UnloadingListIdentifier' und 'Picks Gesamt' für die Datenbeschriftung
+    df['label'] = df.apply(lambda row: f"{row['DeliveryDepot']}: {row['UnloadingListIdentifier']} LKW <br>{row['Picks Gesamt']} Picks", axis=1)
+    fig.update_traces(text=df['label'], textposition='inside')
+
+    # Update der restlichen Layout-Einstellungen und Anzeige des Plots
+    fig.update_layout(
+        font_family="Montserrat", 
+        font_color="#0F2B63", 
+        title_font_family="Montserrat", 
+        title_font_color="#0F2B63", 
+        showlegend=False
+    )
+    fig.update_xaxes(showticklabels=True)
+    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+
+    # ...
+
+    if tabelle:
+        st.data_editor(df)
 
 ### Fehler PLOTS ###
 def figIssuesTotal(dfIssues,show_in_day_Week, show_tables):  
@@ -302,7 +345,7 @@ def reportPage():
     with st.expander("Kennzahlen Mengen", expanded=True):
         sel_filter = st.multiselect(
         "Zeige:",
-        ["Picks Gesamt", "Picks nach Kunde", "Picks nach Verfügbarket",'Picks nach Kategorie'], ['Picks Gesamt'])  
+        ["Picks Gesamt", "Picks nach Kunde", "Picks nach Verfügbarket",'Picks nach Kategorie', 'LKW Pro Depot'], ['Picks Gesamt'])  
         if 'Picks Gesamt' in sel_filter:
             figPICKS_GesamtVolumen(df,show_tables,show_in_day_Week)
         if 'Picks nach Kunde' in sel_filter:
@@ -311,6 +354,8 @@ def reportPage():
             figPicksGesamtnachTagUndVerfügbarkeit(df,show_tables,show_in_day_Week)
         if 'Picks nach Kategorie' in sel_filter:
             fig_Picksgesamt_kategorie(df,show_tables,show_in_day_Week)
+        if 'LKW Pro Depot' in sel_filter:
+            fig_trucks_Org(df,show_tables,show_in_day_Week)
         if sel_filter == []:
             st.warning('Bitte wähle eine Auswertung aus')
     with st.expander("Kennzahlen Fehler", expanded=True):

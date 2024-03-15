@@ -427,6 +427,8 @@ def show_domestic(df_CW_out, df_CW_inb, df_CW_dds):
         st.data_editor(df_CW_inb)
         st.write('DDS LC')
         st.data_editor(df_CW_dds)
+
+
 def show_LC(df_LC_out, df_LC_inb, df_LC_dds):
     #st.dataframe(df_LC_dds)
     def logo_and_Zahlen(df_CW_out):
@@ -845,13 +847,7 @@ def show_SFG(df_SFG_out, df_SFG_inb, df_SFG_dds):
         
         st.write('DDS LC')
         st.data_editor(df_SFG_dds)
-  
-  
-  
-  
-  
-  
-  
+
   
 def show_LEAF(df_CW_out, df_CW_inb, df_CW_dds):
    
@@ -1173,54 +1169,7 @@ def main():
     df_SFG_out, df_SFG_inb, df_SFG_dds = load_data_SFG()
     df_SFG_out = filter_data(df_SFG_out,sel_date,'Abholdatum Update')
     df_SFG_inb = filter_data(df_SFG_inb,sel_date,'Ist Datum\n(Tatsächliche Anlieferung)')
-    
-    
 
-    #show_raw_data(df_CW_out, df_CW_inb, df_CW_dds, df_LC_out, df_LC_inb, df_LC_dds, df_SFG)
-
-    # st.markdown(
-    #     """
-    #     <style>
-    #         div[data-testid="column"]:nth-of-type(1)
-    #         {
-    #             display: flex;
-    #             justify-content: center;
-    #             align-items: center;
-    #             text-align: center;
-    #         } 
-    #         div[data-testid="column"]:nth-of-type(2)
-    #         {
-    #             display: flex;
-    #             justify-content: center;
-    #             align-items: center;
-    #             text-align: center;
-    #         } 
-    #         div[data-testid="column"]:nth-of-type(3)
-    #         {
-    #             display: flex;
-    #             justify-content: center;
-    #             align-items: center;
-    #             text-align: center;
-    #         } 
-    #         div[data-testid="column"]:nth-of-type(4)
-    #         {
-    #             display: flex;
-    #             justify-content: center;
-    #             align-items: center;
-    #             text-align: center;
-    #         }
-    #         div[data-testid="column"]:nth-of-type(5)
-    #         {
-    #             display: flex;
-    #             justify-content: center;
-    #             align-items: center;
-    #             text-align: center;
-    #         }             
-    #     </style>
-    #     """,unsafe_allow_html=True
-    # )
-
-    
     show_LC(df_LC_out, df_LC_inb, df_LC_dds)
     show_domestic(df_CW_out, df_CW_inb, df_CW_dds)
     show_SFG(df_SFG_out, df_SFG_inb, df_SFG_dds)
