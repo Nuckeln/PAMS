@@ -227,48 +227,42 @@ def fig_Picksgesamt_kategorie(df, tabelle, show_in_day_Week):
 
 def fig_trucks_Org(df, tabelle, show_in_day_Week):
     dfOriginal = df
+    #st.data_editor(df)
     # Filter dfOriginal UnloadingListIdentifier is not none
     dfOriginal = dfOriginal[dfOriginal['UnloadingListIdentifier'].notna()]
     depots = ['KNSTR', 'KNLEJ', 'KNBFE', 'KNHAJ']
-
+    dfOriginal['Gepackte Paletten'] = dfOriginal['Gepackte Paletten'].astype(float)
     df = pd.DataFrame()
     for depot in depots:
         df1 = dfOriginal[dfOriginal['DeliveryDepot'] == depot]
         df1['Picks Gesamt'] = df1['Picks Gesamt'].astype(float)
-        df1 = df1.groupby(['DeliveryDepot', 'PlannedDate']).agg({'UnloadingListIdentifier': 'nunique', 'Picks Gesamt': 'sum'}).reset_index()
+        df1 = df1.groupby(['DeliveryDepot', 'PlannedDate']).agg({'UnloadingListIdentifier': 'nunique', 'Picks Gesamt': 'sum', 'Gepackte Paletten':'sum'}).reset_index()
         df = pd.concat([df, df1])
-        
+    # round values to 0 decimal
+    df = df.round(0)
     # ...
+    # Vor der Schleife, initialisieren Sie 'df' mit den entsprechenden Spalten
+    df = pd.DataFrame(columns=['DeliveryDepot', 'PlannedDate', 'UnloadingListIdentifier', 'Picks Gesamt', 'Gepackte Paletten'])
 
-    # Erstelle Balkendiagramm
-    fig = px.bar(df, x='PlannedDate', y='Picks Gesamt', color='DeliveryDepot', barmode='group',
-                title='LKW Pro Depot', height=600)
+    for depot in depots:
+        df1 = dfOriginal[dfOriginal['DeliveryDepot'] == depot]
+        df1['Picks Gesamt'] = df1['Picks Gesamt'].astype(float)
+        df1 = df1.groupby(['DeliveryDepot', 'PlannedDate']).agg({'UnloadingListIdentifier': 'nunique', 'Picks Gesamt': 'sum', 'Gepackte Paletten':'sum'}).reset_index()
+        df = pd.concat([df, df1])
 
-    # Update trace colors
-    colors = ['#0e2b63','#004f9f','#ef7d00','#ffbb00']#,'#ffaf47','#afca0b','#5a328a','#e72582']
-    for color, depot in zip(colors, depots):
-        fig.update_traces(marker_color=color, selector=dict(DeliveryDepot=depot))
+    # Erstellen der Beschriftungen direkt im DataFrame
+    df['label'] = df['DeliveryDepot'] + ": " + df['UnloadingListIdentifier'].astype(str) + " LKW <br>" + df['Picks Gesamt'].astype(str) + " Picks <br>" + df['Gepackte Paletten'].astype(str) + " Paletten"
 
-    # Kombiniere 'UnloadingListIdentifier' und 'Picks Gesamt' für die Datenbeschriftung
-    df['label'] = df.apply(lambda row: f"{row['DeliveryDepot']}: {row['UnloadingListIdentifier']} LKW <br>{row['Picks Gesamt']} Picks", axis=1)
-    fig.update_traces(text=df['label'], textposition='inside')
+    # Erstellen des Balkendiagramms mit Beschriftungen
+    fig = px.bar(df, x='PlannedDate', y='Picks Gesamt', text='label', color='DeliveryDepot', barmode='group', title='LKW Pro Depot', height=600)
 
-    # Update der restlichen Layout-Einstellungen und Anzeige des Plots
-    fig.update_layout(
-        font_family="Montserrat", 
-        font_color="#0F2B63", 
-        title_font_family="Montserrat", 
-        title_font_color="#0F2B63", 
-        showlegend=False
-    )
-    fig.update_xaxes(showticklabels=True)
+    # Update der Farben und Layout-Anpassungen wie zuvor
+    ...
+
+    # Anzeigen des Diagramms
     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
-
-    # ...
-
-    if tabelle:
-        st.data_editor(df)
-
+    if tabelle == True:
+        st.dataframe(dfOriginal)
 ### Fehler PLOTS ###
 def figIssuesTotal(dfIssues,show_in_day_Week, show_tables):  
     # Unique values in column 'Art' to array

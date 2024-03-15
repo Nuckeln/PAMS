@@ -330,6 +330,45 @@ class LIVE:
             figPicksBySAPOrder.update_xaxes(title_text='')
 
             st.plotly_chart(figPicksBySAPOrder,use_container_width=True,config={'displayModeBar': False})
+    def fig_trucks_Org(df):
+        dfOriginal = df[df['UnloadingListIdentifier'].notna()]
+        depots = ['KNSTR', 'KNLEJ', 'KNBFE', 'KNHAJ']
+
+        all_dfs = []  # Liste zum Sammeln der Datenframes für jedes Depot
+        for depot in depots:
+            dfDepot = dfOriginal[dfOriginal['DeliveryDepot'] == depot]
+            dfDepot['Picks Gesamt'] = dfDepot['Picks Gesamt'].astype(float)
+            dfDepotAggregated = dfDepot.groupby(['DeliveryDepot', 'PlannedDate']).agg({'UnloadingListIdentifier': 'nunique', 'Picks Gesamt': 'sum', 'Gepackte Paletten': 'sum'}).reset_index()
+            
+            # Erstelle 'label' innerhalb der Schleife
+            dfDepotAggregated['label'] = dfDepotAggregated.apply(lambda row: f"{row['DeliveryDepot']}: {row['UnloadingListIdentifier']} LKW <br>{row['Picks Gesamt']} Picks <br>{row['Gepackte Paletten']} Paletten", axis=1)
+            
+            all_dfs.append(dfDepotAggregated)
+
+        dfAggregated = pd.concat(all_dfs)
+        dfAggregated = dfAggregated.round(0)
+
+        # Erstelle Balkendiagramm
+        fig = px.bar(dfAggregated, x='PlannedDate', y='Picks Gesamt', color='DeliveryDepot', barmode='group',
+                    title='LKW Pro Depot', height=600, text='label')
+
+        # Update trace colors
+        colors = ['#0e2b63', '#004f9f', '#ef7d00', '#ffbb00']
+        for color, depot in zip(colors, depots):
+            fig.update_traces(marker_color=color, selector=dict(DeliveryDepot=depot))
+
+        # Update der Layout-Einstellungen
+        fig.update_layout(
+            font_family="Montserrat",
+            font_color="#0F2B63",
+            title_font_family="Montserrat",
+            title_font_color="#0F2B63",
+            showlegend=False
+        )
+        fig.update_xaxes(showticklabels=True)
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+
+
 
 
     def figPicksKunde(df):
@@ -434,7 +473,7 @@ class LIVE:
 
     def figTachoDiagrammPicksStr(df):
             
-           
+        
             df1 = df[df['AllSSCCLabelsPrinted']==0]
             offenLei = df1.loc[df1["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()
             offenStu = df1.loc[df1["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()
@@ -567,7 +606,7 @@ class LIVE:
         #drop utc
         dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'].dt.tz_localize(None)
         dfFertig['InTime'] = (dfFertig['Fertiggestellt'] < dfFertig['PlannedDate'])
-         #.astype(int)
+        #.astype(int)
         dfFertig['Fertig um'] = dfFertig['Fertiggestellt']
         dfFertig['Fertig um'] = dfFertig['Fertig um'].dt.strftime('%d.%m.%Y %H:%M')
         #round to hour
@@ -596,7 +635,7 @@ class LIVE:
         # Date PartnerName to text
         st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
 
-   ## AG-Grid Func ###
+## AG-Grid Func ###
 
     def tabelleAnzeigen(df):
         #new df with only the columns we need 'PlannedDate' ,'SapOrderNumber','PartnerName']#'Fertiggestellt','Picks Gesamt','Picks Karton','Picks Paletten','Picks Stangen','Lieferschein erhalten','Fertiggestellt'
@@ -663,16 +702,19 @@ class LIVE:
                 LIVE.figTachoDiagrammPicksStrKNBFE(dfOr)
         except:
             st.write('Keine Daten vorhanden')
-
+        try:
+            LIVE.figPicksKunde(dfOr)
+        except:
+            st.write('Keine Daten vorhanden')
+        try:
+            LIVE.fig_trucks_Org(dfOr)
+        except:
+            LIVE.fig_trucks_Org(dfOr)
         try:
             LIVE.fig_Status_nach_Katergorie(dfOr)
         except:
             st.write('Keine Daten vorhanden')
 
-        try:
-            LIVE.figPicksKunde(dfOr)
-        except:
-            st.write('Keine Daten vorhanden')
 
         try:
             LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr) 
