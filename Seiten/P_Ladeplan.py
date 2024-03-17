@@ -220,24 +220,44 @@ def filter_data(df, date, useCol):
     df = df[df[useCol] == date]
     return df
 
-def show_domestic(df_CW_out, df_CW_inb, df_CW_dds):
-    #st.dataframe(df_CW_out)
-    def logo_and_Zahlen(df_CW_out):
+def show_domestic(df_CW_out, df_CW_inb, df_CW_dds,sel_date):
+
+    try:
+        df_dds = df_CW_dds
+        df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
+
+        # Setze das aktuelle Date auf das neueste Date im DataFrame, wenn es innerhalb der letzten 5 Tage liegt
+        # Stellen Sie sicher, dass 'Date' als datetime interpretiert wird
+        df_dds['Date'] = pd.to_datetime(df_dds['Date'])
+        # Filtere df_dds basierend auf dem aktuellen Datum
+        # sel_date to datetime
+        sel_date = pd.to_datetime(sel_date)
+        df_dds = df_dds[df_dds['Date'] == sel_date]
+        df_dds['Total'] = df_dds['Blocklager Paletten ist'] + df_dds['Regalager Paletten ist']
+        total_stock = df_dds['Total'].sum()
+    except:
+        total_stock = 0
+
+    def outbound(df_CW_out):
       
         sum_of_loadings = df_CW_out['Destination City'].count()
-        
         # zähle Verladen + PGI' in 'Status Verladung '
         sum_loaded = df_CW_out[df_CW_out['Status Verladung'] == 'Verladen + PGI']['Status Verladung'].count()
-        # zähle Vorgestellt in 'Status Verladung '
-        sum_prepared = df_CW_out[df_CW_out['Status Verladung'] == 'Vorgestellt']['Status Verladung'].count()
-        # zähle in in Vorbereitung 'Status Verladung '
-        sum_on_preparation = df_CW_out[df_CW_out['Status Verladung'] == 'in Vorbereitung']['Status Verladung'].count()
-        # Zähle Gestrichen in 'Status Verladung '
-        sum_in_lodingprogress = df_CW_out[df_CW_out['Status Verladung'] == 'Verladung']['Status Verladung'].count()
-        
-        sum_canceled = df_CW_out[df_CW_out['Status Verladung'] == 'Gestrichen']['Status Verladung'].count()
-
-        col1, col2, col3 = st.columns([1,1,3],gap='small')
+        def time_to_timedelta(t):
+            return pd.Timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+        try:
+            # filter ist null 0 or NaN or empty df_CW_out['Wartezeit bis Verladebeginn']
+            df_CW_out = df_CW_out[df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '].notnull()]
+            df_CW_out = df_CW_out[df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] != '0']
+            df_CW_out = df_CW_out[df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] != '']
+            # to datetime
+            df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] = pd.to_datetime(df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '], errors='coerce').dt.time
+            df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] = df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '].apply(time_to_timedelta)
+            out_time = df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '].mean().seconds / 60
+            out_time = round(out_time)
+        except:
+            out_time = 0
+        col1, col2, col3  = st.columns([2,2,1],gap='small')
         
         with col1:
             outbound = Image.open('Data/img/Outbound.png', mode='r')
@@ -245,33 +265,36 @@ def show_domestic(df_CW_out, df_CW_inb, df_CW_dds):
         with col2:
             img_truck = truck_progress_png(sum_loaded, sum_of_loadings)
             st.image(img_truck, use_column_width=True)
-            
-        with col3:  
-            #st.write('Letzte Aktualisierung: ', datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
-            annotated_text(
-                           annotation(f'Verladene Trucks: {sum_loaded}', '', "#50af47", font_family="Montserrat"),
-                           '/',
-                           annotation(f'Trucks in Verladung: {sum_in_lodingprogress}', '', "#afca0b", font_family="Montserrat"),
-                            '/',
-                           annotation(f'Vorgestellte Trucks: {sum_prepared}', '', "#ffbb00", font_family="Montserrat"),
-                           '/',
-                           annotation(f'Gestrichene Trucks: {sum_canceled}', '', "#e72582", font_family="Montserrat"))        
+        with col3:
+            st.metric("ø Verladezeit", value = f"{out_time} min",)
+
     def logo_and_Zahlen_inbound(df_inb):
-      
+        def time_to_timedelta(t):
+            return pd.Timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+        
+        try:
+            # Konvertiere 'Wartezeit bis Entladebeginn' in timedelta-Objekte
+            # to datetime
+            df_inb['Wartezeit bis Entladebeginn'] = pd.to_datetime(df_inb['Wartezeit bis Entladebeginn'])
+            df_CW_inb['Entladungszeit'] = pd.to_datetime(df_CW_inb['Entladungszeit'])
+            df_inb['Wartezeit bis Entladebeginn'] = df_inb['Wartezeit bis Entladebeginn'].apply(time_to_timedelta)
+            #Entladungszeit
+            df_inb['Entladungszeit'] = df_inb['Entladungszeit'].apply(time_to_timedelta)
+            # Berechne die Gesamtzeit in neue Spalte Entladegesamtzeit
+            df_inb['Entladegesamtzeit'] = df_inb['Wartezeit bis Entladebeginn'] + df_inb['Entladungszeit']
+            # Berechne den Durchschnitt der Entladegesamtzeit
+            inb_time = df_inb['Entladegesamtzeit'].mean().seconds / 60
+            # runde auf minuten
+            inb_time = round(inb_time)
+        except:
+            inb_time = 0
+            
         sum_of_loadings = df_inb['Soure Location'].count()
         
         # zähle Verladen + PGI' in 'Status Verladung '
         sum_GR = df_inb[df_inb['Status'] == 'Eingelagert']['Status'].count()
-        # zähle Vorgestellt in 'Status Verladung '
-        sum_unloaded = df_inb[df_inb['Status'] == 'Entladen']['Status'].count()
-        # zähle in in Vorbereitung 'Status Verladung '
-        sum_on_preparation = df_inb[df_inb['Status'] == 'Gebucht']['Status'].count()
-        # Zähle Gestrichen in 'Status Verladung '
-        sum_in_lodingprogress = df_inb[df_inb['Status'] == 'In Arbeit']['Status'].count()
-        
-        sum_canceled_inb = df_inb[df_inb['Status'] == 'Gestrichen']['Status'].count()
 
-        col1, col2, col3 = st.columns([1,1,3],gap='small')
+        col1, col2, col3 = st.columns([2,2,1],gap='small')
         
         with col1:
             outbound = Image.open('Data/img/Inbound.png', mode='r')
@@ -279,17 +302,8 @@ def show_domestic(df_CW_out, df_CW_inb, df_CW_dds):
         with col2:
             img_truck = truck_progress_png(sum_GR, sum_of_loadings)
             st.image(img_truck, use_column_width=True)
-            
         with col3:  
-            #st.write('Letzte Aktualisierung: ', datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
-            annotated_text(
-                           annotation(f'Fertig Trucks: {sum_GR}', '', "#50af47", font_family="Montserrat"),
-                           '/',
-                           annotation(f'Satus Entladen: {sum_in_lodingprogress}', '', "#afca0b", font_family="Montserrat"),
-                            '/',
-                           annotation(f'Satus Gebucht: {sum_GR}', '', "#ffbb00", font_family="Montserrat"),
-                           '/',
-                           annotation(f'Gestrichene Trucks: {sum_canceled_inb}', '', "#e72582", font_family="Montserrat"))        
+            st.metric("ø Entladezeit", value = f"{inb_time} min",)# delta=" 95,6 % Servicelevel")
 
     def plotly_warehouse_stocks(df_CW_dds):
         # Entferne Zeilen mit NaN-Werten
@@ -302,7 +316,7 @@ def show_domestic(df_CW_out, df_CW_inb, df_CW_dds):
 
         # Filtere df_CW_dds.Date zwischen heute und - 5 Werktage
         df_CW_dds = df_CW_dds[df_CW_dds['Date'] <= current_date]
-        df_CW_dds = df_CW_dds[df_CW_dds['Date'] >= (current_date - datetime.timedelta(days=10))]
+        df_CW_dds = df_CW_dds[df_CW_dds['Date'] >= (current_date - datetime.timedelta(days=5))]
 
         # Berechne die Summe der beiden Spalten
         df_CW_dds['Total'] = df_CW_dds['Blocklager Paletten ist'] + df_CW_dds['Regalager Paletten ist']
@@ -347,76 +361,25 @@ def show_domestic(df_CW_out, df_CW_inb, df_CW_dds):
             )
         )
         st.plotly_chart(fig, use_container_width=True)
-    col1,col2 = st.columns([4,1])
+
+    ##### Show the Data #####
+    #########################
+
+    col1,col2,col3 = st.columns([4,2,1])
     img = Image.open('Data/img/Domestic_LOGO.png', mode='r')  
     with col1:
         st.image(img, width=250)
     with col2:
-        on_table = st.toggle('Tabellen', False, key='tables_cw')
+        max_stock = 2800
+        free_space = max_stock - total_stock
+        st.metric("Bestand", value = f"{total_stock} PAL", delta=f"{free_space} PAL Platz")
+    with col3:
+        on_table = st.toggle('Tabellen', False, key='tables_CW')
+        
     col1,col2,col3,col4 = st.columns([3,1,1,1])
     with col1:
         st.write('')
-    def cal_hard_messure(df_CW_dds,df_CW_inb,df_CW_out):
-        
-        df_CW_dds = df_CW_dds.dropna(subset=['Blocklager Paletten ist', 'Regalager Paletten ist'])
-        #drop 0 values
-        df_CW_dds = df_CW_dds[(df_CW_dds['Blocklager Paletten ist'] != 0) | (df_CW_dds['Regalager Paletten ist'] != 0)]
-
-        # Konvertiere die 'Date'-Spalte in ein datetime-Objekt
-        df_CW_dds['Date'] = pd.to_datetime(df_CW_dds['Date'])
-
-        # Finde das neueste Datum mit Einträgen in den Beständen
-        latest_date = df_CW_dds['Date'].max()
-
-        # Filtere den DataFrame auf Zeilen mit dem neuesten Datum
-        df_latest = df_CW_dds[df_CW_dds['Date'] == latest_date]
-
-        # Summiere 'Blocklager Paletten ist' und 'Regalager Paletten ist'
-        total_stock = df_latest['Blocklager Paletten ist'].sum() + df_latest['Regalager Paletten ist'].sum()
-        # Funktion, die datetime.time in timedelta konvertiert
-        
-        
-        def time_to_timedelta(t):
-            return pd.Timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
-        try:
-            # Konvertiere 'Wartezeit bis Entladebeginn' in timedelta-Objekte
-            df_CW_inb['Wartezeit bis Entladebeginn'] = df_CW_inb['Wartezeit bis Entladebeginn'].apply(time_to_timedelta)
-            #Entladungszeit
-            df_CW_inb['Entladungszeit'] = df_CW_inb['Entladungszeit'].apply(time_to_timedelta)
-            # Berechne die Gesamtzeit in neue Spalte Entladegesamtzeit
-            df_CW_inb['Entladegesamtzeit'] = df_CW_inb['Wartezeit bis Entladebeginn'] + df_CW_inb['Entladungszeit']
-            # Berechne den Durchschnitt der Entladegesamtzeit
-            inb_time = df_CW_inb['Entladegesamtzeit'].mean().seconds / 60
-            # runde auf minuten
-            inb_time = round(inb_time, 1)
-        except:
-            inb_time = 0
-        try:
-            # filter ist null 0 or NaN or empty df_CW_out['Wartezeit bis Verladebeginn']
-            df_CW_out = df_CW_out[df_CW_out['Wartezeit bis Verladebeginn'].notnull()]
-            df_CW_out = df_CW_out[df_CW_out['Wartezeit bis Verladebeginn'] != '0']
-            df_CW_out = df_CW_out[df_CW_out['Wartezeit bis Verladebeginn'] != '']
-            df_CW_out['Wartezeit bis Verladebeginn'] = df_CW_out['Wartezeit bis Verladebeginn'].apply(time_to_timedelta)
-            #Entladungszeit
-            df_CW_out['Verladungszeit'] = df_CW_out['Verladungszeit'].apply(time_to_timedelta)
-            # Berechne die Gesamtzeit in neue Spalte Entladegesamtzeit
-            df_CW_out['Ladegesamtzeit'] = df_CW_out['Wartezeit bis Verladebeginn'] + df_CW_out['Verladungszeit']
-            # Berechne den Durchschnitt der Entladegesamtzeit
-            out_time = df_CW_out['Ladegesamtzeit'].mean().seconds / 60
-            out_time = round(out_time, 1)
-        except:
-            out_time = 0
-
-        
-        return total_stock, inb_time, out_time
-
-    # Zeige den Gesamtlagerbestand an
-    total_stock, inb_time,out_time  = cal_hard_messure(df_CW_dds, df_CW_inb, df_CW_out)
-    col2.metric("Bestand", value = f"{total_stock} EP", delta="1.2 EP frei")
-    col3.metric("ø Verladezeit", value = f"{out_time} min",)
-    col4.metric("ø Entladezeit", value = f"{inb_time} min",)# delta=" 95,6 % Servicelevel")
-
-    logo_and_Zahlen(df_CW_out)
+    outbound(df_CW_out)
     logo_and_Zahlen_inbound(df_CW_inb)
     with st.expander('Lagerbestand', expanded=False):
         plotly_warehouse_stocks(df_CW_dds)
@@ -427,21 +390,66 @@ def show_domestic(df_CW_out, df_CW_inb, df_CW_dds):
         st.data_editor(df_CW_inb)
         st.write('DDS LC')
         st.data_editor(df_CW_dds)
+  
+def show_LC(df_LC_out, df_LC_inb, df_LC_dds, sel_date):
+
+    try:
+        df_dds = df_LC_dds
+        df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
+
+        # Setze das aktuelle Date auf das neueste Date im DataFrame, wenn es innerhalb der letzten 5 Tage liegt
+        # Stellen Sie sicher, dass 'Date' als datetime interpretiert wird
+        df_dds['Date'] = pd.to_datetime(df_dds['Date'])
+        # Filtere df_dds basierend auf dem aktuellen Datum
+        # sel_date to datetime
+        sel_date = pd.to_datetime(sel_date)
+        df_dds = df_dds[df_dds['Date'] == sel_date]
 
 
-def show_LC(df_LC_out, df_LC_inb, df_LC_dds):
-    #st.dataframe(df_LC_dds)
-    def logo_and_Zahlen(df_CW_out):
+        columns_prod_mat = [col for col in df_dds.columns if 'Produktionsmaterialien' in col]
+        summeWMS_filtered = df_dds[columns_prod_mat].sum(axis=1)
+
+        # Berechne SummeFG (Summe der Fertigwaren nach Abzug des GEW Bestand)
+        columns_summeFG = ['Zigaretten (ZFG100000)', 'Zigarillos (ZFG110000)', 'OTP (ZFG130000)']
+        summeFG_filtered = df_dds[columns_summeFG].sum(axis=1) - df_dds['GEW Bestand ']
+
+        # Erstelle einen DataFrame für das Sankey-Diagramm
+        sankey_data_filtered = pd.DataFrame({
+            'Date': df_dds['Date'],
+            'SummeWMS': summeWMS_filtered,
+            'SummeFG': summeFG_filtered,
+            'GEW Bestand': df_dds['GEW Bestand ']
+    })
+        
+        df_dds = sankey_data_filtered
+        df_dds['Total'] = df_dds['SummeWMS'] + df_dds['SummeFG'] + df_dds['GEW Bestand']
+        total_stock = df_dds['Total'].sum()
+    except:
+        
+        total_stock = 0
+
+    def outbound(df_LC_out):
       
-        sum_of_loadings = df_CW_out['SCI'].count()
+        sum_of_loadings = df_LC_out['SCI'].count()
         
         # zähle Verladen + PGI' in 'Status Verladung '
-        sum_loaded = df_CW_out[df_CW_out['Loaded at Bayreuth (Documents finished)'] != None]['Loaded at Bayreuth (Documents finished)'].count()
+        sum_loaded = df_LC_out[df_LC_out['Loaded at Bayreuth (Documents finished)'] != None]['Loaded at Bayreuth (Documents finished)'].count()
         # zähle Vorgestellt in 'Status Verladung '
-        
-        sum_canceled = df_CW_out[df_CW_out['Verschoben / Nicht gekommen (Details schreibe Bemerkung)'] == 'X']['Verschoben / Nicht gekommen (Details schreibe Bemerkung)'].count()
+        def time_to_timedelta(t):
+            return pd.Timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+        try:
+            df_LC_out = df_LC_out[df_LC_out['Verladungszeit Log-In'].notnull()]
+            df_LC_out = df_LC_out[df_LC_out['Verladungszeit Log-In'] != '0']
+            df_LC_out = df_LC_out[df_LC_out['Verladungszeit Log-In'] != '']
+            # to datetime
+            df_LC_out['Verladungszeit Log-In'] = pd.to_datetime(df_LC_out['Verladungszeit Log-In'])
+            df_LC_out['Verladungszeit Log-In'] = df_LC_out['Verladungszeit Log-In'].apply(time_to_timedelta)
+            out_time = df_LC_out['Verladungszeit Log-In'].mean().seconds / 60
+            out_time = round(out_time)
+        except:
+            out_time = 0
 
-        col1, col2, col3 = st.columns([1,1,3],gap='small')
+        col1, col2, col3  = st.columns([2,2,1],gap='small')
         
         with col1:
             outbound = Image.open('Data/img/Outbound.png', mode='r')
@@ -449,15 +457,24 @@ def show_LC(df_LC_out, df_LC_inb, df_LC_dds):
         with col2:
             img_truck = truck_progress_png(sum_loaded, sum_of_loadings)
             st.image(img_truck, use_column_width=True)
-            
-        with col3:  
-            #st.write('Letzte Aktualisierung: ', datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
-            annotated_text(
-                           annotation(f'Verladene Trucks: {sum_loaded}', '', "#50af47", font_family="Montserrat"),
-                            '/',
-                           annotation(f'Gestrichene Trucks: {sum_canceled}', '', "#e72582", font_family="Montserrat"))        
+        with col3:
+            st.metric("ø Verladezeit", value = f"{out_time} min",)
     def logo_and_Zahlen_inbound(df_inb):
-      
+        def time_to_timedelta(t):
+            return pd.Timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+        
+        try:
+            # Konvertiere 'Wartezeit bis Entladebeginn' in timedelta-Objekte
+            # to datetime
+            df_inb['Automatisch berechnet.2'] = pd.to_datetime(df_inb['Automatisch berechnet.2'])
+            df_inb['Automatisch berechnet.2'] = df_inb['Automatisch berechnet.2'].apply(time_to_timedelta)
+            #Entladungszeit
+            inb_time = df_inb['Automatisch berechnet.2'].mean().seconds / 60
+            # runde auf minuten
+            inb_time = round(inb_time)
+        except:
+            inb_time = 0
+            
         sum_of_loadings = df_inb['Datum'].count()
         
         sum_GR = df_inb['Echtzeit Büro.1'].count()
@@ -465,9 +482,8 @@ def show_LC(df_LC_out, df_LC_inb, df_LC_dds):
         sum_unloadedFG = df_inb['Anzahl Paletten'].count()
         # zähle in in Vorbereitung 'Status Verladung '
         sum_unloadedWMS = df_inb['Anzahl Paletten.1'].count()
-        
-        
-        col1, col2, col3 = st.columns([1,1,3],gap='small')
+
+        col1, col2, col3 = st.columns([2,2,1],gap='small')
         
         with col1:
             outbound = Image.open('Data/img/Inbound.png', mode='r')
@@ -475,16 +491,8 @@ def show_LC(df_LC_out, df_LC_inb, df_LC_dds):
         with col2:
             img_truck = truck_progress_png(sum_GR, sum_of_loadings)
             st.image(img_truck, use_column_width=True)
-            
         with col3:  
-            #st.write('Letzte Aktualisierung: ', datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
-            annotated_text(
-                           annotation(f'Fertig Trucks: {sum_GR}', '', "#50af47", font_family="Montserrat"),
-                           '/',
-                           annotation(f'Anzahl FG Trucks: {sum_unloadedFG}', '', "#afca0b", font_family="Montserrat"),
-                            '/',
-                           annotation(f'Anzahl WMS Trucks: {sum_unloadedWMS}', '', "#ffbb00", font_family="Montserrat"))
-                         
+            st.metric("ø Entladezeit", value = f"{inb_time} min",)# delta=" 95,6 % Servicelevel")
 
     def plotly_warehouse_stocks(df_dds):
         # Entferne Zeilen mit NaN-Werten
@@ -503,7 +511,7 @@ def show_LC(df_LC_out, df_LC_inb, df_LC_dds):
         df_dds = df_dds[df_dds['Date'] <= current_date]
         # Filtere df_dds.Date zwischen heute und - 5 Werktage
         df_dds = df_dds[df_dds['Date'] <= current_date]
-        df_dds = df_dds[df_dds['Date'] >= (current_date - datetime.timedelta(days=10))]
+        df_dds = df_dds[df_dds['Date'] >= (current_date - datetime.timedelta(days=5))]
 
         # Berechne die Summe der beiden Spalten
         columns_prod_mat = [col for col in df_dds.columns if 'Produktionsmaterialien' in col]
@@ -564,78 +572,22 @@ def show_LC(df_LC_out, df_LC_inb, df_LC_dds):
             )
         )
         st.plotly_chart(fig, use_container_width=True)
-    col1,col2 = st.columns([4,1])
-
+    
+    col1,col2,col3 = st.columns([4,2,1])
     img = Image.open('Data/img/LC_LOGO.png', mode='r')  
     with col1:
         st.image(img, width=250)
     with col2:
+        max_stock = 6959
+        free_space = max_stock - total_stock
+        st.metric("Bestand", value = f"{total_stock} PAL", delta=f"{free_space} PAL Platz")
+    with col3:
         on_table = st.toggle('Tabellen', False, key='tables_LC')
+        
     col1,col2,col3,col4 = st.columns([3,1,1,1])
     with col1:
         st.write('')
-
-    def cal_hard_messure(df_dds,df_CW_inb,df_CW_out):
-        
-        # filtere 0 values aus df_latest['Gesamtlagerkapazität']
-        df_dds = df_dds.dropna(subset=['Gesamtlagerkapazität'])
-        # Konvertiere die 'Date'-Spalte in ein datetime-Objekt
-        df_dds['Date'] = pd.to_datetime(df_dds['Date'])
-
-        # Finde das neueste Datum mit Einträgen in den Beständen
-        latest_date = df_dds['Date'].max()
-
-        # Filtere den DataFrame auf Zeilen mit dem neuesten Datum
-        df_latest = df_dds[df_dds['Date'] == latest_date]
-
-        # Summiere 'Blocklager Paletten ist' und 'Regalager Paletten ist'
-        total_stock = df_latest['Gesamtlagerkapazität'].sum()
-        # Funktion, die datetime.time in timedelta konvertiert
-        
-        
-        def time_to_timedelta(t):
-            return pd.Timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
-        try:
-            # Konvertiere 'Wartezeit bis Entladebeginn' in timedelta-Objekte
-            df_CW_inb['Wartezeit bis Entladebeginn'] = df_CW_inb['Wartezeit bis Entladebeginn'].apply(time_to_timedelta)
-            #Entladungszeit
-            df_CW_inb['Entladungszeit'] = df_CW_inb['Entladungszeit'].apply(time_to_timedelta)
-            # Berechne die Gesamtzeit in neue Spalte Entladegesamtzeit
-            df_CW_inb['Entladegesamtzeit'] = df_CW_inb['Wartezeit bis Entladebeginn'] + df_CW_inb['Entladungszeit']
-            # Berechne den Durchschnitt der Entladegesamtzeit
-            inb_time = df_CW_inb['Entladegesamtzeit'].mean().seconds / 60
-            # runde auf minuten
-            inb_time = round(inb_time, 1)
-        except:
-            inb_time = 0
-        try:
-            # filter ist null 0 or NaN or empty df_CW_out['Wartezeit bis Verladebeginn']
-            df_CW_out = df_CW_out[df_CW_out['Wartezeit bis Verladebeginn'].notnull()]
-            df_CW_out = df_CW_out[df_CW_out['Wartezeit bis Verladebeginn'] != '0']
-            df_CW_out = df_CW_out[df_CW_out['Wartezeit bis Verladebeginn'] != '']
-            df_CW_out['Wartezeit bis Verladebeginn'] = df_CW_out['Wartezeit bis Verladebeginn'].apply(time_to_timedelta)
-            #Entladungszeit
-            df_CW_out['Verladungszeit'] = df_CW_out['Verladungszeit'].apply(time_to_timedelta)
-            # Berechne die Gesamtzeit in neue Spalte Entladegesamtzeit
-            df_CW_out['Ladegesamtzeit'] = df_CW_out['Wartezeit bis Verladebeginn'] + df_CW_out['Verladungszeit']
-            # Berechne den Durchschnitt der Entladegesamtzeit
-            out_time = df_CW_out['Ladegesamtzeit'].mean().seconds / 60
-            out_time = round(out_time, 1)
-        except:
-            out_time = 0
-
-        
-        return total_stock, inb_time, out_time
-
-
-
-    # Zeige den Gesamtlagerbestand an
-    total_stock, inb_time,out_time  = cal_hard_messure(df_LC_dds, df_LC_inb, df_LC_out)
-    col2.metric("Bestand", value = f"{total_stock} EP", delta="1.2 EP frei")
-    col3.metric("ø Verladezeit", value = f"{out_time} min",)
-    col4.metric("ø Entladezeit", value = f"{inb_time} min",)# delta=" 95,6 % Servicelevel")
-
-    logo_and_Zahlen(df_LC_out)
+    outbound(df_LC_out)
     logo_and_Zahlen_inbound(df_LC_inb)
     with st.expander('Lagerbestand', expanded=False):
         plotly_warehouse_stocks(df_LC_dds)
@@ -646,63 +598,60 @@ def show_LC(df_LC_out, df_LC_inb, df_LC_dds):
         st.data_editor(df_LC_inb)
         st.write('DDS LC')
         st.data_editor(df_LC_dds)
-  
-def show_SFG(df_SFG_out, df_SFG_inb, df_SFG_dds):
-    # st.write('Outbound SFG')
-    # st.data_editor(df_SFG_out)
-    # st.write('Inbound SFG')
-    # st.data_editor(df_SFG_inb)
-    # st.data_editor(df_SFG_dds)
-    def logo_and_Zahlen(df_out):       
-        'Filter DIET'
-        df_out["Material Group:\nDiet\nCAF\nStaub\nPresize\nRohware"] == 'Diet'
+
+def show_DIET(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
+
+    # try:
+    df_dds = df_SFG_dds
+    df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
+    df_dds['Date'] = pd.to_datetime(df_dds['Date'])
+
+    # Filtere df_dds basierend auf dem aktuellen Datum
+    # sel_date to datetime
+    sel_date = pd.to_datetime(sel_date)
+    df_dds = df_dds[df_dds['Date'] == sel_date]
+    df_dds['Total'] = df_dds['PMD ']
+    total_stock = df_dds['PMD '].sum()
+    # except:
+    #     total_stock = 0
+
+    def outbound(df_out):
+      
+        df_out = df_out.rename(columns={"Material Group:\nDiet\nCAF\nStaub\nPresize\nRohware": "TYPE"})
+        # flter df_out["TYPE"] == 'CAF'
+        df_out = df_out[df_out["TYPE"] == 'Diet']
         # zähle Vorgestellt in 'Status Verladung '
-        sum_loadings = df_out["Material Group:\nDiet\nCAF\nStaub\nPresize\nRohware"].count()
+        sum_loadings = df_out["TYPE"].count()
+
         sum_finished = df_out[df_out['Ladeende'] != None]['Ladeende'].count()
 
-        col1, col2, col3 = st.columns([1,1,3],gap='small')
+        
+        
+        
+        def time_to_timedelta(t):
+            return pd.Timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+        try:
+            # filter ist null 0 or NaN or empty df_CW_out['Wartezeit bis Verladebeginn']
+            df_out = df_out[df_out['Dauer von Ankuft  bis Ladeende'].notnull()]
+            df_out = df_out[df_out['Dauer von Ankuft  bis Ladeende'] != '0']
+            df_out = df_out[df_out['Dauer von Ankuft  bis Ladeende'] != '']
+            # to datetime
+            df_out['Dauer von Ankuft  bis Ladeende'] = pd.to_datetime(df_out['Dauer von Ankuft  bis Ladeende'], errors='coerce').dt.time
+            df_out['Dauer von Ankuft  bis Ladeende'] = df_out['Dauer von Ankuft  bis Ladeende'].apply(time_to_timedelta)
+            out_time = df_out['Dauer von Ankuft  bis Ladeende'].mean().seconds / 60
+            out_time = round(out_time)
+        except:
+            out_time = 0
+        col1, col2, col3  = st.columns([2,2,1],gap='small')
         
         with col1:
             outbound = Image.open('Data/img/Outbound.png', mode='r')
             st.image(outbound, use_column_width=True)    
         with col2:
-            img_truck = truck_progress_png(sum_loadings, sum_finished)
+            img_truck = truck_progress_png(sum_finished, sum_loadings)
             st.image(img_truck, use_column_width=True)
-            
-        with col3:  
-            #st.write('Letzte Aktualisierung: ', datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
-            annotated_text(
-                           annotation(f'Verladene Trucks: {sum_finished}', '', "#50af47", font_family="Montserrat"),
-                            '/',
-                           annotation(f'Gestrichene Trucks: {sum_finished}', '', "#e72582", font_family="Montserrat"))        
-    def logo_and_Zahlen_inbound(df_inb):
-      
-        sum_of_loadings = df_inb['Datum'].count()
-        
-        sum_GR = df_inb['Echtzeit Büro.1'].count()
-        # zähle FG in 
-        sum_unloadedFG = df_inb['Anzahl Paletten'].count()
-        # zähle in in Vorbereitung 'Status Verladung '
-        sum_unloadedWMS = df_inb['Anzahl Paletten.1'].count()
-        
-        
-        col1, col2, col3 = st.columns([1,1,3],gap='small')
-        
-        with col1:
-            outbound = Image.open('Data/img/Inbound.png', mode='r')
-            st.image(outbound, use_column_width=True)    
-        with col2:
-            img_truck = truck_progress_png(sum_GR, sum_of_loadings)
-            st.image(img_truck, use_column_width=True)
-            
-        with col3:  
-            #st.write('Letzte Aktualisierung: ', datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
-            annotated_text(
-                           annotation(f'Fertig Trucks: {sum_GR}', '', "#50af47", font_family="Montserrat"),
-                           '/',
-                           annotation(f'Anzahl FG Trucks: {sum_unloadedFG}', '', "#afca0b", font_family="Montserrat"),
-                            '/',
-                           annotation(f'Anzahl WMS Trucks: {sum_unloadedWMS}', '', "#ffbb00", font_family="Montserrat"))         
+        with col3:
+            st.metric("ø Verladezeit", value = f"{out_time} min",)
 
     def plotly_warehouse_stocks(df_dds):
 
@@ -717,13 +666,10 @@ def show_SFG(df_SFG_out, df_SFG_inb, df_SFG_dds):
         df_dds = df_dds[df_dds['Date'] <= current_date]
         # Filtere df_dds.Date zwischen heute und - 5 Werktage
         df_dds = df_dds[df_dds['Date'] <= current_date]
-        df_dds = df_dds[df_dds['Date'] >= (current_date - datetime.timedelta(days=10))]
-
-        # rename PMD to DIET CS
-        st.data_editor(df_dds)
+        df_dds = df_dds[df_dds['Date'] >= (current_date - datetime.timedelta(days=5))]
         
         fig = go.Figure()
-        fig.add_trace(go.Bar(x=df_dds['Date'], y=df_dds['PMD '], name='PMD ', marker_color='#00b1eb', text=df_dds['PMD '], textposition='auto'))
+        fig.add_trace(go.Bar(x=df_dds['Date'], y=df_dds['PMD '], name='PMD ', marker_color='#0e2b63', text=df_dds['PMD '], textposition='auto'))
         # fig.add_trace(go.Bar(x=df_dds['Date'], y=df_dds['SummeWMS'], name='SummeWMS', marker_color='#0e2b63', text=df_dds['SummeWMS'], textposition='auto'))
         # fig.add_trace(go.Bar(x=df_dds['Date'], y=df_dds['SummeFG'], name='SummeFG', marker_color='#ef7d00', text=df_dds['SummeFG'], textposition='auto'))
         # Füge die Gesamtsumme als Datenbeschriftung hinzu
@@ -761,81 +707,285 @@ def show_SFG(df_SFG_out, df_SFG_inb, df_SFG_dds):
             )
         )
         st.plotly_chart(fig, use_container_width=True)
-    col1,col2 = st.columns([4,1])
-
+        
+    col1,col2,col3 = st.columns([4,2,1])
+    img = Image.open('Data/img/DIET_LOGO.png', mode='r')  
     with col1:
-        img = Image.open('Data/img/DIET_LOGO.png', mode='r')  
+        st.image(img, width=250)
     with col2:
-        on_table = st.toggle('Tabellen', False, key='tables_SFG')
+        max_stock = 6959
+        free_space = max_stock - total_stock
+        st.metric("Bestand", value = f"{total_stock} CS", delta=f"{free_space} CS Platz")
+    with col3:
+        on_table = st.toggle('Tabellen', False, key='tables_DIET')
+        
     col1,col2,col3,col4 = st.columns([3,1,1,1])
     with col1:
-         
-        st.image(img, width=250)
-        #st.image(img2, width=180)
-    st.write('')
-
-    def cal_hard_messure(df_SFG_out, df_SFG_inb, df_dds):
+        st.write('')
+    outbound(df_SFG_out)
+    with st.expander('Lagerbestand', expanded=False):
+        plotly_warehouse_stocks(df_SFG_dds)
+    if on_table:
+        st.write('Outbound LC')
+        st.dataframe(df_SFG_out)
         
-        # filtere 0 values aus df_latest['Gesamtlagerkapazität']
-        df_dds = df_dds.dropna(subset=['PMD '])
-        # Konvertiere die 'Date'-Spalte in ein datetime-Objekt
-        df_dds['Date'] = pd.to_datetime(df_dds['Date'])
+        st.write('Inbound LC')
+        st.data_editor(df_SFG_inb)
+        
+        st.write('DDS LC')
+        st.data_editor(df_SFG_dds)
 
-        # Finde das neueste Datum mit Einträgen in den Beständen
-        latest_date = df_dds['Date'].max()
+def show_CF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
 
-        # Filtere den DataFrame auf Zeilen mit dem neuesten Datum
-        df_latest = df_dds[df_dds['Date'] == latest_date]
+    # try:
+    df_dds = df_SFG_dds
+    df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
+    df_dds['Date'] = pd.to_datetime(df_dds['Date'])
 
-        # Summiere 'Blocklager Paletten ist' und 'Regalager Paletten ist'
-        total_stock = df_latest['PMD '].sum()
-        # Funktion, die datetime.time in timedelta konvertiert
+    # Filtere df_dds basierend auf dem aktuellen Datum
+    # sel_date to datetime
+    sel_date = pd.to_datetime(sel_date)
+    df_dds = df_dds[df_dds['Date'] == sel_date]
+    df_dds['Total'] = df_dds['C & F - Paletten']
+    total_stock = df_dds['C & F - Paletten'].sum()
+    # except:
+    #     total_stock = 0
+
+    def outbound(df_out):
+        # rename column "Material Group:\nDiet\nCAF\nStaub\nPresize\nRohware" to 'TYPE'
+        df_out = df_out.rename(columns={"Material Group:\nDiet\nCAF\nStaub\nPresize\nRohware": "TYPE"})
+        # flter df_out["TYPE"] == 'CAF'
+        df_out = df_out[df_out["TYPE"] == 'CAF']
+        # zähle Vorgestellt in 'Status Verladung '
+        sum_loadings = df_out["TYPE"].count()
+        sum_finished = df_out[df_out['Ladeende'] != None]['Ladeende'].count()
+
+        
         
         
         def time_to_timedelta(t):
             return pd.Timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
         try:
-            # Konvertiere 'Wartezeit bis Entladebeginn' in timedelta-Objekte
-            df_CW_inb['Wartezeit bis Entladebeginn'] = df_CW_inb['Wartezeit bis Entladebeginn'].apply(time_to_timedelta)
-            #Entladungszeit
-            df_CW_inb['Entladungszeit'] = df_CW_inb['Entladungszeit'].apply(time_to_timedelta)
-            # Berechne die Gesamtzeit in neue Spalte Entladegesamtzeit
-            df_CW_inb['Entladegesamtzeit'] = df_CW_inb['Wartezeit bis Entladebeginn'] + df_CW_inb['Entladungszeit']
-            # Berechne den Durchschnitt der Entladegesamtzeit
-            inb_time = df_CW_inb['Entladegesamtzeit'].mean().seconds / 60
-            # runde auf minuten
-            inb_time = round(inb_time, 1)
-        except:
-            inb_time = 0
-        try:
             # filter ist null 0 or NaN or empty df_CW_out['Wartezeit bis Verladebeginn']
-            df_CW_out = df_CW_out[df_CW_out['Wartezeit bis Verladebeginn'].notnull()]
-            df_CW_out = df_CW_out[df_CW_out['Wartezeit bis Verladebeginn'] != '0']
-            df_CW_out = df_CW_out[df_CW_out['Wartezeit bis Verladebeginn'] != '']
-            df_CW_out['Wartezeit bis Verladebeginn'] = df_CW_out['Wartezeit bis Verladebeginn'].apply(time_to_timedelta)
-            #Entladungszeit
-            df_CW_out['Verladungszeit'] = df_CW_out['Verladungszeit'].apply(time_to_timedelta)
-            # Berechne die Gesamtzeit in neue Spalte Entladegesamtzeit
-            df_CW_out['Ladegesamtzeit'] = df_CW_out['Wartezeit bis Verladebeginn'] + df_CW_out['Verladungszeit']
-            # Berechne den Durchschnitt der Entladegesamtzeit
-            out_time = df_CW_out['Ladegesamtzeit'].mean().seconds / 60
-            out_time = round(out_time, 1)
+            df_out = df_out[df_out['Dauer von Ankuft  bis Ladeende'].notnull()]
+            df_out = df_out[df_out['Dauer von Ankuft  bis Ladeende'] != '0']
+            df_out = df_out[df_out['Dauer von Ankuft  bis Ladeende'] != '']
+            # to datetime
+            df_out['Dauer von Ankuft  bis Ladeende'] = pd.to_datetime(df_out['Dauer von Ankuft  bis Ladeende'], errors='coerce').dt.time
+            df_out['Dauer von Ankuft  bis Ladeende'] = df_out['Dauer von Ankuft  bis Ladeende'].apply(time_to_timedelta)
+            out_time = df_out['Dauer von Ankuft  bis Ladeende'].mean().seconds / 60
+            out_time = round(out_time)
         except:
             out_time = 0
-
+        col1, col2, col3  = st.columns([2,2,1],gap='small')
         
-        return total_stock, inb_time, out_time
+        with col1:
+            outbound = Image.open('Data/img/Outbound.png', mode='r')
+            st.image(outbound, use_column_width=True)    
+        with col2:
+            img_truck = truck_progress_png(sum_finished, sum_loadings)
+            st.image(img_truck, use_column_width=True)
+        with col3:
+            st.metric("ø Verladezeit", value = f"{out_time} min",)
+
+    def plotly_warehouse_stocks(df_dds):
+
+        df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
+
+        df_dds['Date'] = pd.to_datetime(df_dds['Date'])
+
+        # Berechne das aktuelle Datum
+        current_date = pd.Timestamp(datetime.date.today())
+
+        # Filtere df_dds basierend auf 'Date'
+        df_dds = df_dds[df_dds['Date'] <= current_date]
+        # Filtere df_dds.Date zwischen heute und - 5 Werktage
+        df_dds = df_dds[df_dds['Date'] <= current_date]
+        df_dds = df_dds[df_dds['Date'] >= (current_date - datetime.timedelta(days=5))]
+        
+        fig = go.Figure()
+        fig.add_trace(go.Bar(x=df_dds['Date'], y=df_dds['C & F - Paletten'], name='C & F - Paletten', marker_color='#0e2b63', text=df_dds['C & F - Paletten'], textposition='auto'))
+        # fig.add_trace(go.Bar(x=df_dds['Date'], y=df_dds['SummeWMS'], name='SummeWMS', marker_color='#0e2b63', text=df_dds['SummeWMS'], textposition='auto'))
+        # fig.add_trace(go.Bar(x=df_dds['Date'], y=df_dds['SummeFG'], name='SummeFG', marker_color='#ef7d00', text=df_dds['SummeFG'], textposition='auto'))
+        # Füge die Gesamtsumme als Datenbeschriftung hinzu
+        # fig.add_trace(go.Scatter(
+        #     x=df_dds['Date'],
+        #     y=df_dds['Total'],
+        #     mode='text',
+        #     text=df_dds['Total'],
+        #     textposition="top center",
+        #     textfont=dict(
+        #         color="#000000"
+        #     ),
+        #     showlegend=False
+        # ))
+
+        # Ändere das Layout
+        fig.update_layout(
+            barmode='relative',
+            #xaxis={'categoryorder':'total descending', 'type': 'category'},
+            xaxis_title=None,
+            yaxis_title='Anzahl Paletten',
+            title='Lagerbestand der letzten 5 Werktage',
+            font=dict(
+                family="Montserrat",
+                size=12,
+                color="#7f7f7f"
+            ),
+            legend=dict(
+                title='',
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            )
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        
+    col1,col2,col3 = st.columns([4,2,1])
+    img = Image.open('Data/img/C&F_LOGO.png', mode='r')  
+    with col1:
+        st.image(img, width=250)
+    with col2:
+        max_stock = 700
+        free_space = max_stock - total_stock
+        st.metric("Bestand", value = f"{total_stock} PAL", delta=f"{free_space} PAL Platz")
+    with col3:
+        on_table = st.toggle('Tabellen', False, key='tables_CF')
+        
+    col1,col2,col3,col4 = st.columns([3,1,1,1])
+    with col1:
+        st.write('')
+    outbound(df_SFG_out)
+    with st.expander('Lagerbestand', expanded=False):
+        plotly_warehouse_stocks(df_SFG_dds)
+    if on_table:
+        st.write('Outbound LC')
+        st.dataframe(df_SFG_out)
+        
+        st.write('Inbound LC')
+        st.data_editor(df_SFG_inb)
+        
+        st.write('DDS LC')
+        st.data_editor(df_SFG_dds)
+
+def show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
+
+    try:
+        df_dds = df_SFG_dds
+        df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
+        df_dds['Date'] = pd.to_datetime(df_dds['Date'])
+
+        # Filtere df_dds basierend auf dem aktuellen Datum
+        # sel_date to datetime
+        sel_date = pd.to_datetime(sel_date)
+        df_dds = df_dds[df_dds['Date'] == sel_date]
+        df_dds['Total'] = df_dds['LEAF - Kartons']
+        total_stock = df_dds['LEAF - Kartons'].sum()
+    except:
+        total_stock = 0
 
 
+    def logo_and_Zahlen_inbound(df_inb):
+        def time_to_timedelta(t):
+            return pd.Timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+        try:
+            df_inb['Auto.6'] = df_inb['Auto.6'].apply(time_to_timedelta)
+            #Entladungszeit
+            inb_time = df_inb['Auto.6'].mean().seconds / 60
+            # runde auf minuten
+            inb_time = round(inb_time)
+        except:
+            inb_time = 0
+            
 
-    # Zeige den Gesamtlagerbestand an
-    total_stock, inb_time,out_time  = cal_hard_messure(df_SFG_out, df_SFG_inb, df_SFG_dds)
-    col2.metric("Bestand", value = f"{total_stock} EP", delta="1.2 EP frei")
-    col3.metric("ø Verladezeit", value = f"{out_time} min",)
-    col4.metric("ø Entladezeit", value = f"{inb_time} min",)# delta=" 95,6 % Servicelevel")
+        sum_of_loadings = df_inb['Category'].value_counts()['Leaf']
+        # zähle Verladen + PGI' in 'Status Verladung '
+        sum_finish_loads = (df_inb['Category'] == 'Leaf') & (df_inb['Status'] == 'Entladen')
+        sum_finish_loads = sum_finish_loads.sum()
+        
+        col1, col2, col3 = st.columns([2,2,1],gap='small')
+        
+        with col1:
+            outbound = Image.open('Data/img/Inbound.png', mode='r')
+            st.image(outbound, use_column_width=True)    
+        with col2:
+            img_truck = truck_progress_png(sum_of_loadings, sum_finish_loads)
+            st.image(img_truck, use_column_width=True)
+        with col3:  
+            st.metric("ø Entladezeit", value = f"{inb_time} min",)# delta=" 95,6 % Servicelevel")
 
-    logo_and_Zahlen(df_SFG_out)
-    #logo_and_Zahlen_inbound(df_LC_inb)
+    def plotly_warehouse_stocks(df_dds):
+
+        df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
+
+        df_dds['Date'] = pd.to_datetime(df_dds['Date'])
+
+        # Berechne das aktuelle Datum
+        current_date = pd.Timestamp(datetime.date.today())
+
+        # Filtere df_dds basierend auf 'Date'
+        df_dds = df_dds[df_dds['Date'] <= current_date]
+        # Filtere df_dds.Date zwischen heute und - 5 Werktage
+        df_dds = df_dds[df_dds['Date'] <= current_date]
+        df_dds = df_dds[df_dds['Date'] >= (current_date - datetime.timedelta(days=5))]
+        
+        fig = go.Figure()
+        fig.add_trace(go.Bar(x=df_dds['Date'], y=df_dds['LEAF - Kartons'], name='LEAF - Kartons', marker_color='#0e2b63', text=df_dds['LEAF - Kartons'], textposition='auto'))
+        # fig.add_trace(go.Bar(x=df_dds['Date'], y=df_dds['SummeWMS'], name='SummeWMS', marker_color='#0e2b63', text=df_dds['SummeWMS'], textposition='auto'))
+        # fig.add_trace(go.Bar(x=df_dds['Date'], y=df_dds['SummeFG'], name='SummeFG', marker_color='#ef7d00', text=df_dds['SummeFG'], textposition='auto'))
+        # Füge die Gesamtsumme als Datenbeschriftung hinzu
+        # fig.add_trace(go.Scatter(
+        #     x=df_dds['Date'],
+        #     y=df_dds['Total'],
+        #     mode='text',
+        #     text=df_dds['Total'],
+        #     textposition="top center",
+        #     textfont=dict(
+        #         color="#000000"
+        #     ),
+        #     showlegend=False
+        # ))
+
+        # Ändere das Layout
+        fig.update_layout(
+            barmode='relative',
+            #xaxis={'categoryorder':'total descending', 'type': 'category'},
+            xaxis_title=None,
+            yaxis_title='Anzahl Paletten',
+            title='Lagerbestand der letzten 5 Werktage',
+            font=dict(
+                family="Montserrat",
+                size=12,
+                color="#7f7f7f"
+            ),
+            legend=dict(
+                title='',
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            )
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        
+    col1,col2,col3 = st.columns([4,2,1])
+    img = Image.open('Data/img/LEAF_LOGO.png', mode='r')  
+    with col1:
+        st.image(img, width=250)
+    with col2:
+        max_stock = 6007
+        free_space = max_stock - total_stock
+        st.metric("Bestand", value = f"{total_stock} CS", delta=f"{free_space} CS Platz")
+    with col3:
+        on_table = st.toggle('Tabellen', False, key='tables_LEAF')
+        
+    col1,col2,col3,col4 = st.columns([3,1,1,1])
+    with col1:
+        st.write('')
+    logo_and_Zahlen_inbound(df_SFG_inb)
     with st.expander('Lagerbestand', expanded=False):
         plotly_warehouse_stocks(df_SFG_dds)
     if on_table:
@@ -849,7 +999,7 @@ def show_SFG(df_SFG_out, df_SFG_inb, df_SFG_dds):
         st.data_editor(df_SFG_dds)
 
   
-def show_LEAF(df_CW_out, df_CW_inb, df_CW_dds):
+def show_LEAF_OLF(df_CW_out, df_CW_inb, df_CW_dds):
    
     def logo_and_Zahlen(f_CW_out, df_CW_inb):
       
@@ -992,7 +1142,7 @@ def show_LEAF(df_CW_out, df_CW_inb, df_CW_dds):
     with st.expander('Lagerbestand', expanded=False):
         plotly_warehouse_stocks(df_CW_dds)
     
-def show_CF(df_CW_out, df_CW_inb, df_CW_dds):
+def show_CF_OLD(df_CW_out, df_CW_inb, df_CW_dds):
    
     def logo_and_Zahlen(f_CW_out, df_CW_inb):
       
@@ -1170,9 +1320,23 @@ def main():
     df_SFG_out = filter_data(df_SFG_out,sel_date,'Abholdatum Update')
     df_SFG_inb = filter_data(df_SFG_inb,sel_date,'Ist Datum\n(Tatsächliche Anlieferung)')
 
-    show_LC(df_LC_out, df_LC_inb, df_LC_dds)
-    show_domestic(df_CW_out, df_CW_inb, df_CW_dds)
-    show_SFG(df_SFG_out, df_SFG_inb, df_SFG_dds)
-    show_LEAF(df_CW_out, df_CW_inb, df_CW_dds)
-    show_CF(df_CW_out, df_CW_inb, df_CW_dds)
+    col1,col2 = st.columns([1,1])
+    with col1:
+        show_LC(df_LC_out, df_LC_inb, df_LC_dds,sel_date)
+    with col2:
+        show_domestic(df_CW_out, df_CW_inb, df_CW_dds,sel_date)
+    col1,col2 = st.columns([1,1])
+    with col1:
+        show_DIET(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
+    with col2:
+        show_CF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
+    col1,col2 = st.columns([1,1])
+    with col1:
+        show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
+
+    
+    # show_domestic(df_CW_out, df_CW_inb, df_CW_dds)
+    # show_SFG(df_SFG_out, df_SFG_inb, df_SFG_dds)
+    # show_LEAF(df_CW_out, df_CW_inb, df_CW_dds)
+    # show_CF(df_CW_out, df_CW_inb, df_CW_dds)
     

@@ -17,7 +17,7 @@ def upload_file_to_blob_storage(filename, file_object, herkunft):
     filenameorg = pd.Timestamp.now().strftime("%d_%m_%Y_%H_%M_%S") + '_' + filename
     # SAS-Token für den Zugriff auf den Blob-Speicher
     sas_token = "sp=racwdl&st=2023-03-01T13:54:27Z&se=2039-02-28T21:54:27Z&spr=https&sv=2021-06-08&sr=c&sig=eaUtdKd2%2F5W320pmME3B8FiCO4dGrznbBIvGywnIMtE%3D"
-    filename = uuid.uuid4()
+    #filename = uuid.uuid4()
 
     # Lesen des Inhalts der Datei
     # with open(file_object, "rb") as file:
@@ -41,13 +41,6 @@ def upload_file_to_blob_storage(filename, file_object, herkunft):
         print(f"Die Datei {filename} wurde erfolgreich in den Blob-Speicher hochgeladen.")
     else:
         print(f"Beim Hochladen der Datei {filename} ist ein Fehler aufgetreten. Statuscode: {response.status_code}")
-
-    #create a pandas dataframe with the filename and the filenameorg uploadedtime und user und Datum
-    user = st.session_state.user
-    df = pd.DataFrame({'filename': [filename], 'filenameorg': [filenameorg], 'user': [user], 'anwendung':herkunft, 'dateTime': [pd.Timestamp.now()]})
-    #sql.sql_createTable('AzureStorage',df2)
-    #sql.sql_createTable('AzureStorage',df)
-    save_Table(df,'AzureStorage')
     return filename
 
 def get_blob_list():

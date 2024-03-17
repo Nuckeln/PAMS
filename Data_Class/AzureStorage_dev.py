@@ -37,4 +37,18 @@ def get_file_dev(name):
     #return as object
     return blob_content
 
-
+def save_file_dev(name, content):
+    SAS_TOKEN = "sp=racwdl&st=2023-03-01T13:54:22Z&se=2039-02-28T21:54:22Z&spr=https&sv=2021-06-08&sr=c&sig=S9%2BnXWjT3LbveUgLDFrqMNOPDpvcq3DB5JrZhznB3dY%3D"
+    CONTAINER_URL = "https://batstorpdnecmesdevclrs03.blob.core.windows.net/superdepotreporting-attachments"
+    
+    # Erstellen Sie die Blob-URL
+    blob_url = CONTAINER_URL + "/" + name + "?" + SAS_TOKEN
+    
+    # Senden Sie eine PUT-Anfrage an die Blob-URL, um den Inhalt hochzuladen
+    response = requests.put(blob_url, data=content)
+    
+    # Überprüfen Sie, ob die Anfrage erfolgreich war
+    if response.status_code == 201:
+        print(f"Datei {name} erfolgreich hochgeladen.")
+    else:
+        print(f"Fehler beim Hochladen der Datei {name}. Statuscode: {response.status_code}")

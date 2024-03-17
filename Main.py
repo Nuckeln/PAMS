@@ -107,15 +107,15 @@ def berechtigung():
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 
-        return ["Depot Live Status",'Depot Reports','Depot Forecast','Lagerverwaltung']
+        return ["Depot Live Status",'Logistics Live Monitor','Depot Reports','Depot Forecast','Lagerverwaltung']
     
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd
-        return ["Live Status",'Forecast']
+        return ["Live Status",'Forecast','Logistics Live Monitor']
         # Lager
     
     elif st.session_state.rechte == 5:
-        return ["Live Status",'Forecast']
+        return ["Live Status",'Forecast','Logistics Live Monitor']
 
 # ----- Login -----
 authentication_status = None
