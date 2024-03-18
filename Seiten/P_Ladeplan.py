@@ -384,11 +384,11 @@ def show_domestic(df_CW_out, df_CW_inb, df_CW_dds,sel_date):
     with st.expander('Lagerbestand', expanded=False):
         plotly_warehouse_stocks(df_CW_dds)
     if on_table:
-        st.write('Outbound LC')
+        st.write('Outbound CW')
         st.dataframe(df_CW_out)
-        st.write('Inbound LC')
+        st.write('Inbound CW')
         st.data_editor(df_CW_inb)
-        st.write('DDS LC')
+        st.write('DDS CW')
         st.data_editor(df_CW_dds)
   
 def show_LC(df_LC_out, df_LC_inb, df_LC_dds, sel_date):
@@ -726,13 +726,13 @@ def show_DIET(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
     with st.expander('Lagerbestand', expanded=False):
         plotly_warehouse_stocks(df_SFG_dds)
     if on_table:
-        st.write('Outbound LC')
+        st.write('Outbound SFG')
         st.dataframe(df_SFG_out)
         
-        st.write('Inbound LC')
+        st.write('Inbound SFG')
         st.data_editor(df_SFG_inb)
         
-        st.write('DDS LC')
+        st.write('DDS SFG')
         st.data_editor(df_SFG_dds)
 
 def show_CF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
@@ -861,13 +861,13 @@ def show_CF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
     with st.expander('Lagerbestand', expanded=False):
         plotly_warehouse_stocks(df_SFG_dds)
     if on_table:
-        st.write('Outbound LC')
+        st.write('Outbound SFG')
         st.dataframe(df_SFG_out)
         
-        st.write('Inbound LC')
+        st.write('Inbound SFG')
         st.data_editor(df_SFG_inb)
         
-        st.write('DDS LC')
+        st.write('DDS SFG')
         st.data_editor(df_SFG_dds)
 
 def show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
@@ -989,302 +989,16 @@ def show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
     with st.expander('Lagerbestand', expanded=False):
         plotly_warehouse_stocks(df_SFG_dds)
     if on_table:
-        st.write('Outbound LC')
+        st.write('Outbound SFG')
         st.dataframe(df_SFG_out)
         
-        st.write('Inbound LC')
+        st.write('Inbound SFG')
         st.data_editor(df_SFG_inb)
         
-        st.write('DDS LC')
+        st.write('DDS SFG')
         st.data_editor(df_SFG_dds)
 
-  
-def show_LEAF_OLF(df_CW_out, df_CW_inb, df_CW_dds):
-   
-    def logo_and_Zahlen(f_CW_out, df_CW_inb):
-      
-        sum_of_loadings = df_CW_out['Destination City'].count()
-        
-        # zähle Verladen + PGI' in 'Status Verladung '
-        sum_loaded = df_CW_out[df_CW_out['Status Verladung'] == 'Verladen + PGI']['Status Verladung'].count()
-        # zähle Vorgestellt in 'Status Verladung '
-        sum_prepared = df_CW_out[df_CW_out['Status Verladung'] == 'Vorgestellt']['Status Verladung'].count()
-        # zähle in in Vorbereitung 'Status Verladung '
-        sum_on_preparation = df_CW_out[df_CW_out['Status Verladung'] == 'in Vorbereitung']['Status Verladung'].count()
-        # Zähle Gestrichen in 'Status Verladung '
-        sum_in_lodingprogress = df_CW_out[df_CW_out['Status Verladung'] == 'Verladung']['Status Verladung'].count()
-        
-        sum_canceled = df_CW_out[df_CW_out['Status Verladung'] == 'Gestrichen']['Status Verladung'].count()
 
-        col1, col2, col3 = st.columns([1,1,3],gap='small')
-        
-        with col1:
-            outbound = Image.open('Data/img/Outbound.png', mode='r')
-            st.image(outbound, use_column_width=True)    
-        with col2:
-            img_truck = truck_progress_png(sum_loaded, sum_of_loadings)
-            st.image(img_truck, use_column_width=True)
-            
-        with col3:  
-            #st.write('Letzte Aktualisierung: ', datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
-            annotated_text(
-                           annotation(f'Verladene Trucks: {sum_loaded}', '', "#50af47", font_family="Montserrat"),
-                           '/',
-                           annotation(f'Trucks in Verladung: {sum_in_lodingprogress}', '', "#afca0b", font_family="Montserrat"),
-                            '/',
-                           annotation(f'Vorgestellte Trucks: {sum_prepared}', '', "#ffbb00", font_family="Montserrat"),
-                           '/',
-                           annotation(f'Gestrichene Trucks: {sum_canceled}', '', "#e72582", font_family="Montserrat"))        
-    def logo_and_Zahlen_inbound(f_CW_out, df_CW_inb):
-      
-        sum_of_loadings = df_CW_out['Destination City'].count()
-        
-        # zähle Verladen + PGI' in 'Status Verladung '
-        sum_loaded = df_CW_out[df_CW_out['Status Verladung'] == 'Verladen + PGI']['Status Verladung'].count()
-        # zähle Vorgestellt in 'Status Verladung '
-        sum_prepared = df_CW_out[df_CW_out['Status Verladung'] == 'Vorgestellt']['Status Verladung'].count()
-        # zähle in in Vorbereitung 'Status Verladung '
-        sum_on_preparation = df_CW_out[df_CW_out['Status Verladung'] == 'in Vorbereitung']['Status Verladung'].count()
-        # Zähle Gestrichen in 'Status Verladung '
-        sum_in_lodingprogress = df_CW_out[df_CW_out['Status Verladung'] == 'Verladung']['Status Verladung'].count()
-        
-        sum_canceled = df_CW_out[df_CW_out['Status Verladung'] == 'Gestrichen']['Status Verladung'].count()
-
-        col1, col2, col3 = st.columns([1,1,3],gap='small')
-        
-        with col1:
-            outbound = Image.open('Data/img/Inbound.png', mode='r')
-            st.image(outbound, use_column_width=True)    
-        with col2:
-            img_truck = truck_progress_png(sum_loaded, sum_of_loadings)
-            st.image(img_truck, use_column_width=True)
-            
-        with col3:  
-            #st.write('Letzte Aktualisierung: ', datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
-            annotated_text(
-                           annotation(f'Verladene Trucks: {sum_loaded}', '', "#50af47", font_family="Montserrat"),
-                           '/',
-                           annotation(f'Trucks in Verladung: {sum_in_lodingprogress}', '', "#afca0b", font_family="Montserrat"),
-                            '/',
-                           annotation(f'Vorgestellte Trucks: {sum_prepared}', '', "#ffbb00", font_family="Montserrat"),
-                           '/',
-                           annotation(f'Gestrichene Trucks: {sum_canceled}', '', "#e72582", font_family="Montserrat"))        
-
-    def plotly_warehouse_stocks(df_CW_dds):
-        # Entferne Zeilen mit NaN-Werten
-        #df_CW_dds = df_CW_dds.dropna(subset=['Blocklager Paletten ist', 'Regalager Paletten ist'])
-
-        df_CW_dds['Date'] = pd.to_datetime(df_CW_dds['Date'], errors='coerce').dt.date
-
-        # Setze das aktuelle Datum auf das neueste Datum im DataFrame, wenn es innerhalb der letzten 5 Tage liegt
-        current_date = min(datetime.date.today(), df_CW_dds['Date'].max())
-
-        # Filtere df_CW_dds.Date zwischen heute und - 5 Werktage
-        df_CW_dds = df_CW_dds[df_CW_dds['Date'] <= current_date]
-        df_CW_dds = df_CW_dds[df_CW_dds['Date'] >= (current_date - datetime.timedelta(days=10))]
-
-        # Berechne die Summe der beiden Spalten
-        df_CW_dds['Total'] = df_CW_dds['Blocklager Paletten ist'] + df_CW_dds['Regalager Paletten ist']
-
-        # Erstelle gestapelte Balken
-        fig = go.Figure()
-        fig.add_trace(go.Bar(x=df_CW_dds['Date'], y=df_CW_dds['Blocklager Paletten ist'], name='Blocklager Paletten ist', marker_color='#0e2b63', text=df_CW_dds['Blocklager Paletten ist'], textposition='auto'))
-        fig.add_trace(go.Bar(x=df_CW_dds['Date'], y=df_CW_dds['Regalager Paletten ist'], name='Regalager Paletten ist', marker_color='#ef7d00', text=df_CW_dds['Regalager Paletten ist'], textposition='auto'))
-
-        # Füge die Gesamtsumme als Datenbeschriftung hinzu
-        fig.add_trace(go.Scatter(
-            x=df_CW_dds['Date'],
-            y=df_CW_dds['Total'],
-            mode='text',
-            text=df_CW_dds['Total'],
-            textposition="top center",
-            textfont=dict(
-                color="#000000"
-            ),
-            showlegend=False
-        ))
-
-        # Ändere das Layout
-        fig.update_layout(
-            barmode='stack',
-            #xaxis={'categoryorder':'total descending', 'type': 'category'},
-            xaxis_title=None,
-            yaxis_title='Anzahl Paletten',
-            title='Lagerbestand der letzten 5 Werktage',
-            font=dict(
-                family="Montserrat",
-                size=12,
-                color="#7f7f7f"
-            ),
-            legend=dict(
-                title='',
-                orientation="h",
-                yanchor="bottom",
-                y=1.02,
-                xanchor="right",
-                x=1
-            )
-        )
-        st.plotly_chart(fig, use_container_width=True)
-
-    img = Image.open('Data/img/LEAF_LOGO.png', mode='r')  
-    #st.image(img, width=250)
-    col1,col2,col3,col4 = st.columns([3,1,1,1])
-    with col1:  
-        st.image(img, width=250)
-    lagerbestand = df_CW_dds['Blocklager Paletten ist'].sum() + df_CW_dds['Regalager Paletten ist'].sum()
-    col2.metric(f"Temperature", lagerbestand, "1.2 °F")
-    col3.metric("Temperature", "70 °F", "1.2 °F")
-    col4.metric("Temperature", "70 °F", "1.2 °F")
-
-    #logo_and_Zahlen(df_CW_out, df_CW_inb)
-    logo_and_Zahlen_inbound(df_CW_out, df_CW_inb)
-    with st.expander('Lagerbestand', expanded=False):
-        plotly_warehouse_stocks(df_CW_dds)
-    
-def show_CF_OLD(df_CW_out, df_CW_inb, df_CW_dds):
-   
-    def logo_and_Zahlen(f_CW_out, df_CW_inb):
-      
-        sum_of_loadings = df_CW_out['Destination City'].count()
-        
-        # zähle Verladen + PGI' in 'Status Verladung '
-        sum_loaded = df_CW_out[df_CW_out['Status Verladung'] == 'Verladen + PGI']['Status Verladung'].count()
-        # zähle Vorgestellt in 'Status Verladung '
-        sum_prepared = df_CW_out[df_CW_out['Status Verladung'] == 'Vorgestellt']['Status Verladung'].count()
-        # zähle in in Vorbereitung 'Status Verladung '
-        sum_on_preparation = df_CW_out[df_CW_out['Status Verladung'] == 'in Vorbereitung']['Status Verladung'].count()
-        # Zähle Gestrichen in 'Status Verladung '
-        sum_in_lodingprogress = df_CW_out[df_CW_out['Status Verladung'] == 'Verladung']['Status Verladung'].count()
-        
-        sum_canceled = df_CW_out[df_CW_out['Status Verladung'] == 'Gestrichen']['Status Verladung'].count()
-
-        col1, col2, col3 = st.columns([1,1,3],gap='small')
-        
-        with col1:
-            outbound = Image.open('Data/img/Outbound.png', mode='r')
-            st.image(outbound, use_column_width=True)    
-        with col2:
-            img_truck = truck_progress_png(sum_loaded, sum_of_loadings)
-            st.image(img_truck, use_column_width=True)
-            
-        with col3:  
-            #st.write('Letzte Aktualisierung: ', datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
-            annotated_text(
-                           annotation(f'Verladene Trucks: {sum_loaded}', '', "#50af47", font_family="Montserrat"),
-                           '/',
-                           annotation(f'Trucks in Verladung: {sum_in_lodingprogress}', '', "#afca0b", font_family="Montserrat"),
-                            '/',
-                           annotation(f'Vorgestellte Trucks: {sum_prepared}', '', "#ffbb00", font_family="Montserrat"),
-                           '/',
-                           annotation(f'Gestrichene Trucks: {sum_canceled}', '', "#e72582", font_family="Montserrat"))        
-    def logo_and_Zahlen_inbound(f_CW_out, df_CW_inb):
-      
-        sum_of_loadings = df_CW_out['Destination City'].count()
-        
-        # zähle Verladen + PGI' in 'Status Verladung '
-        sum_loaded = df_CW_out[df_CW_out['Status Verladung'] == 'Verladen + PGI']['Status Verladung'].count()
-        # zähle Vorgestellt in 'Status Verladung '
-        sum_prepared = df_CW_out[df_CW_out['Status Verladung'] == 'Vorgestellt']['Status Verladung'].count()
-        # zähle in in Vorbereitung 'Status Verladung '
-        sum_on_preparation = df_CW_out[df_CW_out['Status Verladung'] == 'in Vorbereitung']['Status Verladung'].count()
-        # Zähle Gestrichen in 'Status Verladung '
-        sum_in_lodingprogress = df_CW_out[df_CW_out['Status Verladung'] == 'Verladung']['Status Verladung'].count()
-        
-        sum_canceled = df_CW_out[df_CW_out['Status Verladung'] == 'Gestrichen']['Status Verladung'].count()
-
-        col1, col2, col3 = st.columns([1,1,3],gap='small')
-        
-        with col1:
-            outbound = Image.open('Data/img/Inbound.png', mode='r')
-            st.image(outbound, use_column_width=True)    
-        with col2:
-            img_truck = truck_progress_png(sum_loaded, sum_of_loadings)
-            st.image(img_truck, use_column_width=True)
-            
-        with col3:  
-            #st.write('Letzte Aktualisierung: ', datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
-            annotated_text(
-                           annotation(f'Verladene Trucks: {sum_loaded}', '', "#50af47", font_family="Montserrat"),
-                           '/',
-                           annotation(f'Trucks in Verladung: {sum_in_lodingprogress}', '', "#afca0b", font_family="Montserrat"),
-                            '/',
-                           annotation(f'Vorgestellte Trucks: {sum_prepared}', '', "#ffbb00", font_family="Montserrat"),
-                           '/',
-                           annotation(f'Gestrichene Trucks: {sum_canceled}', '', "#e72582", font_family="Montserrat"))        
-
-    def plotly_warehouse_stocks(df_CW_dds):
-        # Entferne Zeilen mit NaN-Werten
-        #df_CW_dds = df_CW_dds.dropna(subset=['Blocklager Paletten ist', 'Regalager Paletten ist'])
-
-        df_CW_dds['Date'] = pd.to_datetime(df_CW_dds['Date'], errors='coerce').dt.date
-
-        # Setze das aktuelle Datum auf das neueste Datum im DataFrame, wenn es innerhalb der letzten 5 Tage liegt
-        current_date = min(datetime.date.today(), df_CW_dds['Date'].max())
-
-        # Filtere df_CW_dds.Date zwischen heute und - 5 Werktage
-        df_CW_dds = df_CW_dds[df_CW_dds['Date'] <= current_date]
-        df_CW_dds = df_CW_dds[df_CW_dds['Date'] >= (current_date - datetime.timedelta(days=10))]
-
-        # Berechne die Summe der beiden Spalten
-        df_CW_dds['Total'] = df_CW_dds['Blocklager Paletten ist'] + df_CW_dds['Regalager Paletten ist']
-
-        # Erstelle gestapelte Balken
-        fig = go.Figure()
-        fig.add_trace(go.Bar(x=df_CW_dds['Date'], y=df_CW_dds['Blocklager Paletten ist'], name='Blocklager Paletten ist', marker_color='#0e2b63', text=df_CW_dds['Blocklager Paletten ist'], textposition='auto'))
-        fig.add_trace(go.Bar(x=df_CW_dds['Date'], y=df_CW_dds['Regalager Paletten ist'], name='Regalager Paletten ist', marker_color='#ef7d00', text=df_CW_dds['Regalager Paletten ist'], textposition='auto'))
-
-        # Füge die Gesamtsumme als Datenbeschriftung hinzu
-        fig.add_trace(go.Scatter(
-            x=df_CW_dds['Date'],
-            y=df_CW_dds['Total'],
-            mode='text',
-            text=df_CW_dds['Total'],
-            textposition="top center",
-            textfont=dict(
-                color="#000000"
-            ),
-            showlegend=False
-        ))
-
-        # Ändere das Layout
-        fig.update_layout(
-            barmode='stack',
-            #xaxis={'categoryorder':'total descending', 'type': 'category'},
-            xaxis_title=None,
-            yaxis_title='Anzahl Paletten',
-            title='Lagerbestand der letzten 5 Werktage',
-            font=dict(
-                family="Montserrat",
-                size=12,
-                color="#7f7f7f"
-            ),
-            legend=dict(
-                title='',
-                orientation="h",
-                yanchor="bottom",
-                y=1.02,
-                xanchor="right",
-                x=1
-            )
-        )
-        st.plotly_chart(fig, use_container_width=True)
-
-    img = Image.open('Data/img/C&F_LOGO.png', mode='r')  
-    #st.image(img, width=250)
-    col1,col2,col3,col4 = st.columns([3,1,1,1])
-    with col1:  
-        st.image(img, width=250)
-    lagerbestand = df_CW_dds['Blocklager Paletten ist'].sum() + df_CW_dds['Regalager Paletten ist'].sum()
-    col2.metric(f"Temperature", lagerbestand, "1.2 °F")
-    col3.metric("Temperature", "70 °F", "1.2 °F")
-    col4.metric("Temperature", "70 °F", "1.2 °F")
-
-    logo_and_Zahlen(df_CW_out, df_CW_inb)
-    #logo_and_Zahlen_inbound(df_CW_out, df_CW_inb)
-    with st.expander('Lagerbestand', expanded=False):
-        plotly_warehouse_stocks(df_CW_dds)
-    
 
 def main():
     col1, col2, col3 = st.columns([2,1,1])

@@ -331,17 +331,18 @@ class LIVE:
 
             st.plotly_chart(figPicksBySAPOrder,use_container_width=True,config={'displayModeBar': False})
     def fig_trucks_Org(df):
-        dfOriginal = df[df['UnloadingListIdentifier'].notna()]
+        #st.dataframe(df)
+        dfOriginal = df[df['LoadingLaneId'].notna()]
         depots = ['KNSTR', 'KNLEJ', 'KNBFE', 'KNHAJ']
 
         all_dfs = []  # Liste zum Sammeln der Datenframes für jedes Depot
         for depot in depots:
             dfDepot = dfOriginal[dfOriginal['DeliveryDepot'] == depot]
             dfDepot['Picks Gesamt'] = dfDepot['Picks Gesamt'].astype(float)
-            dfDepotAggregated = dfDepot.groupby(['DeliveryDepot', 'PlannedDate']).agg({'UnloadingListIdentifier': 'nunique', 'Picks Gesamt': 'sum', 'Gepackte Paletten': 'sum'}).reset_index()
+            dfDepotAggregated = dfDepot.groupby(['DeliveryDepot', 'PlannedDate']).agg({'LoadingLaneId': 'nunique', 'Picks Gesamt': 'sum', 'Gepackte Paletten': 'sum'}).reset_index()
             
             # Erstelle 'label' innerhalb der Schleife
-            dfDepotAggregated['label'] = dfDepotAggregated.apply(lambda row: f"{row['DeliveryDepot']}: {row['UnloadingListIdentifier']} LKW <br>{row['Picks Gesamt']} Picks <br>{row['Gepackte Paletten']} Paletten", axis=1)
+            dfDepotAggregated['label'] = dfDepotAggregated.apply(lambda row: f"{row['DeliveryDepot']}: {row['LoadingLaneId']} LKW <br>{row['Picks Gesamt']} Picks <br>{row['Gepackte Paletten']} Paletten", axis=1)
             
             all_dfs.append(dfDepotAggregated)
 
@@ -367,8 +368,6 @@ class LIVE:
         )
         fig.update_xaxes(showticklabels=True)
         st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
-
-
 
 
     def figPicksKunde(df):

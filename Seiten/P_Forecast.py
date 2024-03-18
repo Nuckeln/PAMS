@@ -33,12 +33,12 @@ def save_forecast(depot_data, forecast, depot, forecast_dates,forecast_type):
  
     #save Json to Azure Storage
     #crate a jarson file in temp folder Data/tmp
-    with open(f'Data/tmp/{filename}', 'w') as f:
-        json.dump(data_to_save, f)
+    # with open(f'Data/tmp/{filename}', 'w') as f:
+    #     json.dump(data_to_save, f)
     #upload the file to Azure Storage
-    upload_file_to_blob_storage(filename, f'Data/tmp/{filename}', 'Forecast')
+    upload_file_to_blob_storage(filename, data_to_save, 'Forecast')
     #delete the file in temp folder
-    os.remove(f'Data/tmp/{filename}')
+    #os.remove(f'Data/tmp/{filename}')
     
 def forecast():
     df = readData()
