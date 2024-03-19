@@ -339,10 +339,10 @@ class LIVE:
         for depot in depots:
             dfDepot = dfOriginal[dfOriginal['DeliveryDepot'] == depot]
             dfDepot['Picks Gesamt'] = dfDepot['Picks Gesamt'].astype(float)
-            dfDepotAggregated = dfDepot.groupby(['DeliveryDepot', 'PlannedDate']).agg({'LoadingLaneId': 'nunique', 'Picks Gesamt': 'sum', 'Gepackte Paletten': 'sum'}).reset_index()
+            dfDepotAggregated = dfDepot.groupby(['DeliveryDepot', 'PlannedDate']).agg({'LoadingLaneId': 'nunique', 'Picks Gesamt': 'sum', 'Gepackte Paletten': 'sum', 'Geschätzte Paletten' : 'sum' }).reset_index()
             
             # Erstelle 'label' innerhalb der Schleife
-            dfDepotAggregated['label'] = dfDepotAggregated.apply(lambda row: f"{row['DeliveryDepot']}: {row['LoadingLaneId']} LKW <br>{row['Picks Gesamt']} Picks <br>{row['Gepackte Paletten']} Paletten", axis=1)
+            dfDepotAggregated['label'] = dfDepotAggregated.apply(lambda row: f"{row['DeliveryDepot']}: {row['LoadingLaneId']} LKW <br>{row['Picks Gesamt']} Picks <br>{row['Gepackte Paletten']} Bereits gepackte Paletten <br> {row['Geschätzte Paletten']} noch zu packende Paletten" , axis=1)
             
             all_dfs.append(dfDepotAggregated)
 

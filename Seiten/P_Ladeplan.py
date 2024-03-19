@@ -592,6 +592,7 @@ def show_LC(df_LC_out, df_LC_inb, df_LC_dds, sel_date):
     with st.expander('Lagerbestand', expanded=False):
         plotly_warehouse_stocks(df_LC_dds)
     if on_table:
+        #
         st.write('Outbound LC')
         st.dataframe(df_LC_out)
         st.write('Inbound LC')
@@ -600,20 +601,31 @@ def show_LC(df_LC_out, df_LC_inb, df_LC_dds, sel_date):
         st.data_editor(df_LC_dds)
 
 def show_DIET(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
+    try:
+        df_dds = df_SFG_dds
+        df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
+        df_dds['Date'] = pd.to_datetime(df_dds['Date'])
 
-    # try:
-    df_dds = df_SFG_dds
-    df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
-    df_dds['Date'] = pd.to_datetime(df_dds['Date'])
+        sel_date = pd.to_datetime(sel_date)
+        df_dds = df_dds[df_dds['Date'] == sel_date]
+        df_dds['Total'] = df_dds['PMD ']
+        total_stock = df_dds['PMD '].sum()
 
-    # Filtere df_dds basierend auf dem aktuellen Datum
-    # sel_date to datetime
-    sel_date = pd.to_datetime(sel_date)
-    df_dds = df_dds[df_dds['Date'] == sel_date]
-    df_dds['Total'] = df_dds['PMD ']
-    total_stock = df_dds['PMD '].sum()
-    # except:
-    #     total_stock = 0
+        if total_stock == 0:
+            # so lange sel_date - Tag bis total_stock > 0
+            
+            while total_stock == 0:
+                sel_date = sel_date - datetime.timedelta(days=1)
+                df_dds = df_SFG_dds
+                df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
+                df_dds['Date'] = pd.to_datetime(df_dds['Date'])
+                df_dds = df_dds[df_dds['Date'] == sel_date]
+                df_dds['Total'] = df_dds['PMD ']
+                total_stock = df_dds['PMD '].sum()
+        
+    except:
+        total_stock = 0
+
 
     def outbound(df_out):
       
@@ -737,19 +749,33 @@ def show_DIET(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
 
 def show_CF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
 
-    # try:
-    df_dds = df_SFG_dds
-    df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
-    df_dds['Date'] = pd.to_datetime(df_dds['Date'])
+    try:
+        df_dds = df_SFG_dds
+        df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
+        df_dds['Date'] = pd.to_datetime(df_dds['Date'])
 
-    # Filtere df_dds basierend auf dem aktuellen Datum
-    # sel_date to datetime
-    sel_date = pd.to_datetime(sel_date)
-    df_dds = df_dds[df_dds['Date'] == sel_date]
-    df_dds['Total'] = df_dds['C & F - Paletten']
-    total_stock = df_dds['C & F - Paletten'].sum()
-    # except:
-    #     total_stock = 0
+        sel_date = pd.to_datetime(sel_date)
+        df_dds = df_dds[df_dds['Date'] == sel_date]
+        df_dds['Total'] = df_dds['C & F - Paletten']
+        total_stock = df_dds['C & F - Paletten'].sum()
+
+        if total_stock == 0:
+            # so lange sel_date - Tag bis total_stock > 0
+            
+            while total_stock == 0:
+                sel_date = sel_date - datetime.timedelta(days=1)
+                df_dds = df_SFG_dds
+                df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
+                df_dds['Date'] = pd.to_datetime(df_dds['Date'])
+                df_dds = df_dds[df_dds['Date'] == sel_date]
+                df_dds['Total'] = df_dds['C & F - Paletten']
+                total_stock = df_dds['C & F - Paletten'].sum()
+        
+    except:
+        total_stock = 0
+
+
+
 
     def outbound(df_out):
         # rename column "Material Group:\nDiet\nCAF\nStaub\nPresize\nRohware" to 'TYPE'
@@ -877,12 +903,23 @@ def show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
         df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
         df_dds['Date'] = pd.to_datetime(df_dds['Date'])
 
-        # Filtere df_dds basierend auf dem aktuellen Datum
-        # sel_date to datetime
         sel_date = pd.to_datetime(sel_date)
         df_dds = df_dds[df_dds['Date'] == sel_date]
         df_dds['Total'] = df_dds['LEAF - Kartons']
         total_stock = df_dds['LEAF - Kartons'].sum()
+
+        if total_stock == 0:
+            # so lange sel_date - Tag bis total_stock > 0
+            
+            while total_stock == 0:
+                sel_date = sel_date - datetime.timedelta(days=1)
+                df_dds = df_SFG_dds
+                df_dds['Date'] = pd.to_datetime(df_dds['Date'], errors='coerce').dt.date
+                df_dds['Date'] = pd.to_datetime(df_dds['Date'])
+                df_dds = df_dds[df_dds['Date'] == sel_date]
+                df_dds['Total'] = df_dds['LEAF - Kartons']
+                total_stock = df_dds['LEAF - Kartons'].sum()
+        
     except:
         total_stock = 0
 
@@ -899,11 +936,17 @@ def show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
         except:
             inb_time = 0
             
-
-        sum_of_loadings = df_inb['Category'].value_counts()['Leaf']
-        # zähle Verladen + PGI' in 'Status Verladung '
-        sum_finish_loads = (df_inb['Category'] == 'Leaf') & (df_inb['Status'] == 'Entladen')
-        sum_finish_loads = sum_finish_loads.sum()
+        try:
+            sum_of_loadings = df_inb['Category'].value_counts()['Leaf']
+        except:
+            sum_of_loadings = 0
+        try:
+            sum_finish_loads = (df_inb['Category'] == 'Leaf') & (df_inb['Status'] == 'Entladen')
+            sum_finish_loads = sum_finish_loads.sum()
+        except:
+    
+            sum_finish_loads = 0     
+        
         
         col1, col2, col3 = st.columns([2,2,1],gap='small')
         
@@ -911,7 +954,7 @@ def show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
             outbound = Image.open('Data/img/Inbound.png', mode='r')
             st.image(outbound, use_column_width=True)    
         with col2:
-            img_truck = truck_progress_png(sum_of_loadings, sum_finish_loads)
+            img_truck = truck_progress_png(sum_finish_loads, sum_of_loadings)
             st.image(img_truck, use_column_width=True)
         with col3:  
             st.metric("ø Entladezeit", value = f"{inb_time} min",)# delta=" 95,6 % Servicelevel")
