@@ -63,7 +63,7 @@ class LIVE:
                 st.write("WTF " + f"{ temp}" + "°C")
         except:
             st.write("Wetterdaten konnten nicht geladen werden")
-    ## Filter für Live AllSSCCLabelsPrinted Func ###
+    ## Filter für Live Allhttps://dev.azure.com/BATCloudMES/Superdepot%20ReportingSSCCLabelsPrinted Func ###
     def FilterNachDatum(day1, day2,df):
         #df['PlannedDate'] = df['PlannedDate'].dt.strftime('%m/%d/%y')
         df['PlannedDate'] = df['PlannedDate'].astype('datetime64[ns]').dt.date
@@ -342,7 +342,7 @@ class LIVE:
             dfDepotAggregated = dfDepot.groupby(['DeliveryDepot', 'PlannedDate']).agg({'LoadingLaneId': 'nunique', 'Picks Gesamt': 'sum', 'Gepackte Paletten': 'sum', 'Geschätzte Paletten' : 'sum' }).reset_index()
             
             # Erstelle 'label' innerhalb der Schleife
-            dfDepotAggregated['label'] = dfDepotAggregated.apply(lambda row: f"{row['DeliveryDepot']}: {row['LoadingLaneId']} LKW <br>{row['Picks Gesamt']} Picks <br>{row['Gepackte Paletten']} Bereits gepackte Paletten <br> {row['Geschätzte Paletten']} noch zu packende Paletten" , axis=1)
+            dfDepotAggregated['label'] = dfDepotAggregated.apply(lambda row: f"{row['DeliveryDepot']}: {row['LoadingLaneId']} LKW <br>{row['Picks Gesamt']} Picks <br>{row['Gepackte Paletten']} Bereits gepackte Paletten'",axis =1) # <br> {row['Geschätzte Paletten']} noch zu packende Paletten" , axis=1)
             
             all_dfs.append(dfDepotAggregated)
 
