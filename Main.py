@@ -99,7 +99,7 @@ img = Image.open('Data/img/logo.png', mode='r')
 def berechtigung():
     if st.session_state.rechte == 1:
         #admin Vollzugriff
-        return ['Depot Live Status',"Logistics Live Monitor",'Depot Reports','Warehouse Reports','Forecast','Lagerverwaltung','Admin']
+        return ['Depot Live Status',"Logistics Live Monitor",'Depot Reports','Forecast','Lagerverwaltung','Admin']
     # else:
     #     return ['Wartung']
     elif st.session_state.rechte == 2: 
@@ -139,7 +139,8 @@ if authentication_status == True:
                 menu_icon='kanban-fill',
                 styles={'container':{'font':'Montserrat'}},)
             Login.authenticator.logout('Logout')
-            Login.newPasswort(Login)
+            with st.popover('Passwort ändern'):
+                Login.newPasswort(Login)
         except:
             pass
 if authentication_status == True:

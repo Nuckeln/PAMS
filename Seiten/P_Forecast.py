@@ -269,7 +269,6 @@ def main():
     # filter behalte alles was mit forecast anfängt
     dates = [date for date in datein if date.startswith('Forecast')]    
     
-    st.write(dates)
     # behalte nur das Datum aus dem string das sind immer die letzten 10 Zeichen vor dem punkt
     dates = [date[-14:-4] for date in dates]    
     # remove duplicates
@@ -296,9 +295,7 @@ def main():
                 st.success('Done!')
                 #lade die Seite neu
                 st.rerun()
-    
-    #show the images
-    st.write(filename_1)
+
     from PIL import Image, UnidentifiedImageError
     import io
 
