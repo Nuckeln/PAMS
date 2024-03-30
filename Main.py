@@ -15,7 +15,8 @@ from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.P_Ladeplan import main as pageLadeplan
 
 # Logging Konfiguration
-
+if 'authentication_status' not in st.session_state:
+    st.session_state['authentication_status'] = False  # oder ein anderer Standardwert
 
 def checkSystem():
     try:

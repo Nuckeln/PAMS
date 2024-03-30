@@ -10,6 +10,49 @@ if 'key' not in st.session_state:
     st.session_state['key'] = 'value'
     
 class Login:
+    # def __init__(self):
+    #     self.usernames = []
+    #     self.names = []
+    #     self.passwords = []
+    #     self.funktionen = []
+    #     self.rechte = []
+
+    #     self.credentials = {}
+    #     self.authenticator = None
+    #     st.session_state = None
+
+    #     authentication_status = None
+    # def Login(self):
+    #     if 'key' not in st.session_state:
+    #         st.session_state['key'] = 'value'
+    #     # Initialize the 'rechte' attribute of session_state.
+
+
+    #     df = read_table('user')
+    #     self.usernames = df['username'].tolist()
+    #     self.names = df['name'].tolist()
+    #     self.passwords = df['password'].tolist()
+    #     self.funktionen = df['function'].tolist()
+    #     self.rechte = df['rechte'].tolist()
+    #     self.credentials = {"usernames":{}}
+    #     authentication_status = None
+
+    #     # Extract the values from the DataFrame and add them to the 'credentials' dictionary.
+    #     for uname,name,pwd,funktion,rechte in zip(self.usernames,self.names,self.passwords,self.funktionen,self.rechte):
+    #         user_dict = {"name": name, "password": pwd, "function": funktion, "rechte": rechte}
+    #         self.credentials["usernames"].update({uname: user_dict})
+
+    #     self.authenticator = stauth.Authenticate(self.credentials, "cokkie_name", "random_key",
+    #                                         cookie_expiry_days=30)
+    #     name, authentication_status, usernames= self.authenticator.login("Login", 'main')
+    #     if authentication_status == True:
+    #         st.session_state.user = name
+    #         st.session_state.rechte = df.loc[df['name'] == name, 'rechte'].iloc[0]
+    #     if authentication_status == False:
+    #         st.error("Login fehlgeschlagen!")
+
+    #     return authentication_status
+
     def __init__(self):
         self.usernames = []
         self.names = []
@@ -21,12 +64,10 @@ class Login:
         self.authenticator = None
         st.session_state = None
 
-        authentication_status = None
-    def Login(self):
-        if 'key' not in st.session_state:
-            st.session_state['key'] = 'value'
-        # Initialize the 'rechte' attribute of session_state.
 
+    def Login(self):
+        if 'authentication_status' not in st.session_state:
+            st.session_state['authentication_status'] = False 
 
         df = read_table('user')
         self.usernames = df['username'].tolist()
@@ -35,14 +76,13 @@ class Login:
         self.funktionen = df['function'].tolist()
         self.rechte = df['rechte'].tolist()
         self.credentials = {"usernames":{}}
-        authentication_status = None
 
         # Extract the values from the DataFrame and add them to the 'credentials' dictionary.
         for uname,name,pwd,funktion,rechte in zip(self.usernames,self.names,self.passwords,self.funktionen,self.rechte):
             user_dict = {"name": name, "password": pwd, "function": funktion, "rechte": rechte}
             self.credentials["usernames"].update({uname: user_dict})
 
-        self.authenticator = stauth.Authenticate(self.credentials, "cokkie_name", "random_key",
+        self.authenticator = stauth.Authenticate(self.credentials, "BanderolenTransportApp", "random_key",
                                             cookie_expiry_days=30)
         name, authentication_status, usernames= self.authenticator.login("Login", 'main')
         if authentication_status == True:
@@ -53,6 +93,11 @@ class Login:
 
         return authentication_status
     
+
+
+
+
+  
     def Logout(self):
     
         self.authenticator.logout('Logout', 'main')

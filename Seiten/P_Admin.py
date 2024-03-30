@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 
 from Data_Class.SQL import read_table,save_table_to_SQL,return_table_names
+from Data_Class.AzureStorage import upload_file_to_blob_storage, get_blob_list
 from Data_Class.MMSQL_connection import save_Table
 
 from Seiten.P_UserLogin import Login
@@ -251,23 +252,21 @@ def Azure():
         st.warning('Zeige alle Dateien in Blob')
         df = SQL.sql_datenTabelleLaden('AzureStorage')
         st.dataframe(df)
-    def löschealleFiles():
-        Data_Class.AzureStorage.st_Azure_deleteBtn()
-    def ladeFileinBlob():
-        df = SQL.sql_datenTabelleLaden('AzureStorage')
-        st.warning('Datei in Blob laden vorher die Anwendung auswählen!!!')
-        anwendugen = df['anwendung'].unique()
-        sel_anwendung = st.selectbox('Anwendung',anwendugen)
+    # def löschealleFiles():
+    #     Data_Class.AzureStorage.st_Azure_deleteBtn()
+    # def ladeFileinBlob():
+    #     df = SQL.sql_datenTabelleLaden('AzureStorage')
+    #     st.warning('Datei in Blob laden vorher die Anwendung auswählen!!!')
+    #     anwendugen = df['anwendung'].unique()
+    #     sel_anwendung = st.selectbox('Anwendung',anwendugen)
 
 
-        Data_Class.AzureStorage.st_Azure_uploadBtn(sel_anwendung)
+    #     Data_Class.AzureStorage.st_Azure_uploadBtn(sel_anwendung)
 
 
     with st.expander("Azure", expanded=True):
-        downloadFilesFromBlob()
-        ladeFileinBlob()
-        showDateinBlob()
-        löschealleFiles()
+        df = get_blob_list()
+        st.dataframe(df)
 
 def adminPage():
     read_table('user')  
@@ -276,6 +275,7 @@ def adminPage():
     mitarbeiterPflegen()
     UserAnlegen()
     berechtigungen_anzeigen()
+    Azure()
 
     try:
         a = os.environ['SQLAZURECONNSTR_DbConnection']

@@ -726,8 +726,7 @@ class LIVE:
             st.write('Keine Daten vorhanden, schreibweise beachtet?')
         LIVE.downLoadTagesReport(dfOr)
         LIVE.tabelleAnzeigen(dfOr)
-        #save df to csv
-        dfOr.to_csv('df.csv', index=False)
+
 
 
 

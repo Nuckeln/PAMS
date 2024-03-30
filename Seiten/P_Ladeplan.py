@@ -152,8 +152,30 @@ def load_data_SFG():
         return df_outbound, df_inbound, None    
  
 def anwesenheit():
-     img = Image.open('Data/img/Mitarbeiter/micha.png', mode='r')
-     st.image(img, width=200)
+    img = Image.open('Data/img/Mitarbeiter/micha.png', mode='r')
+    st.image(img, width=200)
+    data = get_file_dev("Anwesenheit.xlsx")
+        # #save as csv to Data/con_backups/Quelle_PA_BLOBB
+    @st.cache_data
+    def loadData(data):
+        df = pd.read_excel(BytesIO(data),sheet_name='LPC')
+        return df
+    df = loadData(data)    
+
+
+    df = df[2:]
+    df = df.T
+    df_transposed = df.iloc[1:5].T
+    #drop zeile 2 bis 4
+    df = df.drop(df.index[1:5])
+    
+    df.columns = df.iloc[0]
+    df_transposed.columns = df_transposed.iloc[0]
+    df = df[1:]
+    df_transposed = df_transposed[1:]
+    
+    st.dataframe(df_transposed)
+    st.dataframe(df)
 
 def truck_progress_png(progress, total):
     # Lade das Bild
@@ -573,6 +595,7 @@ def show_LC(df_LC_out, df_LC_inb, df_LC_dds, sel_date):
         )
         st.plotly_chart(fig, use_container_width=True)
     
+    
     col1,col2,col3 = st.columns([4,2,1])
     img = Image.open('Data/img/LC_LOGO.png', mode='r')  
     with col1:
@@ -583,6 +606,9 @@ def show_LC(df_LC_out, df_LC_inb, df_LC_dds, sel_date):
         st.metric("Bestand", value = f"{total_stock} PAL", delta=f"{free_space} PAL Platz")
     with col3:
         on_table = st.toggle('Tabellen', False, key='tables_LC')
+        with st.popover('Details'):
+            
+            st.data_editor(df_dds)
         
     col1,col2,col3,col4 = st.columns([3,1,1,1])
     with col1:
@@ -1040,8 +1066,6 @@ def show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
         
         st.write('DDS SFG')
         st.data_editor(df_SFG_dds)
-
-
 
 def main():
     col1, col2, col3 = st.columns([2,1,1])

@@ -1,24 +1,13 @@
-import streamlit as st
-import pandas as pd
 import datetime
 import time
-#from Data_Class.SQL import sql_datenLadenLabel,sql_datenLadenOderItems,sql_datenLadenStammdaten,sql_datenLadenOder
-#from Data_Class.DB_Daten_Agg import orderDatenAgg
-import st_aggrid as ag
-import plotly_express as px
-from streamlit_option_menu import option_menu
-from Data_Class.MMSQL_connection import read_Table , save_Table
-import Data_Class.AzureStorage
-from io import BytesIO
+import pandas as pd
 from PIL import Image
-import json
-
-
-import seaborn as sns
+import streamlit as st
+import plotly_express as px
 import matplotlib.pyplot as plt
 
-
-
+from streamlit_option_menu import option_menu
+from Data_Class.MMSQL_connection import read_Table , save_Table
 
 heute = datetime.date.today()
 morgen = heute + datetime.timedelta(days=4)
@@ -26,7 +15,7 @@ heute_minus_10_tage =  datetime.timedelta(days=30)
 
 def untersagte_sku_TN(masterdata,dfBIN):
     df = read_Table('data_materialmaster-MaterialMasterUnitOfMeasures')
-    dfText = read_Table('MaterialMasterMaterialDescriptions')
+#    dfText = read_Table('MaterialMasterMaterialDescriptions')
     masterdata = read_Table('data_materialmaster_Duplicate_InternationalArticleNumber')
 
     # filtere nur nicht leer in InternationalArticleNumber

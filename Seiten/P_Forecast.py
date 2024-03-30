@@ -11,7 +11,7 @@ import os
 import matplotlib.image as mpimg
 
 from Data_Class.SQL import read_table, save_table_to_SQL
-from Data_Class.AzureStorage import upload_file_to_blob_storage
+from Data_Class.AzureStorage import upload_file_to_blob_storage, get_blob_list, get_blob_file
 
 
 def readData():
@@ -134,10 +134,26 @@ def forecast():
 
     plt.tight_layout()
     current_date = datetime.now().strftime('%Y-%m-%d')
-    fig.savefig(f'Data/appData/forecast/PICKS_{depot}_{current_date}.png')
-    # Annahme: st.pyplot(fig) wird verwendet, um die Figur in einem Streamlit Dashboard anzuzeigen
-    # st.pyplot(fig)
+    # CREATE IMG AND SAVE IT ON AZURE STORAGE
+    #     #CREATE IMG
+    # item =  fig.savefig(f'Data/appData/forecast/Forecast_Picks_{depot}_{current_date}.png')
+    # filename = f'Forecast_Picks_{depot}_{current_date}.png'
+    # #save to Azure Storage
+    # upload_file_to_blob_storage(filename, item, 'Forecast')
+    
+    import io
 
+    # Erstellen Sie ein BytesIO-Objekt und speichern Sie das Bild darin
+    image_io = io.BytesIO()
+    fig.savefig(image_io, format='png')
+
+    # Setzen Sie den Cursor des BytesIO-Objekts zurück an den Anfang
+    image_io.seek(0)
+
+    # Jetzt können Sie das BytesIO-Objekt auf Azure Storage hochladen
+    filename = f'Forecast_Picks_{depot}_{current_date}.png'
+    upload_file_to_blob_storage(filename, image_io, 'Forecast')
+    
 def forecast_TRUCKS():
     df = readData()
     dfOriginal = df
@@ -232,28 +248,44 @@ def forecast_TRUCKS():
     #save fig locally in Data/appData with Truck and anctual Date in the name
 
     current_date = datetime.now().strftime('%Y-%m-%d')
-    fig.savefig(f'Data/appData/forecast/TRUCKS_{depot}_{current_date}.png')
-    # st.pyplot(fig)
-    
+    import io
 
+    # Erstellen Sie ein BytesIO-Objekt und speichern Sie das Bild darin
+    image_io = io.BytesIO()
+    fig.savefig(image_io, format='png')
+
+    # Setzen Sie den Cursor des BytesIO-Objekts zurück an den Anfang
+    image_io.seek(0)
+
+    # Jetzt können Sie das BytesIO-Objekt auf Azure Storage hochladen
+    filename = f'Forecast_Trucks_{depot}_{current_date}.png'
+    upload_file_to_blob_storage(filename, image_io, 'Forecast')
+    
 def main():
     st.title("PAMS Forecast Tool")
-    directory = 'Data/appData/forecast'
-
-    # Erstellen Sie eine Liste aller Dateinamen im Verzeichnis
-    filenames = os.listdir(directory)
-    # read of the strings in the list only the Date
-    dates = [filename.split('_')[-1].split('.')[0] for filename in filenames]
-    # behalte nur Unique Dates
-    dates = list(set(dates))
-    dates.sort(reverse=True)
     
+    datein = get_blob_list()
+    
+    # filter behalte alles was mit forecast anfängt
+    dates = [date for date in datein if date.startswith('Forecast')]    
+    
+    st.write(dates)
+    # behalte nur das Datum aus dem string das sind immer die letzten 10 Zeichen vor dem punkt
+    dates = [date[-14:-4] for date in dates]    
+    # remove duplicates
+    dates = list(set(dates))
+
     col1, col2 = st.columns(2)
     with col1:
-
         sel_Date = st.selectbox('Select Date', dates)
-
+        filename_1 = f'Forecast_Picks_KNBFE_{sel_Date}.png'
+        filename_2 = f'Forecast_Trucks_KNHAJ_{sel_Date}.png'
+        # get the images from Azure Storage
+        img1 = get_blob_file(filename_1)
+        img2 = get_blob_file(filename_2)
+        
         # Lade die Dateien mit dem ausgewählten Datum
+        
     with col2:
         if st.button('Berechne neues Forecast-Datenmodell'):
             with st.spinner('Datenmodell wird erstellt... ladezeit bis zu 1 Minute'):
@@ -263,11 +295,17 @@ def main():
                 #warte 3 sekunden
                 st.success('Done!')
                 #lade die Seite neu
-                st.experimental_rerun()
-    selected_files = [file for file in filenames if sel_Date in file]
+                st.rerun()
+    
+    #show the images
+    st.write(filename_1)
+    from PIL import Image, UnidentifiedImageError
+    import io
 
-    for file in selected_files:
-        # Lade die Figur
-        img = mpimg.imread(os.path.join(directory, file))
-        # Zeige die Figur an
-        st.image(img, caption=file, use_column_width=True)
+    try:
+        Image.open(io.BytesIO(img1))
+    except UnidentifiedImageError:
+        st.error('Das Bild konnte nicht geöffnet werden. Bitte überprüfen Sie das Bildformat.')
+    else:
+        st.image(img1, caption='Picks Forecast', use_column_width=True)
+        st.image(img2, caption='Trucks Forecast', use_column_width=True)
