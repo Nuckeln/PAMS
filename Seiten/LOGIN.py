@@ -1,112 +1,53 @@
 import streamlit as st
 import streamlit_authenticator as stauth
-# from Data_Class.SQL import SQL_TabellenLadenBearbeiten as SQL
-# from Data_Class.SQL_Neu import updateTable
 from Data_Class.SQL import read_table, updateTable
+      
 
-
-
-if 'key' not in st.session_state:
-    st.session_state['key'] = 'value'
+class LOGIN:
     
-class Login:
+
     def __init__(self):
         self.usernames = []
         self.names = []
         self.passwords = []
         self.funktionen = []
         self.rechte = []
-
         self.credentials = {}
         self.authenticator = None
-        st.session_state = None
+        
 
-        authentication_status = None
     def Login(self):
-        if 'key' not in st.session_state:
-            st.session_state['key'] = 'value'
-        # Initialize the 'rechte' attribute of session_state.
-
 
         df = read_table('user')
         self.usernames = df['username'].tolist()
+        self.user = ''
         self.names = df['name'].tolist()
         self.passwords = df['password'].tolist()
         self.funktionen = df['function'].tolist()
         self.rechte = df['rechte'].tolist()
         self.credentials = {"usernames":{}}
-        authentication_status = None
+        self.authentication_status = self
 
         # Extract the values from the DataFrame and add them to the 'credentials' dictionary.
         for uname,name,pwd,funktion,rechte in zip(self.usernames,self.names,self.passwords,self.funktionen,self.rechte):
             user_dict = {"name": name, "password": pwd, "function": funktion, "rechte": rechte}
             self.credentials["usernames"].update({uname: user_dict})
 
-        self.authenticator = stauth.Authenticate(self.credentials, "cokkie_name", "random_key",
+        self.authenticator = stauth.Authenticate(self.credentials, "PamsReportingTool", "random_key",
                                             cookie_expiry_days=30)
-        name, authentication_status, usernames= self.authenticator.login("Login", 'main')
+        name, authentication_status, usernames= self.authenticator.login(location='main',max_concurrent_users=20,max_login_attempts=10,clear_on_submit=True)
         if authentication_status == True:
-            st.session_state.user = name
-            st.session_state.rechte = df.loc[df['name'] == name, 'rechte'].iloc[0]
+            user = name
+            rechte = df.loc[df['name'] == name, 'rechte'].iloc[0]
+            return authentication_status, user, rechte
         if authentication_status == False:
-            st.error("Login fehlgeschlagen!")
-
-        return authentication_status
-
-    # def __init__(self):
-    #     self.usernames = []
-    #     self.names = []
-    #     self.passwords = []
-    #     self.funktionen = []
-    #     self.rechte = []
-
-    #     self.credentials = {}
-    #     self.authenticator = None
-    #     st.session_state = None
-
-
-    # def Login(self):
-    #     if 'authentication_status' not in st.session_state:
-    #         st.session_state['authentication_status'] = False 
-
-    #     df = read_table('user')
-    #     self.usernames = df['username'].tolist()
-    #     self.names = df['name'].tolist()
-    #     self.passwords = df['password'].tolist()
-    #     self.funktionen = df['function'].tolist()
-    #     self.rechte = df['rechte'].tolist()
-    #     self.credentials = {"usernames":{}}
-
-    #     # Extract the values from the DataFrame and add them to the 'credentials' dictionary.
-    #     for uname,name,pwd,funktion,rechte in zip(self.usernames,self.names,self.passwords,self.funktionen,self.rechte):
-    #         user_dict = {"name": name, "password": pwd, "function": funktion, "rechte": rechte}
-    #         self.credentials["usernames"].update({uname: user_dict})
-
-    #     self.authenticator = stauth.Authenticate(self.credentials, "BanderolenTransportApp", "random_key",
-    #                                         cookie_expiry_days=30)
-    #     name, authentication_status, usernames= self.authenticator.login("Login", 'main')
-    #     if authentication_status == True:
-    #         st.session_state.user = name
-    #         st.session_state.rechte = df.loc[df['name'] == name, 'rechte'].iloc[0]
-    #     if authentication_status == False:
-    #         st.error("Login fehlgeschlagen!")
-
-    #     return authentication_status
-    
-
-
-
-
-  
+            return authentication_status, user, rechte
     def Logout(self):
-    
         self.authenticator.logout('Logout', 'main')
-        if st.session_state.user is None:
+        if self.user is None:
             st.success("Logout successful!", key='logout_success')
-            # clear cookies
-            #reload page
-            st.experimental_rerun()
-
+            self.authentication_status = False
+            st.rerun()
     def newPasswort(self):
 
         df = read_table('user')
@@ -117,18 +58,13 @@ class Login:
         self.rechte = df['rechte'].tolist()
         self.credentials = {"usernames":{}}
 
-        st.write('du Bist eingeloggt als: ', st.session_state.user)
-        st.write('dein Username ist: ', df.loc[df['name'] == st.session_state.user, 'username'].iloc[0])
-        # st.write('deine Rechte sind: ', st.session_state.rechte)
-        # st.write('deine Funktion ist: ', df.loc[df['name'] == st.session_state.user, 'function'].iloc[0])
-
         neupassword = st.text_input("neues password:",key='neus_password_anlegen')
     
         X = st.button("Speichere neues Passwort",key='speichere_neues_passwort')
         if X:
             pw = stauth.Hasher(neupassword)._hash(neupassword)
             # replace password in df with new password
-            df.loc[df['name'] == st.session_state.user, 'password'] = pw
+            df.loc[df['name'] == self.user, 'password'] = pw
             # update table with new password
             
             updateTable(df,'user')

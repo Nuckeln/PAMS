@@ -98,7 +98,14 @@ class LIVE:
                 img_type = img_outer
                 col1, col2, = st.columns([0.3, 0.4])
                 with col2:
-                    st.image(img_type, width=32,clamp=True)
+                    st.image(img_type, width=32,clamp=False)
+                    hide_img_fs = '''
+                    <style>
+                    button[title="View fullscreen"]{
+                        visibility: hidden;}
+                    </style>
+                    '''
+                    st.markdown(hide_img_fs, unsafe_allow_html=True)
                 with col1:
                     annotated_text(annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
 
@@ -119,6 +126,14 @@ class LIVE:
                 with col1:
                     #green
                     annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
+
+
+
+
+
+
+
+
 
             elif img_type == 'Delivery':
                 img_type = img_Delivery
@@ -664,7 +679,7 @@ class LIVE:
 
     def PageTagesReport():
         pd.set_option("display.precision", 2)
-        sar.st_autorefresh(interval=48000)
+        sar.st_autorefresh(interval=48000, debounce=True)
         colhead1, colhead2 ,colhead3, colhead4 = st.columns(4)
         with colhead2:
             lastUpdate = read_table('prod_KundenbestellungenUpdateTime')
