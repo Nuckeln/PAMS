@@ -155,6 +155,8 @@ if authentication_status == True:
                                 styles = {'navtab': {'background-color':'#0e2b63', #Hintergrundfarbe der Tabs
                                                     'color': '#ffffff', #Farbe der Schrift und Icons
                                                     'font-size': '18px',
+                                                    #Text in Fett
+                                                    
                                                     'transition': '.3s',
                                                     'white-space': 'nowrap',
                                                     'text-transform': 'uppercase'},
