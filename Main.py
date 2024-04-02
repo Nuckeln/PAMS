@@ -1,11 +1,10 @@
 #Python Module
 import streamlit as st
 import os
-import streamlit_option_menu #import option_menu 
+from streamlit_option_menu import option_menu 
 from PIL import Image 
-import streamlit_authenticator as stauth
-from st_on_hover_tabs import on_hover_tabs
 
+#Eigene Klassen
 from Seiten.P_UserLogin import Login
 from Seiten.P_Live import LIVE
 from Seiten.P_Report import reportPage
@@ -14,7 +13,10 @@ from Seiten.P_User_Reports import pageUserReport
 from Seiten.P_Forecast import main as pageForecast
 from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.P_Ladeplan import main as pageLadeplan
-from Data_Class.SQL import read_table, updateTable
+
+# Logging Konfiguration
+if 'authentication_status' not in st.session_state:
+    st.session_state['authentication_status'] = False  # oder ein anderer Standardwert
 
 
 def checkSystem():
@@ -29,38 +31,6 @@ def checkSystem():
     except:
         return 'System: Test'
 
-def berechtigung(rechte):
-            
-    #admin Vollzugriff
-    if rechte == 1:
-        pages = ['Depot Live Status',"LC Monitor",'Depot Reports','Forecast','Lagerverwaltung','Admin']
-        icons = ['autorenew', 'monitoring','analytics', 'science','warehouse','admin_panel_settings']
-        return pages, icons
-    # Manager
-    elif rechte == 2: 
-        pages = ['Depot Live Status',"LC Monitor",'Depot Reports','Forecast','Lagerverwaltung']
-        icons = ['autorenew', 'monitoring','analytics', 'science','warehouse']
-        return pages, icons
-    
-    # Mitarbeiter AD 
-    elif rechte == 3:
-        pages = ['Depot Live Status','Depot Reports','Forecast','Lagerverwaltung']
-        icons = ['autorenew','analytics', 'science','warehouse']
-        return pages, icons
-    
-    # Mitarbeiter Fremd
-    elif rechte == 4:
-        pages = ['Depot Live Status','Depot Reports','Forecast']
-        icons = ['autorenew','analytics', 'science']
-        return pages, icons
-    
-    # Lager
-    elif rechte == 5:
-        pages = ['Depot Live Status']
-        icons = ['autorenew']
-        return pages, icons
-
-
 #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/Main.py"
  
 # --- Set Global Page Configs ---
@@ -71,6 +41,7 @@ hide_full_screen = '''
 .element-container:nth-child(12) .overlayBtn {visibility: hidden;}
 </style>
 '''
+
 hide_streamlit_style = """
                 <style>
                 @import url('https://fonts.googleapis.com/css?family=Montserrat');
@@ -123,104 +94,83 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 st.markdown(hide_full_screen, unsafe_allow_html=True)
 # ----- Config Main Menue -----
-img = Image.open('Data/img/logo_white.png', mode='r')
-
-if st.session_state.get('Counter') is None:
-    st.session_state['Counter'] = 0
+img = Image.open('Data/img/logo.png', mode='r')
 
 # ----- Config Main Menue -----
-#authentication_status,user,rechte = Login()
+
+with st.sidebar: 
+        st.image(img)
+
+        st.text('')
+
+        sel_main_m = option_menu('PAMS', ['Depot Live Status',"LC Monitor",'Depot Reports','Forecast','Lagerverwaltung','Admin'], 
+            icons=[''], 
+            menu_icon='kanban-fill',
+            styles={'container':{'font':'Montserrat'}},)
+# ----- Login -----
+authentication_status = None
 authentication_status = Login.Login(self=Login)
+#logging.info(f'Authentifizierungsstatus: {authentication_status}')
+def berechtigung():
+    if st.session_state.rechte == 1:
+        #admin Vollzugriff
+        return ['Depot Live Status',"LC Monitor",'Depot Reports','Forecast','Lagerverwaltung','Admin']
+    elif st.session_state.rechte == 2: 
+        # Manager
+        return ['Depot Live Status',"LC Monitor",'Depot Reports','Forecast','Lagerverwaltung']
+    elif st.session_state.rechte == 3:
+        # Mitarbeiter AD 
+        return ['Depot Live Status','Depot Reports','Forecast','Lagerverwaltung']
+    elif st.session_state.rechte == 4:
+        # Mitarbeiter Fremd
+        return ["Depot Live Status"]
+        # Lager
+    elif st.session_state.rechte == 5:
+        return ["Depot Live Status"]
 
-rechte = st.session_state.rechte
 if authentication_status == True:
+    user = st.session_state.user
+    #logging.info(f'User: {user}')
+
+with st.sidebar:
+        Login.authenticator.logout('Logout')
         
-
-    def user_menue(pages,icons):
-
-        st.markdown('<style>' + open('./style.css').read() + '</style>', unsafe_allow_html=True)
-
-        with st.sidebar:
-
+        with st.popover('Passwort ändern'):
             try:
-                st.image(img, caption='Logo')
+                Login.newPasswort(Login)
             except:
-                st.text('')
-            
-            
-            st.markdown('<div id="sidebar-header"</div>', unsafe_allow_html=True)  # Logo Bereich
-            # Load Menue
-            sel_main_m = on_hover_tabs(tabName=pages,
-                                iconName=icons, default_choice=0,
-                                styles = {'navtab': {'background-color':'#0e2b63', #Hintergrundfarbe der Tabs
-                                                    'color': '#ffffff', #Farbe der Schrift und Icons
-                                                    'font-size': '18px',
-                                                    #Text in Fett
-                                                    
-                                                    'transition': '.3s',
-                                                    'white-space': 'nowrap',
-                                                    'text-transform': 'uppercase'},
-                                        'tabOptionsStyle': {':hover :hover': {'color': '#ef7d00',
-                                                                        'cursor': 'pointer'}},
-                                        'iconStyle':{'position':'fixed',
-                                                        'left':'7.5px',
-                                                        'text-align': 'left'},
-                                        'tabStyle' : {'list-style-type': 'none',
-                                                        'margin-bottom': '30px',
-                                                        'padding-left': '30px'}},
-                                key="1")         
-
-        #     st.markdown("""
-        #     <style>
-        #         /* Button standardmäßig verstecken */
-        #         #logout-button {
-        #             display: none;
-        #         }
-
-        #         /* Button anzeigen, wenn Sidebar ausgeklappt ist */
-        #         section[data-testid='stSidebar']:hover #logout-button {
-        #             display: block;
-        #         }
-        #     </style>
-        #     <button id="logout-button" onclick="alert('Logout');">Logout</button>
-        # """, unsafe_allow_html=True)
-            
-            
-
-            # with st.popover('Passwort ändern'):
-            #     LOGIN.newPasswort(Login)
-
-            
-        if sel_main_m == "Depot Live Status":
-            LIVE.PageTagesReport()
-        if sel_main_m == 'Depot Reports':
-                reportPage()   
-        if sel_main_m == 'Warehouse Reports':
-            pageUserReport()
-            #logging.info('User läd Seite User Reports')
-        if sel_main_m == 'Admin':
-            adminPage() 
-            #logging.info('User läd Seite Admin')
-        if sel_main_m == 'Forecast':
-            pageForecast()
-            #logging.info('User läd Seite Forecast')
-        if sel_main_m == 'Lagerverwaltung':
-            pageStellplatzverwaltung()
-        if sel_main_m == 'LC Monitor':
-            pageLadeplan()        
-    pages,icons = berechtigung(rechte)
-    user_menue(pages,icons)
-
-    Login.authenticator.logout('Logout')
-    with st.popover('Passwort ändern'):
-        st.write(rechte)
-        st.write(pages)
-        st.write(st.session_state.rechte)
-        Login.newPasswort(Login)   
-
-if st.session_state.get('Counter') is not None:
-    st.session_state['Counter'] += 1
-#st.write(st.session_state['Counter'])
-#wenn kleiner als 2 dann st.rerun()
-if st.session_state['Counter'] < 2:
+                st.stop()
+check = berechtigung()
+if check == []:
     st.rerun()
+if sel_main_m == "Depot Live Status":
+    # Prüfe Berechtigung ist Depot Live Status in der Liste
+    if 'Depot Live Status' in check:
+        LIVE.PageTagesReport()
+    else:
+        st.error('Keine Berechtigung für diese Seite')
+if sel_main_m == 'Depot Reports':
+    if 'Depot Reports' in check:
+        reportPage()   
+    else:
+        st.error('Keine Berechtigung für diese Seite')        
+if sel_main_m == 'Forecast':
+    if 'Forecast' in check:
+        pageForecast()
+    else:
+        st.error('Keine Berechtigung für diese Seite')        
+if sel_main_m == 'Lagerverwaltung':
+    if 'Lagerverwaltung' in check:
+        pageStellplatzverwaltung()
+    else:
+        st.error('Keine Berechtigung für diese Seite')        
+if sel_main_m == 'Admin':
+    if 'Admin' in check:
+        adminPage()
+    else:
+        st.error('Keine Berechtigung für diese Seite')        
+if sel_main_m == 'LC Monitor':
+    if 'LC Monitor' in check:
+        pageLadeplan()
+    else:
+        st.error('Keine Berechtigung für diese Seite')        

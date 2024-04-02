@@ -605,9 +605,16 @@ class LIVE:
     def figUebermitteltInDeadline(df):        
         sel_deadStr = '14:00:00'
         sel_deadLej = '14:00:00'
+        sel_deadBfe = '14:00:00'
+        sel_deadHaj = '14:00:00'
 
-        #add deadlines to df by DeliveryDepot
-        df['Deadline'] = np.where(df['DeliveryDepot'] == 'KNLEJ', sel_deadStr, sel_deadLej)
+        #add deadlines to df by DeliveryDepot 
+        df['Deadline'] = np.where(df['DeliveryDepot'] == 'KNSTR', sel_deadStr, 
+                                np.where(df['DeliveryDepot'] == 'KNLEJ', sel_deadLej,
+                                np.where(df['DeliveryDepot'] == 'KNBFE', sel_deadBfe,
+                                np.where(df['DeliveryDepot'] == 'KNHAJ', sel_deadHaj,0))))
+        
+        
         df['PlannedDate'] = df['PlannedDate'] + pd.to_timedelta(df['Deadline'])
         #convert to datetime
         df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
@@ -616,7 +623,7 @@ class LIVE:
         dfFertig = df[df['Fertiggestellt'] != '0']
         dfFertig['Fertiggestellt'] = pd.to_datetime(dfFertig['Fertiggestellt'], format='%Y-%m-%d %H:%M:%S.%f%z')
         #add two hours to Feritggestellt
-        #dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'] + pd.to_timedelta('2:00:00')
+        dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'] + pd.to_timedelta('2:00:00')
         #drop utc
         dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'].dt.tz_localize(None)
         dfFertig['InTime'] = (dfFertig['Fertiggestellt'] < dfFertig['PlannedDate'])
@@ -648,6 +655,8 @@ class LIVE:
         fig.update_xaxes(title_text='')
         # Date PartnerName to text
         st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
+
+
 
 ## AG-Grid Func ###
 

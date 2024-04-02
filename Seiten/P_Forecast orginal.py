@@ -66,7 +66,7 @@ def forecast():
     # Summe der Picks Gesamt für alle Depots berechnen
     gesamt_data = df.resample('D', on='PlannedDate').sum()['Picks Gesamt']
     gesamt_data = gesamt_data[(gesamt_data.index.dayofweek >= 0) & (gesamt_data.index.dayofweek <= 4)]
-    gesamt_data_last_14 = gesamt_data[-300:]
+    gesamt_data_last_14 = gesamt_data[-14:]
 
     # Vorhersage für gesamte Picks berechnen
     model_gesamt = ARIMA(gesamt_data_last_14, order=(5,1,0))
@@ -112,7 +112,7 @@ def forecast():
             axs[i].annotate(f'{bar.get_height():.0f}', (bar.get_x() + bar.get_width() / 2, bar.get_height()), textcoords="offset points", xytext=(0,3), ha='center')
 
         save_forecast(depot_data_last_14, forecast, depot, filtered_forecast_range, 'Picks_')
-    gesamt_data_last_14 = gesamt_data_last_14[-14:]
+
     # Visualisierung für Gesamtsumme
     axs[-1].bar(gesamt_data_last_14.index, gesamt_data_last_14, label='Tatsächliche Picks Gesamt')
     axs[-1].bar(filtered_forecast_range, forecast_gesamt[:len(filtered_forecast_range)], label='Vorhergesagte Picks Gesamt')
