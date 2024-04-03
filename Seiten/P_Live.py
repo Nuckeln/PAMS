@@ -609,52 +609,52 @@ class LIVE:
         sel_deadHaj = '14:00:00'
 
         #add deadlines to df by DeliveryDepot 
-        df['Deadline'] = np.where(df['DeliveryDepot'] == 'KNSTR', sel_deadStr, 
-                                np.where(df['DeliveryDepot'] == 'KNLEJ', sel_deadLej,
-                                np.where(df['DeliveryDepot'] == 'KNBFE', sel_deadBfe,
-                                np.where(df['DeliveryDepot'] == 'KNHAJ', sel_deadHaj,0))))
-        
+        df.loc[df['DeliveryDepot'] == 'KNSTR', 'Deadline'] = sel_deadStr
+        df.loc[df['DeliveryDepot'] == 'KNLEJ', 'Deadline'] = sel_deadLej
+        df.loc[df['DeliveryDepot'] == 'KNBFE', 'Deadline'] = sel_deadBfe
+        df.loc[df['DeliveryDepot'] == 'KNHAJ', 'Deadline'] = sel_deadHaj
         
         df['PlannedDate'] = df['PlannedDate'] + pd.to_timedelta(df['Deadline'])
-        #convert to datetime
+        # filter df by AllSSCCLabelsPrinted = 1
+        df = df[df['AllSSCCLabelsPrinted'] == 1]
         df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
+        
+        
+        #convert to datetime
         # filter by fertiggestellt = '0'
-        dfOffen = df[df['Fertiggestellt'] == '0']
-        dfFertig = df[df['Fertiggestellt'] != '0']
-        dfFertig['Fertiggestellt'] = pd.to_datetime(dfFertig['Fertiggestellt'], format='%Y-%m-%d %H:%M:%S.%f%z')
+        df['Fertiggestellt'] = pd.to_datetime(df['Fertiggestellt'], format='%Y-%m-%d %H:%M:%S')
         #add two hours to Feritggestellt
-        dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'] + pd.to_timedelta('2:00:00')
+        df['Fertiggestellt'] = df['Fertiggestellt'] + pd.to_timedelta('2:00:00')
         #drop utc
-        dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'].dt.tz_localize(None)
-        dfFertig['InTime'] = (dfFertig['Fertiggestellt'] < dfFertig['PlannedDate'])
-        #.astype(int)
-        dfFertig['Fertig um'] = dfFertig['Fertiggestellt']
-        dfFertig['Fertig um'] = dfFertig['Fertig um'].dt.strftime('%d.%m.%Y %H:%M')
-        #round to hour
-        dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'].dt.round('H')
-        #change format to day as text and hour
-        dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'].dt.strftime('%d.%m.%Y %H:%M')
-        #group by
-        dfFertig = dfFertig.groupby(['PlannedDate','PartnerName','Fertiggestellt','SapOrderNumber','DeliveryDepot','InTime','Fertig um']).agg({'Picks Gesamt':'sum'}).reset_index()
-        #sort by Fertiggestellt
-        dfFertig = dfFertig.sort_values(by=['Fertiggestellt'], ascending=True)
-        #Create Plotly Chart
-        title = "<b>Lieferschein in Deadline Fertiggestellt  </b> <span style='color:#4FAF46'>ja</span> / <span style='color:#E72482'>nein</span>"
+        st.dataframe(df)
+        
+        
+        # df['Fertiggestellt'] = df['Fertiggestellt'].dt.tz_localize(None)
+        # df['InTime'] = (df['Fertiggestellt'] < df['PlannedDate'])
+        # df['Fertiggestellt'] = df['Fertiggestellt'].dt.round('H')
+        # #change format to day as text and hour
+        # df['Fertiggestellt'] = df['Fertiggestellt'].dt.strftime('%d.%m.%Y %H:%M')
+        # #group by
+        # dfFertig = dfFertig.groupby(['PlannedDate','PartnerName','Fertiggestellt','SapOrderNumber','DeliveryDepot','InTime','Fertig um']).agg({'Picks Gesamt':'sum'}).reset_index()
+        # #sort by Fertiggestellt
+        # dfFertig = dfFertig.sort_values(by=['Fertiggestellt'], ascending=True)
+        # #Create Plotly Chart
+        # title = "<b>Lieferschein in Deadline Fertiggestellt  </b> <span style='color:#4FAF46'>ja</span> / <span style='color:#E72482'>nein</span>"
 
-        fig = px.bar(dfFertig, x='Fertiggestellt', y="Picks Gesamt", color="InTime", hover_data=['PartnerName','Fertig um','SapOrderNumber','DeliveryDepot'],height=600, title=title)
-        #if in Time 1 set to green else to red
-        fig.update_traces(marker_color=['#4FAF46' if x == 1 else '#E72482' for x in dfFertig['InTime']])
-        fig.data[0].text = dfFertig['PartnerName'] + '<br>' + dfFertig['Picks Gesamt'].astype(str)
-        fig.layout.xaxis.type = 'category'
-        # x aaxis text horizontal
-        fig.layout.xaxis.tickangle = 70
-        # remove xaxis and yaxis title
-        fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
-        fig.update_layout(legend_title_text='InTime')
-        fig.update_yaxes(title_text='')
-        fig.update_xaxes(title_text='')
-        # Date PartnerName to text
-        st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
+        # fig = px.bar(dfFertig, x='Fertiggestellt', y="Picks Gesamt", color="InTime", hover_data=['PartnerName','Fertig um','SapOrderNumber','DeliveryDepot'],height=600, title=title)
+        # #if in Time 1 set to green else to red
+        # fig.update_traces(marker_color=['#4FAF46' if x == 1 else '#E72482' for x in dfFertig['InTime']])
+        # fig.data[0].text = dfFertig['PartnerName'] + '<br>' + dfFertig['Picks Gesamt'].astype(str)
+        # fig.layout.xaxis.type = 'category'
+        # # x aaxis text horizontal
+        # fig.layout.xaxis.tickangle = 70
+        # # remove xaxis and yaxis title
+        # fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
+        # fig.update_layout(legend_title_text='InTime')
+        # fig.update_yaxes(title_text='')
+        # fig.update_xaxes(title_text='')
+        # # Date PartnerName to text
+        # st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
 
 
 
