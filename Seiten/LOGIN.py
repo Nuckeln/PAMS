@@ -3,7 +3,7 @@ import streamlit_authenticator as stauth
 from Data_Class.SQL import read_table, updateTable
       
 
-class LOGIN:
+class Login:
     
 
     def __init__(self):
@@ -37,11 +37,11 @@ class LOGIN:
                                             cookie_expiry_days=30)
         name, authentication_status, usernames= self.authenticator.login(location='main',max_concurrent_users=20,max_login_attempts=10,clear_on_submit=True)
         if authentication_status == True:
-            user = name
-            rechte = df.loc[df['name'] == name, 'rechte'].iloc[0]
-            return authentication_status, user, rechte
+            st.session_state.user = name
+            st.session_state.rechte = df.loc[df['name'] == name, 'rechte'].iloc[0]
+            return authentication_status, st.session_state.user, st.session_state.rechte
         if authentication_status == False:
-            return authentication_status, user, rechte
+            return authentication_status, st.session_state.user, st.session_state.rechte
     def Logout(self):
         self.authenticator.logout('Logout', 'main')
         if self.user is None:

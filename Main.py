@@ -1,11 +1,15 @@
-#Python Module
-import streamlit as st
-import os
-from streamlit_option_menu import option_menu 
-from PIL import Image 
+import sys
+from streamlit.config import on_config_parsed
+from streamlit.web.cli import main
+import streamlit_option_menu as option_menu
 
+
+import os
+from PIL import Image 
+import streamlit as st
 #Eigene Klassen
-from Seiten.P_UserLogin import Login
+#from Seiten.P_UserLogin import Login
+from Seiten.LOGIN import Login
 from Seiten.P_Live import LIVE
 from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
@@ -13,30 +17,25 @@ from Seiten.P_User_Reports import pageUserReport
 from Seiten.P_Forecast import main as pageForecast
 from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.P_Ladeplan import main as pageLadeplan
-import mimetypes
-mimetypes.add_type('application/javascript', '.js')
-mimetypes.add_type('text/css', '.css')
+
 # Logging Konfiguration
 if 'authentication_status' not in st.session_state:
     st.session_state['authentication_status'] = False  # oder ein anderer Standardwert
-
-
-def checkSystem():
-    try:
-        a = os.environ['SQLAZURECONNSTR_DbConnection']
-        #if you found "pp" in the string, then it's a production environment
-        a = a.find("pp")
-        if a == -1:
-            return 'System: Test'
-        else:
-            return 'System: Produktiv'
-    except:
-        return 'System: Test'
-
 #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/Main.py"
  
 # --- Set Global Page Configs ---
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="expanded")
+img = Image.open('Data/img/logo.png', mode='r')
+with st.sidebar: 
+        st.image(img)
+
+        st.text('')
+        
+        sel_main_m = option_menu.option_menu('PAMS', ['Depot Live Status',"LC Monitor",'Depot Reports','Forecast','Lagerverwaltung','Admin'], 
+            icons=[''], 
+            menu_icon='kanban-fill',
+            styles={'container':{'font':'Montserrat'}},)
+        
 hide_full_screen = '''
 <style>
 .element-container:nth-child(3) .overlayBtn {visibility: hidden;}
@@ -93,22 +92,13 @@ hide_streamlit_style = """
                  div.block-container{padding-top:0rem;}
                 </style>
                 """
+
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 st.markdown(hide_full_screen, unsafe_allow_html=True)
 # ----- Config Main Menue -----
-img = Image.open('Data/img/logo.png', mode='r')
 
 # ----- Config Main Menue -----
 
-with st.sidebar: 
-        st.image(img)
-
-        st.text('')
-
-        sel_main_m = option_menu('PAMS', ['Depot Live Status',"LC Monitor",'Depot Reports','Forecast','Lagerverwaltung','Admin'], 
-            icons=[''], 
-            menu_icon='kanban-fill',
-            styles={'container':{'font':'Montserrat'}},)
 # ----- Login -----
 authentication_status = None
 authentication_status = Login.Login(self=Login)

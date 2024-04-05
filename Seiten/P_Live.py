@@ -618,11 +618,8 @@ class LIVE:
         # filter df by AllSSCCLabelsPrinted = 1
         df = df[df['AllSSCCLabelsPrinted'] == 1]
         df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
-        
-        
-        #convert to datetime
-        # filter by fertiggestellt = '0'
-        df['Fertiggestellt'] = pd.to_datetime(df['Fertiggestellt'], format='%Y-%m-%d %H:%M:%S')
+        #Fertiggestellt to datetime
+        df['Fertiggestellt'] = pd.to_datetime(df['Fertiggestellt'])
         #add two hours to Feritggestellt
         df['Fertiggestellt'] = df['Fertiggestellt'] + pd.to_timedelta('2:00:00')
         #drop utc
