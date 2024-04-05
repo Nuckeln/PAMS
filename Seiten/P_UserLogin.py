@@ -20,8 +20,6 @@ class Login:
         self.credentials = {}
         self.authenticator = None
         st.session_state = None
-
-        authentication_status = None
     def Login(self):
         if 'key' not in st.session_state:
             st.session_state['key'] = 'value'

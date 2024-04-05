@@ -116,8 +116,7 @@ class LIVE:
                     st.image(img_type, width=32)
                 with col1:
                     annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
-
-                            
+                  
             elif img_type == 'Pallet':
                 img_type = img_pallet
                 col1, col2 = st.columns([0.3, 0.4])
@@ -126,14 +125,6 @@ class LIVE:
                 with col1:
                     #green
                     annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
-
-
-
-
-
-
-
-
 
             elif img_type == 'Delivery':
                 img_type = img_Delivery
@@ -154,8 +145,6 @@ class LIVE:
                     annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
         
         
-        
-        
         cities = [("Gesamt", ""), ("Stuttgart", "KNSTR"), ("Leipzig", "KNLEJ"), ("Hannover", "KNHAJ"), ("Bielefeld", "KNBFE")]
         cols = st.columns(len(cities))
         
@@ -167,7 +156,7 @@ class LIVE:
                     </style>
                     <h2 style='text-align: left; color: #0F2B63; font-family: Montserrat; font-weight: bold;'>{}</h2>
                     """.format(city), unsafe_allow_html=True)   
-                # Picks Gesamt of the Depot
+                #Picks Gesamt of the Depot
                 if city == "Gesamt":
                     sum_picks = df['Picks Gesamt'].sum()
                     st.write(f"Summe Picks: {sum_picks}")
@@ -602,6 +591,37 @@ class LIVE:
 
         st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
 
+    def figTachoDiagrammPicksALL(df):
+        df1 = df[df['AllSSCCLabelsPrinted']==0]
+        offenKNBFE = df1["Picks Gesamt"].sum()
+
+        df2 = df[df['AllSSCCLabelsPrinted']==1]
+        fertigKNBFE = df2["Picks Gesamt"].sum()
+        
+        completion_rate = (fertigKNBFE / (fertigKNBFE + offenKNBFE)) * 100
+        fig = go.Figure(go.Indicator(
+            domain = {'x': [0, 1], 'y': [0, 1]},
+            value = completion_rate,
+            mode = "gauge+number+delta",
+            title = {'text': "Gesamt %"},
+            delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
+            gauge = {'axis': {'range': [0, 100], 'tickangle': -90},
+                    'steps' : [
+                        {'range': [0, 100], 'color': "#0F2B63"},
+                        ],
+                    'threshold' : {'line': {'color': "#E72482", 'width': 4}, 'thickness': 0.75, 'value': 100}}))
+        fig.update_traces(number_suffix=" %")
+        fig.update_traces(delta_suffix=" %")
+        fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63",title_font_size=35)
+        fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
+        fig.update_layout(title_text='')
+        fig.update_xaxes(title_text='')
+        fig.update_yaxes(title_text='')
+        fig.layout.xaxis.tickangle = 70
+
+        st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
+
+
     def figUebermitteltInDeadline(df):        
         sel_deadStr = '14:00:00'
         sel_deadLej = '14:00:00'
@@ -696,11 +716,7 @@ class LIVE:
             sel_date = datetime.date.today()  
             sel_date = st.date_input('Datum', sel_date)   
             dfOr = LIVE.loadDF(sel_date,sel_date) 
-
-        # with colhead2:
-        #     sel = st.multiselect('Depot  ', ['KNSTR','KNLEJ'],['KNSTR','KNLEJ'],key='choise Depot')
-        #     #dfOr = dfOr[dfOr['DeliveryDepot'].isin(sel)]
-            
+    
         with colhead4:                
             LIVE.wetter()
         img_strip = Image.open('Data/img/strip.png')   
@@ -710,7 +726,9 @@ class LIVE:
         LIVE.columnsKennzahlen(dfOr)
     
         try:
-            col34, col35, col36, col37 = st.columns(4)
+            col33 ,col34, col35, col36, col37 = st.columns(5)
+            with col33:
+                LIVE.figTachoDiagrammPicksALL(dfOr)
             with col34:
                 LIVE.figTachoDiagrammPicksStr(dfOr)
             with col35:

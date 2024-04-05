@@ -14,7 +14,6 @@ class Login:
         self.rechte = []
         self.credentials = {}
         self.authenticator = None
-        
 
     def Login(self):
 
