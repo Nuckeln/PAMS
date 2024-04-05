@@ -642,36 +642,98 @@ class LIVE:
         df['Fertiggestellt'] = pd.to_datetime(df['Fertiggestellt'])
         #add two hours to Feritggestellt
         df['Fertiggestellt'] = df['Fertiggestellt'] + pd.to_timedelta('2:00:00')
-        #drop utc
-        st.dataframe(df)
-        
-        
-        # df['Fertiggestellt'] = df['Fertiggestellt'].dt.tz_localize(None)
-        # df['InTime'] = (df['Fertiggestellt'] < df['PlannedDate'])
-        # df['Fertiggestellt'] = df['Fertiggestellt'].dt.round('H')
-        # #change format to day as text and hour
-        # df['Fertiggestellt'] = df['Fertiggestellt'].dt.strftime('%d.%m.%Y %H:%M')
-        # #group by
-        # dfFertig = dfFertig.groupby(['PlannedDate','PartnerName','Fertiggestellt','SapOrderNumber','DeliveryDepot','InTime','Fertig um']).agg({'Picks Gesamt':'sum'}).reset_index()
-        # #sort by Fertiggestellt
-        # dfFertig = dfFertig.sort_values(by=['Fertiggestellt'], ascending=True)
-        # #Create Plotly Chart
-        # title = "<b>Lieferschein in Deadline Fertiggestellt  </b> <span style='color:#4FAF46'>ja</span> / <span style='color:#E72482'>nein</span>"
 
-        # fig = px.bar(dfFertig, x='Fertiggestellt', y="Picks Gesamt", color="InTime", hover_data=['PartnerName','Fertig um','SapOrderNumber','DeliveryDepot'],height=600, title=title)
-        # #if in Time 1 set to green else to red
-        # fig.update_traces(marker_color=['#4FAF46' if x == 1 else '#E72482' for x in dfFertig['InTime']])
-        # fig.data[0].text = dfFertig['PartnerName'] + '<br>' + dfFertig['Picks Gesamt'].astype(str)
-        # fig.layout.xaxis.type = 'category'
-        # # x aaxis text horizontal
-        # fig.layout.xaxis.tickangle = 70
-        # # remove xaxis and yaxis title
-        # fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
-        # fig.update_layout(legend_title_text='InTime')
-        # fig.update_yaxes(title_text='')
-        # fig.update_xaxes(title_text='')
-        # # Date PartnerName to text
-        # st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
+        def kategorisieren(volume):
+            if volume <= 25:
+                return '1-25'
+            elif volume <= 100:
+                return '26-100'
+            elif volume <= 200:
+                return '101-200'
+            else:
+                return '201+'
+
+        def fehlerprüfung(row):
+            # Fertiggestellt zu datetime konvertieren
+            row['Fertiggestellt'] = pd.to_datetime(row['Fertiggestellt'])
+            # First_Picking zu datetime konvertieren
+            row['First_Picking'] = pd.to_datetime(row['First_Picking'])
+            row['Fertiggestellt'] = pd.to_datetime(row['Fertiggestellt']).tz_localize(None)
+            # First_Picking zu datetime konvertieren
+            row['First_Picking'] = pd.to_datetime(row['First_Picking']).tz_localize(None)
+            if pd.isnull(row['Fertiggestellt']) or row['Fertiggestellt'] - row['First_Picking'] < pd.Timedelta(hours=0):
+                row['Fehlerspalte'] = row['First_Picking']
+                row['First_Picking'] = row['Fertiggestellt'] - pd.Timedelta(hours=3)
+                # Prüfe ob Fertiggestellt - FirstPick größer als 36h ist wenn ja kopiere wieder
+                if row['Fertiggestellt'] - row['First_Picking'] > pd.Timedelta(hours=36):
+                    row['Fehlerspalte'] = row['First_Picking']
+                    row['First_Picking'] = row['Fertiggestellt'] - pd.Timedelta(hours=3)            
+            return row
+
+        df = df.apply(fehlerprüfung, axis=1)
+        df['Volumen Kategorie'] = df['Picks Gesamt'].apply(kategorisieren)
+        df = df.rename(columns={'First_Picking': 'Start Bearbeitung', 'Fertiggestellt': 'Ende Bearbeitung'})
+        df.sort_values(by='Start Bearbeitung', inplace=True)
+
+        # Funktion zur Bestimmung der Stapel-Ebene für jeden Balken
+        def calculate_levels(df, start_column, end_column):
+            levels = [0]  # Start mit Ebene 0
+            for index, row in df.iterrows():
+                current_start = row[start_column]
+                for level in range(len(levels)):
+                    if all(current_start >= df.loc[df['level'] == level, end_column]):
+                        break
+                else:
+                    levels.append(level + 1)
+                    level = len(levels) - 1
+                df.at[index, 'level'] = level
+            return df
+
+        df['level'] = 0  # Initialisiere die Ebene mit 0
+        df = calculate_levels(df, 'Start Bearbeitung', 'Ende Bearbeitung')
+        # Text für die Balken kürzen (beispielsweise auf 15 Zeichen begrenzen)
+        df['PartnerName_kurz'] = df['PartnerName'].apply(lambda x: x[:15] + '...' if len(x) > 15 else x)
+
+        # Erstellen des Zeitstrahls mit Plotly
+        fig = px.timeline(
+            df,
+            x_start='Start Bearbeitung',
+            x_end='Ende Bearbeitung',
+            y='level',
+            color='Volumen Kategorie',
+            text='PartnerName_kurz',  # Verwendung des gekürzten Namens
+            # hover_data={
+            #     'PartnerName': True,  # Zeigt den vollen Partner-Namen an
+            #     'SapOrderNumber': True,  # Zeigt die SapOrderNumber an
+            
+            #     'Volumen Kategorie': False,  # Verstecke die Volumen Kategorie, da sie als Farbe dargestellt wird
+            #     'level': False,  # Verstecke die Ebene, da sie nur für die Anordnung verwendet wird
+            #     'PartnerName_kurz': False  # Versteckt den gekürzten Partner-Namen
+            # },
+            title='Auftragsbearbeitungszeitraum',
+            color_discrete_map={
+                '1-25': '#ef7d00',
+                '26-100': '#ffbb00',
+                '101-200': '#ffaf47',
+                '201+': '#afca0b'
+            }
+        )
+
+        # Schriftart und weitere Layout-Anpassungen
+        fig.update_layout(
+            font_family="Montserrat",
+            xaxis_title='Zeit',
+            yaxis_title='Ebene',
+            yaxis={'visible': False},
+            showlegend=False,
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)'
+        )
+
+        # Rahmen hinzufügen
+        fig.update_traces(marker_line_width=2, marker_line_color="black")
+
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
 
 
@@ -759,10 +821,10 @@ class LIVE:
         except:
             st.write('Keine Daten vorhanden')
 
-        try:    
-            LIVE.figUebermitteltInDeadline(dfOr)
-        except:
-            st.write('Keine Daten vorhanden, schreibweise beachtet?')
+        #try:    
+        LIVE.figUebermitteltInDeadline(dfOr)
+        #except:
+        #    st.write('Keine Daten vorhanden, schreibweise beachtet?')
         LIVE.downLoadTagesReport(dfOr)
         LIVE.tabelleAnzeigen(dfOr)
 
