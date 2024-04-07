@@ -6,7 +6,6 @@ import streamlit as st
 import plotly_express as px
 import matplotlib.pyplot as plt
 
-from streamlit_option_menu import option_menu
 from Data_Class.MMSQL_connection import read_Table , save_Table
 
 heute = datetime.date.today()
