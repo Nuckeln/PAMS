@@ -15,6 +15,10 @@ from Seiten.P_Ladeplan import main as pageLadeplan
 
 #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/Main.py"
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="expanded")
+# prüfe ob st.session_state.rechte vorhanden ist
+if 'rechte' not in st.session_state:
+    st.session_state['rechte'] = None  # oder ein anderer Standardwert
+
 
 hide_streamlit_style = """
                 <style>
@@ -95,6 +99,9 @@ with col2:
 )
 
 authentication_status = Login.Login(self=Login)
+if st.session_state.rechte is None:
+    st.stop()
+
 def berechtigung():
     if st.session_state.rechte == 1:
         #admin Vollzugriff
