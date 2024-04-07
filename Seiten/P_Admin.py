@@ -7,7 +7,6 @@ from Data_Class.AzureStorage import upload_file_to_blob_storage, get_blob_list
 from Data_Class.MMSQL_connection import save_Table
 
 from Seiten.P_UserLogin import Login
-from streamlit_option_menu import option_menu 
 
 import streamlit_authenticator as stauth
 import datetime
