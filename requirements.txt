@@ -7,6 +7,7 @@ attrs==23.2.0
 bcrypt==4.1.2
 beautifulsoup4==4.12.3
 blinker==1.7.0
+bokeh==2.4.3
 bs4==0.0.2
 cachetools==5.3.3
 certifi==2024.2.2
@@ -96,7 +97,7 @@ streamlit-authenticator==0.3.2
 streamlit-autorefresh==1.0.1
 streamlit-elements==0.1.0
 streamlit-on-Hover-tabs==1.0.1
-streamlit-option-menu==0.3.12
+streamlit-timeline==0.0.2
 tenacity==8.2.3
 threadpoolctl==3.3.0
 toml==0.10.2
@@ -109,4 +110,5 @@ tzlocal==5.2
 urllib3==2.2.0
 validators==0.22.0
 wcwidth==0.2.13
+xyzservices==2024.4.0
 zipp==3.18.1
