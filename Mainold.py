@@ -1,20 +1,47 @@
+import sys
+from streamlit.config import on_config_parsed
+from streamlit.web.cli import main
+import streamlit_option_menu as option_menu
 
-import hydralit_components as hc
 
-
+import os
 from PIL import Image 
 import streamlit as st
 #Eigene Klassen
+#from Seiten.P_UserLogin import Login
 from Seiten.LOGIN import Login
 from Seiten.P_Live import LIVE
 from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
+from Seiten.P_User_Reports import pageUserReport
 from Seiten.P_Forecast import main as pageForecast
 from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.P_Ladeplan import main as pageLadeplan
 
+# Logging Konfiguration
+if 'authentication_status' not in st.session_state:
+    st.session_state['authentication_status'] = False  # oder ein anderer Standardwert
 #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/Main.py"
+ 
+# --- Set Global Page Configs ---
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",initial_sidebar_state="expanded")
+img = Image.open('Data/img/logo.png', mode='r')
+with st.sidebar: 
+        st.image(img)
+
+        st.text('')
+        
+        sel_main_m = option_menu.option_menu('PAMS', ['Depot Live Status',"LC Monitor",'Depot Reports','Forecast','Lagerverwaltung','Admin'], 
+            icons=[''], 
+            menu_icon='kanban-fill',
+            styles={'container':{'font':'Montserrat'}},)
+        
+hide_full_screen = '''
+<style>
+.element-container:nth-child(3) .overlayBtn {visibility: hidden;}
+.element-container:nth-child(12) .overlayBtn {visibility: hidden;}
+</style>
+'''
 
 hide_streamlit_style = """
                 <style>
@@ -67,34 +94,15 @@ hide_streamlit_style = """
                 """
 
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+st.markdown(hide_full_screen, unsafe_allow_html=True)
+# ----- Config Main Menue -----
 
+# ----- Config Main Menue -----
 
-
-img = Image.open('Data/img/logo.png', mode='r')
-
-
-menu_data = [
-    {'id':'Depot Reports','icon':"🟰",'label':"Depot Reports"},
-    {'id':'Forecast','icon':"🟰",'label':"Forecast"},
-    {'id':'Lagerverwaltung','icon':"🟰",'label':"Lagerverwaltung"},
-    {'id':'Admin','icon':"🟰",'label':"Admin"}
-    ] 
-
-over_theme = {'txc_inactive': '#ef7d00','txc_active': '#004f9f',}
-col1, col2 = st.columns([1, 7])
-with col1:
-    st.image(img)
-with col2:
-    menu_id = hc.nav_bar(
-    menu_definition=menu_data,
-    override_theme=over_theme,
-    home_name='Live Status Depot',
-    hide_streamlit_markers=True, #will show the st hamburger as well as the navbar now!
-    sticky_nav=False, #at the top or not
-    sticky_mode='pinned', #jumpy or not-jumpy, but sticky or pinned
-)
-
+# ----- Login -----
+authentication_status = None
 authentication_status = Login.Login(self=Login)
+#logging.info(f'Authentifizierungsstatus: {authentication_status}')
 def berechtigung():
     if st.session_state.rechte == 1:
         #admin Vollzugriff
@@ -112,28 +120,49 @@ def berechtigung():
     elif st.session_state.rechte == 5:
         return ["Depot Live Status"]
 
-    st.write(berechtigung())
-optionen = ['Depot Live Status',"LC Monitor",'Depot Reports','Forecast','Lagerverwaltung','Admin']
-if menu_id == 'Live Status Depot':
-    if 'Depot Live Status' in optionen:
+if authentication_status == True:
+    user = st.session_state.user
+    #logging.info(f'User: {user}')
+
+with st.sidebar:
+        Login.authenticator.logout('Logout')
+        
+        with st.popover('Passwort ändern'):
+            try:
+                Login.newPasswort(Login)
+            except:
+                st.stop()
+check = berechtigung()
+if check == []:
+    st.rerun()
+if sel_main_m == "Depot Live Status":
+    # Prüfe Berechtigung ist Depot Live Status in der Liste
+    if 'Depot Live Status' in check:
         LIVE.PageTagesReport()
-if menu_id == 'LC Monitor':
-    if 'LC Monitor' in optionen:
-        pageLadeplan()
-if menu_id == 'Depot Reports':
-    if 'Depot Reports' in optionen:
-        reportPage()
-if menu_id == 'Forecast':
-    if 'Forecast' in optionen:
+    else:
+        st.error('Keine Berechtigung für diese Seite')
+if sel_main_m == 'Depot Reports':
+    if 'Depot Reports' in check:
+        reportPage()   
+    else:
+        st.error('Keine Berechtigung für diese Seite')        
+if sel_main_m == 'Forecast':
+    if 'Forecast' in check:
         pageForecast()
-if menu_id == 'Lagerverwaltung':
-    if 'Lagerverwaltung' in optionen:
+    else:
+        st.error('Keine Berechtigung für diese Seite')        
+if sel_main_m == 'Lagerverwaltung':
+    if 'Lagerverwaltung' in check:
         pageStellplatzverwaltung()
-if menu_id == 'Admin':
-    if 'Admin' in optionen:
+    else:
+        st.error('Keine Berechtigung für diese Seite')        
+if sel_main_m == 'Admin':
+    if 'Admin' in check:
         adminPage()
-if menu_id == 'Logout':
-            Login.authenticator.logout('Logout')
-            st.session_state.user = None
-            st.session_state.rechte = None
-Login.authenticator.logout('Logout')
+    else:
+        st.error('Keine Berechtigung für diese Seite')        
+if sel_main_m == 'LC Monitor':
+    if 'LC Monitor' in check:
+        pageLadeplan()
+    else:
+        st.error('Keine Berechtigung für diese Seite')        
