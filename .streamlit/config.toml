@@ -3,7 +3,6 @@ base="light"
 primaryColor="#0e2b63"
 secondaryBackgroundColor="#f7f9f9"
 textColor="#262730"
-font="Montserrat"
 [server]
 port = 8000
 [client]

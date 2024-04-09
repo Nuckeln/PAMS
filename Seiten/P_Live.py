@@ -2,19 +2,16 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import datetime
-import time 
 import streamlit_autorefresh as sar
 from PIL import Image
 import plotly_express as px
 import plotly.graph_objects as go
 from annotated_text import annotated_text, annotation
 import streamlit_timeline as timeline
-import hydralit_components as hc
 from Data_Class.wetter.api import getWetterBayreuth
 from Data_Class.SQL import read_table
 import matplotlib.pyplot as plt
-from plotly.subplots import make_subplots
-
+import hydralit_components as hc
 
 
 class LIVE:
@@ -220,16 +217,24 @@ class LIVE:
 
         cols = st.columns(len(cities))  # Erstellen Sie eine Spalte für jedes Depot
     
-    import datetime
+    # import datetime
 
     def hc_blocks(df, delivery_depot):
-        cities = [("Gesamt", ""), ("Stuttgart", "KNSTR"), ("Leipzig", "KNLEJ"), ("Hannover", "KNHAJ"), ("Bielefeld", "KNBFE")]
-        #suche DeliveryDepot in city uns gebe kurz zurück
-        for city, depot in cities:
-            if city == delivery_depot:
-                dfnew = df[df['DeliveryDepot'] == depot]
-                break
-
+        if delivery_depot == "Gesamt":
+            df = df
+        else:
+            df = df[df['DeliveryDepot'] == delivery_depot]  
+            if delivery_depot == "KNLEJ":
+                delivery_depot = "Leipzig"
+            elif delivery_depot == "KNSTR":
+                delivery_depot = "Stuttgart"
+            elif delivery_depot == "KNHAJ":
+                delivery_depot = "Hannover"
+            elif delivery_depot == "KNBFE":
+                delivery_depot = "Bielefeld"
+            else:
+                delivery_depot = "Gesamt"
+        
         current_datetime = datetime.datetime.now()
         sel_plannedDate = df['PlannedDate'].dt.date
         deadline = datetime.time(14, 0)  # Setzen Sie die Deadline auf 14:00 Uhr
@@ -254,137 +259,92 @@ class LIVE:
                     done_pallet = df[df['AllSSCCLabelsPrinted']==0]['Picks Paletten'].sum()                       
                     open_mastercase = df[df['AllSSCCLabelsPrinted']==1]['Picks Karton'].sum()
                     open_outer = df[df['AllSSCCLabelsPrinted']==1]['Picks Stangen'].sum()
-                    open_pallet = df[df['AllSSCCLabelsPrinted']==1]['Picks Paletten'].sum()                    
-                    df_offen = df[df['AllSSCCLabelsPrinted']==0]['Picks Gesamt'].sum()
-                    df_fertig = df[df['AllSSCCLabelsPrinted']==1]['Picks Gesamt'].sum()   
+                    open_pallet = df[df['AllSSCCLabelsPrinted']==1]['Picks Paletten'].sum()                     
                     sum_picks = df['Picks Gesamt'].sum()   
                     sum_done = df[df['AllSSCCLabelsPrinted']==1]['Picks Gesamt'].sum()    
-                    return count_SAP_open, count_SAP_done, done__mastercase, done_outer, done_pallet, open_mastercase, open_outer, open_pallet, df_offen, df_fertig, sum_picks, sum_done
-        count_SAP_open, count_SAP_done, done__mastercase, done_outer, done_pallet, open_mastercase, open_outer, open_pallet, df_offen, df_fertig, sum_picks, sum_done = calPicks(dfnew)
+                    return count_SAP_open, count_SAP_done, done__mastercase, done_outer, done_pallet, open_mastercase, open_outer, open_pallet, sum_picks, sum_done
+        count_SAP_open, count_SAP_done, done__mastercase, done_outer, done_pallet, open_mastercase, open_outer, open_pallet, sum_pick,sum_done = calPicks(df)
         
+        open_inPercent = round((sum_pick - sum_done) / sum_pick * 100, 2)
                 
         if is_after_deadline == True:
             sel_theme = theme_bad
         else:
             sel_theme = theme_good
 
-        count_SAP_open, count_SAP_done, done__mastercase, done_outer, done_pallet, open_mastercase, open_outer, open_pallet, df_offen, df_fertig, sum_picks, sum_done = calPicks(dfnew)
-        # prozentwert von anteil sum_picks und sum_done als absoulter wert
-        sum_picks = int(sum_picks)
-        sum_done = int(sum_done)
-        sum_picks = sum_picks if sum_picks > 0 else 1
-        sum_done = sum_done if sum_done > 0 else 1
-        sum_done_percent = int((sum_done / sum_picks) * 100)
         
         #to int
-        
+        content = f'Karton 🔜 ✓: {sum_done.astype(str)} : {sum_pick - sum_done}' # need   
+
         
         card = hc.info_card(
-            title=delivery_depot,
+            title=f'{sum_pick.astype(str)}',
+            content= content ,  # Fügen Sie hier ein Komma hinzu
             theme_override=sel_theme,
-            bar_value=sum_done_percent
+            bar_value=open_inPercent
         )
-        st.write(card)
+        card2 = hc.info_card(
+            title='Stangen',
+            content= content ,  # Fügen Sie hier ein Komma hinzu
+            theme_override=sel_theme,
+            bar_value=open_inPercent
+        )
+        
     
-    def broekh(df, delivery_depot):
-        from bokeh.plotting import figure, show
-        from bokeh.models import ColumnDataSource, ImageURL
-        cities = [("Gesamt", ""), ("Stuttgart", "KNSTR"), ("Leipzig", "KNLEJ"), ("Hannover", "KNHAJ"), ("Bielefeld", "KNBFE")]
-        #suche DeliveryDepot in city uns gebe kurz zurück
-        for city, depot in cities:
-            if city == delivery_depot:
-                dfnew = df[df['DeliveryDepot'] == depot]
-                break
-
+    def new_kennzahlen(df):
+        
+        def calPicks(df):
+            count_SAP_open = df[df['AllSSCCLabelsPrinted']==0]['SapOrderNumber'].nunique()
+            count_SAP_done = df[df['AllSSCCLabelsPrinted']==1]['SapOrderNumber'].nunique()
+            done__mastercase = df[df['AllSSCCLabelsPrinted']==0]['Picks Karton'].sum()       
+            done_outer = df[df['AllSSCCLabelsPrinted']==0]['Picks Stangen'].sum()
+            done_pallet = df[df['AllSSCCLabelsPrinted']==0]['Picks Paletten'].sum()                       
+            open_mastercase = df[df['AllSSCCLabelsPrinted']==1]['Picks Karton'].sum()
+            open_outer = df[df['AllSSCCLabelsPrinted']==1]['Picks Stangen'].sum()
+            open_pallet = df[df['AllSSCCLabelsPrinted']==1]['Picks Paletten'].sum()                    
+            df_offen = df[df['AllSSCCLabelsPrinted']==0]['Picks Gesamt'].sum()
+            df_fertig = df[df['AllSSCCLabelsPrinted']==1]['Picks Gesamt'].sum()   
+            sum_picks = df['Picks Gesamt'].sum()   
+            sum_done = df[df['AllSSCCLabelsPrinted']==1]['Picks Gesamt'].sum()    
+            return count_SAP_open, count_SAP_done, done__mastercase, done_outer, done_pallet, open_mastercase, open_outer, open_pallet, df_offen, df_fertig, sum_picks, sum_done
+        count_SAP_open, count_SAP_done, done__mastercase, done_outer, done_pallet, open_mastercase, open_outer, open_pallet, df_offen, df_fertig, sum_picks, sum_done = calPicks(df)
+            
         icon_path_mastercase = 'Data/appData/ico/mastercase_favicon.ico'
         icon_path_outer = 'Data/appData/ico/favicon_outer.ico'
         icon_path_pallet = 'Data/appData/ico/pallet_favicon.ico'   
         icon_path_Delivery = 'Data/appData/ico/delivery-note.ico' 
+        icon_path_sum = 'Data/appData/ico/summe.ico'
+        
+        labels = ['Karton', 'Stangen', 'Paletten']
+        open_counts = [open_mastercase, open_outer, open_pallet]
+        done_counts = [done__mastercase, done_outer, done_pallet]
 
+        x = np.arange(len(labels))  # die Label-Positionen
+        width = 0.35  # die Breite der Balken
 
+        fig, ax = plt.subplots()
+
+        # Gestapelte Balken für offene und fertige Picks
+        bars1 = ax.bar(x - width/2, open_counts, width, label='Offen')
+        bars2 = ax.bar(x + width/2, done_counts, width, label='Fertig')
+
+        # Icons zu den Balken hinzufügen (Sie müssen die Icon-Dateien in ein passendes Format umwandeln, z.B. als Bilder einbinden)
+        for bar in bars1:
+            # Hier könnten Sie die Icons über die Balken platzieren.
+            # Sie müssen ein Bild der Icons laden und über die Balken legen.
+            pass
+
+        ax.set_xlabel('Kategorien')
+        ax.set_ylabel('Anzahl der Picks')
+        ax.set_title('Picks pro Kategorie für Depot XYZ')
+        ax.set_xticks(x)
+        ax.set_xticklabels(labels)
+        ax.legend()
+
+        st.pyplot(fig)
 
         
-    ## Plotly Charts ###
-    def Test2(df):
-        sum_karton_offen = df['Picks Karton offen'].sum()
-        sum_paletten_offen = df['Picks Paletten offen'].sum()
-        sum_stangen_offen = df['Picks Stangen offen'].sum()
-
-        sum_karton_fertig = df['Picks Karton fertig'].sum()
-        sum_paletten_fertig = df['Picks Paletten fertig'].sum()
-        sum_stangen_fertig = df['Picks Stangen fertig'].sum()
-
-        total_offen = sum_karton_offen + sum_paletten_offen + sum_stangen_offen
-        total_fertig = sum_karton_fertig + sum_paletten_fertig + sum_stangen_fertig
-
-        categories = ['Karton', 'Paletten', 'Stangen']
-
-        # Calculate the total for the entire bar (should be 100%)
-        total_bar = total_offen + total_fertig
-
-        # Calculate the percentages for each category
-        percent_karton_offen = (sum_karton_offen / total_bar) * 100 if total_bar != 0 else 0
-        percent_paletten_offen = (sum_paletten_offen / total_bar) * 100 if total_bar != 0 else 0
-        percent_stangen_offen = (sum_stangen_offen / total_bar) * 100 if total_bar != 0 else 0
-
-        percent_karton_fertig = (sum_karton_fertig / total_bar) * 100 if total_bar != 0 else 0
-        percent_paletten_fertig = (sum_paletten_fertig / total_bar) * 100 if total_bar != 0 else 0
-        percent_stangen_fertig = (sum_stangen_fertig / total_bar) * 100 if total_bar != 0 else 0
-
-        # Prepare the data in a way that allows stacking in the horizontal bar chart
-        cumulative_fertig = np.cumsum([0, percent_karton_fertig, percent_paletten_fertig, percent_stangen_fertig])
-        cumulative_offen = cumulative_fertig[-1] + np.cumsum([0, percent_karton_offen, percent_paletten_offen, percent_stangen_offen])
-
-        # Define custom colors based on user input
-        colors_fertig = ['#4FAF46', '#4FAF46', '#4FAF46']
-        colors_offen = ['#ef7d00', '#ef7d00', '#ef7d00']
-
-        # Create the horizontal bar chart
-        plt.figure(figsize=(14, 2))
-
-        # Schwarzen Trennbalken hinzufügen
-        # black_bar_width = 20  # Breite in Prozent
-        # plt.barh('Total', black_bar_width, left=cumulative_fertig[-1], color='black')
-    
-
-
-
-        # Add bars and labels for 'Fertig' categories with custom colors
-        for i, category in enumerate(categories):
-            plt.barh('Total', cumulative_fertig[i+1] - cumulative_fertig[i], left=cumulative_fertig[i], color=colors_fertig[i])
-            plt.text(
-                cumulative_fertig[i] + (cumulative_fertig[i+1] - cumulative_fertig[i]) / 2, 
-                0, 
-                f"{category}\n{cumulative_fertig[i+1] - cumulative_fertig[i]:.2f}%\n({int(cumulative_fertig[i+1]*total_bar/100)})",
-                va='center', 
-                ha='center', 
-                color='white'
-            )
-
-        # Add bars and labels for 'Offen' categories with custom colors
-        for i, category in enumerate(categories):
-            plt.barh('Total', cumulative_offen[i+1] - cumulative_offen[i], left=cumulative_offen[i], color=colors_offen[i])
-            plt.text(
-                cumulative_offen[i] + (cumulative_offen[i+1] - cumulative_offen[i]) / 2, 
-                0, 
-                f"{category}\n{cumulative_offen[i+1] - cumulative_offen[i]:.2f}%\n({int(cumulative_offen[i+1]*total_bar/100)})",
-                va='center', 
-                ha='center', 
-                color='white'
-            )
-
-        # Add titles and labels
-        plt.title('Anteil der Fertigen und Offenen Werte (100% Balken)')
-        plt.xlabel('Anteil (%)')
-        plt.yticks([])  # Hide y-ticks as they are not needed
-
-        plt.show()
-
-
-# Add titles 
-
-        fig = plt.gcf()
-        st.pyplot(fig)
+## Plotly Charts ###
 
     def fig_Status_nach_Katergorie(df):
         # Das Balkendiagram Teilt Fertige und Offene Gesamt Picks in Kategorien auf Karton, Paletten und Stangen aus 
@@ -593,199 +553,6 @@ class LIVE:
 
 
         st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
-
-    # def figTachoDiagrammPicksLei(df):
-    #     #TODO: Skaliert nicht auf dem Ipad sieht extrem klein aus
-        
-    #     df1 = df[df['AllSSCCLabelsPrinted']==0]
-    #     offenLei = df1.loc[df1["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()
-    #     offenStu = df1.loc[df1["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()
-
-    #     df2 = df[df['AllSSCCLabelsPrinted']==1]
-    #     fertigLei = df2.loc[df2["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()
-    #     fertigStu = df2.loc[df2["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()
-
-    #     data = {'Offen': [offenLei, offenStu],
-    #             'Fertig': [fertigLei, fertigStu]}
-    #     df = pd.DataFrame(data, index=['Leipzig', 'Stuttgart'])
-
-    #     # Berechnen Sie den Prozentsatz der abgeschlossenen Lieferungen
-    #     completion_rate = (fertigLei / (fertigLei + offenLei)) * 100
-
-    #     fig = go.Figure(go.Indicator(
-    #         domain = {'x': [0, 1], 'y': [0, 1]},
-    #         value = completion_rate,
-    #         mode = "gauge+number+delta",
-    #         title = {'text': "Leipzig Ziel (%)"},
-    #         delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
-    #         gauge = {'axis': {'range': [0, 100], 'tickangle': -90},
-    #                 'steps' : [
-    #                     {'range': [0, 100], 'color': "#0F2B63"},
-    #                     ],
-
-    #                 'threshold' : {'line': {'color': "#E72482", 'width': 4}, 'thickness': 0.75, 'value': 100}}))
-    #     #update fig to high 600
-    #     fig.update_traces(number_suffix=" %")
-    #     # add suffix to delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
-    #     fig.update_traces(delta_suffix=" %")
-    #     fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
-    #     fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
-    #     fig.update_layout(title_text='')
-    #     fig.update_xaxes(title_text='')
-    #     fig.update_yaxes(title_text='')
-    #     fig.layout.xaxis.tickangle = 70
-    #     fig.update_layout(height=320)
-
-    #     st.plotly_chart(fig,use_container_width=True,use_container_height=True,sharing='streamlit',config={'displayModeBar': False})
-
-    # def figTachoDiagrammPicksStr(df):
-            
-        
-    #         df1 = df[df['AllSSCCLabelsPrinted']==0]
-    #         offenLei = df1.loc[df1["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()
-    #         offenStu = df1.loc[df1["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()
-    
-    #         df2 = df[df['AllSSCCLabelsPrinted']==1]
-    #         fertigLei = df2.loc[df2["DeliveryDepot"] == "KNLEJ"]["Picks Gesamt"].sum()
-    #         fertigStu = df2.loc[df2["DeliveryDepot"] == "KNSTR"]["Picks Gesamt"].sum()
-    
-    #         data = {'Offen': [offenLei, offenStu],
-    #                 'Fertig': [fertigLei, fertigStu]}
-    #         df = pd.DataFrame(data, index=['Leipzig', 'Stuttgart'])
-    
-    #         # Berechnen Sie den Prozentsatz der abgeschlossenen Lieferungen
-    #         completion_rate = (fertigStu / (fertigStu + offenStu)) * 100
-    
-    #         fig = go.Figure(go.Indicator(
-    #             domain = {'x': [0, 1], 'y': [0, 1]},
-    #             value = completion_rate,
-    #             mode = "gauge+number+delta",
-    #             title = {'text': "Stuttgart Ziel (%)"},
-    #             delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
-    #             gauge = {'axis': {'range': [0, 100], 'tickangle': -90},
-    #                     'steps' : [
-    #                         {'range': [0, 100], 'color': "#0F2B63"},
-    #                         ],
-    
-    #                     'threshold' : {'line': {'color': "#E72482", 'width': 4}, 'thickness': 0.75, 'value': 100}}))
-    #         fig.update_traces(number_suffix=" %")
-    #         # add suffix to delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
-    #         fig.update_traces(delta_suffix=" %")
-    #         fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
-    #         fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
-    #         fig.update_layout(title_text='')
-    #         fig.update_xaxes(title_text='')
-    #         fig.update_yaxes(title_text='')
-    #         fig.layout.xaxis.tickangle = 70
-    #         fig.update_layout(height=320)
-
-    #         st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
-
-    # def figTachoDiagrammPicksStrHannover(df):
-    #     df1 = df[df['AllSSCCLabelsPrinted']==0]
-    #     offenHan = df1.loc[df1["DeliveryDepot"] == "KNHAJ"]["Picks Gesamt"].sum()
-
-    #     df2 = df[df['AllSSCCLabelsPrinted']==1]
-    #     fertigHan = df2.loc[df2["DeliveryDepot"] == "KNHAJ"]["Picks Gesamt"].sum()
-
-    #     data = {'Offen': [offenHan],
-    #             'Fertig': [fertigHan]}
-    #     df = pd.DataFrame(data, index=['Hannover'])
-
-    #     # Berechnen Sie den Prozentsatz der abgeschlossenen Lieferungen
-    #     completion_rate = (fertigHan / (fertigHan + offenHan)) * 100
-
-    #     fig = go.Figure(go.Indicator(
-    #         domain = {'x': [0, 1], 'y': [0, 1]},
-    #         value = completion_rate,
-    #         mode = "gauge+number+delta",
-    #         title = {'text': "Hannover Ziel (%)"},
-    #         delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
-    #         gauge = {'axis': {'range': [0, 100], 'tickangle': -90},
-    #                 'steps' : [
-    #                     {'range': [0, 100], 'color': "#0F2B63"},
-    #                     ],
-
-    #                 'threshold' : {'line': {'color': "#E72482", 'width': 4}, 'thickness': 0.75, 'value': 100}}))
-    #     fig.update_traces(number_suffix=" %")
-    #     fig.update_traces(delta_suffix=" %")
-    #     fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
-    #     fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
-    #     fig.update_layout(title_text='')
-    #     fig.update_xaxes(title_text='')
-    #     fig.update_yaxes(title_text='')
-    #     fig.layout.xaxis.tickangle = 70
-    #     fig.update_layout(height=320)
-    #     st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
-
-    # def figTachoDiagrammPicksStrKNBFE(df):
-    #     df1 = df[df['AllSSCCLabelsPrinted']==0]
-    #     offenKNBFE = df1.loc[df1["DeliveryDepot"] == "KNBFE"]["Picks Gesamt"].sum()
-
-    #     df2 = df[df['AllSSCCLabelsPrinted']==1]
-    #     fertigKNBFE = df2.loc[df2["DeliveryDepot"] == "KNBFE"]["Picks Gesamt"].sum()
-
-    #     data = {'Offen': [offenKNBFE],
-    #             'Fertig': [fertigKNBFE]}
-    #     df = pd.DataFrame(data, index=['KNBFE'])
-
-    #     # Berechnen Sie den Prozentsatz der abgeschlossenen Lieferungen
-    #     completion_rate = (fertigKNBFE / (fertigKNBFE + offenKNBFE)) * 100
-
-    #     fig = go.Figure(go.Indicator(
-    #         domain = {'x': [0, 1], 'y': [0, 1]},
-    #         value = completion_rate,
-    #         mode = "gauge+number+delta",
-    #         title = {'text': "Bielefeld Ziel (%)"},
-    #         delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
-    #         gauge = {'axis': {'range': [0, 100], 'tickangle': -90},
-    #                 'steps' : [
-    #                     {'range': [0, 100], 'color': "#0F2B63"},
-    #                     ],
-
-    #                 'threshold' : {'line': {'color': "#E72482", 'width': 4}, 'thickness': 0.75, 'value': 100}}))
-    #     fig.update_traces(number_suffix=" %")
-    #     fig.update_traces(delta_suffix=" %")
-    #     fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
-    #     fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
-    #     fig.update_layout(title_text='')
-    #     fig.update_xaxes(title_text='')
-    #     fig.update_yaxes(title_text='')
-    #     fig.layout.xaxis.tickangle = 70
-    #     fig.update_layout(height=320)
-
-    #     st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
-
-    # def figTachoDiagrammPicksALL(df):
-    #     df1 = df[df['AllSSCCLabelsPrinted']==0]
-    #     offenKNBFE = df1["Picks Gesamt"].sum()
-
-    #     df2 = df[df['AllSSCCLabelsPrinted']==1]
-    #     fertigKNBFE = df2["Picks Gesamt"].sum()
-        
-    #     completion_rate = (fertigKNBFE / (fertigKNBFE + offenKNBFE)) * 100
-    #     fig = go.Figure(go.Indicator(
-    #         domain = {'x': [0, 1], 'y': [0, 1]},
-    #         value = completion_rate,
-    #         mode = "gauge+number+delta",
-    #         title = {'text': "Gesamt %"},
-    #         delta = {'reference': 100,'increasing': {'color': "#4FAF46"}},
-    #         gauge = {'axis': {'range': [0, 100], 'tickangle': -90},
-    #                 'steps' : [
-    #                     {'range': [0, 100], 'color': "#0F2B63"},
-    #                     ],
-    #                 'threshold' : {'line': {'color': "#E72482", 'width': 4}, 'thickness': 0.75, 'value': 100}}))
-    #     fig.update_traces(number_suffix=" %")
-    #     fig.update_traces(delta_suffix=" %")
-    #     fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63",title_font_size=35)
-    #     fig.update_layout(uniformtext_minsize=10, uniformtext_mode='hide',showlegend=False)
-    #     fig.update_layout(title_text='')
-    #     fig.update_xaxes(title_text='')
-    #     fig.update_yaxes(title_text='')
-    #     fig.layout.xaxis.tickangle = 70
-    #     # höhe der Grafik anpassen auf 320 breite bleibt gleich
-    #     fig.update_layout(height=320)
-    #     st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
 
     def figUebermitteltInDeadline(df):        
         sel_deadStr = '14:00:00'
@@ -1063,13 +830,15 @@ class LIVE:
         img_strip = img_strip.resize((1000, 15))     
 
         st.image(img_strip, use_column_width=True, caption='',)      
-        LIVE.broekh(dfOr,'Stuttgart')       
+          
 
         col33 ,col34, col35, col36, col37 = st.columns(5)
         with col33:
             LIVE.figTachoDiagramm(dfOr,'Gesamt')
+            LIVE.hc_blocks(dfOr, 'Gesamt')
         with col34:
             LIVE.figTachoDiagramm(dfOr,'KNSTR')
+            LIVE.hc_blocks(dfOr, 'KNSTR') 
         with col35:
             LIVE.figTachoDiagramm(dfOr,'KNLEJ')
         with col36:
@@ -1077,7 +846,6 @@ class LIVE:
         with col37:
             LIVE.figTachoDiagramm(dfOr,'KNHAJ')
         #LIVE.columnsKennzahlen(dfOr)
-
         #st.write('Keine Daten vorhanden')
         try:
             with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', use_container_width=True, ):
@@ -1105,8 +873,7 @@ class LIVE:
             LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr) 
         except:
             st.write('Keine Daten vorhanden')
-#        LIVE.downLoadTagesReport(dfOr)
-#        LIVE.tabelleAnzeigen(dfOr)
+
 
 
 
