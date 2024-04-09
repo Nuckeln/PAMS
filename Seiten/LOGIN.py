@@ -13,9 +13,9 @@ class Login:
         self.funktionen = []
         self.rechte = []
         self.credentials = {}
-        self.authenticator = None
+        self.authenticator 
 
-    def Login(self):
+    def einloggen(self):
 
         df = read_table('user')
         self.usernames = df['username'].tolist()
