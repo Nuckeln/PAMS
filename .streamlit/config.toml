@@ -6,3 +6,5 @@ textColor="#262730"
 font="Montserrat"
 [server]
 port = 8000
+[client]
+toolbarMode = "viewer"
