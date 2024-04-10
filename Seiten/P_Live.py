@@ -662,6 +662,131 @@ class LIVE:
         masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done_mastercase)
         masterCase_Outer_Pal_Icoons('Pallet' ,open_pallet, done_pallet)
         
+
+    def figTachoDiagramm2(df, delivery_depot):
+        if delivery_depot == "Gesamt":
+            df = df
+        else:
+            df = df[df['DeliveryDepot'] == delivery_depot]  
+            if delivery_depot == "KNLEJ":
+                delivery_depot = "Leipzig"
+            elif delivery_depot == "KNSTR":
+                delivery_depot = "Stuttgart"
+            elif delivery_depot == "KNHAJ":
+                delivery_depot = "Hannover"
+            elif delivery_depot == "KNBFE":
+                delivery_depot = "Bielefeld"
+            else:
+                delivery_depot = "Gesamt"
+        
+        def calPicks(df):
+                open_DN = df[df['AllSSCCLabelsPrinted']==0]['SapOrderNumber'].nunique()
+                done_DN = df[df['AllSSCCLabelsPrinted']==1]['SapOrderNumber'].nunique()
+                done_mastercase = df[df['AllSSCCLabelsPrinted']==0]['Picks Karton'].sum()       
+                done_outer = df[df['AllSSCCLabelsPrinted']==0]['Picks Stangen'].sum()
+                done_pallet = df[df['AllSSCCLabelsPrinted']==0]['Picks Paletten'].sum()                       
+                open_mastercase = df[df['AllSSCCLabelsPrinted']==1]['Picks Karton'].sum()
+                open_outer = df[df['AllSSCCLabelsPrinted']==1]['Picks Stangen'].sum()
+                open_pallet = df[df['AllSSCCLabelsPrinted']==1]['Picks Paletten'].sum()                    
+                open_ALL = df[df['AllSSCCLabelsPrinted']==0]['Picks Gesamt'].sum()
+                done_All = df[df['AllSSCCLabelsPrinted']==1]['Picks Gesamt'].sum()     
+                return open_DN, done_DN, done_mastercase, done_outer, done_pallet, open_mastercase, open_outer, open_pallet, open_ALL, done_All
+        open_DN, done_DN, done_mastercase, done_outer, done_pallet, open_mastercase, open_outer, open_pallet, open_ALL, done_All = calPicks(df)
+        sum_picks = open_ALL + done_All 
+        completion_rate = round((done_All / sum_picks) * 100, 2)
+
+        fig = go.Figure(go.Indicator(
+            
+            domain = {'x': [0, 1], 'y': [0, 1]},
+            value = completion_rate,
+            mode = "gauge+number+delta",
+            title = {'text': f"{delivery_depot} Ziel (%)"},
+            #delta = {'reference': 100},
+            number = {'suffix': "%"},
+            gauge = {
+                'axis': {
+                    'range': [0, 100],
+                    'tickangle': -90,
+                    'tickvals': [],  # Keine Ticks anzeigen
+                    'ticktext': []   # Keine Texte für Ticks anzeigen
+                },
+                'steps': [{'range': [0, 100], 'color': "#0F2B63"}],
+
+            }
+        ))
+        fig.update_layout(
+        title={
+            'text': f"{delivery_depot}",
+            'y':0.4,  # Positionierung des Titels relativ zum oberen Rand des Diagramms
+            'x':0.5,  # Zentrierung des Titels auf der X-Achse
+            'xanchor': 'center',  # Zentrieren des Titels um den `x` Wert
+            'yanchor': 'top'  # Ankerpunkt des Titels ist die obere Seite
+        },
+        showlegend=False,
+        font_family="Montserrat",
+        font_color="#0F2B63",
+        title_font_family="Montserrat",
+        title_font_color="#0F2B63",
+        title_font_size=25
+        )
+
+    # Für die Annotationen könnten Sie auch relative Positionen verwenden:
+        fig.add_annotation(x=0.0, y=0.05, text=f"Gesamt: {sum_picks}", showarrow=False, font=dict(size=20))
+        fig.add_annotation(x=0.50, y=0.05, text=f"{done_All}", showarrow=False, font=dict(size=20))
+        fig.add_annotation(x=0.80, y=0.05, text=f"{open_ALL}", showarrow=False, font=dict(size=20))
+
+
+        st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
+        
+        def masterCase_Outer_Pal_Icoons(img_type,done_value,open_value):
+            '''Function to display the MasterCase, OuterCase and Pallet Icons in the Live Status Page
+            Args:
+                img_type (str): Type of Icon to display
+                done_value (int): Value of done picks
+                open_value (int): Value of open picks
+            '''
+            icon_path_mastercase = 'Data/appData/ico/mastercase_favicon.ico'
+            icon_path_outer = 'Data/appData/ico/favicon_outer.ico'
+            icon_path_pallet = 'Data/appData/ico/pallet_favicon.ico'   
+            icon_path_Delivery = 'Data/appData/ico/delivery-note.ico' 
+            icon_path_Sum = 'Data/appData/ico/summe.ico'
+            img_mastercase = Image.open(icon_path_mastercase)
+            img_outer = Image.open(icon_path_outer)
+            img_pallet = Image.open(icon_path_pallet)
+            img_Delivery = Image.open(icon_path_Delivery)
+            icon_path_Sum = Image.open(icon_path_Sum)
+
+            #select img type by string
+            if img_type == 'Mastercase':
+                img = Image.open(icon_path_mastercase)
+            elif img_type == 'Outer':
+                img = Image.open(icon_path_outer)
+            elif img_type == 'Pallet':
+                img = Image.open(icon_path_pallet)  
+            elif img_type == 'Delivery':
+                img = Image.open(icon_path_Delivery)
+                
+
+            img_type = img
+            col1, col2,col3,col4 = st.columns([0.3,0.1,0.4,0.2])
+            with col1:
+                st.write('')
+            with col2:
+                st.image(img_type, width=32,clamp=False)
+                hide_img_fs = '''
+                <style>
+                button[title="View fullscreen"]{
+                    visibility: hidden;}
+                </style>
+                '''
+                st.markdown(hide_img_fs, unsafe_allow_html=True)
+            with col3:
+                annotated_text(annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
+
+        masterCase_Outer_Pal_Icoons('Delivery' ,done_DN, open_DN)
+        masterCase_Outer_Pal_Icoons('Outer' ,done_outer, open_outer)
+        masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done_mastercase)
+        masterCase_Outer_Pal_Icoons('Pallet' ,open_pallet, done_pallet)
         
 
     def figUebermitteltInDeadline(df):        
@@ -683,7 +808,6 @@ class LIVE:
         #Fertiggestellt to datetime
         df['Fertiggestellt'] = pd.to_datetime(df['Fertiggestellt'])
         #add two hours to Feritggestellt
-        df['Fertiggestellt'] = df['Fertiggestellt'] + pd.to_timedelta('2:00:00')
 
         def kategorisieren(volume):
             if volume <= 25:
@@ -714,6 +838,9 @@ class LIVE:
 
         df = df.apply(fehlerprüfung, axis=1)
         df['Volumen Kategorie'] = df['Picks Gesamt'].apply(kategorisieren)
+        # add 2 hours to Fertiggestellt
+        df['Fertiggestellt'] = df['Fertiggestellt'] + pd.to_timedelta('2:00:00')
+        df['First_Picking'] = df['First_Picking'] + pd.to_timedelta('2:00:00')
         df = df.rename(columns={'First_Picking': 'Start Bearbeitung', 'Fertiggestellt': 'Ende Bearbeitung'})
         df.sort_values(by='Start Bearbeitung', inplace=True)
 
@@ -786,6 +913,7 @@ class LIVE:
         df.loc[:, 'Fertiggestellt'] = pd.to_datetime(df['Fertiggestellt'])
         #add two hours to Feritggestellt
         df['Fertiggestellt'] = df['Fertiggestellt'] + pd.to_timedelta('2:00:00')
+        
 
         def kategorisieren(volume):
             if volume <= 25:
@@ -816,6 +944,7 @@ class LIVE:
 
         df = df.apply(fehlerprüfung, axis=1)
         df['Volumen Kategorie'] = df['Picks Gesamt'].apply(kategorisieren)
+        df['First_Picking'] = df['First_Picking'] + pd.to_timedelta('2:00:00')
         df = df.rename(columns={'First_Picking': 'Start Bearbeitung', 'Fertiggestellt': 'Ende Bearbeitung'})
         df.sort_values(by='Start Bearbeitung', inplace=True)
 
@@ -940,19 +1069,18 @@ class LIVE:
         img_strip = img_strip.resize((1000, 15))     
 
         st.image(img_strip, use_column_width=True, caption='',)      
-          
 
         col33 ,col34, col35, col36, col37 = st.columns(5)
         with col33:
-            LIVE.figTachoDiagramm(dfOr,'Gesamt')
+            LIVE.figTachoDiagramm2(dfOr,'Gesamt')
         with col34:
-            LIVE.figTachoDiagramm(dfOr,'KNSTR')
+            LIVE.figTachoDiagramm2(dfOr,'KNSTR')
         with col35:
-            LIVE.figTachoDiagramm(dfOr,'KNLEJ')
+            LIVE.figTachoDiagramm2(dfOr,'KNLEJ')
         with col36:
-            LIVE.figTachoDiagramm(dfOr,'KNBFE')
+            LIVE.figTachoDiagramm2(dfOr,'KNBFE')
         with col37:
-            LIVE.figTachoDiagramm(dfOr,'KNHAJ')
+            LIVE.figTachoDiagramm2(dfOr,'KNHAJ')
         #LIVE.columnsKennzahlen(dfOr)
         #st.write('Keine Daten vorhanden')
         try:
