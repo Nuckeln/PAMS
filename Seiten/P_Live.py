@@ -149,19 +149,19 @@ class LIVE:
         
         for i, (city, depot) in enumerate(cities):
             with cols[i]:
-                st.markdown("""
-                    <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
-                    </style>
-                    <h2 style='text-align: left; color: #0F2B63; font-family: Montserrat; font-weight: bold;'>{}</h2>
-                    """.format(city), unsafe_allow_html=True)   
+                # st.markdown("""
+                #     <style>
+                #     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+                #     </style>
+                #     <h2 style='text-align: left; color: #0F2B63; font-family: Montserrat; font-weight: bold;'>{}</h2>
+                #     """.format(city), unsafe_allow_html=True)   
                 #Picks Gesamt of the Depot
                 if city == "Gesamt":
                     sum_picks = df['Picks Gesamt'].sum()
-                    st.write(f"Summe Picks: {sum_picks}")
+
                 else:
                     sum_picks = df.loc[df['DeliveryDepot']==depot]['Picks Gesamt'].sum()
-                    st.write(f"Summe Picks: {sum_picks}")
+
                 
 
 
@@ -279,7 +279,7 @@ class LIVE:
         
         card = hc.info_card(
             title=f'{sum_pick.astype(str)}',
-            content= content ,  # Fügen Sie hier ein Komma hinzu
+            content= "",#content ,  # Fügen Sie hier ein Komma hinzu
             theme_override=sel_theme,
             bar_value=open_inPercent
         )
@@ -313,36 +313,59 @@ class LIVE:
         icon_path_outer = 'Data/appData/ico/favicon_outer.ico'
         icon_path_pallet = 'Data/appData/ico/pallet_favicon.ico'   
         icon_path_Delivery = 'Data/appData/ico/delivery-note.ico' 
-        icon_path_sum = 'Data/appData/ico/summe.ico'
-        
+                
         labels = ['Karton', 'Stangen', 'Paletten']
-        open_counts = [open_mastercase, open_outer, open_pallet]
-        done_counts = [done__mastercase, done_outer, done_pallet]
 
-        x = np.arange(len(labels))  # die Label-Positionen
-        width = 0.35  # die Breite der Balken
+        def type_progress_png(progress, total, type: str):
+            # Lade das Bild
+            if type == 'Mastercase':
+                img = Image.open(icon_path_mastercase)
+            elif type == 'Outer':
+                img = Image.open(icon_path_outer)
+            elif type == 'Pallet':
+                img = Image.open(icon_path_pallet)
+            elif type == 'Delivery':
+                img = Image.open(icon_path_Delivery)
+            # Berechne den Prozentsatz des Fortschritts
+            percentage = (progress / total) * 100
 
-        fig, ax = plt.subplots()
+            # Erstelle eine Figur mit transparentem Hintergrund
+            fig, ax = plt.subplots(figsize=(35, 11))
+            fig.patch.set_alpha(0)
 
-        # Gestapelte Balken für offene und fertige Picks
-        bars1 = ax.bar(x - width/2, open_counts, width, label='Offen')
-        bars2 = ax.bar(x + width/2, done_counts, width, label='Fertig')
+            # Erstelle die Fortschrittsleiste
+            ax.barh([''], [percentage], color='#50af47')#50af47'
+            ax.barh([''], [100-percentage], left=[percentage], color='#4D4D4D')
 
-        # Icons zu den Balken hinzufügen (Sie müssen die Icon-Dateien in ein passendes Format umwandeln, z.B. als Bilder einbinden)
-        for bar in bars1:
-            # Hier könnten Sie die Icons über die Balken platzieren.
-            # Sie müssen ein Bild der Icons laden und über die Balken legen.
-            pass
+            # Setze Grenzen und Labels
+            ax.set_xlim(0, 100)
+            ax.set_xticks([])
+            ax.set_yticks([])
+            ax.set_frame_on(False)
 
-        ax.set_xlabel('Kategorien')
-        ax.set_ylabel('Anzahl der Picks')
-        ax.set_title('Picks pro Kategorie für Depot XYZ')
-        ax.set_xticks(x)
-        ax.set_xticklabels(labels)
-        ax.legend()
+            # Füge den Fortschrittstext hinzu
+            plt.text(0, 0, f'{progress} von {total} ({percentage:.0f}%)', ha='left', va='center', color='white', fontsize=205, fontdict={'family': 'Montserrat', 'weight': 'bold'})
 
-        st.pyplot(fig)
+            # Konvertiere das Diagramm in ein NumPy-Array
+            fig.canvas.draw()
+            progress_bar_np = np.array(fig.canvas.renderer._renderer)
+            plt.close()
 
+            # Bestimme, wo die Fortschrittsleiste auf dem Bild platziert werden soll
+            img_width, img_height = img.size
+            bar_height = progress_bar_np.shape[0]
+            bar_width = progress_bar_np.shape[1]
+            x_offset = 160  # Setze diesen Wert auf 133, um den Balken bei Pixel 133 beginnen zu lassen
+            y_offset = img_height - bar_height - (img_height // 4)
+
+            # Füge die Fortschrittsleiste zum Bild hinzu
+            final_img = img.copy()
+            final_img.paste(Image.fromarray(progress_bar_np), (x_offset, y_offset), Image.fromarray(progress_bar_np))
+
+            # Speichere das finale Bild
+            return final_img
+        img_truck = type_progress_png(done_pallet+open_pallet, done_pallet, 'Pallet')
+        st.image(img_truck, use_column_width=True)
         
 ## Plotly Charts ###
 
@@ -389,7 +412,7 @@ class LIVE:
         all_dfs = []  # Liste zum Sammeln der Datenframes für jedes Depot
         for depot in depots:
             dfDepot = dfOriginal[dfOriginal['DeliveryDepot'] == depot]
-            dfDepot['Picks Gesamt'] = dfDepot['Picks Gesamt'].astype(float)
+            dfDepot.loc[:, 'Picks Gesamt'] = dfDepot['Picks Gesamt'].astype(float)
             dfDepotAggregated = dfDepot.groupby(['DeliveryDepot', 'PlannedDate']).agg({'LoadingLaneId': 'nunique', 'Picks Gesamt': 'sum', 'Gepackte Paletten': 'sum', 'Geschätzte Paletten' : 'sum' }).reset_index()
             
             # Erstelle 'label' innerhalb der Schleife
@@ -553,6 +576,93 @@ class LIVE:
 
 
         st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
+        
+        def masterCase_Outer_Pal_Icoons(img_type,done_value,open_value):
+            '''Function to display the MasterCase, OuterCase and Pallet Icons in the Live Status Page
+            Args:
+                img_type (str): Type of Icon to display
+                done_value (int): Value of done picks
+                open_value (int): Value of open picks
+            '''
+            icon_path_mastercase = 'Data/appData/ico/mastercase_favicon.ico'
+            icon_path_outer = 'Data/appData/ico/favicon_outer.ico'
+            icon_path_pallet = 'Data/appData/ico/pallet_favicon.ico'   
+            icon_path_Delivery = 'Data/appData/ico/delivery-note.ico' 
+            icon_path_Sum = 'Data/appData/ico/summe.ico'
+            img_mastercase = Image.open(icon_path_mastercase)
+            img_outer = Image.open(icon_path_outer)
+            img_pallet = Image.open(icon_path_pallet)
+            img_Delivery = Image.open(icon_path_Delivery)
+            icon_path_Sum = Image.open(icon_path_Sum)
+
+            #select img type by string
+            if img_type == 'Mastercase':
+                img = Image.open(icon_path_mastercase)
+            elif img_type == 'Outer':
+                img = Image.open(icon_path_outer)
+            elif img_type == 'Pallet':
+                img = Image.open(icon_path_pallet)  
+            elif img_type == 'Delivery':
+                img = Image.open(icon_path_Delivery)
+                
+
+            img_type = img
+            col1, col2,col3,col4 = st.columns([0.3,0.1,0.4,0.2])
+            with col1:
+                st.write('')
+            with col2:
+                st.image(img_type, width=32,clamp=False)
+                hide_img_fs = '''
+                <style>
+                button[title="View fullscreen"]{
+                    visibility: hidden;}
+                </style>
+                '''
+                st.markdown(hide_img_fs, unsafe_allow_html=True)
+            with col3:
+                annotated_text(annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
+    
+            # if img_type == 'Mastercase':
+            #     img_type = img_mastercase
+            #     col1, col2 = st.columns([0.3, 0.4])
+            #     with col2:
+            #         st.image(img_type, width=32)
+            #     with col1:
+            #         annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
+                  
+            # elif img_type == 'Pallet':
+            #     img_type = img_pallet
+            #     col1, col2 = st.columns([0.3, 0.4])
+            #     with col2:
+            #         st.image(img_type, width=32)
+            #     with col1:
+            #         #green
+            #         annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
+
+            # elif img_type == 'Delivery':
+            #     img_type = img_Delivery
+            #     col1, col2, = st.columns([0.3, 0.4])
+            #     with col2:
+            #         st.image(img_type, width=32)
+            #     with col1:
+            #         #green
+            #         annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
+               
+            # elif img_type == 'Sum':
+            #     img_type = icon_path_Sum
+            #     col1, col2  = st.columns([0.3, 0.4])
+            #     with col2:
+            #         st.image(img_type, width=32)
+            #     with col1:
+            #         #green
+            #         annotated_text('',annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'   / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
+        
+        masterCase_Outer_Pal_Icoons('Delivery' ,done_DN, open_DN)
+        masterCase_Outer_Pal_Icoons('Outer' ,done_outer, open_outer)
+        masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done_mastercase)
+        masterCase_Outer_Pal_Icoons('Pallet' ,open_pallet, done_pallet)
+        
+        
 
     def figUebermitteltInDeadline(df):        
         sel_deadStr = '14:00:00'
@@ -670,10 +780,10 @@ class LIVE:
     def timeline(df):
         #https://timeline.knightlab.com/docs/json-format.html#json-text
         # filter df by AllSSCCLabelsPrinted = 1
-        df = df[df['AllSSCCLabelsPrinted'] == 1]
-        df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
+        df = df[df['AllSSCCLabelsPrinted'] == 1].copy()  # Erstellen Sie eine Kopie des gefilterten DataFrames
+        df.loc[:, 'PlannedDate'] = pd.to_datetime(df['PlannedDate'])
         #Fertiggestellt to datetime
-        df['Fertiggestellt'] = pd.to_datetime(df['Fertiggestellt'])
+        df.loc[:, 'Fertiggestellt'] = pd.to_datetime(df['Fertiggestellt'])
         #add two hours to Feritggestellt
         df['Fertiggestellt'] = df['Fertiggestellt'] + pd.to_timedelta('2:00:00')
 
@@ -835,10 +945,8 @@ class LIVE:
         col33 ,col34, col35, col36, col37 = st.columns(5)
         with col33:
             LIVE.figTachoDiagramm(dfOr,'Gesamt')
-            LIVE.hc_blocks(dfOr, 'Gesamt')
         with col34:
             LIVE.figTachoDiagramm(dfOr,'KNSTR')
-            LIVE.hc_blocks(dfOr, 'KNSTR') 
         with col35:
             LIVE.figTachoDiagramm(dfOr,'KNLEJ')
         with col36:
