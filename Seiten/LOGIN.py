@@ -42,11 +42,11 @@ class Login:
         if authentication_status == False:
             return authentication_status, st.session_state.user, st.session_state.rechte
     def Logout(self):
-        self.authenticator.logout('Logout', 'main')
-        if self.user is None:
-            st.success("Logout successful!", key='logout_success')
-            self.authentication_status = False
-            st.rerun()
+        #stauth.Authenticate.logout(self.authenticator)
+        self.authenticator.logout('ausloggen', 'unrendered',key='logout')
+        st.session_state.clear()
+        st.rerun()
+        
     def newPasswort(self):
 
         df = read_table('user')

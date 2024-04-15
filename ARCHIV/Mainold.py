@@ -125,7 +125,7 @@ if authentication_status == True:
     #logging.info(f'User: {user}')
 
 with st.sidebar:
-        Login.authenticator.logout('Logout')
+        Login.Logout(Login)
         
         with st.popover('Passwort ändern'):
             try:

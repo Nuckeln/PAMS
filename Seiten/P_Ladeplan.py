@@ -1068,6 +1068,9 @@ def show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
         st.data_editor(df_SFG_dds)
 
 def main():
+    with open( "style.css" ) as css:
+        st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
+
     col1, col2, col3 = st.columns([2,1,1])
     with col1:  
         st.markdown("""

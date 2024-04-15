@@ -662,7 +662,6 @@ class LIVE:
         masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done_mastercase)
         masterCase_Outer_Pal_Icoons('Pallet' ,open_pallet, done_pallet)
         
-
     def figTachoDiagramm2(df, delivery_depot):
         if delivery_depot == "Gesamt":
             df = df
@@ -717,7 +716,7 @@ class LIVE:
         fig.update_layout(
         title={
             'text': f"{delivery_depot}",
-            'y':0.4,  # Positionierung des Titels relativ zum oberen Rand des Diagramms
+            'y':0.9,  # Positionierung des Titels relativ zum oberen Rand des Diagramms
             'x':0.5,  # Zentrierung des Titels auf der X-Achse
             'xanchor': 'center',  # Zentrieren des Titels um den `x` Wert
             'yanchor': 'top'  # Ankerpunkt des Titels ist die obere Seite
@@ -731,11 +730,14 @@ class LIVE:
         )
 
     # Für die Annotationen könnten Sie auch relative Positionen verwenden:
-        fig.add_annotation(x=0.0, y=0.05, text=f"Gesamt: {sum_picks}", showarrow=False, font=dict(size=20))
-        fig.add_annotation(x=0.50, y=0.05, text=f"{done_All}", showarrow=False, font=dict(size=20))
-        fig.add_annotation(x=0.80, y=0.05, text=f"{open_ALL}", showarrow=False, font=dict(size=20))
+     # X = horizontal, Y = vertikal
+     
+        fig.add_annotation(x=0.5, y=-0.1, text=f"Gesamt: {sum_picks}", showarrow=False, font=dict(size=12))
+        fig.add_annotation(x=0.0, y=-0.2, text=f"Fertig: {done_All}", showarrow=False, font=dict(size=8))
+        fig.add_annotation(x=1.0, y=-0.2, text=f"Offen: {open_ALL}", showarrow=False, font=dict(size=8))
 
-
+        # figure höhe anpassen auf 330
+        fig.update_layout(height=330)
         st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
         
         def masterCase_Outer_Pal_Icoons(img_type,done_value,open_value):
@@ -768,7 +770,7 @@ class LIVE:
                 
 
             img_type = img
-            col1, col2,col3,col4 = st.columns([0.3,0.1,0.4,0.2])
+            col1, col2,col3,col4 = st.columns([0.1,0.1,0.4,0.1])
             with col1:
                 st.write('')
             with col2:
@@ -786,8 +788,7 @@ class LIVE:
         masterCase_Outer_Pal_Icoons('Delivery' ,done_DN, open_DN)
         masterCase_Outer_Pal_Icoons('Outer' ,done_outer, open_outer)
         masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done_mastercase)
-        masterCase_Outer_Pal_Icoons('Pallet' ,open_pallet, done_pallet)
-        
+        masterCase_Outer_Pal_Icoons('Pallet' ,open_pallet, done_pallet)        
 
     def figUebermitteltInDeadline(df):        
         sel_deadStr = '14:00:00'
@@ -1062,7 +1063,8 @@ class LIVE:
             sel_date = datetime.date.today()  
             sel_date = st.date_input('Datum', sel_date)   
             dfOr = LIVE.loadDF(sel_date,sel_date) 
-    
+        with colhead3:
+            st.write(f'Hi {st.session_state.user} 👋')
         with colhead4:                
             LIVE.wetter()
         img_strip = Image.open('Data/img/strip.png')   

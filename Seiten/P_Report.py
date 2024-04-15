@@ -212,18 +212,63 @@ def fig_Picksgesamt_kategorie(df, tabelle, show_in_day_Week):
     figPicksBySAPOrder.update_traces(text=df['Picks Karton'], selector=dict(name='Picks Karton'),textposition='inside')
     figPicksBySAPOrder.update_traces(text=df['Picks Paletten'], selector=dict(name='Picks Paletten'),textposition='inside')
     figPicksBySAPOrder.update_traces(text=df['Picks Stangen'], selector=dict(name='Picks Stangen'),textposition='inside')
-    #hide xaxis title and ticks
-    figPicksBySAPOrder.update_xaxes(showticklabels=False)
-    #disable index
     figPicksBySAPOrder.update_yaxes(title_text='')
+    # Zeige PlannedDate auf der x-Achse
     figPicksBySAPOrder.update_xaxes(title_text='')
-
-
+    figPicksBySAPOrder.update_xaxes(tickformat='%d.%m.%Y')
+    figPicksBySAPOrder.update_xaxes(showticklabels=True)
     
     # Diagramm und Datentabelle in Streamlit anzeigen
     st.plotly_chart(figPicksBySAPOrder, use_container_width=True,config={'displayModeBar': False})
     if tabelle == True:
          st.dataframe(df)
+
+def auslastung_der_trucks(df, tabelle, show_in_day_Week):
+        dfOriginal = df
+        dfOriginal.EstimatedNumberOfPallets = dfOriginal.EstimatedNumberOfPallets.astype(float)
+        # Filter dfOriginal UnloadingListIdentifier is not none
+        dfOriginal = dfOriginal[dfOriginal['UnloadingListIdentifier'].notna()]
+        depots = ['KNSTR', 'KNLEJ', 'KNBFE', 'KNHAJ']
+        dfOriginal['Gepackte Paletten'] = dfOriginal['Gepackte Paletten'].astype(float)
+        df = pd.DataFrame()
+        for depot in depots:
+            df1 = dfOriginal[dfOriginal['DeliveryDepot'] == depot]
+            df1['Gepackte Paletten'] = df1['Gepackte Paletten'].astype(float)
+            
+            df1 = df1.groupby(['DeliveryDepot', 'PlannedDate']).agg({'UnloadingListIdentifier': 'nunique', 'EstimatedNumberOfPallets': 'sum', 'Gepackte Paletten':'sum'}).reset_index()
+            df = pd.concat([df, df1])
+        # round values to 0 decimal
+        df = df.round(0)
+        df = df.rename(columns={'UnloadingListIdentifier': 'Anzahl_Trucks', 'EstimatedNumberOfPallets': 'Anzahl_Paletten_geschätzt'})
+        df['Stellplätze'] = (df['Anzahl_Trucks'] * 33)
+        df['Auslastung_Steplätze'] = (df['Gepackte Paletten'] / df['Stellplätze']) * 100
+        
+        # erstllen Lineplot
+        fig = px.line(df, x='PlannedDate', y='Auslastung_Steplätze', color='DeliveryDepot', title='Auslastung der Trucks', height=600)
+        fig.update_layout(title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", legend_title_font_color="#0F2B63", legend_title_font_family="Montserrat", legend_title_font_size=14, legend_font_size=12, legend_font_family="Montserrat", legend_font_color="#0F2B63", legend_orientation="h")
+        fig.update_traces(mode='lines+markers')
+        fig.update_xaxes(tickformat='%d.%m.%Y')
+        fig.update_xaxes(showticklabels=True)
+        fig.update_layout(font_family="Montserrat")
+        # Legende unter Überschrift
+        fig.update_layout(legend=dict(title='Depots', orientation='h', y=1.1, yanchor='top', x=0.5, xanchor='center'))
+        # Füge Text Auslastung_Steplätze zu den Linien hinzu
+        for depot in depots:
+            fig.add_trace(go.Scatter
+            (x=df[df['DeliveryDepot'] == depot]['PlannedDate'],
+            y=df[df['DeliveryDepot'] == depot]['Auslastung_Steplätze'],
+            mode='text',
+            text=df[df['DeliveryDepot'] == depot]['Auslastung_Steplätze'].round(2),
+            textposition='top center',
+            textfont=dict(family='Montserrat', size=12, color='#0F2B63'),
+            showlegend=False))
+        
+        # Anzeigen des Diagramms
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        if tabelle == True:
+            st.data_editor(df)
+    
+    
 
 def fig_trucks_Org(df, tabelle, show_in_day_Week):
     dfOriginal = df
@@ -339,7 +384,7 @@ def reportPage():
     with st.expander("Kennzahlen Mengen", expanded=True):
         sel_filter = st.multiselect(
         "Zeige:",
-        ["Picks Gesamt", "Picks nach Kunde", "Picks nach Verfügbarket",'Picks nach Kategorie', 'LKW Pro Depot'], ['Picks Gesamt'])  
+        ["Picks Gesamt", "Picks nach Kunde", "Picks nach Verfügbarket",'Picks nach Kategorie', 'LKW Pro Depot','Auslastung der Trucks'], ['Picks Gesamt'])  
         if 'Picks Gesamt' in sel_filter:
             figPICKS_GesamtVolumen(df,show_tables,show_in_day_Week)
         if 'Picks nach Kunde' in sel_filter:
@@ -350,6 +395,8 @@ def reportPage():
             fig_Picksgesamt_kategorie(df,show_tables,show_in_day_Week)
         if 'LKW Pro Depot' in sel_filter:
             fig_trucks_Org(df,show_tables,show_in_day_Week)
+        if 'Auslastung der Trucks' in sel_filter:
+            auslastung_der_trucks(df,show_tables,show_in_day_Week)
         if sel_filter == []:
             st.warning('Bitte wähle eine Auswertung aus')
     with st.expander("Kennzahlen Fehler", expanded=True):
