@@ -40,7 +40,7 @@ class Login:
             st.session_state.rechte = df.loc[df['name'] == name, 'rechte'].iloc[0]
             return authentication_status, st.session_state.user, st.session_state.rechte
         if authentication_status == False:
-            return authentication_status, st.session_state.user, st.session_state.rechte
+            return st.error('Falsche Anmeldedaten! Bitte versuche es erneut!')
     def Logout(self):
         #stauth.Authenticate.logout(self.authenticator)
         self.authenticator.logout('ausloggen', 'unrendered',key='logout')

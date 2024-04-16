@@ -1,18 +1,25 @@
-
+import pygwalker as pyg
+import streamlit.components.v1 as components
+from pygwalker.api.streamlit import StreamlitRenderer, init_streamlit_comm
 
 import streamlit as st
 import pandas as pd
 import numpy as np
 from datetime import datetime
-
+import pygwalker as pyg
+import pandas as pd
+import streamlit.components.v1 as components
 import plotly.express as px
 
-from Data_Class.SQL import read_table
+from Data_Class.SQL import read_table, return_table_names
 
 import plotly.graph_objs as go
 import plotly.subplots as sp
 import matplotlib.pyplot as plt
 from PIL import Image
+
+
+# init_streamlit_comm()
 
 ''' BAT Colurs
 #0e2b63 darkBlue
@@ -268,8 +275,6 @@ def auslastung_der_trucks(df, tabelle, show_in_day_Week):
         if tabelle == True:
             st.data_editor(df)
     
-    
-
 def fig_trucks_Org(df, tabelle, show_in_day_Week):
     dfOriginal = df
     #st.data_editor(df)
@@ -372,6 +377,24 @@ def figFehlerVsLieferscheine(dfIssues,df,show_tables,show_in_day_Week):
         if show_tables:
             st.dataframe(dfIssuesOriginal)
 
+# BAU DIR WAS
+@st.cache_resource
+def get_pygwalker(dataframe)-> "StreamlitRenderer":
+
+    # When you need to publish your app to the public, you should set the debug parameter to False to prevent other users from writing to your chart configuration file.
+    return StreamlitRenderer(dataframe, spec="./gw_config.json", debug=False)
+        
+def bau_dir_was():
+    
+    
+    tables = return_table_names()
+    sel_Table = st.selectbox('Tabelle',tables)
+    df = read_table(sel_Table)
+
+    
+    renderer = get_pygwalker(df)
+    renderer.explorer()
+
 
 
 ###Show Page###
@@ -407,8 +430,10 @@ def reportPage():
             figFehlerVsLieferscheine(dfIssues,df,show_tables,show_in_day_Week)
         if 'Fehler Total nach Art' in sel_filterIssues:
             figIssuesTotal(dfIssues,show_in_day_Week,show_tables)
-
-
+    
+    # with st.expander("Bau dir was", expanded=True):
+    #     bau_dir_was()
+        
     if st.button('Daten vom Server neu laden'):
         st.cache_data.clear()
         #rerun page

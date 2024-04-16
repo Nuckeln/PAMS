@@ -1,10 +1,5 @@
-
-import hydralit_components as hc
-
-from PIL import Image 
 import streamlit as st
 from streamlit_navigation_bar import st_navbar
-import streamlit.components.v1 as components
 
 from Seiten.LOGIN import Login
 from Seiten.P_Live import LIVE
@@ -18,6 +13,54 @@ from Seiten.P_Ladeplan import main as pageLadeplan
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",)
 
 Login.einloggen(self=Login)
+
+
+hide_streamlit_style = """
+                <style>
+                div[data-testid="stToolbar"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                
+                div[data-testid="stDecoration"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                
+                div[data-testid="stStatusWidget"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                #MainMenu {
+                visibility: hidden;
+                height: 0%;
+                }
+                header {
+                visibility: hidden;
+                height: 0%;
+                }
+                footer {
+                visibility: hidden;
+                height: 0%;
+                }
+
+                </style>
+                """
+
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+#st.markdown(hide_full_screen, unsafe_allow_html=True)
+# ----- Config Main Menue -----
+
+
+
+
+
+
+
+
 
 def user_menue_rechte():
     if st.session_state.rechte == 1:
@@ -37,17 +80,30 @@ def user_menue_rechte():
         return ["Depot Live Status",'Logout']
 
 def user_menue_frontend():
- 
     styles = {
-        "nav": {
-            "background-color": "#ef7d00",
-            "primary-color: ": "#ffaf47",
-            "text-color": "#ffffff",
-        }
+    "nav": {
+        "background-color": "#0e2b63",
+        "text-color": "#e72582",
+    },
+    "div": {
+        "max-width": "70rem",
+    },
+    "span": {
+        "color": "white",
+        "border-radius": "0.5rem",
+        "padding": "0.4375rem 0.625rem",
+        "margin": "0 0.125rem",
+    },
+    "active": {
+        "background-color": "rgba(255, 255, 255, 0.25)",
+    },
+    "hover": {
+        "background-color": "rgba(255, 255, 255, 0.35)",
+    },
     }
 
 
-    page = st_navbar(user_menue_rechte(), styles=styles, options={"use_padding": False},logo_path='Data/img/neu_logo.svg',selected='Depot Live Status')
+    page = st_navbar(user_menue_rechte(), styles=styles, options={"use_padding": True},logo_path='Data/img/logo_white.svg',selected='Depot Live Status')
     # Ihre Seitenlogik hier...
     if page == 'Depot Live Status':
         LIVE.PageTagesReport()

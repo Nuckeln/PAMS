@@ -217,8 +217,6 @@ class LIVE:
 
         cols = st.columns(len(cities))  # Erstellen Sie eine Spalte für jedes Depot
     
-    # import datetime
-
     def hc_blocks(df, delivery_depot):
         if delivery_depot == "Gesamt":
             df = df
@@ -290,7 +288,6 @@ class LIVE:
             bar_value=open_inPercent
         )
         
-    
     def new_kennzahlen(df):
         
         def calPicks(df):
@@ -367,8 +364,7 @@ class LIVE:
         img_truck = type_progress_png(done_pallet+open_pallet, done_pallet, 'Pallet')
         st.image(img_truck, use_column_width=True)
         
-## Plotly Charts ###
-
+    ## Plotly Charts ###
     def fig_Status_nach_Katergorie(df):
         # Das Balkendiagram Teilt Fertige und Offene Gesamt Picks in Kategorien auf Karton, Paletten und Stangen aus 
             df = df.groupby(['AllSSCCLabelsPrinted'])[['Picks Karton','Picks Paletten','Picks Stangen']].sum().reset_index()        #set index to SapOrderNumber
@@ -786,7 +782,7 @@ class LIVE:
                 annotated_text(annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
 
         masterCase_Outer_Pal_Icoons('Delivery' ,done_DN, open_DN)
-        masterCase_Outer_Pal_Icoons('Outer' ,done_outer, open_outer)
+        masterCase_Outer_Pal_Icoons('Outer' ,open_outer, done_outer)
         masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done_mastercase)
         masterCase_Outer_Pal_Icoons('Pallet' ,open_pallet, done_pallet)        
 
@@ -1022,8 +1018,7 @@ class LIVE:
         timeline_json = convert_to_timeline_json(df)
         timeline.timeline(timeline_json)
 
-## AG-Grid Func ###
-
+    ## AG-Grid Func ####
     def tabelleAnzeigen(df):
         #new df with only the columns we need 'PlannedDate' ,'SapOrderNumber','PartnerName']#'Fertiggestellt','Picks Gesamt','Picks Karton','Picks Paletten','Picks Stangen','Lieferschein erhalten','Fertiggestellt'
         dfAG = df[['PlannedDate','DeliveryDepot' ,'SapOrderNumber','PartnerName','Fertiggestellt','Fertige Paletten','Picks Gesamt','Lieferschein erhalten']]
