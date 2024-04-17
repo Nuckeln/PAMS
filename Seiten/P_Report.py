@@ -4,7 +4,6 @@ from pygwalker.api.streamlit import StreamlitRenderer, init_streamlit_comm
 
 import streamlit as st
 import pandas as pd
-import numpy as np
 from datetime import datetime
 import pygwalker as pyg
 import pandas as pd
@@ -14,9 +13,7 @@ import plotly.express as px
 from Data_Class.SQL import read_table, return_table_names
 
 import plotly.graph_objs as go
-import plotly.subplots as sp
-import matplotlib.pyplot as plt
-from PIL import Image
+
 
 
 # init_streamlit_comm()

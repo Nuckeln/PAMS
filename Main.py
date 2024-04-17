@@ -69,9 +69,11 @@ def user_menue_rechte():
     elif st.session_state.rechte == 2: 
         # Manager
         return ['Depot Live Status',"LC Monitor",'Depot Reports','Forecast','Lagerverwaltung','Logout']
+    
     elif st.session_state.rechte == 3:
         # Mitarbeiter AD 
         return ['Depot Live Status','Depot Reports','Forecast','Lagerverwaltung','Logout']
+    
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd
         return ["Depot Live Status",'Logout']

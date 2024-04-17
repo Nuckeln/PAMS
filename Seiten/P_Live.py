@@ -1058,6 +1058,7 @@ class LIVE:
             sel_date = datetime.date.today()  
             sel_date = st.date_input('Datum', sel_date)   
             dfOr = LIVE.loadDF(sel_date,sel_date) 
+            
         with colhead3:
             st.write(f'Hi {st.session_state.user} 👋')
         with colhead4:                

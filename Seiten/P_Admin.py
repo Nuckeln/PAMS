@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
+
 
 from Data_Class.SQL import read_table,save_table_to_SQL,return_table_names
 from Data_Class.AzureStorage import get_blob_file, get_blob_list
-from Data_Class.MMSQL_connection import save_Table
+
 
 from ARCHIV.P_UserLogin import Login
 
@@ -117,7 +117,7 @@ def userLöschen(df):
 
 def UserAnlegen():      
     df = read_table('user')      
-    with st.form("User Anlegen"):
+    with st.form("User Anlegen",clear_on_submit=True):
         neuname = st.text_input("name (Anzeigename)",key='name_anlegen')
         neuuser = st.text_input("user (login Name)",key='user_anlegen')
         neupassword = st.text_input("password",key='password_anlegen')
@@ -129,9 +129,9 @@ def UserAnlegen():
             pw = stauth.Hasher(neupassword)._hash(neupassword)
             new_data = {'name': neuname, 'username': neuuser, 'password': pw, 'function': funktion, 'rechte': rechte}
             df = pd.concat([df, pd.DataFrame(new_data, index=[0])], ignore_index=True)
-            save_Table(df,'user')
+            save_table_to_SQL(df,'user')
             st.success("User erfolgreich angelegt")
-            st.experimental_rerun()
+            st.rerun()
 
 
 def zeigeDFOrder():

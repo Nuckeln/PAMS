@@ -8,9 +8,9 @@ import streamlit as st
 import datetime
 from datetime import datetime
 
-import matplotlib.image as mpimg
+
 from PIL import Image 
-from Data_Class.SQL import read_table, save_table_to_SQL
+from Data_Class.SQL import read_table
 from Data_Class.AzureStorage import upload_file_to_blob_storage, get_blob_list, get_blob_file
 
 
