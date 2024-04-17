@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 from Data_Class.SQL import read_table,save_table_to_SQL,return_table_names
-from Data_Class.AzureStorage import upload_file_to_blob_storage, get_blob_list
+from Data_Class.AzureStorage import get_blob_file, get_blob_list
 from Data_Class.MMSQL_connection import save_Table
 
 from ARCHIV.P_UserLogin import Login
@@ -243,29 +243,16 @@ def showOrderDatenGo():
 
 def Azure():    
 
-    def downloadFilesFromBlob():
-        st.warning('Datei in Blob Donwloaden vorher Filenamewählen!!!')
-        Data_Class.AzureStorage.st_Azure_downloadBtn()
-
-    def showDateinBlob():
-        st.warning('Zeige alle Dateien in Blob')
-        df = SQL.sql_datenTabelleLaden('AzureStorage')
-        st.dataframe(df)
-    # def löschealleFiles():
-    #     Data_Class.AzureStorage.st_Azure_deleteBtn()
-    # def ladeFileinBlob():
-    #     df = SQL.sql_datenTabelleLaden('AzureStorage')
-    #     st.warning('Datei in Blob laden vorher die Anwendung auswählen!!!')
-    #     anwendugen = df['anwendung'].unique()
-    #     sel_anwendung = st.selectbox('Anwendung',anwendugen)
-
-
-    #     Data_Class.AzureStorage.st_Azure_uploadBtn(sel_anwendung)
-
-
     with st.expander("Azure", expanded=True):
         df = get_blob_list()
         st.dataframe(df)
+    
+    sel_file = st.selectbox('Dateien auswählen', df)
+    if st.button('Download'):
+            file = get_blob_file(sel_file)
+            st.download_button('Download', file, sel_file)
+            st.success('Download erfolgreich')
+    
 
 def adminPage():
     read_table('user')  
@@ -282,7 +269,7 @@ def adminPage():
     except:
         st.error('Keine Azure Connection')
 
-    #Admin.Azure()
+    
     # Admin.erstelleDB()
     # Admin.SqlDownload()
     # Admin.UserAnlegen(df)

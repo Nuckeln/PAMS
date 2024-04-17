@@ -3,13 +3,13 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 import matplotlib.dates as mdates
 import requests
-import json
+
 import streamlit as st
 import datetime
 from datetime import datetime
-import os
-import matplotlib.image as mpimg
 
+import matplotlib.image as mpimg
+from PIL import Image 
 from Data_Class.SQL import read_table, save_table_to_SQL
 from Data_Class.AzureStorage import upload_file_to_blob_storage, get_blob_list, get_blob_file
 
@@ -134,26 +134,9 @@ def forecast():
 
     plt.tight_layout()
     current_date = datetime.now().strftime('%Y-%m-%d')
-    # CREATE IMG AND SAVE IT ON AZURE STORAGE
-    #     #CREATE IMG
-    # item =  fig.savefig(f'Data/appData/forecast/Forecast_Picks_{depot}_{current_date}.png')
-    # filename = f'Forecast_Picks_{depot}_{current_date}.png'
-    # #save to Azure Storage
-    # upload_file_to_blob_storage(filename, item, 'Forecast')
-    
-    import io
+    #save data locally in Data/appData with Pick and anctual Date in the name
+    fig.savefig(f'Data/appData/forecast/Forecast_Picks_KNBFE_{current_date}.png')
 
-    # Erstellen Sie ein BytesIO-Objekt und speichern Sie das Bild darin
-    image_io = io.BytesIO()
-    fig.savefig(image_io, format='png')
-
-    # Setzen Sie den Cursor des BytesIO-Objekts zurück an den Anfang
-    image_io.seek(0)
-
-    # Jetzt können Sie das BytesIO-Objekt auf Azure Storage hochladen
-    filename = f'Forecast_Picks_{depot}_{current_date}.png'
-    upload_file_to_blob_storage(filename, image_io, 'Forecast')
-    
 def forecast_TRUCKS():
     df = readData()
     dfOriginal = df
@@ -256,10 +239,8 @@ def forecast_TRUCKS():
 
     # Setzen Sie den Cursor des BytesIO-Objekts zurück an den Anfang
     image_io.seek(0)
-
-    # Jetzt können Sie das BytesIO-Objekt auf Azure Storage hochladen
-    filename = f'Forecast_Trucks_{depot}_{current_date}.png'
-    upload_file_to_blob_storage(filename, image_io, 'Forecast')
+    fig.savefig(f'Data/appData/forecast/Forecast_Trucks_{depot}_{current_date}.png')
+    
     
 def main():
     st.title("PAMS Forecast Tool")
@@ -273,6 +254,8 @@ def main():
     dates = [date[-14:-4] for date in dates]    
     # remove duplicates
     dates = list(set(dates))
+    # sort the list by Date jjjj-mm-tt
+    dates = sorted(dates, reverse=True)
 
     col1, col2 = st.columns(2)
     with col1:
@@ -280,10 +263,8 @@ def main():
         filename_1 = f'Forecast_Picks_KNBFE_{sel_Date}.png'
         filename_2 = f'Forecast_Trucks_KNHAJ_{sel_Date}.png'
         # get the images from Azure Storage
-        img1 = get_blob_file(filename_1)
-        img2 = get_blob_file(filename_2)
         
-        # Lade die Dateien mit dem ausgewählten Datum
+        
         
     with col2:
         if st.button('Berechne neues Forecast-Datenmodell'):
@@ -295,14 +276,11 @@ def main():
                 st.success('Done!')
                 #lade die Seite neu
                 st.rerun()
-
-    from PIL import Image, UnidentifiedImageError
-    import io
-
-    try:
-        Image.open(io.BytesIO(img1))
-    except UnidentifiedImageError:
-        st.error('Das Bild konnte nicht geöffnet werden. Bitte überprüfen Sie das Bildformat.')
-    else:
-        st.image(img1, caption='Picks Forecast', use_column_width=True)
-        st.image(img2, caption='Trucks Forecast', use_column_width=True)
+    
+    # Lade die Bilder aus dem tmp-Ordner
+    img1 = Image.open(f'Data/appData/forecast/{filename_1}')
+    img2 = Image.open(f'Data/appData/forecast/{filename_2}')
+    # Anzeige der Bilder
+    st.image(img1, caption='Picks Forecast', use_column_width=True)
+    st.image(img2, caption='Trucks Forecast', use_column_width=True)
+    
