@@ -81,7 +81,7 @@ def user_menue_rechte():
    
     elif st.session_state.rechte == 6:
         # Mitarbeiter Extern Sachbearbeiter/Teamleiter
-        return ["Depot Live Status", "LC Monitor"]
+        return ["Depot Live Status", 'Depot Reports']
 
 
 def user_menue_frontend():
