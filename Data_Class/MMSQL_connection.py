@@ -89,6 +89,16 @@ def save_Table(df, table_name):
     df.to_sql(table_name, db_conn.db, if_exists='replace', index=False)
     # Verbindung schließen
     db_conn.dispose()
+def save_Table_append(df, table_name):
+    json_path = 'Data/appData/credentials.json'
+    conn_settings = load_connection_settings(json_path)
+    db_conn = AzureDbConnection(conn_settings)
+    # Verbindung herstellen
+    db_conn.connect()
+    # Hier kannst du die Verbindung verwenden, z.B. Abfragen ausführen oder Tabellen abrufen
+    df.to_sql(table_name, db_conn.db, if_exists='append', index=False)
+    # Verbindung schließen
+    db_conn.dispose()
 
 def read_Table(table_name):
     json_path = 'Data/appData/credentials.json'

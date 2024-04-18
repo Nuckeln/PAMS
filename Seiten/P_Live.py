@@ -15,7 +15,7 @@ import hydralit_components as hc
 
 
 class LIVE:
-    @st.cache_data
+    #@st.cache_data
     def loadDF(day1=None, day2=None): 
         dfOr = read_table('prod_Kundenbestellungen_14days')
         #load parquet

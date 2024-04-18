@@ -1,18 +1,20 @@
 import streamlit as st
 from streamlit_navigation_bar import st_navbar
+import streamlit_authenticator as stauth
+import bcrypt
 
-from Seiten.LOGIN import Login
+import pandas as pd
 from Seiten.P_Live import LIVE
 from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
 from Seiten.P_Forecast import main as pageForecast
 from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.P_Ladeplan import main as pageLadeplan
+from Data_Class.user_verwaltung import st_page_login
+from Data_Class.MMSQL_connection import read_Table,save_Table_append
 #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/main.py"
 
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",)
-
-Login.einloggen(self=Login)
 
 
 hide_streamlit_style = """
@@ -51,35 +53,31 @@ hide_streamlit_style = """
                 """
 
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-#st.markdown(hide_full_screen, unsafe_allow_html=True)
 # ----- Config Main Menue -----
-
-
-
-
-
-
-
-
-
 def user_menue_rechte():
+    # Sicherstellen, dass 'rechte' initialisiert ist
+    if 'rechte' not in st.session_state:
+        st.session_state.rechte = None  # oder einen anderen Standardwert, falls geeignet
+    # Logik zur Bestimmung der Menürechte basierend auf den Benutzerrechten
     if st.session_state.rechte == 1:
-        #admin Vollzugriff
-        return ['Depot Live Status',"LC Monitor",'Depot Reports','Forecast','Lagerverwaltung','Admin','Logout']
-    elif st.session_state.rechte == 2: 
+        # Admin Vollzugriff
+        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung', 'Admin']
+    elif st.session_state.rechte == 2:
         # Manager
-        return ['Depot Live Status',"LC Monitor",'Depot Reports','Forecast','Lagerverwaltung','Logout']
-    
+        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung']
     elif st.session_state.rechte == 3:
-        # Mitarbeiter AD 
-        return ['Depot Live Status','Depot Reports','Forecast','Lagerverwaltung','Logout']
-    
+        # Mitarbeiter Intern
+        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung']
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd
-        return ["Depot Live Status",'Logout']
-        # Lager
+        return ["Depot Live Status"]
     elif st.session_state.rechte == 5:
-        return ["Depot Live Status",'Logout']
+        # Lager
+        return ["Depot Live Status"]
+    elif st.session_state.rechte == 6:
+        # Mitarbeiter Extern Sachbearbeiter/Teamleiter
+        return ["Depot Live Status", "LC Monitor"]
+
 
 def user_menue_frontend():
     styles = {
@@ -120,17 +118,88 @@ def user_menue_frontend():
     if page == 'Admin':
         adminPage()
     if page == 'Logout':
-        Login().Logout()
+        st.session_state.user = None
+        st.session_state.rechte = None
+        
                
 def main():
-    with open( "style.css" ) as css:
-        st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
+    with open("style.css") as css:
+        st.markdown(f'<style>{css.read()}</style>', unsafe_allow_html=True)
+    if 'user' not in st.session_state:
+        st.session_state.user = None  # oder einen anderen Standardwert, falls geeignet
+    # Datenbanktabelle 'user' auslesen
+    users_df = read_Table("user")
+    users_df.set_index('username', inplace=True)
 
-    try:
+    # Umstrukturieren des DataFrames, um den erwarteten Schlüsseln zu entsprechen
+    credentials = {
+        'usernames': dict()
+    }
+    for idx, row in users_df.iterrows():
+        credentials['usernames'][idx] = {
+            'name': row['name'],
+            'password': row['password'],
+            'email': row.get('email', ''),  # falls es eine E-Mail-Spalte gibt
+            'access_rights': row['rechte']  # oder wie auch immer deine Rechtespalte benannt ist
+        }
+
+    # Jetzt kannst du den Authenticator mit den korrekten Daten initialisieren
+    authenticator = stauth.Authenticate(
+        credentials=credentials,
+        cookie_name='mein_cookie_name',
+        cookie_key='mein_sehr_geheimer_schlüssel',
+        cookie_expiry_days=30
+    )
+    # Authentifizierungsfunktion aufrufen
+    fields = {
+        'username': 'Benutzername',
+        'password': 'Passwort',
+        'submit_button': 'Einloggen'
+    }
+    st.session_state.user, authentication_status, username = authenticator.login(
+        location='main', 
+        fields=fields,
+        clear_on_submit=True
+    )
+
+    if authentication_status:
+        st.session_state.rechte = credentials['usernames'][username]['access_rights']  # Zugriffsrechte aus den Benutzerdaten setzen
+        if st.session_state.rechte == 0:
+            st.error("Sie haben noch keine Berechtigung für diese Anwendung bitte Kontaktieren Sie Christian Hammann oder Martin Wolf.")
+            authenticator.logout()
+            st.stop()
         user_menue_frontend()
-    except:
-        pass
+        authenticator.logout()
+    elif authentication_status is False:
+        st.error("Benutzername oder Passwort ist falsch.")
+    else:
+        st.warning("Bitte Benutzername und Passwort eingeben.")
+    if st.session_state.user is None:
+        
+        with st.popover("Registrieren", help = "Hier können Sie sich als neuer Benutzer registrieren."):
+            with st.form(key="register_form"):
+                new_user = st.text_input("Username")
+                new_username = st.text_input("Klarname")
+                new_password = st.text_input("Passwort", type="password")
+                register_button = st.form_submit_button("Registrieren")
 
-
-if __name__ == '__main__':
+            # Wenn der Registrierungsbutton gedrückt wird, Benutzerdaten speichern
+            if register_button:
+                # Passwort hashen
+                function = "None"
+                recht = 0
+                hashed_password = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt()).decode()
+                new_user_data = pd.DataFrame({
+                    "username": [new_user],
+                    "name": [new_username],  # oder wie auch immer deine Spalte für den Klarnamen heißt
+                    "password": [hashed_password],  # Gehashtes Passwort speichern
+                    "function": [function],
+                    "rechte": [recht]
+                })
+                save_Table_append(new_user_data, "user")  # Speichert die Daten in der Datenbank
+                st.success("Benutzer erfolgreich registriert, Bitte Kontaktieren Sie Christian Hammann oder Martin Wolf um Berechtigungen zu erhalten.")
+        # In deiner Hauptfunktion, stelle sicher, dass 'rechte' gesetzt wird, nachdem ein Benutzer sich erfolgreich eingeloggt hat
+    
+        
+if __name__ == "__main__":
     main()

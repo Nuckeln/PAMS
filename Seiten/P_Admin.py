@@ -2,18 +2,87 @@ import streamlit as st
 import pandas as pd
 
 
-from Data_Class.SQL import read_table,save_table_to_SQL,return_table_names
+#from Data_Class.SQL import read_table,save_table_to_SQL,return_table_names
 from Data_Class.AzureStorage import get_blob_file, get_blob_list
-
+from Data_Class.MMSQL_connection import save_Table, read_Table, save_Table_append
 
 from ARCHIV.P_UserLogin import Login
 
 import streamlit_authenticator as stauth
 import datetime
 import os
+import bcrypt
 
 
+def userverwaltung():
+    
+    df = read_Table('user')
+    
+    
+    with st.expander('Userverwaltung'):
+        all_funktionen = df['function'].unique()
+        sel_user = st.selectbox('User',df['name'])
+        df_filtered = df[df['name'] == sel_user]
+        name = df_filtered['name'].values[0]
+        user = df_filtered['username'].values[0]
+        password = df_filtered['password'].values[0]
+        function = df_filtered['function'].values[0]
+        recht = df_filtered['rechte'].values[0]
+        st.write(sel_user)
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write('User: ',user)
+            st.write('Password: ',password)
+        with col2:
+            st.write('Funktion: ',function)
+            st.write('Recht: ',recht)
+        
+        col1, col2, st.columns([1.10])
+        with col1:
+            with st.popover('Zugriffsrechte und Menüoptionen:'):
+            # read rechte.md file and display it
+                file = open('Rechte.md', 'r')
+                rechte = file.read()
+                st.write(rechte)
+        with col2:
+            st.write('')
+            
+            
+        col1, col2, col3, = st.columns(3)
+        with col1:
+            with st.popover('passwort ändern'):
+                new_password = st.text_input('Neues Passwort')
+                if st.button('Passwort Speichern'):
+                    hashed_password = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt()).decode()
+                    new_user_data = pd.DataFrame({
+                        "username": [user],
+                        "name": [name],  # oder wie auch immer deine Spalte für den Klarnamen heißt
+                        "password": [hashed_password],  # Gehashtes Passwort speichern
+                        "function": [function],
+                        "rechte": [recht]
+                    })
+                    save_Table_append(new_user_data, "user")  # Speichert die Daten in der Datenbank
+                    st.success('Passwort wurde geändert')
+        with col2:
+            with st.popover('User löschen'):
+                if st.button('Löschen'):
+                    df = df[df['name'] != sel_user]
+                    save_Table('user',df)
+                    st.success('User wurde gelöscht')
+                    st.rerun()
+        with col3:
+            with st.popover('Funktion anpassen'):
+                
+                new_function = st.selectbox('Funktion',all_funktionen)
+                if st.button('Speichern Funktion'):
+                    df_filtered['function'] = new_function
+                    #replace old user with new user
+                    df = df[df['name'] != sel_user]
+                    df = pd.concat([df,df_filtered])
+                    save_Table(df,'user')
 
+                    
+        
 
 def aktualisier_Issues_Table():
     with st.expander('Issues aktualisieren'):
@@ -113,25 +182,28 @@ def userLöschen(df):
                 SQL.sql_updateTabelle(SQL.tabelleUser,df)
                 st.success("User erfolgreich gelöscht")
                 st.experimental_rerun()
-            
+
+
+         
 
 def UserAnlegen():      
     df = read_table('user')      
-    with st.form("User Anlegen",clear_on_submit=True):
-        neuname = st.text_input("name (Anzeigename)",key='name_anlegen')
-        neuuser = st.text_input("user (login Name)",key='user_anlegen')
-        neupassword = st.text_input("password",key='password_anlegen')
-        funktion = st.selectbox("Funktion",["Operativ",'Administration','Management','admin'],key='funktion_anlegen')
-        rechte = st.selectbox("Rechte", ['1', '2','3','4','5'], key='rechte_anlegen')
-        rechte = int(rechte)
-        X = st.form_submit_button("Speichern")
-        if X:
-            pw = stauth.Hasher(neupassword)._hash(neupassword)
-            new_data = {'name': neuname, 'username': neuuser, 'password': pw, 'function': funktion, 'rechte': rechte}
-            df = pd.concat([df, pd.DataFrame(new_data, index=[0])], ignore_index=True)
-            save_table_to_SQL(df,'user')
-            st.success("User erfolgreich angelegt")
-            st.rerun()
+    neuname = st.text_input("name (Anzeigename)",key='name_anlegen')
+    neuuser = st.text_input("user (login Name)",key='user_anlegen')
+    neupassword = st.text_input("password",key='password_anlegen')
+    funktion = st.selectbox("Funktion",["Operativ",'Administration','Management','admin'],key='funktion_anlegen')
+    rechte = st.selectbox("Rechte", ['1', '2','3','4','5'], key='rechte_anlegen')
+    rechte = int(rechte)
+    save_btn = st.button("Save",key='save_btn')
+    if save_btn:        
+        neupassword = stauth.Hasher(neupassword).generate()
+        st.write(neupassword)
+        # new_data = {'name': neuname, 'username': neuuser, 'password': neupassword, 'function': funktion, 'rechte': rechte}
+        # df = pd.concat([df, pd.DataFrame(new_data, index=[0])], ignore_index=True)
+        # st.write()
+        #save_table_to_SQL(df,'user2')
+        st.success("User erfolgreich angelegt")
+        #st.rerun()
 
 
 def zeigeDFOrder():
@@ -255,19 +327,19 @@ def Azure():
     
 
 def adminPage():
-    read_table('user')  
-    aktualisier_Issues_Table()    
-    show_All_Databases()
-    mitarbeiterPflegen()
-    UserAnlegen()
-    berechtigungen_anzeigen()
-    Azure()
+    userverwaltung()
+# #    aktualisier_Issues_Table()    
+#     #show_All_Databases()
+# #    mitarbeiterPflegen()
+#     UserAnlegen()
+#     berechtigungen_anzeigen()
+    #Azure()
 
-    try:
-        a = os.environ['SQLAZURECONNSTR_DbConnection']
-        st.write(a)
-    except:
-        st.error('Keine Azure Connection')
+    # try:
+    #     a = os.environ['SQLAZURECONNSTR_DbConnection']
+    #     st.write(a)
+    # except:
+    #     st.error('Keine Azure Connection')
 
     
     # Admin.erstelleDB()

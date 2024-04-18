@@ -22,8 +22,6 @@ def return_table_names():
 
     return table_names
 
-
-
 def save_table_to_SQL(df: pd.DataFrame, table_name: str, batch_size: int = 10):
     server = "batsql-pp-ne-cmes-prod-10.database.windows.net"
     database = "batsdb-pp-ne-prod-reporting_SuperDepot"
@@ -38,7 +36,7 @@ def save_table_to_SQL(df: pd.DataFrame, table_name: str, batch_size: int = 10):
     end = batch_size
     while start < len(df):
         batch_df = df.iloc[start:end]
-        batch_df.to_sql(table_name, engine, if_exists='replace', index=False)
+        batch_df.to_sql(table_name, engine, if_exists='append', index=False)
         start = end
         end += batch_size
 
@@ -76,13 +74,10 @@ def read_table(table_name: str):
     database = "batsdb-pp-ne-prod-reporting_SuperDepot"
     username = "batedp-cmes-prod-reportinguser"
     password = "b2.5v^H!IKjetuXMVNvW"
-    # Datenbankverbindung erstellen
-    engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server')
-    # SQL-Befehl laden der Tabelle
-    query = f"SELECT * FROM [{table_name}]"
-    # Datenframe aus der Datenbank laden
+    connection_string = f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server'
+    engine = create_engine(connection_string)
+    query = f"SELECT * FROM {table_name}"
     df = pd.read_sql(query, engine)
-
     return df
 
 def updateTable(df: pd.DataFrame, table_name: str):
