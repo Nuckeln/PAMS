@@ -62,18 +62,23 @@ def user_menue_rechte():
     if st.session_state.rechte == 1:
         # Admin Vollzugriff
         return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung', 'Admin']
+    
     elif st.session_state.rechte == 2:
-        # Manager
+        # Manager BAT
         return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung']
+    
     elif st.session_state.rechte == 3:
-        # Mitarbeiter Intern
+        # Mitarbeiter BAT AD 
         return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung']
+    
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd
         return ["Depot Live Status"]
+    
     elif st.session_state.rechte == 5:
-        # Lager
+        # Live Bildschirm
         return ["Depot Live Status"]
+   
     elif st.session_state.rechte == 6:
         # Mitarbeiter Extern Sachbearbeiter/Teamleiter
         return ["Depot Live Status", "LC Monitor"]

@@ -74,13 +74,29 @@ def userverwaltung():
             with st.popover('Funktion anpassen'):
                 
                 new_function = st.selectbox('Funktion',all_funktionen)
+                def ordne_funk_rechte_zu(funktion):
+                    if funktion == 'Admin Vollzugriff':
+                        return 1
+                    elif funktion == 'Manager BAT':
+                        return 2
+                    elif funktion == 'Mitarbeiter BAT AD' :
+                        return 3
+                    elif funktion == 'Mitarbeiter Fremd':
+                        return 4
+                    elif funktion == 'Live Bildschirm':
+                        return 5
+                    elif funktion == 'Mitarbeiter Extern Sachbearbeiter/Teamleiter':
+                        return 6
+                    
                 if st.button('Speichern Funktion'):
                     df_filtered['function'] = new_function
+                    df_filtered['rechte'] = ordne_funk_rechte_zu(new_function)
                     #replace old user with new user
                     df = df[df['name'] != sel_user]
                     df = pd.concat([df,df_filtered])
                     save_Table(df,'user')
-
+                    st.success('Funktion wurde geändert')
+                    st.rerun()
                     
         
 
