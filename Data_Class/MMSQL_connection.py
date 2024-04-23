@@ -6,6 +6,7 @@ import urllib
 import pandas as pd
 import time
 import json
+from sqlalchemy import Table, Column, Integer, MetaData
 
 import pyodbc
 

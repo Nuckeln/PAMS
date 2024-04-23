@@ -26,7 +26,8 @@ Depot Live Status
 5. Live Bildschirm
 Zugriff auf:
 Depot Live Status
+
 6. Mitarbeiter Extern Sachbearbeiter/Teamleiter
 Zugriff auf:
-Depot Live Status
-'Depot Reports'
+
+"Depot Live Status", 'Depot Reports', 'Forecast', 'Lagerverwaltung'

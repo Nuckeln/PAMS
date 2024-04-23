@@ -1,9 +1,5 @@
-import streamlit as st
 import pandas as pd
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, DataReturnMode
-import uuid
-
-
 
 def createAGgrid_withCheckbox(df:pd.DataFrame,hoehe:int,keyname:str):
     '''
@@ -73,7 +69,6 @@ def createAGgrid_withCheckbox(df:pd.DataFrame,hoehe:int,keyname:str):
     ))  
     #drop auswahl
     return response.get('selected_rows')
-
 
 def AG_Select_Grid(df: pd.DataFrame, height_value: int,keyname:str) -> str:
         '''

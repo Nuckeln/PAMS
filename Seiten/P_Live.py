@@ -9,15 +9,16 @@ import plotly.graph_objects as go
 from annotated_text import annotated_text, annotation
 import streamlit_timeline as timeline
 from Data_Class.wetter.api import getWetterBayreuth
-from Data_Class.SQL import read_table
+from Data_Class.MMSQL_connection import read_Table
+
 import matplotlib.pyplot as plt
-import hydralit_components as hc
+#import hydralit_components as hc
 
 
 class LIVE:
     #@st.cache_data
     def loadDF(day1=None, day2=None): 
-        dfOr = read_table('prod_Kundenbestellungen_14days')
+        dfOr = read_Table('prod_Kundenbestellungen_14days')
         #load parquet
         #dfOr = pq.read_table('df.parquet.gzip').to_pandas()
         dfOr['PlannedDate'] = dfOr['PlannedDate'].astype(str)
@@ -1050,7 +1051,7 @@ class LIVE:
         sar.st_autorefresh(interval=48000, debounce=True)
         colhead1, colhead2 ,colhead3, colhead4 = st.columns(4)
         with colhead2:
-            lastUpdate = read_table('prod_KundenbestellungenUpdateTime')
+            lastUpdate = read_Table('prod_KundenbestellungenUpdateTime')
             lastUpdateDate = lastUpdate['time'].iloc[0]
             st.write('Letztes Update:')
             st.write(lastUpdateDate)

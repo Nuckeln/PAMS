@@ -29,44 +29,44 @@ def rename_duplicate_values_in_first_row(df):
 
 @st.cache_data
 def load_data_CW():
-    try:
-        data = get_file_dev("CW_SDDS.xlsm")
-        # #save as csv to Data/con_backups/Quelle_PA_BLOBB
-        
-        
-        # df_outbound = pd.read_excel(BytesIO(data),sheet_name='Outbound_Monitor')
-        # df_outbound.columns = df_outbound.iloc[0]
-        # df_outbound = df_outbound[2:]
-        df_outbound = read_Table('PAMS_CW_SDDS_Outbound_Monitor')
-        
-        
-        
-        # df_inbound = pd.read_excel(BytesIO(data), sheet_name='Inbound_Monitor')       
-        # df_inbound.columns = df_inbound.iloc[0]
-        # df_inbound = df_inbound[2:]
-        df_inbound = read_Table('PAMS_CW_SDDS_Inbound_Monitor')
 
-        df_dds = get_file_dev('CW_DDS.xlsm')
-        df_dds = pd.read_excel(BytesIO(df_dds), sheet_name='Logistik DE DDS')
-        df_dds = df_dds.T
-
-        df_dds = df_dds.iloc[:, :93]
-        df_dds = rename_duplicate_values_in_first_row(df_dds)  # Aktualisiere die Werte in der ersten Zeile von df_dds
-        #set the first row as the header
-        df_dds.columns = df_dds.iloc[0]
-        # rename column 1 to 'Date'
-        df_dds.rename(columns={df_dds.columns[0]: 'Date',df_dds.columns[1]: 'Weekday'}, inplace=True)
-        df_dds.reset_index(drop=True, inplace=True)
-        df_dds = df_dds[6:]
-
-        return df_outbound, df_inbound, df_dds
+    data = get_file_dev("CW_SDDS.xlsm")
+    # #save as csv to Data/con_backups/Quelle_PA_BLOBB
     
-    except:
-        df_outbound = pd.read_csv('Data/con_backups/Quelle_PA_BLOBB/Outbound_Monitor.csv')
-        df_inbound = pd.read_csv('Data/con_backups/Quelle_PA_BLOBB/Inbound_Monitor.csv')
-        st.warning('Fehler beim Laden der 2024_Ladeplan_SDDS_FG_GER_Domestic.xlsm Datei. Bitte kontaktieren Sie den Administrator.')
-        st.error('Die Angezeigten Daten sind Veraltet')
-        return df_outbound, df_inbound, None
+    
+    # df_outbound = pd.read_excel(BytesIO(data),sheet_name='Outbound_Monitor')
+    # df_outbound.columns = df_outbound.iloc[0]
+    # df_outbound = df_outbound[2:]
+    df_outbound = read_Table('PAMS_CW_SDDS_Outbound_Monitor')
+    
+    
+    
+    # df_inbound = pd.read_excel(BytesIO(data), sheet_name='Inbound_Monitor')       
+    # df_inbound.columns = df_inbound.iloc[0]
+    # df_inbound = df_inbound[2:]
+    df_inbound = read_Table('PAMS_CW_SDDS_Inbound_Monitor')
+
+    df_dds = get_file_dev('CW_DDS.xlsm')
+    df_dds = pd.read_excel(BytesIO(df_dds), sheet_name='Logistik DE DDS')
+    df_dds = df_dds.T
+
+    df_dds = df_dds.iloc[:, :93]
+    df_dds = rename_duplicate_values_in_first_row(df_dds)  # Aktualisiere die Werte in der ersten Zeile von df_dds
+    #set the first row as the header
+    df_dds.columns = df_dds.iloc[0]
+    # rename column 1 to 'Date'
+    df_dds.rename(columns={df_dds.columns[0]: 'Date',df_dds.columns[1]: 'Weekday'}, inplace=True)
+    df_dds.reset_index(drop=True, inplace=True)
+    df_dds = df_dds[6:]
+
+    return df_outbound, df_inbound, df_dds
+    
+    # except:
+    #     df_outbound = pd.read_csv('Data/con_backups/Quelle_PA_BLOBB/Outbound_Monitor.csv')
+    #     df_inbound = pd.read_csv('Data/con_backups/Quelle_PA_BLOBB/Inbound_Monitor.csv')
+    #     st.warning('Fehler beim Laden der 2024_Ladeplan_SDDS_FG_GER_Domestic.xlsm Datei. Bitte kontaktieren Sie den Administrator.')
+    #     st.error('Die Angezeigten Daten sind Veraltet')
+    #     return df_outbound, df_inbound, None
 
 @st.cache_data
 def load_data_LC():
@@ -606,10 +606,6 @@ def show_LC(df_LC_out, df_LC_inb, df_LC_dds, sel_date):
         st.metric("Bestand", value = f"{total_stock} PAL", delta=f"{free_space} PAL Platz")
     with col3:
         on_table = st.toggle('Tabellen', False, key='tables_LC')
-        with st.popover('Details'):
-            
-            st.data_editor(df_dds)
-        
     col1,col2,col3,col4 = st.columns([3,1,1,1])
     with col1:
         st.write('')

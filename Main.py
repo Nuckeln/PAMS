@@ -10,7 +10,6 @@ from Seiten.P_Admin import adminPage
 from Seiten.P_Forecast import main as pageForecast
 from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.P_Ladeplan import main as pageLadeplan
-from Data_Class.user_verwaltung import st_page_login
 from Data_Class.MMSQL_connection import read_Table,save_Table_append
 #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/main.py"
 
@@ -81,7 +80,7 @@ def user_menue_rechte():
    
     elif st.session_state.rechte == 6:
         # Mitarbeiter Extern Sachbearbeiter/Teamleiter
-        return ["Depot Live Status", 'Depot Reports']
+        return ["Depot Live Status", 'Depot Reports', 'Forecast', 'Lagerverwaltung']
 
 
 def user_menue_frontend():
@@ -108,7 +107,7 @@ def user_menue_frontend():
     }
 
 
-    page = st_navbar(user_menue_rechte(), styles=styles, options={"use_padding": True},logo_path='Data/img/logo_white.svg',selected='Depot Live Status')
+    page = st_navbar(user_menue_rechte(), styles=styles, options={"use_padding": False},logo_path='Data/img/logo_white.svg',selected='Depot Live Status')
     # Ihre Seitenlogik hier...
     if page == 'Depot Live Status':
         LIVE.PageTagesReport()
