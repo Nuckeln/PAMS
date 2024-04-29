@@ -69,12 +69,7 @@ def loadDF():
     filenameOrg = f"MLGT vom:{lastUpload}"
     df_alleVerbotenenSKU = untersagte_sku_TN(masterdata,dfBIN)       
     return df, masterdata,dfBIN, filenameOrg,df_alleVerbotenenSKU
-    
-def menueLaden():
-    selected2 = option_menu(None, ["Stellplatzverwaltung", "Zugriffe SN/TN "],
-    icons=['house', 'cloud-upload', "list-task"], 
-    menu_icon="cast", default_index=0, orientation="horizontal")
-    return selected2   
+     
 
 def FilterNachDatum(day1, day2, df):
     day1 = pd.to_datetime(day1).date()
@@ -98,7 +93,7 @@ def datenUpload(masterdata,dfBIN):
             if st.button('Upload'):
                 if selFile is not None:
                     st.write('Uploading...')
-                    # Speichern Sie die hochgeladene Datei unter einem neuen Namen und Pfad
+                    
                     with open(f'Data/appData/MLGT.xlsx', 'wb') as f:
                         f.write(selFile.getvalue())
                         #save date in a locl json file
@@ -297,24 +292,21 @@ def pageStellplatzverwaltung():
 
         LagerNeu = pd.read_excel(LagerNeu_path)
 
-        # Bereinigen Sie die LagerNeu DataFrame
         LagerNeu_clean = LagerNeu.drop(columns=[col for col in LagerNeu if col.startswith('Unnamed:')])
-
-        # Zusammenführen der DataFrames basierend auf dem Lagerplatz
         merged_data = pd.merge(dfBedarf, LagerNeu_clean, left_on='LGPLA_SN', right_on='Stellplatz', how='left')
 
-        # Entfernen von Zeilen ohne Koordinaten
+        
         heatmap_data = merged_data.dropna(subset=['X', 'Y'])
 
-        # Normalisierung der 'CorrespondingMastercases'
+        
         max_cases = heatmap_data['CorrespondingMastercases'].max()
         heatmap_data['NormalizedCases'] = heatmap_data['CorrespondingMastercases'] / max_cases
 
-        # Funktion zur Zuweisung von Farben basierend auf normalisierten Fällen
+        
         def get_color(value):
             return plt.cm.hot(value)
 
-        # Laden des Lagerbildes
+        
         warehouse_image = Image.open(image_path)
 
         # Erstellen des Plots

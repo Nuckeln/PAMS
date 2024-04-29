@@ -30,7 +30,7 @@ import plotly.graph_objs as go
 '''
 ##### LOAD AND FILTER DATA #####
 BATColurs = ['#0e2b63','#004f9f','#00b1eb','#ef7d00','#ffbb00','#ffaf47','#afca0b','#5a328a','#e72582']
-@st.cache_data
+
 def load_data():
 
     df = read_Table('prod_Kundenbestellungen')
@@ -96,7 +96,7 @@ def filterDate(df: pd,dfIssues: pd):
         pass
     #to datetime
 
-#    st.write('Von', sel_day_min, 'bis', sel_day_max)
+
     # filter dfIssues
     col1, col2 = st.columns(2)
     with col1:
@@ -286,8 +286,7 @@ def fig_trucks_Org(df, tabelle, show_in_day_Week):
         df = pd.concat([df, df1])
     # round values to 0 decimal
     df = df.round(0)
-    # ...
-    # Vor der Schleife, initialisieren Sie 'df' mit den entsprechenden Spalten
+
     df = pd.DataFrame(columns=['DeliveryDepot', 'PlannedDate', 'UnloadingListIdentifier', 'Picks Gesamt', 'Gepackte Paletten'])
 
     for depot in depots:
@@ -302,8 +301,6 @@ def fig_trucks_Org(df, tabelle, show_in_day_Week):
     # Erstellen des Balkendiagramms mit Beschriftungen
     fig = px.bar(df, x='PlannedDate', y='Picks Gesamt', text='label', color='DeliveryDepot', barmode='group', title='LKW Pro Depot', height=600)
 
-    # Update der Farben und Layout-Anpassungen wie zuvor
-    ...
 
     # Anzeigen des Diagramms
     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})

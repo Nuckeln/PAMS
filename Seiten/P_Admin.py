@@ -16,6 +16,7 @@ def userverwaltung():
     
     
     with st.expander('Userverwaltung'):
+        st.dataframe(df)
         all_funktionen = df['function'].unique()
         sel_user = st.selectbox('User',df['name'])
         df_filtered = df[df['name'] == sel_user]
@@ -81,7 +82,7 @@ def userverwaltung():
                 with st.form('Funktion ändern'):
                     new_function = st.selectbox('Funktion',all_funktionen)
                     def ordne_funk_rechte_zu(funktion):
-                        if funktion == 'Admin':
+                        if funktion == 'admin':
                             return 1
                         elif funktion == 'Manager BAT':
                             return 2
