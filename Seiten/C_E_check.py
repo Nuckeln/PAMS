@@ -179,8 +179,8 @@ def main():
             if testversionladen == True:
                 test = st.slider('Testversion',1,3)
     if testversionladen:
-        df_sap = pd.read_excel(f'/Library/Python_local/Superdepot Reporting/Data/appData/testdatendbh/Test{test} SAP.xlsx')
-        df_dbh = pd.read_csv(f'/Library/Python_local/Superdepot Reporting/Data/appData/testdatendbh/Test{test}DBH.csv',sep=';')
+        df_sap = pd.read_excel(f'Data/appData/testdatendbh/Test{test} SAP.xlsx')
+        df_dbh = pd.read_csv(f'Data/appData/testdatendbh/Test{test}DBH.csv',sep=';')
         df_sap, df_dbh = check_upload(df_sap, df_dbh,check_aktive=False)
         differences, dn_DBH_list, dn_sap, missing_dn, df_dbh_agg, df_sap_agg = datenprüfung(df_sap, df_dbh)
         abw_table = formatiere_abweichungen(differences)
