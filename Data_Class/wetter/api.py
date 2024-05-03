@@ -9,7 +9,6 @@ def getWetterBayreuth():
     API_KEY = "617894bbf9a9019b4f70056a84ddefff"
     URL = BASE_URL + "q=" + CITY + "&appid=" + API_KEY
     response = requests.get(URL)
-    # add to pd dataframe
     data = response.json()
     df = pd.DataFrame(columns=['Temp','Temp Max','Temp Min','Humidity','Wind Speed','Wind Degree','Clouds','Weather'])
     df.loc[0,'Temp'] = data['main']['temp']

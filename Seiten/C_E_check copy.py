@@ -1,6 +1,5 @@
 from pandas.testing import assert_frame_equal
 import pandas as pd
-import numpy as np
 import re
 import streamlit as st
 import json
@@ -48,10 +47,9 @@ def check_upload(df_sap:pd.DataFrame, df_dbh: pd.DataFrame, check_aktive:bool = 
     else:
         return df_sap, df_dbh        
 
-def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
-    with st.expander('Inhalt der Dokumente anzeigen', expanded=False):
-        st.dataframe(df_sap)
-        st.dataframe(df_dbh)
+def datenprüfung(df_sap, df_dbh):
+    st.data_editor(df_sap)
+    st.data_editor(df_dbh)
 
     dn_sap = df_sap['Delivery Number'].tolist()
     #entferne duplikate
@@ -87,70 +85,43 @@ def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
     col_names_sap = df_sap_agg.columns
     #change col names of df_dbh_agg to col_names_sap
     df_dbh_agg.columns = col_names_sap
-    # Erstelle eine Ausgabe DataFrame
-    diff_table = pd.DataFrame(columns=['Spalte', 'Index',])
+    differences = None
+    try:
+        assert_frame_equal(df_dbh_agg, df_sap_agg)
+    except AssertionError as e:
+        differences = str(e)
+    return differences, dn_DBH_list, dn_sap, missing_dn, df_dbh_agg, df_sap_agg
+            
+def formatiere_abweichungen(differences):
+    if differences is None:
+        return "Keine Abweichungen gefunden."
+    error_messages = differences.split('\n')
+    diff_table = pd.DataFrame(columns=['Spalte', 'Index', 'Wert Links', 'Wert Rechts'])
+    st.write(error_messages)
 
+    for line in error_messages:
+        if 'values are different' in line:
+            parts = line.split('[')
+            if len(parts) < 4:
+                continue  # Überspringe, falls die erwartete Struktur nicht vorhanden ist
 
-    def truncate_float_columns(dataframe, decimals):
-        factor = 10 ** decimals
-        for column in dataframe.columns:
-            if dataframe[column].dtype == float:
-                dataframe[column] = np.trunc(dataframe[column] * factor) / factor
-        return dataframe
-    # ist round_on True dann runde die float spalten auf 2 nachkommastellen
-    if round_on:
-        df_sap_agg = truncate_float_columns(df_sap_agg, 2)
-        df_dbh_agg = truncate_float_columns(df_dbh_agg, 2)
+            # Extrahiere die relevante Information
+            col_info = line.split(' ')[1].strip()
+            index_info = parts[1].split(']')[0]
+            left_values = parts[2].split(']')[0].split(', ')
+            right_values = parts[3].split(']')[0].split(', ')
+            indices = index_info.split(', ')
 
-    
-    df1 = df_dbh_agg
-    df2 = df_sap_agg    
-    # Prüfe zuerst Spaltennamen und Datentypen
-    if set(df1.columns) != set(df2.columns):
-        missing_in_df1 = set(df2.columns) - set(df1.columns)
-        missing_in_df2 = set(df1.columns) - set(df2.columns)
-        new_row = pd.DataFrame({
-            'Spalte': ['Missing Columns'],
-            'Index': ['-'],
-            'Wert in DBH Dokument': [list(missing_in_df2)],
-            'Wert in SAP Dokument': [list(missing_in_df1)]
-        })
-        diff_table = pd.concat([diff_table, new_row], ignore_index=True)
+            # Füge die Information in die Tabelle
+            for idx, (left, right) in enumerate(zip(left_values, right_values)):
+                diff_table = diff_table.append({
+                    'Spalte': col_info,
+                    'Index': indices[idx],
+                    'Wert Links': left,
+                    'Wert Rechts': right
+                }, ignore_index=True)
 
-    # Vergleiche die Werte in den Spalten
-    for column in set(df1.columns).intersection(df2.columns):
-        if df1[column].dtype != df2[column].dtype:
-            new_row = pd.DataFrame({
-                'Spalte': [column],
-                'DBH Dokument': [df1[column].dtype],
-                'SAP Dokument': [df2[column].dtype]
-            })
-            diff_table = pd.concat([diff_table, new_row], ignore_index=True)
-        else:
-            for index, (value1, value2) in enumerate(zip(df1[column], df2[column])):
-                if pd.isna(value1) and pd.isna(value2):
-                    continue  # Beide Werte sind NaN
-                if value1 != value2:
-                    new_row = pd.DataFrame({
-                        'Spalte': [column],
-                        'Index_in_Commodity_Code': [index],
-                        'DBH Dokument': [value1],
-                        'SAP Dokument': [value2]
-                    })
-                    diff_table = pd.concat([diff_table, new_row], ignore_index=True)
-
-        # suche nach dem Commodity Code in df_sap_agg anhand der Index_in_Commodity_Code in diff_table
-    # füge die Spalte Commodity Code in diff_table hinzu
-    try:    
-        df_sap_agg['IndexStelle']= df_sap_agg.index
-        # sverweis auf df_sap_agg suche nach Commodity Code in df_sap_agg anhand der Index_in_Commodity_Code in diff_table
-        diff_table['Commodity Code'] = diff_table['Index_in_Commodity_Code'].map(df_sap_agg.set_index('IndexStelle')['Commodity Code'])
-        #sotiere spalten nach Commodity Code, Spalte SAP Dokument und DBH Dokument drope den rest
-        diff_table = diff_table[['Commodity Code','Spalte','DBH Dokument','SAP Dokument']]
-    except KeyError:
-        pass
     return diff_table
-
 
 def umrechnerZFG510000(SKU, Menge):
     # 10189719 
@@ -167,8 +138,7 @@ def umrechnerZFG510000(SKU, Menge):
         return Zollmenge
     else:
         return 'SKU nicht gefunden'
- 
-   
+    
         
 def main():
     st.warning('Dies ist noch in der Entwicklung und darf nicht für BAU verwendet werden')
@@ -204,46 +174,35 @@ def main():
 #### TESTBEDIENUNG ########
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        round_on = st.toggle('Runde 2 Nachkommastellen SAP', False)
         testversionladen = st.toggle('Testversionen laden', False)
         with col2:
             if testversionladen == True:
                 test = st.slider('Testversion',1,3)
-    
-    
-    
     if testversionladen:
         df_sap = pd.read_excel(f'Data/appData/testdatendbh/Test{test} SAP.xlsx')
         df_dbh = pd.read_csv(f'Data/appData/testdatendbh/Test{test}DBH.csv',sep=';')
         df_sap, df_dbh = check_upload(df_sap, df_dbh,check_aktive=False)
-        diff_table = detaillierte_datenprüfung(df_sap, df_dbh,round_on=round_on)
-        # wenn diff_table keine werte hat dann 
-        if diff_table.empty:
-            st.success('Lieferscheine ☑️, Warengruppen ☑️ und Mengen ☑️ Good Job 👍')
-        else:
-            st.warning('⛔️ Fehler in den Daten gefunden ⛔️')
-            st.write(diff_table)
-                                
+        differences, dn_DBH_list, dn_sap, missing_dn, df_dbh_agg, df_sap_agg = datenprüfung(df_sap, df_dbh)
+        abw_table = formatiere_abweichungen(differences)
+        #st.write(abw_table)           
+                
+                
     if uploaded_file and uploaded_file2:
         df_sap = pd.read_excel(uploaded_file)
         df_dbh = pd.read_csv(uploaded_file2,sep=';')
     if st.button('Daten Hochladen und prüfen'):
         if uploaded_file and uploaded_file2 not in [None]:
             df_sap, df_dbh = check_upload(df_sap, df_dbh, check_aktive=False)
-            
-            diff_table = detaillierte_datenprüfung(df_sap, df_dbh,round_on=round_on)
-            # wenn diff_table keine werte hat dann 
-            if diff_table.empty:
-                st.success('Lieferscheine ☑️, Warengruppen ☑️ und Mengen ☑️ Good Job 👍')
-            else:
-                st.warning('⛔️ Fehler in den Daten gefunden ⛔️')
-                st.write(diff_table)
-                # # Prüfe ob in df_sap Material Group ZFG510000 enthalten ist wenn ja berechne Zollmenge für jede Zeile
-                # if 'Material Group' in df_sap.columns:
-                #     df_sap['Material Group'] = df_sap['Material Group'].astype(str)
-                #     if 'ZFG510000' in df_sap['Material Group'].values:
-                #         st.warning('Material Group ZFG510000 gefunden und angepasst')
-                #         df_sap['Zollmenge'] = df_sap.apply(lambda row: umrechnerZFG510000(row['SKU'], row['Quantity']), axis=1)
+            # Prüfe ob in df_sap Material Group ZFG510000 enthalten ist wenn ja berechne Zollmenge für jede Zeile
+            if 'Material Group' in df_sap.columns:
+                df_sap['Material Group'] = df_sap['Material Group'].astype(str)
+                if 'ZFG510000' in df_sap['Material Group'].values:
+                    st.warning('Material Group ZFG510000 gefunden und angepasst')
+                    df_sap['Zollmenge'] = df_sap.apply(lambda row: umrechnerZFG510000(row['SKU'], row['Quantity']), axis=1)
+            differences, dn_DBH_list, dn_sap, missing_dn, df_dbh_agg, df_sap_agg = datenprüfung(df_sap, df_dbh)
+            abw_table = formatiere_abweichungen(differences)
+           # st.write(abw_table)
+    
     
 if __name__ == '__main__':
     main()
