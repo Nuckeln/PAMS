@@ -154,6 +154,8 @@ def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
     return diff_table, missing_dn, dn_DBH_list, dn_sap
 
 def umrechnerZFG510000(SKU, Menge):
+    #Menge to float
+    Menge = float(Menge)
     # 10189719 
     master_data = read_Table('data_materialmaster-MaterialMasterUnitOfMeasures')
     master_data['MaterialNumber'] = master_data['MaterialNumber'].astype(str)
@@ -165,7 +167,7 @@ def umrechnerZFG510000(SKU, Menge):
         DenominatorToBaseUnitOfMeasure = master_data['DenominatorToBaseUnitOfMeasure'].values[0]
         NumeratorToBaseUnitOfMeasure = master_data['NumeratorToBaseUnitOfMeasure'].values[0]
         Zollmenge = DenominatorToBaseUnitOfMeasure / NumeratorToBaseUnitOfMeasure * Menge
-        return Zollmenge
+        return Zollmenge, DenominatorToBaseUnitOfMeasure, NumeratorToBaseUnitOfMeasure
     else:
         return 'SKU nicht gefunden'
         
@@ -196,15 +198,22 @@ def main():
             col1, col2, col3= st.columns([1,1,3])
             with col1:
                 sel_check_sku = st.text_input('Sku', key='search')
-                cal = st.form_submit_button('Zeige umgerechnete Menge')
+                cal_start = st.form_submit_button('Zeige umgerechnete Menge')
             with col2:
-                sel_check_qty = st.text_input('Menge', key='menge')
+                sel_check_qty = st.number_input('Menge', key='menge')
             with col3:
-                if cal:
+                if cal_start:
                     if sel_check_sku == '' or sel_check_qty == '':
-                        st.error('Bitte SKU und Menge eingeben')
+                        st.error('Keine Werte keine Kekse....')
+                    elif not sel_check_sku.isdigit():
+                        st.error('Du kannst mir die SKU Buchstabieren.... aber ich kann nur Zahlen lesen sry....')
+                    
+                    elif len(sel_check_sku) != 8:
+                        st.error('8 Stellen hat so eine SKU......')
                     else:
-                        st.success(f'Die umgerechnete Menge beträgt {umrechnerZFG510000(sel_check_sku, int(sel_check_qty))} TH')
+                        ergebniss, numerator, denominator = umrechnerZFG510000(sel_check_sku, int(sel_check_qty))
+                        st.success(f'Die umgerechnete Menge beträgt {ergebniss} KG')
+                        st.write(f'SAP Stammdaten:  DenominatorToBaseUnitOfMeasure {denominator} / NumeratorToBaseUnitOfMeasure {numerator}')
         
     col1, col2 = st.columns(2)
     with col1:
@@ -222,7 +231,7 @@ def main():
             diff_table, missing_dn, dn_DBH_list, dn_sap = detaillierte_datenprüfung(df_sap, df_dbh,round_on=round_on)
             # erstelle einen string je Liste und Trenne mit ; 
             if diff_table.empty and missing_dn == []:
-                st.success('Lieferscheine ☑️, Warengruppen ☑️ und Mengen ☑️ Good Job 👍')
+                st.success('Good Job 👍 Lieferscheine ☑️ Warengruppen ☑️  Mengen ☑️')
                 fehler_ja_nein = 'Nein'  
             if missing_dn:
                 st.error('⛔️ Folgende Lieferscheine fehlen ⛔️')
@@ -258,7 +267,7 @@ def main():
                     diff_table, missing_dn, dn_DBH_list, dn_sap = detaillierte_datenprüfung(df_sap, df_dbh,round_on=round_on)
                     # erstelle einen string je Liste und Trenne mit ; 
                     if diff_table.empty and missing_dn == []:
-                        st.success('Lieferscheine ☑️, Warengruppen ☑️ und Mengen ☑️ Good Job 👍')
+                        st.success('Good Job 👍 Lieferscheine ☑️ Warengruppen ☑️  Mengen ☑️')
                         fehler_ja_nein = 'Nein'  
                     if missing_dn:
                         st.error('⛔️ Folgende Lieferscheine fehlen ⛔️')
