@@ -177,7 +177,7 @@ def main():
             authenticator.logout()
             st.stop()
         user_menue_frontend()
-        authenticator.logout()
+        #authenticator.logout()
     elif authentication_status is False:
         st.error("Benutzername oder Passwort ist falsch.")
     else:

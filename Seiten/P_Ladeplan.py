@@ -1102,17 +1102,22 @@ def main():
 
     col1,col2 = st.columns([1,1])
     with col1:
-        show_LC(df_LC_out, df_LC_inb, df_LC_dds,sel_date)
+        with st.container(border=True):
+            show_LC(df_LC_out, df_LC_inb, df_LC_dds,sel_date)
     with col2:
-        show_domestic(df_CW_out, df_CW_inb, df_CW_dds,sel_date)
+        with st.container(border=True):
+            show_domestic(df_CW_out, df_CW_inb, df_CW_dds,sel_date)
     col1,col2 = st.columns([1,1])
     with col1:
-        show_DIET(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
+        with st.container(border=True):        
+            show_DIET(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
     with col2:
-        show_CF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
+        with st.container(border=True):
+            show_CF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
     col1,col2 = st.columns([1,1])
     with col1:
-        show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
+        with st.container(border=True):
+            show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
 
     
     # show_domestic(df_CW_out, df_CW_inb, df_CW_dds)
