@@ -66,7 +66,7 @@ def user_menue_rechte():
     
     elif st.session_state.rechte == 2:
         # Manager BAT
-        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check']
+        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','SFG Reports']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter BAT AD 

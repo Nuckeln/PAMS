@@ -111,9 +111,13 @@ def main():
     img_strip = Image.open('Data/img/strip.png')   
     img_strip = img_strip.resize((1000, 15))  
     st.image(img_strip, use_column_width=True)
-    st.data_editor(df)
-    df = df[df["Pick-up date update"] >= pd.Timestamp.now() - pd.Timedelta(days=20)]
-    plot_data(df)
+    img_pams = Image.open('Data/img/pams.png')   
+    st.header("PAMS SFG ....... soon")
+    img_pams = img_pams.resize((800, 600))  
+    st.image(img_pams, use_column_width=True)
+    # st.data_editor(df)
+    # df = df[df["Pick-up date update"] >= pd.Timestamp.now() - pd.Timedelta(days=20)]
+    # plot_data(df)
     # Filter für die letzten 20 Tage
     # df = df[df["Pick-up date update"] >= pd.Timestamp.now() - pd.Timedelta(days=20)]
 
