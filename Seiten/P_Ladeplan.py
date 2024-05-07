@@ -9,6 +9,7 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 from io import BytesIO
 import time
+import hydralit_components as hc
 
 from annotated_text import annotated_text, annotation
 from Data_Class.AzureStorage_dev import get_blob_list_dev, get_file_dev
@@ -300,9 +301,17 @@ def show_domestic(df_CW_out, df_CW_inb, df_CW_dds,sel_date):
         with col2:
             img_truck = truck_progress_png(sum_loaded, sum_of_loadings)
             st.image(img_truck, use_column_width=True)
+
         with col3:
             st.metric("ø Verladezeit", value = f"{out_time} min",)
-
+        sum_wartend = df_CW_out['Ankunft Office'].count()
+        sum_wartend = sum_wartend - sum_loaded
+        #sum wartent to anteil in %
+        sum_wartend2 = (sum_wartend / sum_of_loadings) * 100
+        sum_wartend = str(sum_wartend)
+        override_theme_1 = {'bgcolor': '#EFF8F7','progress_color': '#ef7d00'}
+        hc.progress_bar(sum_wartend2,f'Wartende LKW {sum_wartend} 🚛',override_theme=override_theme_1)
+                
     def logo_and_Zahlen_inbound(df_inb):
         def time_to_timedelta(t):
             return pd.Timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
@@ -411,6 +420,7 @@ def show_domestic(df_CW_out, df_CW_inb, df_CW_dds,sel_date):
     with col3:
         on_table = st.toggle('Tabellen', False, key='tables_CW')
         
+        
     col1,col2,col3,col4 = st.columns([3,1,1,1])
     with col1:
         st.write('')
@@ -495,6 +505,17 @@ def show_LC(df_LC_out, df_LC_inb, df_LC_dds, sel_date):
             st.image(img_truck, use_column_width=True)
         with col3:
             st.metric("ø Verladezeit", value = f"{out_time} min",)
+        sum_wartend = df_LC_out['Ankunft Office'].count()
+        sum_wartend = sum_wartend - sum_loaded
+        #sum wartent to anteil in %
+        sum_wartend2 = (sum_wartend / sum_of_loadings) * 100
+        sum_wartend = str(sum_wartend)
+        override_theme_1 = {'bgcolor': '#EFF8F7','progress_color': '#ef7d00'}
+        hc.progress_bar(sum_wartend2,f'Wartende LKW {sum_wartend} 🚛',override_theme=override_theme_1)
+                        
+            
+            
+            
     def logo_and_Zahlen_inbound(df_inb):
         def time_to_timedelta(t):
             return pd.Timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
@@ -670,7 +691,6 @@ def show_DIET(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
         df_out = df_out[df_out['TYPE'].str.contains('Diet', case=False, na=False)]
         # zähle Vorgestellt in 'Status Verladung '
         sum_loadings = df_out["TYPE"].count()
-
         sum_finished = df_out[df_out['Ladeende'] != None]['Ladeende'].count()
         
         
@@ -692,12 +712,20 @@ def show_DIET(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
         
         with col1:
             outbound = Image.open('Data/img/Outbound.png', mode='r')
-            st.image(outbound, use_column_width=True)    
+            st.image(outbound, use_column_width=True)  
         with col2:
             img_truck = truck_progress_png(sum_finished, sum_loadings)
             st.image(img_truck, use_column_width=True)
         with col3:
             st.metric("ø Verladezeit", value = f"{out_time} min",)
+        sum_wartend = df_out['Ankunft \nOffice\nDatum'].count()
+        sum_wartend = sum_wartend - sum_finished
+        #sum wartent to anteil in %
+        sum_wartend2 = (sum_wartend / sum_loadings) * 100
+        sum_wartend = str(sum_wartend)
+        override_theme_1 = {'bgcolor': '#EFF8F7','progress_color': '#ef7d00'}
+        hc.progress_bar(sum_wartend2,f'Wartende LKW {sum_wartend} 🚛',override_theme=override_theme_1)
+            
 
     def plotly_warehouse_stocks(df_dds):
 
@@ -818,9 +846,7 @@ def show_CF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
         df_out = df_out[df_out["TYPE"] == 'CAF']
         # zähle Vorgestellt in 'Status Verladung '
         sum_loadings = df_out["TYPE"].count()
-        sum_finished = df_out[df_out['Ladeende'] != None]['Ladeende'].count()
-
-        
+        sum_finished = df_out[df_out['Ladeende'] != None]['Ladeende'].count()        
         
         
         def time_to_timedelta(t):
@@ -847,6 +873,15 @@ def show_CF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
             st.image(img_truck, use_column_width=True)
         with col3:
             st.metric("ø Verladezeit", value = f"{out_time} min",)
+        sum_wartend = df_out['Ankunft \nOffice\nDatum'].count()
+        sum_wartend = sum_wartend - sum_finished
+        #sum wartent to anteil in %
+        sum_wartend2 = (sum_wartend / sum_loadings) * 100
+        sum_wartend = str(sum_wartend)
+        override_theme_1 = {'bgcolor': '#EFF8F7','progress_color': '#ef7d00'}
+        hc.progress_bar(sum_wartend2,f'Wartende LKW {sum_wartend} 🚛',override_theme=override_theme_1)
+            
+
 
     def plotly_warehouse_stocks(df_dds):
 

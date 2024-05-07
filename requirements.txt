@@ -44,6 +44,7 @@ matplotlib==3.8.4
 matplotlib-inline==0.1.7
 mdurl==0.1.2
 monotonic==1.6
+hydralit_components
 more-itertools==10.2.0
 numpy==1.26.4
 openpyxl==3.1.2
