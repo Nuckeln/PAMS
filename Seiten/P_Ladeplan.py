@@ -666,14 +666,12 @@ def show_DIET(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
     def outbound(df_out):
       
         df_out = df_out.rename(columns={"Material Group:\nDiet\nCAF\nStaub\nPresize\nRohware": "TYPE"})
-        # flter df_out["TYPE"] == 'CAF'
-        df_out = df_out[df_out["TYPE"] == 'Diet']
+        # flter df_out["TYPE"] == 'Diet' oder DIET
+        df_out = df_out[df_out['TYPE'].str.contains('Diet', case=False, na=False)]
         # zähle Vorgestellt in 'Status Verladung '
         sum_loadings = df_out["TYPE"].count()
 
         sum_finished = df_out[df_out['Ladeende'] != None]['Ladeende'].count()
-
-        
         
         
         def time_to_timedelta(t):

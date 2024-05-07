@@ -441,14 +441,16 @@ class LIVE:
         st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
     
     def status(df):
-        df = df.groupby(['PartnerName', 'SapOrderNumber', "AllSSCCLabelsPrinted", 'DeliveryDepot', 'Fertiggestellt', 'Lieferschein erhalten']).agg({'Picks Gesamt': 'sum'}).reset_index()
-        df = df.sort_values(by=['Picks Gesamt', 'AllSSCCLabelsPrinted'], ascending=False)
+        # if in df Staus is SSCCInformationSent then change to 1 else 0
+        df['Status'] = np.where(df['Status'] == 'SSCCInformationSent', True, False)
+        df = df.groupby(['PartnerName', 'SapOrderNumber', "Status", 'DeliveryDepot', 'Fertiggestellt', 'Lieferschein erhalten']).agg({'Picks Gesamt': 'sum'}).reset_index()
+        df = df.sort_values(by=['Picks Gesamt', 'Status'], ascending=False)
         
         # HTML-formatted title with different word colors
-        title = "<b>Status Order je Depot:</b> <span style='color:#E72482'>Offen</span> / <span style='color:#4FAF46'>Fertig</span>"
+        title = "<b>Order an K&N Übermittelt je Depot:</b> <span style='color:#E72482'>Nein</span> / <span style='color:#4FAF46'>Ja</span>"
         figTagKunden = px.bar(df, x="DeliveryDepot", y="Picks Gesamt", title=title, hover_data=['Picks Gesamt','PartnerName', 'SapOrderNumber','Lieferschein erhalten', 'Fertiggestellt'], height=900)
         
-        figTagKunden.update_traces(marker_color=np.where(df['AllSSCCLabelsPrinted'] == 1, '#4FAF46', '#E72482'))
+        figTagKunden.update_traces(marker_color=np.where(df['Status'] == 1, '#4FAF46', '#E72482'))
         figTagKunden.update_traces(texttemplate='%{text:.3}', text=df['Picks Gesamt'], textposition='inside')
         figTagKunden.update_layout(uniformtext_minsize=13, uniformtext_mode='hide', showlegend=False)
         #figTagKunden.layout.xaxis.tickangle = 70
@@ -466,7 +468,7 @@ class LIVE:
         st.plotly_chart(figTagKunden, use_container_width=True,config={'displayModeBar': False})
         with st.popover("Tabellenansicht"):
             #rename column AllSSCCLabelsPrinted to Übermittelt an K&N Ja/Nein
-            dfnew = df.rename(columns={'AllSSCCLabelsPrinted': 'Übermittelt an K&N Ja/Nein'})
+            dfnew = df.rename(columns={'Status': 'Übermittelt an K&N Ja/Nein'})
             st.dataframe(dfnew)
     
     def figPicksKunde(df):
@@ -1177,10 +1179,10 @@ class LIVE:
             LIVE.figPicksKunde(dfOr)
         except:
             st.write('Keine Daten vorhanden')
-        try:
-            LIVE.status(dfOr)
-        except:
-            st.write('Keine Daten vorhanden')
+#        try:
+        LIVE.status(dfOr)
+#        except:
+        st.write('Keine Daten vorhanden')
         try:
             LIVE.fig_trucks_Org(dfOr)
         except:
