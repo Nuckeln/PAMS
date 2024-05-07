@@ -310,6 +310,8 @@ def show_domestic(df_CW_out, df_CW_inb, df_CW_dds,sel_date):
         sum_wartend2 = (sum_wartend / sum_of_loadings) * 100
         sum_wartend = str(sum_wartend)
         override_theme_1 = {'bgcolor': '#EFF8F7','progress_color': '#ef7d00'}
+        sum_wartend = sum_wartend + ' CW'
+
         hc.progress_bar(sum_wartend2,f'Wartende LKW {sum_wartend} 🚛',override_theme=override_theme_1)
                 
     def logo_and_Zahlen_inbound(df_inb):
@@ -508,10 +510,12 @@ def show_LC(df_LC_out, df_LC_inb, df_LC_dds, sel_date):
         sum_wartend = df_LC_out['Ankunft Office'].count()
         sum_wartend = sum_wartend - sum_loaded
         #sum wartent to anteil in %
-        sum_wartend2 = (sum_wartend / sum_of_loadings) * 100
+        sum_wartend3 = (sum_wartend / sum_of_loadings) * 100
         sum_wartend = str(sum_wartend)
+        sum_wartend = sum_wartend + ' LC'
+
         override_theme_1 = {'bgcolor': '#EFF8F7','progress_color': '#ef7d00'}
-        hc.progress_bar(sum_wartend2,f'Wartende LKW {sum_wartend} 🚛',override_theme=override_theme_1)
+        hc.progress_bar(sum_wartend3,f'Wartende LKW {sum_wartend} 🚛',override_theme=override_theme_1)
                         
             
             
@@ -723,6 +727,8 @@ def show_DIET(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
         #sum wartent to anteil in %
         sum_wartend2 = (sum_wartend / sum_loadings) * 100
         sum_wartend = str(sum_wartend)
+        # add DIET to sum_wartend
+        sum_wartend = sum_wartend + ' DIET'
         override_theme_1 = {'bgcolor': '#EFF8F7','progress_color': '#ef7d00'}
         hc.progress_bar(sum_wartend2,f'Wartende LKW {sum_wartend} 🚛',override_theme=override_theme_1)
             
@@ -876,10 +882,12 @@ def show_CF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
         sum_wartend = df_out['Ankunft \nOffice\nDatum'].count()
         sum_wartend = sum_wartend - sum_finished
         #sum wartent to anteil in %
-        sum_wartend2 = (sum_wartend / sum_loadings) * 100
+        sum_wartend3 = (sum_wartend / sum_loadings) * 100
         sum_wartend = str(sum_wartend)
+        sum_wartend = sum_wartend + ' C&F'
+
         override_theme_1 = {'bgcolor': '#EFF8F7','progress_color': '#ef7d00'}
-        hc.progress_bar(sum_wartend2,f'Wartende LKW {sum_wartend} 🚛',override_theme=override_theme_1)
+        hc.progress_bar(sum_wartend3,f'Wartende LKW {sum_wartend} 🚛',override_theme=override_theme_1)
             
 
 
