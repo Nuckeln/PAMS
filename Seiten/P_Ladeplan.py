@@ -13,6 +13,8 @@ import time
 from annotated_text import annotated_text, annotation
 from Data_Class.AzureStorage_dev import get_blob_list_dev, get_file_dev
 from Data_Class.MMSQL_connection import read_Table
+import json
+
 def rename_duplicate_columns(df):
     cols = pd.Series(df.columns)
     for dup in cols[cols.duplicated()].unique(): 
@@ -27,9 +29,20 @@ def rename_duplicate_values_in_first_row(df):
     df.iloc[0] = first_row
     return df
 
+def save_update_time():
+    # Aktuelles Datum und Uhrzeit speichern
+    jetzt = datetime.datetime.now()
+
+    # Datum und Uhrzeit als String speichern
+    datum_zeit_string = jetzt.strftime("%Y-%m-%d %H:%M:%S")
+
+    # Daten in eine Datei schreiben
+    with open('Data/appData/update_time_Ladeplan.json', 'w') as file:
+        json.dump(datum_zeit_string, file)
+
 @st.cache_data
 def load_data_CW():
-
+    save_update_time()
     data = get_file_dev("CW_SDDS.xlsm")
     # #save as csv to Data/con_backups/Quelle_PA_BLOBB
     
@@ -449,6 +462,7 @@ def show_LC(df_LC_out, df_LC_inb, df_LC_dds, sel_date):
     except:
         
         total_stock = 0
+    
 
     def outbound(df_LC_out):
       
@@ -1076,12 +1090,15 @@ def main():
                     <h2 style='text-align: left; color: #0F2B63; font-family: Montserrat; font-weight: bold;'>{}</h1>
                     """.format('Logistics Live Monitor'), unsafe_allow_html=True)   
     with col2:
-        #st.write('Letzte Aktualisierung: ', datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
         sel_date = st.date_input('Datum', datetime.date.today())
     with col3:
-        if st.button('Reload'):
-            with st.spinner('Reload in 3 seconds...'):
+        with open('Data/appData/update_time_Ladeplan.json', 'r') as file:
+            lastupdate = file.read()
+        st.write('Stand: ' + lastupdate)
+        if st.button('Aktualisieren'):
+            with st.spinner('Aktualisierung startet...'):
                 time.sleep(3)
+                save_update_time()
                 st.cache_data.clear()
                 st.rerun()
     img_strip = Image.open('Data/img/strip.png')   

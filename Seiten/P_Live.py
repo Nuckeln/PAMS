@@ -419,15 +419,15 @@ class LIVE:
 
         dfAggregated = pd.concat(all_dfs)
         dfAggregated = dfAggregated.round(0)
+        colors = ['#0e2b63', '#004f9f', '#ef7d00', '#ffbb00']
+        # Erstelle Balkendiagramm
+        # Erstellen Sie ein Farbwörterbuch
+        color_dict = {depot: color for depot, color in zip(depots, colors)}
 
         # Erstelle Balkendiagramm
-        fig = px.bar(dfAggregated, x='PlannedDate', y='Picks Gesamt', color='DeliveryDepot', barmode='group',
-                    title='LKW Pro Depot', height=600, text='label')
-
-        # Update trace colors
-        colors = ['#0e2b63', '#004f9f', '#ef7d00', '#ffbb00']
-        for color, depot in zip(colors, depots):
-            fig.update_traces(marker_color=color, selector=dict(DeliveryDepot=depot))
+        fig = px.bar(dfAggregated, x='PlannedDate', y='Gepackte Paletten', color='DeliveryDepot', barmode='group',
+                     title='LKW Pro Depot', height=600, text='label', hover_data=['Geschätzte Paletten'],
+                     color_discrete_map=color_dict)  # Weisen Sie das Farbwörterbuch zu
 
         # Update der Layout-Einstellungen
         fig.update_layout(
@@ -439,14 +439,43 @@ class LIVE:
         )
         fig.update_xaxes(showticklabels=True)
         st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+    
+    def status(df):
+        df = df.groupby(['PartnerName', 'SapOrderNumber', "AllSSCCLabelsPrinted", 'DeliveryDepot', 'Fertiggestellt', 'Lieferschein erhalten']).agg({'Picks Gesamt': 'sum'}).reset_index()
+        df = df.sort_values(by=['Picks Gesamt', 'AllSSCCLabelsPrinted'], ascending=False)
+        
+        # HTML-formatted title with different word colors
+        title = "<b>Status Order je Depot:</b> <span style='color:#E72482'>Offen</span> / <span style='color:#4FAF46'>Fertig</span>"
+        figTagKunden = px.bar(df, x="DeliveryDepot", y="Picks Gesamt", title=title, hover_data=['Picks Gesamt','PartnerName', 'SapOrderNumber','Lieferschein erhalten', 'Fertiggestellt'], height=900)
+        
+        figTagKunden.update_traces(marker_color=np.where(df['AllSSCCLabelsPrinted'] == 1, '#4FAF46', '#E72482'))
+        figTagKunden.update_traces(texttemplate='%{text:.3}', text=df['Picks Gesamt'], textposition='inside')
+        figTagKunden.update_layout(uniformtext_minsize=13, uniformtext_mode='hide', showlegend=False)
+        #figTagKunden.layout.xaxis.tickangle = 70
+        figTagKunden.update_layout(font_family="Montserrat", font_color="#0F2B63", title_font_family="Montserrat", title_font_color="#0F2B63",)
+        #disable xaxis title
+        figTagKunden.update_xaxes(title_text='')
+        
+        # figTagKunden.update_layout(
+        #             annotations=[
+        #                 {"x": x, "y": total * 1.05, "text": str(total), "showarrow": False}
+        #                 for x, total in df.groupby("PartnerName", as_index=False).agg({"Picks Gesamt": "sum"}).values])
+        figTagKunden.update_yaxes(title_text='')
+        figTagKunden.update_xaxes(title_text='')
 
+        st.plotly_chart(figTagKunden, use_container_width=True,config={'displayModeBar': False})
+        with st.popover("Tabellenansicht"):
+            #rename column AllSSCCLabelsPrinted to Übermittelt an K&N Ja/Nein
+            dfnew = df.rename(columns={'AllSSCCLabelsPrinted': 'Übermittelt an K&N Ja/Nein'})
+            st.dataframe(dfnew)
+    
     def figPicksKunde(df):
-        df = df.groupby(['PartnerName', 'SapOrderNumber', "AllSSCCLabelsPrinted", 'DeliveryDepot', 'Fertiggestellt']).agg({'Picks Gesamt': 'sum'}).reset_index()
+        df = df.groupby(['PartnerName', 'SapOrderNumber', "AllSSCCLabelsPrinted", 'DeliveryDepot', 'Fertiggestellt', 'Lieferschein erhalten']).agg({'Picks Gesamt': 'sum'}).reset_index()
         df = df.sort_values(by=['Picks Gesamt', 'AllSSCCLabelsPrinted'], ascending=False)
         
         # HTML-formatted title with different word colors
         title = "<b>Kundenübersicht nach Status:</b> <span style='color:#E72482'>Offen</span> / <span style='color:#4FAF46'>Fertig</span>"
-        figTagKunden = px.bar(df, x="PartnerName", y="Picks Gesamt", title=title, hover_data=['Picks Gesamt', 'SapOrderNumber', 'Fertiggestellt'], color='Picks Gesamt', height=900)
+        figTagKunden = px.bar(df, x="PartnerName", y="Picks Gesamt", title=title, hover_data=['Picks Gesamt', 'SapOrderNumber','Lieferschein erhalten', 'Fertiggestellt'], height=900)
         
         figTagKunden.update_traces(marker_color=np.where(df['AllSSCCLabelsPrinted'] == 1, '#4FAF46', '#E72482'))
         figTagKunden.update_traces(texttemplate='%{text:.3}', text=df['Picks Gesamt'], textposition='inside')
@@ -1019,13 +1048,71 @@ class LIVE:
         timeline_json = convert_to_timeline_json(df)
         timeline.timeline(timeline_json)
 
+    # import plotly.graph_objects as go
+
+    # import plotly.graph_objects as go
+
+    # def status2(df):
+    #     # Zeige alle SapOrderNumber an, die noch nicht abgeschlossen sind (AllSSCCLabelsPrinted == 0) und alle Aufträge, die abgeschlossen sind (AllSSCCLabelsPrinted == 1) auf einem stacked Barchart je nach DeliveryDepot
+    #     fig = go.Figure()
+    #     for status in [0, 1]:
+    #         for depot in df['DeliveryDepot'].unique():
+    #             df_filtered = df[(df['AllSSCCLabelsPrinted'] == status) & (df['DeliveryDepot'] == depot)]
+    #             total_picks = df_filtered['Picks Gesamt'].sum()  # Summe der PicksTotal für das gegebene Depot und den Status
+    #             fig.add_trace(go.Bar(
+    #                 x=[depot],  # Depot auf der x-Achse
+    #                 y=[total_picks],  # Gesamtzahl der Picks auf der y-Achse
+    #                 name=f"{depot} - {'Offen' if status == 0 else 'Abgeschlossen'}",
+    #                 marker_color='red' if status == 0 else 'green',
+    #             ))
+
+    #     # Anpassen der Layout-Einstellungen
+    #     fig.update_layout(
+    #         barmode='stack',
+    #         title='Status der Aufträge pro Depot',
+    #         xaxis_title='Depot',
+    #         yaxis_title='Gesamtzahl der Picks',
+    #         legend_title='Depot - Status'
+    #     )
+
+    #     # Anzeigen des Diagramms
+    #     # Anzeigen des Diagramms
+    #     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+    
+    # import plotly.graph_objects as go
+
+    # def status(df):
+    #     fig = go.Figure()
+    #     for status in [0, 1]:
+    #         for depot in df['DeliveryDepot'].unique():
+    #             df_filtered = df[(df['AllSSCCLabelsPrinted'] == status) & (df['DeliveryDepot'] == depot)]
+    #             for _, row in df_filtered.iterrows():
+    #                 fig.add_trace(go.Bar(
+    #                     x=[depot],
+    #                     y=[row['Picks Gesamt']],
+    #                     name=f"{row['SapOrderNumber']} - {'Offen' if status == 0 else 'Abgeschlossen'}",
+    #                     marker_color='red' if status == 0 else 'green',
+    #                 ))
+
+    #     fig.update_layout(
+    #         barmode='stack',
+    #         title='Status der Aufträge pro Depot',
+    #         xaxis_title='Depot',
+    #         yaxis_title='Gesamtzahl der Picks',
+    #         legend_title='SapOrderNumber - Status'
+    #     )
+
+    #     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+    
+    
+    
     ## AG-Grid Func ####
     def tabelleAnzeigen(df):
         #new df with only the columns we need 'PlannedDate' ,'SapOrderNumber','PartnerName']#'Fertiggestellt','Picks Gesamt','Picks Karton','Picks Paletten','Picks Stangen','Lieferschein erhalten','Fertiggestellt'
-        dfAG = df[['PlannedDate','DeliveryDepot' ,'SapOrderNumber','PartnerName','Fertiggestellt','Fertige Paletten','Picks Gesamt','Lieferschein erhalten']]
+        dfAG = df[['PlannedDate','Lieferschein erhalten','DeliveryDepot','SapOrderNumber','PartnerName','Fertiggestellt','Fertige Paletten','Picks Gesamt','UnloadingListIdentifier','ActualNumberOfPallets','EstimatedNumberOfPallets']]
 
 
-        st.data_editor(data=dfAG, use_container_width=True)
+        st.dataframe(data=dfAG, use_container_width=True)
     
     def downLoadTagesReport(df):
     
@@ -1080,8 +1167,7 @@ class LIVE:
             LIVE.figTachoDiagramm2(dfOr,'KNBFE')
         with col37:
             LIVE.figTachoDiagramm2(dfOr,'KNHAJ')
-        #LIVE.columnsKennzahlen(dfOr)
-        #st.write('Keine Daten vorhanden')
+
         try:
             with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', use_container_width=True, ):
                     LIVE.timeline(dfOr)         
@@ -1092,14 +1178,13 @@ class LIVE:
         except:
             st.write('Keine Daten vorhanden')
         try:
-            LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr) 
+            LIVE.status(dfOr)
         except:
-            st.write('Keine Daten vorhanden')
             st.write('Keine Daten vorhanden')
         try:
             LIVE.fig_trucks_Org(dfOr)
         except:
-            LIVE.fig_trucks_Org(dfOr)
+            st.write('Keine Daten vorhanden')
         try:
             LIVE.fig_Status_nach_Katergorie(dfOr)
         except:
@@ -1108,8 +1193,9 @@ class LIVE:
             LIVE.figPicksBy_SAP_Order_CS_PAL(dfOr) 
         except:
             st.write('Keine Daten vorhanden')
-
-
-
+        try:
+            LIVE.tabelleAnzeigen(dfOr)
+        except:
+            st.write('Keine Daten vorhanden')
 
 

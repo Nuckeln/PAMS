@@ -11,6 +11,7 @@ from Seiten.P_Forecast import main as pageForecast
 from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.P_Ladeplan import main as pageLadeplan
 from Seiten.C_E_check import main as pageC_E_check
+from Seiten.P_SFG_Reports import main as pageSFG_Reports
 from Data_Class.MMSQL_connection import read_Table,save_Table_append
 #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/main.py"
 
@@ -61,7 +62,7 @@ def user_menue_rechte():
     # Logik zur Bestimmung der Menürechte basierend auf den Benutzerrechten
     if st.session_state.rechte == 1:
         # Admin Vollzugriff
-        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check', 'Admin']
+        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','SFG Reports','Admin']
     
     elif st.session_state.rechte == 2:
         # Manager BAT
@@ -124,7 +125,8 @@ def user_menue_frontend():
         adminPage()
     if page == 'C&E check':
         pageC_E_check()
-        
+    if page == 'SFG Reports':
+        pageSFG_Reports()   
     if page == 'Logout':
         st.session_state.user = None
         st.session_state.rechte = None
