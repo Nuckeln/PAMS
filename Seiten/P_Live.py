@@ -1169,7 +1169,6 @@ class LIVE:
             LIVE.figTachoDiagramm2(dfOr,'KNBFE')
         with col37:
             LIVE.figTachoDiagramm2(dfOr,'KNHAJ')
-
         try:
             with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', use_container_width=True, ):
                     LIVE.timeline(dfOr)         
@@ -1179,10 +1178,10 @@ class LIVE:
             LIVE.figPicksKunde(dfOr)
         except:
             st.write('Keine Daten vorhanden')
-#        try:
-        LIVE.status(dfOr)
-#        except:
-        st.write('Keine Daten vorhanden')
+        try:
+            LIVE.status(dfOr)
+        except:
+            st.write('Keine Daten vorhanden')
         try:
             LIVE.fig_trucks_Org(dfOr)
         except:

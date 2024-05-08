@@ -1158,6 +1158,7 @@ def main():
     df_SFG_out = filter_data(df_SFG_out,sel_date,'Abholdatum Update')
     df_SFG_inb = filter_data(df_SFG_inb,sel_date,'Ist Datum\n(Tatsächliche Anlieferung)')
 
+
     col1,col2 = st.columns([1,1])
     with col1:
         with st.container(border=True):
@@ -1177,7 +1178,7 @@ def main():
         with st.container(border=True):
             show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
 
-    
+
     # show_domestic(df_CW_out, df_CW_inb, df_CW_dds)
     # show_SFG(df_SFG_out, df_SFG_inb, df_SFG_dds)
     # show_LEAF(df_CW_out, df_CW_inb, df_CW_dds)
