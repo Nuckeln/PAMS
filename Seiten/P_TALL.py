@@ -2,6 +2,7 @@
 import streamlit as st
 import hydralit_components as hc
 from Data_Class.cal_lt22_TALL_Data import fuege_Stammdaten_zu_LT22
+import pandas as pd
 
 
 def berechne_stapeln(df):
@@ -68,8 +69,22 @@ def page():
     
     # Berechne die Stapelung
     stapel_details, unverbrauchte_paletten = berechne_stapeln(dfPal)
+    # finde und zähle die anzahl einzigartiger Ziel_Pal_ID in stapel_details
+    # Konvertiere die Liste von Dictionaries in ein DataFrame
+    df_stapel_details = pd.DataFrame(stapel_details)
+
+    # Finde und zähle die Anzahl der einzigartigen Ziel_Pal_ID
+    unique_target_pal_ids = set(df_stapel_details['Ziel_Pal_ID'])
+    count_unique_target_pal_ids = len(unique_target_pal_ids)
+
+    st.write(f'Anzahl der einzigartigen Ziel_Pal_ID: {count_unique_target_pal_ids}')
+    
     st.write('unverbrauchte_paletten')
     st.write(unverbrauchte_paletten)
+    # COUNT unverbrauchte_paletten
+    anzahl_unverbrauchte_paletten = unverbrauchte_paletten['Pal_ID'].count()
+    st.write(f'Anzahl unverbrauchte Paletten: {anzahl_unverbrauchte_paletten}')
+    st.write(f'Anzahl der einzigartigen Ziel_Pal_ID: {count_unique_target_pal_ids}')
     st.write('stapel_details')
     st.write(stapel_details)
     

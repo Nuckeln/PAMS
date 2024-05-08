@@ -112,6 +112,11 @@ def user_menue_frontend():
 
 
     page = st_navbar(user_menue_rechte(), styles=styles, options={"use_padding": True,'show_menu': False},logo_path='Data/img/logo_white.svg',selected='Depot Live Status')
+    # create df User and sel_menu and date and time and save to SQL
+    time = pd.Timestamp.now()
+    date = time.date()
+    df_log = pd.DataFrame({'PAMS_LOG_User': [st.session_state.user], 'Menu': [page], 'Date': [date], 'Time': [time]})
+    save_Table_append(df_log, 'log')
     #Seitenlogik hier...
     if page == 'Depot Live Status':
         LIVE.PageTagesReport()
@@ -191,7 +196,7 @@ def main():
             authenticator.logout()
             st.stop()
         user_menue_frontend()
-        #authenticator.logout()
+        
     elif authentication_status is False:
         st.error("Benutzername oder Passwort ist falsch.")
     else:
