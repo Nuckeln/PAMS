@@ -116,8 +116,7 @@ def user_menue_frontend():
     time = pd.Timestamp.now()
     date = time.date()
     df_log = pd.DataFrame({'PAMS_LOG_User': [st.session_state.user], 'Menu': [page], 'Date': [date], 'Time': [time]})
-    save_Table_append(df_log, 'log')
-    #Seitenlogik hier...
+    save_Table_append(df_log, 'PAMS_LOG_User')
     if page == 'Depot Live Status':
         LIVE.PageTagesReport()
     if page == 'LC Monitor':
