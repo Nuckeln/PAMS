@@ -116,28 +116,28 @@ def user_menue_frontend():
     if page == 'Depot Live Status':
         LIVE.PageTagesReport()
     if page == 'LC Monitor':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='blue'):
             pageLadeplan()
     if page == 'Depot Reports':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='red'):
             reportPage()
     if page == 'Forecast':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
             pageForecast()
     if page == 'Lagerverwaltung':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
             pageStellplatzverwaltung()
     if page == 'Admin':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
             adminPage()
     if page == 'C&E check':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
             pageC_E_check()
     if page == 'SFG Reports':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
             pageSFG_Reports()   
     if page == 'TALL':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
             pageTALL()
     if page == 'Logout':
         st.session_state.user = None
