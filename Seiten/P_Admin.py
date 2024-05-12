@@ -81,6 +81,8 @@ def userverwaltung():
                 
                 with st.form('Funktion ändern'):
                     new_function = st.selectbox('Funktion',all_funktionen)
+                    # pages = ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','SFG Reports','TALL','Admin']
+                    
                     def ordne_funk_rechte_zu(funktion):
                         if funktion == 'admin':
                             return 1

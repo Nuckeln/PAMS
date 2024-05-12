@@ -7,7 +7,7 @@ import pandas as pd
 import time
 import json
 from sqlalchemy import Table, Column, Integer, MetaData
-
+import streamlit as st
 import pyodbc
 
 @dataclass(frozen=True)
@@ -107,10 +107,14 @@ def read_Table(table_name):
     db_conn = AzureDbConnection(conn_settings)
     # Verbindung herstellen
     db_conn.connect()
-    # Hier kannst du die Verbindung verwenden, z.B. Abfragen ausführen oder Tabellen abrufen
-    df = pd.read_sql(f"SELECT * FROM [{table_name}]", db_conn.db)
+    try:
+        # Hier kannst du die Verbindung verwenden, z.B. Abfragen ausführen oder Tabellen abrufen
+        df = pd.read_sql(f"SELECT * FROM [{table_name}]", db_conn.db)
+    except:
+        st.warning(f"Table {table_name} not found")
     # Verbindung schließen
     db_conn.dispose()
+    
     return df
 
 def read_Table_by_Date(day1: str, day2:str, tabellenName,datumsSpalte):

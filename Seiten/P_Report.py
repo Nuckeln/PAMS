@@ -30,18 +30,18 @@ import plotly.graph_objs as go
 '''
 ##### LOAD AND FILTER DATA #####
 BATColurs = ['#0e2b63','#004f9f','#00b1eb','#ef7d00','#ffbb00','#ffaf47','#afca0b','#5a328a','#e72582']
-
+@st.cache_data(show_spinner=False)
 def load_data():
 
     df = read_Table('prod_Kundenbestellungen')
-    dfIssues = read_Table('PAMS_Issues')
+    dfIssues = read_Table('PAMS_SD_Issues')
     return df, dfIssues
 
 def filterDate(df: pd,dfIssues: pd):
     df.PlannedDate = pd.to_datetime(df.PlannedDate)
     df['Packtag'] = df.PlannedDate.dt.strftime('%d.%m.%Y')
     df['Packtag'] = df['Packtag'].astype(str)
-
+    df['Jahr'] = df.PlannedDate.dt.strftime('%Y')
     df['Wochentag'] = df['PlannedDate'].dt.strftime('%A')
     df['Woche'] = df['PlannedDate'].dt.strftime('%V.%Y')
     df['Monat'] = df['PlannedDate'].dt.strftime('%m.%Y')
@@ -52,7 +52,7 @@ def filterDate(df: pd,dfIssues: pd):
     with col1:
         sel_filter = st.radio(
         "Filtern nach:",
-        ["Monat", "Woche" ],
+        ["Monat", "Woche", 'Jahr' ],
         key="visibility",
         horizontal=True)       
 
@@ -78,12 +78,16 @@ def filterDate(df: pd,dfIssues: pd):
             #select unique values in column Monat
             dfMonth = df2['Monat'].unique()
             dfMonth_sorted = sorted(dfMonth, key=lambda x: (x.split('.')[1], x.split('.')[0]), reverse=True)
-
-
-            
-            
             sel_monthRange = st.selectbox('Wähle Monat', dfMonth_sorted)
             df = df[df['Monat'] == sel_monthRange]
+        if sel_filter == 'Jahr':
+            #sort df by PlannedDate acciending
+            df2 = df.sort_values(by=['PlannedDate'], ascending=False)
+            #select unique values in column Monat
+            dfYear = df2['Jahr'].unique()
+            dfYear_sorted = sorted(dfYear, key=lambda x: (x.split('.')[1], x.split('.')[0]) if '.' in x else (x, x), reverse=True)
+            sel_yearRange = st.selectbox('Wähle Jahr', dfYear_sorted)
+            df = df[df['Jahr'] == sel_yearRange]
 
     #to datetime
     try:
@@ -92,6 +96,14 @@ def filterDate(df: pd,dfIssues: pd):
         sel_day_min = df['PlannedDate'].min()
         sel_day_min = datetime.strptime(sel_day_min, '%d.%m.%Y')
         dfIssues = dfIssues[(dfIssues['Datum gemeldet'] >= sel_day_min) & (dfIssues['Datum gemeldet'] <= sel_day_max)]
+        if sel_filter == 'Woche':
+            dfIssues = dfIssues[dfIssues['Datum gemeldet'].dt.strftime('%V.%Y') == sel_weekRange]
+            #create new column for week
+            dfIssues['Datum gemeldet'] = dfIssues['Datum gemeldet'].dt.strftime('%d.%m.%Y')
+        if sel_filter == 'Monat':
+            dfIssues = dfIssues[dfIssues['Datum gemeldet'].dt.strftime('%m.%Y') == sel_monthRange]
+            #create new column for month
+            dfIssues['Datum gemeldet'] = dfIssues['Datum gemeldet'].dt.strftime('%d.%m.%Y')
     except:
         pass
     #to datetime
@@ -102,11 +114,15 @@ def filterDate(df: pd,dfIssues: pd):
     with col1:
         tabelle = st.checkbox('Tabellen einblenden')
     with col2:
-        sel_Day_week = st.radio("Zeige in: ", ["Tagen", "Wochen"], key="zeigeIn", horizontal=True)
+        sel_Day_week = st.radio("Zeige in: ", ["Tagen", "Wochen","Monaten","Jahren"], key="zeigeIn", horizontal=True)
     if sel_Day_week == 'Wochen':
         sel_Day_week = 'Woche'
     if sel_Day_week == 'Tagen':
         sel_Day_week = 'PlannedDate'
+    if sel_Day_week == 'Monaten':
+        sel_Day_week = 'Monat'
+    if sel_Day_week == 'Jahren':
+        sel_Day_week = 'Jahr'
     return df, dfIssues, tabelle, sel_Day_week
 
 
@@ -369,6 +385,11 @@ def figFehlerVsLieferscheine(dfIssues,df,show_tables,show_in_day_Week):
 
         if show_tables:
             st.dataframe(dfIssuesOriginal)
+    
+def figFehlerBarDay(dfIssues,df,show_tables,show_in_day_Week):
+    dfIssues = dfIssues.groupby(['Datum gemeldet','Art']).size().reset_index(name='Anzahl')
+    fig = px.bar(dfIssues, x="Datum gemeldet", y='Anzahl', color="Art", hover_data=["Anzahl","Art","Datum gemeldet"])
+    st.plotly_chart(fig, use_container_width=True)
 
 # BAU DIR WAS
 @st.cache_resource
@@ -423,7 +444,7 @@ def reportPage():
             figFehlerVsLieferscheine(dfIssues,df,show_tables,show_in_day_Week)
         if 'Fehler Total nach Art' in sel_filterIssues:
             figIssuesTotal(dfIssues,show_in_day_Week,show_tables)
-    
+        figFehlerBarDay(dfIssues,df,show_tables,show_in_day_Week)
     # with st.expander("Bau dir was", expanded=True):
     #     bau_dir_was()
         

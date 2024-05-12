@@ -41,7 +41,7 @@ def save_update_time():
     with open('Data/appData/update_time_Ladeplan.json', 'w') as file:
         json.dump(datum_zeit_string, file)
 
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def load_data_CW():
     save_update_time()
     data = get_file_dev("CW_SDDS.xlsm")
@@ -82,7 +82,7 @@ def load_data_CW():
     #     st.error('Die Angezeigten Daten sind Veraltet')
     #     return df_outbound, df_inbound, None
 
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def load_data_LC():
     try:
         data = get_file_dev("LC_SDDS.xlsm")
@@ -124,7 +124,7 @@ def load_data_LC():
         st.error('Die Angezeigten Daten sind Veraltet')
         return df_outbound, df_inbound, None    
 
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def load_data_SFG():
     try:
         data = get_file_dev("SFG_SDDS.xlsx")
@@ -253,6 +253,7 @@ def show_raw_data(df_CW_out, df_CW_inb, df_CW_dds, df_LC_out,df_LC_inb, df_LC_dd
 
 def filter_data(df, date, useCol):
     df[useCol] = pd.to_datetime(df[useCol], errors='coerce').dt.date
+    
     df = df[df[useCol] == date]
     return df
 

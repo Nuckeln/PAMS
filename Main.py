@@ -13,6 +13,7 @@ from Seiten.P_Ladeplan import main as pageLadeplan
 from Seiten.C_E_check import main as pageC_E_check
 from Seiten.P_SFG_Reports import main as pageSFG_Reports
 from Seiten.P_TALL import page as pageTALL
+from Seiten.P_PDCA_Board import main as pagePDCA
 import hydralit_components as hc
 from Data_Class.MMSQL_connection import read_Table,save_Table_append
 #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/main.py"
@@ -64,7 +65,7 @@ def user_menue_rechte():
     # Logik zur Bestimmung der Menürechte basierend auf den Benutzerrechten
     if st.session_state.rechte == 1:
         # Admin Vollzugriff
-        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','SFG Reports','TALL','Admin']
+        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','SFG Reports','PDCA','Admin']
     
     elif st.session_state.rechte == 2:
         # Manager BAT
@@ -143,6 +144,9 @@ def user_menue_frontend():
     if page == 'TALL':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
             pageTALL()
+    if page == 'PDCA':
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
+            pagePDCA()
     if page == 'Logout':
         st.session_state.user = None
         st.session_state.rechte = None
