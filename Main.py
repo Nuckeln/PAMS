@@ -133,7 +133,7 @@ def user_menue_frontend():
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
             pageStellplatzverwaltung()
     if page == 'Admin':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
             adminPage()
     if page == 'C&E check':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
@@ -142,10 +142,10 @@ def user_menue_frontend():
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
             pageSFG_Reports()   
     if page == 'TALL':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
             pageTALL()
     if page == 'PDCA':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
             pagePDCA()
     if page == 'Logout':
         st.session_state.user = None

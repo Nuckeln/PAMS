@@ -180,7 +180,7 @@ def showTabels(df_depot: pd, dfIssues_depot: pd, ):
     st.write('DF Issues')
     st.dataframe(dfIssues_depot)
 
-def cw_loadingperformance(df_CW_out):
+def cw_loadingperformance(df_CW_out, df_in_CW):
     
     sum_of_loadings = df_CW_out['Destination City'].count()
     # zähle Verladen + PGI' in 'Status Verladung '
@@ -196,36 +196,194 @@ def cw_loadingperformance(df_CW_out):
     df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] = pd.to_datetime(df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '], errors='coerce').dt.time
     df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] = df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '].apply(time_to_timedelta)
     out_time = df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '].mean().seconds / 60
-    out_time = round(out_time) 
+    lp_cw = round(out_time) 
     
     # ermittle ob innerhalb von 150 Minuten verladen wurde und setze True oder False
     df_CW_out['In time'] = df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] <= pd.Timedelta(minutes=150)   
-    # ermittel Prozentanteil
-    in_time = df_CW_out['In time'].sum() / sum_of_loadings * 100
     
-    # st.write('Anzahl Verladungen: ', sum_of_loadings)
-    # st.write('Durchschnittliche Verladezeit: ', out_time, 'Minuten')
-    # st.write('Innerhalb von 150 Minuten verladen: ', in_time, '%')
+    outbound_time = df_CW_out['In time'].sum() / sum_of_loadings * 100
+    in_time_loded_total = df_CW_out['In time'].sum()
+    outbound_time = round(outbound_time,1)
     
-    
-    #can apply customisation to almost all the properties of the card, including the progress bar
-    theme_bad = {'bgcolor': '#FFF0F0','title_color': 'red','content_color': 'red','icon_color': 'red', 'icon': 'fa fa-times-circle'}
-    theme_neutral = {'bgcolor': '#f9f9f9','title_color': 'orange','content_color': 'orange','icon_color': 'orange', 'icon': 'fa fa-question-circle'}
-    theme_good = {'bgcolor': '#EFF8F7','title_color': 'green','content_color': 'green','icon_color': 'green', 'icon': 'fa fa-check-circle'}
-    
-    
-    in_time = round(in_time,1)
-    if in_time < 85:
-        infocard = hc.info_card(title=f'{in_time} %', content='Loading performance CW!',bar_value=in_time, theme_override=theme_bad)
-    if in_time >= 85:
-        infocard = hc.info_card(title=f'{in_time} %', content='Loading performance CW!',bar_value=in_time, theme_override=theme_good)
+    def plotly_loadingTime_CW(df_CW_out):
+        # Entferne Zeilen mit NaN-Werten
+        df_CW_out = df_CW_out.dropna(subset=['In time'])
 
-    #create a bar chart
-    fig = px.bar(df_CW_out, x='Destination City', y='On time innerhalb 2,5 Std. (Automatisch berechnet) ', color='In time', title='Verladezeit in Minuten', labels={'Destination City': 'Stadt', 'On time innerhalb 2,5 Std. (Automatisch berechnet) ': 'Verladezeit in Minuten', 'In time': 'Innerhalb von 150 Minuten verladen'})
-    # st.plotly_chart(fig)
-    # st.data_editor(df_CW_out)
-    return in_time, fig
+        # df_CW_out group by Date and the mean of 'On time innerhalb 2,5 Std. (Automatisch berechnet) '
+        df_CW_out = df_CW_out.groupby('Ist Datum').agg({'On time innerhalb 2,5 Std. (Automatisch berechnet) ': 'mean'}).reset_index()
+        # Erstelle ein gestapeltes Flächendiagramm
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=df_CW_out['Ist Datum'], y=df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '], name='Blocklager Paletten ist', mode='lines', fill='tozeroy', line=dict(width=0.5, color='#0e2b63')))
+        #fig.add_trace(go.Scatter(x=df_CW_dds['Date'], y=df_CW_dds['Kumulatives Regalager'], name='Regalager Paletten ist', mode='lines', fill='tonexty', line=dict(width=0.5, color='#ef7d00')))
+
+        # # Füge Beschriftungen nur alle drei Tage hinzu
+        # df_CW_dds['Beschriftung'] = pd.to_datetime(df_CW_dds['Date']).dt.day % 3 == 0
+        # df_label = df_CW_dds[df_CW_dds['Beschriftung']]
+
+        # fig.add_trace(go.Scatter(
+        #     x=df_label['Date'],
+        #     y=df_label['Kumulatives Regalager'],
+        #     mode='text',
+        #     text=df_label['Kumulatives Regalager'],
+        #     textposition="top center",
+        #     textfont=dict(
+        #         color="#000000"
+        #     ),
+        #     showlegend=False
+        # ))
+
+        # # Ändere das Layout
+        # fig.update_layout(
+        #     xaxis_title=None,
+        #     yaxis_title='Anzahl Paletten',
+        #     title='CW (Geb7) Lagerbestand in Paletten',
+        #     font=dict(
+        #         family="Montserrat",
+        #         size=12,
+        #         color="#7f7f7f"
+        #     ),
+        #     legend=dict(
+        #         title='',
+        #         orientation="h",
+        #         yanchor="bottom",
+        #         y=1.02,
+        #         xanchor="right",
+        #         x=1
+        #     )
+        # )
+        return fig
+    
+    
+    
+    
+    try:
+        # Konvertiere 'Wartezeit bis Entladebeginn' in timedelta-Objekte
+        # to datetime
+        df_in_CW['Wartezeit bis Entladebeginn'] = pd.to_datetime(df_in_CW['Wartezeit bis Entladebeginn'])
+        df_in_CW['Entladungszeit'] = pd.to_datetime(df_in_CW['Entladungszeit'])
+        df_in_CW['Wartezeit bis Entladebeginn'] = df_in_CW['Wartezeit bis Entladebeginn'].apply(time_to_timedelta)
+        #Entladungszeit
+        df_in_CW['Entladungszeit'] = df_in_CW['Entladungszeit'].apply(time_to_timedelta)
+        # Berechne die Gesamtzeit in neue Spalte Entladegesamtzeit
+        df_in_CW['Entladegesamtzeit'] = df_in_CW['Wartezeit bis Entladebeginn'] + df_in_CW['Entladungszeit']
+        # Berechne den Durchschnitt der Entladegesamtzeit
+        inb_time = df_in_CW['Entladegesamtzeit'].mean().seconds / 60
+        # runde auf minuten
+        inb_time = round(inb_time)
+    except:
+        inb_time = 0
+        
+        
+    
+    fig = plotly_loadingTime_CW(df_CW_out)
+    
+    return lp_cw,in_time_loded_total ,fig, inb_time, sum_of_loadings
     #group by 'Ist Datum', Destination City, count 'On time innerhalb 2,5 Std. (Automatisch berechnet) '
+
+def LC_loadingperformance(df_out_LC, df_in_LC):
+    
+    sum_of_loadings = df_out_LC['SCI'].count()
+    
+    # zähle Verladen + PGI' in 'Status Verladung '
+    sum_loaded = df_out_LC[df_out_LC['Loaded at Bayreuth (Documents finished)'] != None]['Loaded at Bayreuth (Documents finished)'].count()
+    # zähle Vorgestellt in 'Status Verladung '
+    def time_to_timedelta(t):
+        return pd.Timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+    try:
+        df_out_LC = df_out_LC[df_out_LC['Verladungszeit Log-In'].notnull()]
+        df_out_LC = df_out_LC[df_out_LC['Verladungszeit Log-In'] != '0']
+        df_out_LC = df_out_LC[df_out_LC['Verladungszeit Log-In'] != '']
+        # to datetime
+        df_out_LC['Verladungszeit Log-In'] = pd.to_datetime(df_out_LC['Verladungszeit Log-In'])
+        df_out_LC['Verladungszeit Log-In'] = df_out_LC['Verladungszeit Log-In'].apply(time_to_timedelta)
+        out_time = df_out_LC['Verladungszeit Log-In'].mean().seconds / 60
+        out_time = round(out_time)
+    except:
+        out_time = 0
+    
+    # ermittle ob innerhalb von 150 Minuten verladen wurde und setze True oder False
+    df_out_LC['In time'] = df_out_LC['Verladungszeit Log-In'] <= pd.Timedelta(minutes=150)   
+    
+    outbound_time = df_out_LC['In time'].sum() / sum_of_loadings * 100
+    in_time_loded_total = df_out_LC['In time'].sum()
+    lp_lc = round(outbound_time,1)
+    fig = px.bar(df_out_LC, x='Destination City', y='Verladungszeit Log-In', color='In time', title='Verladezeit in Minuten', labels={'Destination City': 'Stadt', 'Verladungszeit Log-In': 'Verladezeit in Minuten', 'In time': 'Innerhalb von 150 Minuten verladen'})
+
+    try:
+        # Konvertiere 'Wartezeit bis Entladebeginn' in timedelta-Objekte
+        # to datetime
+        df_in_LC['Automatisch berechnet.2'] = pd.to_datetime(df_in_LC['Automatisch berechnet.2'])
+        df_in_LC['Automatisch berechnet.2'] = df_in_LC['Automatisch berechnet.2'].apply(time_to_timedelta)
+        #Entladungszeit
+        inb_time = df_in_LC['Automatisch berechnet.2'].mean().seconds / 60
+        # runde auf minuten
+        inb_time = round(inb_time)
+    except:
+        inb_time = 0
+        
+    sum_of_loadings = df_in_LC['Datum'].count()
+    
+    sum_GR = df_in_LC['Echtzeit Büro.1'].count()
+    # zähle FG in 
+    sum_unloadedFG = df_in_LC['Anzahl Paletten'].count()
+    # zähle in in Vorbereitung 'Status Verladung '
+    sum_unloadedWMS = df_in_LC['Anzahl Paletten.1'].count()
+    
+    
+    return lp_lc,in_time_loded_total ,fig, inb_time, sum_of_loadings
+    #group by 'Ist Datum', Destination City, count 'On time innerhalb 2,5 Std. (Automatisch berechnet) '
+
+def SFG_loadingperformance(df_CW_out, df_in_CW):
+    
+    sum_of_loadings = df_CW_out['Destination City'].count()
+    # zähle Verladen + PGI' in 'Status Verladung '
+    sum_loaded = df_CW_out[df_CW_out['Status Verladung'] == 'Verladen + PGI']['Status Verladung'].count()
+    def time_to_timedelta(t):
+        return pd.Timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+    
+    # filter ist null 0 or NaN or empty df_CW_out['Wartezeit bis Verladebeginn']
+    df_CW_out = df_CW_out[df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '].notnull()]
+    df_CW_out = df_CW_out[df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] != '0']
+    df_CW_out = df_CW_out[df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] != '']
+    # to datetime
+    df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] = pd.to_datetime(df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '], errors='coerce').dt.time
+    df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] = df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '].apply(time_to_timedelta)
+    out_time = df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '].mean().seconds / 60
+    lp_cw = round(out_time) 
+    
+    # ermittle ob innerhalb von 150 Minuten verladen wurde und setze True oder False
+    df_CW_out['In time'] = df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] <= pd.Timedelta(minutes=150)   
+    
+    outbound_time = df_CW_out['In time'].sum() / sum_of_loadings * 100
+    in_time_loded_total = df_CW_out['In time'].sum()
+    outbound_time = round(outbound_time,1)
+    fig = px.bar(df_CW_out, x='Destination City', y='On time innerhalb 2,5 Std. (Automatisch berechnet) ', color='In time', title='Verladezeit in Minuten', labels={'Destination City': 'Stadt', 'On time innerhalb 2,5 Std. (Automatisch berechnet) ': 'Verladezeit in Minuten', 'In time': 'Innerhalb von 150 Minuten verladen'})
+
+    try:
+        # Konvertiere 'Wartezeit bis Entladebeginn' in timedelta-Objekte
+        # to datetime
+        df_in_CW['Wartezeit bis Entladebeginn'] = pd.to_datetime(df_in_CW['Wartezeit bis Entladebeginn'])
+        df_in_CW['Entladungszeit'] = pd.to_datetime(df_in_CW['Entladungszeit'])
+        df_in_CW['Wartezeit bis Entladebeginn'] = df_in_CW['Wartezeit bis Entladebeginn'].apply(time_to_timedelta)
+        #Entladungszeit
+        df_in_CW['Entladungszeit'] = df_in_CW['Entladungszeit'].apply(time_to_timedelta)
+        # Berechne die Gesamtzeit in neue Spalte Entladegesamtzeit
+        df_in_CW['Entladegesamtzeit'] = df_in_CW['Wartezeit bis Entladebeginn'] + df_in_CW['Entladungszeit']
+        # Berechne den Durchschnitt der Entladegesamtzeit
+        inb_time = df_in_CW['Entladegesamtzeit'].mean().seconds / 60
+        # runde auf minuten
+        inb_time = round(inb_time)
+    except:
+        inb_time = 0
+    
+    
+    
+    return lp_cw,in_time_loded_total ,fig, inb_time, sum_of_loadings
+    #group by 'Ist Datum', Destination City, count 'On time innerhalb 2,5 Std. (Automatisch berechnet) '
+
+
+
+
 
 def Lagerbestand (df_dds_cw, df_dds_lc, df_dds_sfg, sel_stock):
     img = Image.open('Data/img/Domestic_LOGO.png', mode='r')  
@@ -408,22 +566,7 @@ def Lagerbestand (df_dds_cw, df_dds_lc, df_dds_sfg, sel_stock):
         
         fig = go.Figure()
         fig.add_trace(go.Bar(x=df_dds['Date'], y=df_dds['C & F - Paletten'], name='C & F - Paletten', marker_color='#0e2b63', text=df_dds['C & F - Paletten'], textposition='auto'))
-        # fig.add_trace(go.Bar(x=df_dds['Date'], y=df_dds['SummeWMS'], name='SummeWMS', marker_color='#0e2b63', text=df_dds['SummeWMS'], textposition='auto'))
-        # fig.add_trace(go.Bar(x=df_dds['Date'], y=df_dds['SummeFG'], name='SummeFG', marker_color='#ef7d00', text=df_dds['SummeFG'], textposition='auto'))
-        # Füge die Gesamtsumme als Datenbeschriftung hinzu
-        # fig.add_trace(go.Scatter(
-        #     x=df_dds['Date'],
-        #     y=df_dds['Total'],
-        #     mode='text',
-        #     text=df_dds['Total'],
-        #     textposition="top center",
-        #     textfont=dict(
-        #         color="#000000"
-        #     ),
-        #     showlegend=False
-        # ))
 
-        # Ändere das Layout
         fig.update_layout(
             barmode='relative',
             #xaxis={'categoryorder':'total descending', 'type': 'category'},
@@ -509,63 +652,61 @@ def main():
     df_out_SFG, df_in_SFG, df_dds_sfg = load_data_SFG()
     cw_img, lc_img, diet_img, caf_img, leaf_img, outbound_img, inbound_img = load_img_logos()
     col1, col2 = st.columns(2)
-     
-    with col1:
-        sel_filter = st.radio(
-        "Filtern nach:",
-        ["Monat", 'Jahr' ],
-        key="visibility",
-        horizontal=True)  
-        
-        if sel_filter == 'Monat':
-            dfMonth = df_depot.sort_values(by=['PlannedDate'], ascending=False)
-            #select unique values in column Monat
-            dfMonth = dfMonth['Monat'].unique()
-            dfMonth_sorted = sorted(dfMonth, key=lambda x: (x.split('.')[1], x.split('.')[0]), reverse=True)
-            sel_monthRange = st.selectbox('Wähle Monat', dfMonth_sorted)  
-        
-        if sel_filter == 'Jahr':
-            dfYear = df_depot.sort_values(by=['PlannedDate'], ascending=False)
-            #select unique values in column Monat
-            dfYear = dfYear['Jahr'].unique()
-            dfYear_sorted = sorted(dfYear, key=lambda x: (x.split('.')[1], x.split('.')[0]) if '.' in x else (x, x), reverse=True)
-            sel_yearRange = st.selectbox('Wähle Jahr', dfYear_sorted)
+    with st.expander('Filter', expanded=False,):     
+        with col1:
+            sel_filter = st.radio(
+            "Filtern nach:",
+            ["Monat", 'Jahr' ],
+            key="visibility",
+            horizontal=True)  
             
+            if sel_filter == 'Monat':
+                dfMonth = df_depot.sort_values(by=['PlannedDate'], ascending=False)
+                #select unique values in column Monat
+                dfMonth = dfMonth['Monat'].unique()
+                dfMonth_sorted = sorted(dfMonth, key=lambda x: (x.split('.')[1], x.split('.')[0]), reverse=True)
+                sel_monthRange = st.selectbox('Wähle Monat', dfMonth_sorted)  
             
-    with col1:
-        tabelle = st.checkbox('Tabellen einblenden')
-    with col2:
-        sel_Day_week = st.radio("Zeige in: ", ["Monaten","Jahren"], key="zeigeIn", horizontal=True)
-        sel_stock = st.multiselect('Wähle Lagerbestand', ['CW', 'LC', 'SFG LEAF', 'SFG DIET', 'SFG CAF'], default=['CW'])
-    if sel_Day_week == 'Monaten':
-        sel_Day_week = 'Monat'
-    if sel_Day_week == 'Jahren':
-        sel_Day_week = 'Jahr'   
-    
+            if sel_filter == 'Jahr':
+                dfYear = df_depot.sort_values(by=['PlannedDate'], ascending=False)
+                #select unique values in column Monat
+                dfYear = dfYear['Jahr'].unique()
+                dfYear_sorted = sorted(dfYear, key=lambda x: (x.split('.')[1], x.split('.')[0]) if '.' in x else (x, x), reverse=True)
+                sel_yearRange = st.selectbox('Wähle Jahr', dfYear_sorted)
 
-    if sel_filter == 'Monat':
-        df_depot = filter_data(df_depot, sel_monthRange, 'Monat', 'PlannedDate')
-        dfIssues_depot = filter_data(dfIssues_depot, sel_monthRange, 'Monat', 'Datum gemeldet')
-        df_out_CW = filter_data(df_out_CW, sel_monthRange, 'Monat','Ist Datum')
-        df_in_CW = filter_data(df_in_CW, sel_monthRange, 'Monat', 'Ist Datum')
-        df_dds_cw = filter_data(df_dds_cw, sel_monthRange, 'Monat','Date')
-        df_out_LC = filter_data(df_out_LC, sel_monthRange, 'Monat','Datum')
-        df_in_LC = filter_data(df_in_LC, sel_monthRange, 'Monat','Datum')
-        df_dds_lc = filter_data(df_dds_lc, sel_monthRange, 'Monat','Date')
-        df_out_SFG = filter_data(df_out_SFG, sel_monthRange, 'Monat', 'Abholdatum Update')
-        df_in_SFG = filter_data(df_in_SFG, sel_monthRange, 'Monat','Ist Datum\n(Tatsächliche Anlieferung)')
-        df_dds_sfg = filter_data(df_dds_sfg, sel_monthRange, 'Monat','Date')
-    if sel_filter == 'Jahr':
-        df_depot = filter_data(df_depot, sel_yearRange, 'Jahr', 'PlannedDate')
-        dfIssues_depot = filter_data(dfIssues_depot, sel_yearRange, 'Jahr', 'Datum gemeldet')
-        df_out_CW = filter_data(df_out_CW, sel_yearRange, 'Jahr','Ist Datum')
-        df_in_CW = filter_data(df_in_CW, sel_yearRange, 'Jahr', 'Ist Datum')
-        df_out_LC = filter_data(df_out_LC, sel_yearRange, 'Jahr','Datum')
-        df_in_LC = filter_data(df_in_LC, sel_yearRange, 'Jahr','Datum')
-        df_dds_lc = filter_data(df_dds_lc, sel_yearRange, 'Jahr','Date')
-        df_out_SFG = filter_data(df_out_SFG, sel_yearRange, 'Jahr', 'Abholdatum Update')
-        df_in_SFG = filter_data(df_in_SFG, sel_yearRange, 'Jahr','Ist Datum\n(Tatsächliche Anlieferung)')
-    
+            tabelle = st.checkbox('Tabellen einblenden')
+        with col2:
+            sel_Day_week = st.radio("Zeige in: ", ["Monaten","Jahren"], key="zeigeIn", horizontal=True)
+            sel_stock = st.multiselect('Wähle Lagerbestand', ['CW', 'LC', 'SFG LEAF', 'SFG DIET', 'SFG CAF'], default=['CW'])
+        if sel_Day_week == 'Monaten':
+            sel_Day_week = 'Monat'
+        if sel_Day_week == 'Jahren':
+            sel_Day_week = 'Jahr'   
+        
+
+        if sel_filter == 'Monat':
+            df_depot = filter_data(df_depot, sel_monthRange, 'Monat', 'PlannedDate')
+            dfIssues_depot = filter_data(dfIssues_depot, sel_monthRange, 'Monat', 'Datum gemeldet')
+            df_out_CW = filter_data(df_out_CW, sel_monthRange, 'Monat','Ist Datum')
+            df_in_CW = filter_data(df_in_CW, sel_monthRange, 'Monat', 'Ist Datum')
+            df_dds_cw = filter_data(df_dds_cw, sel_monthRange, 'Monat','Date')
+            df_out_LC = filter_data(df_out_LC, sel_monthRange, 'Monat','Datum')
+            df_in_LC = filter_data(df_in_LC, sel_monthRange, 'Monat','Datum')
+            df_dds_lc = filter_data(df_dds_lc, sel_monthRange, 'Monat','Date')
+            df_out_SFG = filter_data(df_out_SFG, sel_monthRange, 'Monat', 'Abholdatum Update')
+            df_in_SFG = filter_data(df_in_SFG, sel_monthRange, 'Monat','Ist Datum\n(Tatsächliche Anlieferung)')
+            df_dds_sfg = filter_data(df_dds_sfg, sel_monthRange, 'Monat','Date')
+        if sel_filter == 'Jahr':
+            df_depot = filter_data(df_depot, sel_yearRange, 'Jahr', 'PlannedDate')
+            dfIssues_depot = filter_data(dfIssues_depot, sel_yearRange, 'Jahr', 'Datum gemeldet')
+            df_out_CW = filter_data(df_out_CW, sel_yearRange, 'Jahr','Ist Datum')
+            df_in_CW = filter_data(df_in_CW, sel_yearRange, 'Jahr', 'Ist Datum')
+            df_out_LC = filter_data(df_out_LC, sel_yearRange, 'Jahr','Datum')
+            df_in_LC = filter_data(df_in_LC, sel_yearRange, 'Jahr','Datum')
+            df_dds_lc = filter_data(df_dds_lc, sel_yearRange, 'Jahr','Date')
+            df_out_SFG = filter_data(df_out_SFG, sel_yearRange, 'Jahr', 'Abholdatum Update')
+            df_in_SFG = filter_data(df_in_SFG, sel_yearRange, 'Jahr','Ist Datum\n(Tatsächliche Anlieferung)')
+        
     
     cw_actual_total_stock = df_dds_cw['Blocklager Paletten ist'].iloc[-1] + df_dds_cw['Regalager Paletten ist'].iloc[-1]
     cw_max_stock = 2800
@@ -575,39 +716,70 @@ def main():
     theme_bad = {'bgcolor': '#FFF0F0','title_color': 'red','content_color': 'red','icon_color': 'red', 'icon': 'fa fa-times-circle'}
     theme_neutral = {'bgcolor': '#f9f9f9','title_color': 'orange','content_color': 'orange','icon_color': 'orange', 'icon': 'fa fa-question-circle'}
     theme_good = {'bgcolor': '#EFF8F7','title_color': 'green','content_color': 'green','icon_color': 'green', 'icon': 'fa fa-check-circle'}
-    
-
-
     col1, col2, col3, col4, col5  = st.columns([1,1,1,1,1]) 
-    cw_fig, in_time = cw_loadingperformance(df_out_CW)
+    lp_cw,in_time_loded_total ,fig, inb_time, sum_of_loadings = cw_loadingperformance(df_out_CW, df_in_CW)
+    lp_lc,lc_in_time_loded_total ,lc_fig, lc_inb_time, lc_sum_of_loadings = LC_loadingperformance(df_out_LC, df_in_LC)
     with st.container(border=True):
+        
+        ## CW
         with col1:
             st.image(cw_img, use_column_width=True)
-            if in_time < 85:
-                hc.info_card(title=f'{in_time} %', content='Loading performance CW!',bar_value=in_time, theme_override=theme_bad)
-            if in_time >= 85:
-                hc.info_card(title=f'{in_time} %', content='Loading performance CW!',bar_value=in_time, theme_override=theme_good)
-
-            st.metric('CW Stock: ', value = f"{cw_actual_total_stock}",delta=f"{cw_free_space} PAL Platz")
+            if lp_cw < 85:
+                hc.info_card(title=f'{lp_cw} %', content='Loading performance',bar_value=lp_cw, theme_override=theme_bad)
+            if lp_cw >= 85:
+                hc.info_card(title=f'{lp_cw} %', content='Loading performance',bar_value=lp_cw, theme_override=theme_good)
+        
+            annotated_text(annotation(f'In Time {str(lp_cw)}','', "#50af47", font_family="Montserrat"),'  ',annotation(f'To Late {str(lp_cw)}','', "#ef7d00", font_family="Montserrat"))
+            with st.popover('Loadingtimes'):
+                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(lc_fig, use_container_width=True)
+            if inb_time < 85:
+                hc.info_card(title=f'{inb_time} %', content='Unloading performance',bar_value=inb_time, theme_override=theme_bad)
+            if inb_time >= 85:
+                hc.info_card(title=f'{inb_time} %', content='Unloading performance',bar_value=inb_time, theme_override=theme_good)
+            
+            annotated_text(annotation(f'In Time {str(inb_time)}','', "#50af47", font_family="Montserrat"),'  ',annotation(f'To Late {str(inb_time)}','', "#ef7d00", font_family="Montserrat"))
+    
+        
         with col2:
             st.image(lc_img, use_column_width=True)
+            if lp_lc < 85:
+                hc.info_card(title=f'{lp_lc} %', content='Loading performance',bar_value=lp_lc, theme_override=theme_bad)
+            if lp_lc >= 85:
+                hc.info_card(title=f'{lp_lc} %', content='Loading performance',bar_value=lp_lc, theme_override=theme_good)
+            
+            st.metric('CW Stock: ', value = f"{cw_actual_total_stock}",delta=f"{cw_free_space} PAL Platz")
+        ## CAF
+    #     with col3:
+    #         st.image(caf_img, use_column_width=True)
+    #         if in_time < 85:
+    #             hc.info_card(title=f'{in_time} %', content='Loading performance CW!',bar_value=in_time, theme_override=theme_bad)
+    #         if in_time >= 85:
+    #             hc.info_card(title=f'{in_time} %', content='Loading performance CW!',bar_value=in_time, theme_override=theme_good)
+            
+    #     ## DIET
+    #     with col4:
+    #         st.image(diet_img, use_column_width=True)
+    #         if in_time < 85:
+    #             hc.info_card(title=f'{in_time} %', content='Loading performance CW!',bar_value=in_time, theme_override=theme_bad)
+    #         if in_time >= 85:
+    #             hc.info_card(title=f'{in_time} %', content='Loading performance CW!',bar_value=in_time, theme_override=theme_good)
+            
+    #     ## LEAF
+    #     with col5:
+    #         st.image(leaf_img, use_column_width=True)
+    #         if in_time < 85:
+    #             hc.info_card(title=f'{in_time} %', content='Loading performance CW!',bar_value=in_time, theme_override=theme_bad)
+    #         if in_time >= 85:
+    #             hc.info_card(title=f'{in_time} %', content='Loading performance CW!',bar_value=in_time, theme_override=theme_good)
             
 
-        with col3:
-            st.image(caf_img, use_column_width=True)
-            st.write('CAF (Geb3) Lagerbestand: ')
-        with col4:
-            st.image(diet_img, use_column_width=True)
-            st.write('DIET (Geb1) Lagerbestand: ')
-        with col5:
-            st.image(leaf_img, use_column_width=True)
-            st.write('LEAF (Geb4) Lagerbestand: ')
         
-    Lagerbestand(df_dds_cw, df_dds_lc, df_dds_sfg, sel_stock)  
-    if tabelle:
-        showTabels(df_depot, dfIssues_depot)
-        showTabels(df_out_CW, df_in_CW)
-        showTabels(df_out_LC, df_in_LC)
-        showTabels(df_out_SFG, df_in_SFG)
+    # Lagerbestand(df_dds_cw, df_dds_lc, df_dds_sfg, sel_stock)  
+    # if tabelle:
+    #     showTabels(df_depot, dfIssues_depot)
+    #     showTabels(df_out_CW, df_in_CW)
+    #     showTabels(df_out_LC, df_in_LC)
+    #     showTabels(df_out_SFG, df_in_SFG)
         
     
