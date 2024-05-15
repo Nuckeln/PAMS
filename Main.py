@@ -20,7 +20,6 @@ from Data_Class.MMSQL_connection import read_Table,save_Table_append
 
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",)
 
-
 hide_streamlit_style = """
                 <style>
                 div[data-testid="stToolbar"] {

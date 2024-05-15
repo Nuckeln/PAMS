@@ -1,0 +1,22 @@
+Inbound CW
+
+Date = Entladedatum 
+SCI (Leer) = Shuttle und Krage
+SCI (Voll) = DHL
+
+Status = Eingelagert
+
+
+Outbound CW
+
+Status Verladung  = Verladen + PGI
+
+
+
+SFG Allgemein
+
+Status Verladung  = Verladen
+
+Type = DIET
+
+DIET Outbound

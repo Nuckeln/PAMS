@@ -342,9 +342,14 @@ def SFG_loadingperformance(df_CW_out, df_in_CW):
         return pd.Timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
     
     # filter ist null 0 or NaN or empty df_CW_out['Wartezeit bis Verladebeginn']
-    df_CW_out = df_CW_out[df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '].notnull()]
-    df_CW_out = df_CW_out[df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] != '0']
-    df_CW_out = df_CW_out[df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] != '']
+    df_CW_out = df_CW_out[df_CW_out['Dauer von Ankuft  bis Ladeende'].notnull()]
+    df_CW_out = df_CW_out[df_CW_out['Dauer von Ankuft  bis Ladeende'] != '0']
+    df_CW_out = df_CW_out[df_CW_out['Dauer von Ankuft  bis Ladeende'] != '']
+    #prüfe ob Fehlerhafte werte (nicht Zeit) in der Spalte sind
+    df_CW_out = df_CW_out[df_CW_out['Dauer von Ankuft  bis Ladeende'].str.contains(':')]
+    # Gebe aus wie viele Zeilen entfernt wurden
+    st.write('Fehlerhafte Werte in der Spalte Dauer von Ankuft  bis Ladeende: ', sum_of_loadings - df_CW_out['Destination City'].count())
+    
     # to datetime
     df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] = pd.to_datetime(df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '], errors='coerce').dt.time
     df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '] = df_CW_out['On time innerhalb 2,5 Std. (Automatisch berechnet) '].apply(time_to_timedelta)
@@ -645,14 +650,14 @@ def Lagerbestand (df_dds_cw, df_dds_lc, df_dds_sfg, sel_stock):
 
 def main():
         
-        
-    df_depot, dfIssues_depot = load_data_Depot()
-    df_out_CW, df_in_CW, df_dds_cw = load_data_CW()
-    df_out_LC, df_in_LC , df_dds_lc= load_data_LC()
-    df_out_SFG, df_in_SFG, df_dds_sfg = load_data_SFG()
-    cw_img, lc_img, diet_img, caf_img, leaf_img, outbound_img, inbound_img = load_img_logos()
-    col1, col2 = st.columns(2)
     with st.expander('Filter', expanded=False,):     
+        
+        df_depot, dfIssues_depot = load_data_Depot()
+        df_out_CW, df_in_CW, df_dds_cw = load_data_CW()
+        df_out_LC, df_in_LC , df_dds_lc= load_data_LC()
+        df_out_SFG, df_in_SFG, df_dds_sfg = load_data_SFG()
+        cw_img, lc_img, diet_img, caf_img, leaf_img, outbound_img, inbound_img = load_img_logos()
+        col1, col2 = st.columns(2)
         with col1:
             sel_filter = st.radio(
             "Filtern nach:",
@@ -716,10 +721,10 @@ def main():
     theme_bad = {'bgcolor': '#FFF0F0','title_color': 'red','content_color': 'red','icon_color': 'red', 'icon': 'fa fa-times-circle'}
     theme_neutral = {'bgcolor': '#f9f9f9','title_color': 'orange','content_color': 'orange','icon_color': 'orange', 'icon': 'fa fa-question-circle'}
     theme_good = {'bgcolor': '#EFF8F7','title_color': 'green','content_color': 'green','icon_color': 'green', 'icon': 'fa fa-check-circle'}
-    col1, col2, col3, col4, col5  = st.columns([1,1,1,1,1]) 
     lp_cw,in_time_loded_total ,fig, inb_time, sum_of_loadings = cw_loadingperformance(df_out_CW, df_in_CW)
     lp_lc,lc_in_time_loded_total ,lc_fig, lc_inb_time, lc_sum_of_loadings = LC_loadingperformance(df_out_LC, df_in_LC)
     with st.container(border=True):
+        col1, col2, col3, col4, col5  = st.columns([1,1,1,1,1]) 
         
         ## CW
         with col1:
@@ -730,6 +735,7 @@ def main():
                 hc.info_card(title=f'{lp_cw} %', content='Loading performance',bar_value=lp_cw, theme_override=theme_good)
         
             annotated_text(annotation(f'In Time {str(lp_cw)}','', "#50af47", font_family="Montserrat"),'  ',annotation(f'To Late {str(lp_cw)}','', "#ef7d00", font_family="Montserrat"))
+            st.title("This is :red-background[red].")
             with st.popover('Loadingtimes'):
                 st.plotly_chart(fig, use_container_width=True)
                 st.plotly_chart(lc_fig, use_container_width=True)
