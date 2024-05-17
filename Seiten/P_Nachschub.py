@@ -166,6 +166,7 @@ def pageStellplatzverwaltung():
 
     def berechnungen(dfBedarfSKU):
         #st.data_editor(dfBIN)
+        st.write('vor berechnungen')
         #-- Bedarf letzte 7 Tage ermitteln und Df für Figur erstellen
         dfOrg = dfBedarfSKU.copy()
         #drop all columns except MaterialNumber PlannedDate, CorrospondingOuters. CorrospondingMasterCases, SaporderNumber
@@ -207,7 +208,10 @@ def pageStellplatzverwaltung():
     img_strip = img_strip.resize((1000, 15))     
     st.image(img_strip, use_column_width=True, caption='',)     
     
-       
+    
+    # filter dfBedarfSKU by MaterialNumber 10192253
+    # dfBedarfSKU = dfBedarfSKU[dfBedarfSKU['MaterialNumber'] == '10192253']
+    # st.data_editor(dfBedarfSKU)
 
     #----- Filter nach Stellplatz -----                              
     if nichtgepflegteSKU:
@@ -250,11 +254,13 @@ def pageStellplatzverwaltung():
             # Zusammenführen des Ergebnisses mit dfBedarfSKU_SN
             dfBedarfSKU_SN = pd.merge(dfBedarfSKU_SN, material_daily_count_sku_df, on="MaterialNumber", how="left")
 
-
+            # rename CorrespondingMastercases and LGPLA_SN to Abruf MC gewählter Zeitraum and Stellplatz
+            
+            dfBedarfSKU_SN = dfBedarfSKU_SN.rename(columns={'CorrespondingMastercases': 'Abruf MC gewählter Zeitraum', 'LGPLA_SN': 'System BIN'})
             st.data_editor(dfBedarfSKU_SN, key='my_editorSNBedarf')
             #save to excel
             dfBedarfSKU.to_excel('Data/dfBedarfSKU.xlsx', index=False)
-            fig = px.bar(dfBedarfSKU_SN, x='LGPLA_SN', y='CorrespondingMastercases', color='CorrespondingMastercases',hover_data=['MaterialNumber'])
+            fig = px.bar(dfBedarfSKU_SN, x='System BIN', y='Abruf MC gewählter Zeitraum', color='Abruf MC gewählter Zeitraum',hover_data=['MaterialNumber'])
             fig.update(layout_coloraxis_showscale=False)
             fig.update_layout(yaxis=dict(visible=False))
             st.plotly_chart(fig, use_container_width=True)

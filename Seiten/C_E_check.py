@@ -163,13 +163,14 @@ def umrechnerZFG510000(SKU, Menge):
     #Filter master_data for SKU and UnitOfMeasure == ZFG510000
     master_data = master_data[(master_data['MaterialNumber'] == SKU) & (master_data['UnitOfMeasure'] == 'KGM')]
     # Berechne Zollmenge = DenominatorToBaseUnitOfMeasure / NumeratorToBaseUnitOfMeasure * Menge
-    if not master_data.empty:        
+    #wenn erste Zeile leer dann 
+    if not master_data.empty:    
         DenominatorToBaseUnitOfMeasure = master_data['DenominatorToBaseUnitOfMeasure'].values[0]
         NumeratorToBaseUnitOfMeasure = master_data['NumeratorToBaseUnitOfMeasure'].values[0]
         Zollmenge = DenominatorToBaseUnitOfMeasure / NumeratorToBaseUnitOfMeasure * Menge
         return Zollmenge, DenominatorToBaseUnitOfMeasure, NumeratorToBaseUnitOfMeasure
     else:
-        return 'SKU nicht gefunden'
+        pass
         
 def main():
     st.warning('Dies ist noch in der Entwicklung und darf nicht für BAU verwendet werden')
@@ -211,10 +212,12 @@ def main():
                     elif len(sel_check_sku) != 8:
                         st.error('8 Stellen hat so eine SKU......')
                     else:
-                        ergebniss, numerator, denominator = umrechnerZFG510000(sel_check_sku, int(sel_check_qty))
-                        st.success(f'Die umgerechnete Menge beträgt {ergebniss} KG')
-                        st.write(f'SAP Stammdaten:  DenominatorToBaseUnitOfMeasure {denominator} / NumeratorToBaseUnitOfMeasure {numerator}')
-        
+                        try:  
+                            ergebniss, numerator, denominator = umrechnerZFG510000(sel_check_sku, int(sel_check_qty))
+                            st.success(f'Die umgerechnete Menge beträgt {ergebniss} KG')
+                            st.write(f'SAP Stammdaten:  DenominatorToBaseUnitOfMeasure {denominator} / NumeratorToBaseUnitOfMeasure {numerator}')
+                        except:
+                            st.error('SKU hat keine daten zu UnitOfMeasure == KGM prüfe die SKU oder die Einheit in den Stammdaten.')
     col1, col2 = st.columns(2)
     with col1:
         uploaded_file = st.file_uploader("Upload SAP File", type=['xlsx'])
@@ -249,6 +252,7 @@ def main():
             diff_table = ';'.join(map(str, diff_table))
             df = pd.DataFrame({'Datum': [pd.Timestamp.now()], 'User': [st.session_state.username], 'UUID': [str(uuid.uuid4())], 'Fehler gefunden': fehler_ja_nein, 'Lieferscheine SAP': [dn_sap], 'Lieferscheine DBH': [dn_DBH_list], 'Fehlende Lieferscheine': [missing_dn], 'Fehlerhafte Mengen': [diff_table]})
             save_Table_append(df, 'PAMS_DBH_SAP_Check')
+            
 ####################### ENDE TESTBEDIENUNG ############################
 
     pd.set_option("display.precision", 2)

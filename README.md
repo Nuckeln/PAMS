@@ -42,8 +42,8 @@ Verbesserung der Benutzeroberfläche für eine noch intuitivere Benutzererfahrun
 #004f9f MidBlue
 #00b1eb LightBlue
 #ef7d00 Orange
-#ffbb00 Yellow
-#ffaf47 Green
+#ffbb00 Helles Orange 
+#ffaf47 Orange hell
 #afca0b lightGreen
 #5a328a Purple
 #e72582 Pink

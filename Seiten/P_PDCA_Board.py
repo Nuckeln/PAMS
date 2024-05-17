@@ -737,8 +737,8 @@ def main():
             annotated_text(annotation(f'In Time {str(lp_cw)}','', "#50af47", font_family="Montserrat"),'  ',annotation(f'To Late {str(lp_cw)}','', "#ef7d00", font_family="Montserrat"))
             st.title("This is :red-background[red].")
             with st.popover('Loadingtimes'):
-                st.plotly_chart(fig, use_container_width=True)
-                st.plotly_chart(lc_fig, use_container_width=True)
+                st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
+                st.plotly_chart(lc_fig, use_container_width=True,config={'displayModeBar': False})
             if inb_time < 85:
                 hc.info_card(title=f'{inb_time} %', content='Unloading performance',bar_value=inb_time, theme_override=theme_bad)
             if inb_time >= 85:

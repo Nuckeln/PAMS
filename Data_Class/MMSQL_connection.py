@@ -148,8 +148,8 @@ def load_table_by_Col_Content(table_name: str, col_name: str,content: list[str])
     json_path = 'Data/appData/credentials.json'
     conn_settings = load_connection_settings(json_path)
     db_conn = AzureDbConnection(conn_settings)
-    # Split order_numbers into batches of max_size
-    max_size = 50  # or any other number that works for your case
+
+    max_size = 50  # 
     order_number_batches = [content[i:i+max_size] for i in range(0, len(content), max_size)]
     
     dfs = []
