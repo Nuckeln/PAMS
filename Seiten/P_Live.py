@@ -929,10 +929,10 @@ class LIVE:
                     LIVE.timeline(dfOr)         
         except:
             st.write('Keine Daten vorhanden')   
-        try:
-            LIVE.figUebermitteltInDeadline(dfOr)
-        except:
-            st.write('Keine Daten vorhanden')
+        # try:
+        #     LIVE.figUebermitteltInDeadline(dfOr)
+        # except:
+        #     st.write('Keine Daten vorhanden')
         try:
             LIVE.figPicksKunde(dfOr)
         except:
