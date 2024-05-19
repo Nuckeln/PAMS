@@ -1,21 +1,12 @@
-import pygwalker as pyg
-import streamlit.components.v1 as components
-from pygwalker.api.streamlit import StreamlitRenderer, init_streamlit_comm
-
+# Funktion: Report Page
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-import pygwalker as pyg
-import pandas as pd
-import streamlit.components.v1 as components
 import plotly.express as px
-
-from Data_Class.MMSQL_connection import read_Table
 import plotly.graph_objs as go
 
+from Data_Class.MMSQL_connection import read_Table
 
-
-# init_streamlit_comm()
 
 ''' BAT Colurs
 #0e2b63 darkBlue
@@ -28,6 +19,7 @@ import plotly.graph_objs as go
 #5a328a Purple
 #e72582 Pink
 '''
+
 ##### LOAD AND FILTER DATA #####
 BATColurs = ['#0e2b63','#004f9f','#00b1eb','#ef7d00','#ffbb00','#ffaf47','#afca0b','#5a328a','#e72582']
 @st.cache_data(show_spinner=False)
