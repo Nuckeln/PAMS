@@ -104,6 +104,7 @@ streamlit==1.34.0
 streamlit-authenticator==0.3.2
 streamlit-autorefresh==1.0.1
 streamlit-navigation-bar==3.2.0
+streamlit-timeline==0.0.2
 streamlit-vis-timeline==0.3.0
 tenacity==8.3.0
 toml==0.10.2

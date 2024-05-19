@@ -8,6 +8,7 @@ import plotly_express as px
 import plotly.graph_objects as go
 from annotated_text import annotated_text, annotation
 import streamlit_timeline as timeline
+
 from Data_Class.wetter.api import getWetterBayreuth
 from Data_Class.MMSQL_connection import read_Table
 
@@ -929,10 +930,10 @@ class LIVE:
                     LIVE.timeline(dfOr)         
         except:
             st.write('Keine Daten vorhanden')   
-        # try:
-        #     LIVE.figUebermitteltInDeadline(dfOr)
-        # except:
-        #     st.write('Keine Daten vorhanden')
+        try:
+            LIVE.figUebermitteltInDeadline(dfOr)
+        except:
+            st.write('Keine Daten vorhanden')
         try:
             LIVE.figPicksKunde(dfOr)
         except:
