@@ -11,9 +11,9 @@ from Seiten.P_Forecast import main as pageForecast
 from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.P_Ladeplan import main as pageLadeplan
 from Seiten.C_E_check import main as pageC_E_check
-from Seiten.P_SFG_Reports import main as pageSFG_Reports
-from Seiten.P_TALL import page as pageTALL
-from Seiten.P_PDCA_Board import main as pagePDCA
+# from Seiten.P_SFG_Reports import main as pageSFG_Reports
+# from Seiten.P_TALL import page as pageTALL
+# from Seiten.P_PDCA_Board import main as pagePDCA
 import hydralit_components as hc
 from Data_Class.MMSQL_connection import read_Table,save_Table_append
 #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/main.py"
@@ -137,15 +137,15 @@ def user_menue_frontend():
     if page == 'C&E check':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
             pageC_E_check()
-    if page == 'SFG Reports':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
-            pageSFG_Reports()   
-    if page == 'TALL':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
-            pageTALL()
-    if page == 'PDCA':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
-            pagePDCA()
+    # if page == 'SFG Reports':
+    #     with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
+    #         pageSFG_Reports()   
+    # if page == 'TALL':
+    #     with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
+    #         pageTALL()
+    # if page == 'PDCA':
+    #     with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
+    #         pagePDCA()
     if page == 'Logout':
         st.session_state.user = None
         st.session_state.rechte = None

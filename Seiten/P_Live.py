@@ -282,6 +282,29 @@ class LIVE:
         # Date PartnerName to text
         st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
 
+    # def pick_stunden(df):
+    #     import matplotlib.pyplot as plt
+    #     data = df
+    #     # Convert 'Fertiggestellt' to datetime
+    #     data['Fertiggestellt'] = pd.to_datetime(data['Fertiggestellt'])
+
+    #     # Combine all Picks columns
+    #     picks_columns = ['Picks Karton fertig', 'Picks Paletten fertig', 'Picks Stangen fertig']
+    #     data['Total Picks'] = data[picks_columns].sum(axis=1, skipna=True)
+
+    #     # Group by hour and sum the total picks
+    #     data.set_index('Fertiggestellt', inplace=True)
+    #     hourly_picks = data['Total Picks'].resample('H').sum()
+
+    #     # Plot the data
+    #     plt.figure(figsize=(12, 6))
+    #     hourly_picks.plot(kind='line')
+    #     plt.title('Summe der Picks pro Stunde')
+    #     plt.xlabel('Stunde')
+    #     plt.ylabel('Summe der Picks')
+    #     plt.grid(True)
+    #     st.pyplot()
+
 
     def status(df):
         # if in df Staus is SSCCInformationSent then change to 1 else 0
@@ -441,7 +464,7 @@ class LIVE:
                 title_font_family="Montserrat",
                 title_font_color="#0F2B63",
                 title_font_size=25,
-                # autosize=True,
+                autosize=True,
                 # margin=dict(t=78, b=95, l=5, r=5)
             )
             fig.update_layout(height=330)
@@ -889,6 +912,10 @@ class LIVE:
         key='download-csv'
             )
 
+    def picksDepot(df):
+        pass
+    
+
     #######------------------Main------------------########
 
     def PageTagesReport():
@@ -925,11 +952,16 @@ class LIVE:
             LIVE.figTachoDiagramm_VEGA(dfOr,'KNBFE')
         with col37:
             LIVE.figTachoDiagramm_VEGA(dfOr,'KNHAJ')
+
         try:
             with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', use_container_width=True, ):
                     LIVE.timeline(dfOr)         
         except:
             st.write('Keine Daten vorhanden')   
+        # try:
+        #     LIVE.pick_stunden(dfOr)
+        # except:
+        #     st.write('Keine Daten vorhanden')
         try:
             LIVE.figUebermitteltInDeadline(dfOr)
         except:
