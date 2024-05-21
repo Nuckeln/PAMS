@@ -970,10 +970,10 @@ class LIVE:
             LIVE.figPicksKunde(dfOr)
         except:
             st.write('Keine Daten vorhanden')
-        try:
-            LIVE.status(dfOr)
-        except:
-            st.write('Keine Daten vorhanden')
+        # try:
+        #     LIVE.status(dfOr)
+        # except:
+        #     st.write('Keine Daten vorhanden')
         try:
             LIVE.fig_trucks_Org(dfOr)
         except:
