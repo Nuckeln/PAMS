@@ -69,7 +69,7 @@ class LIVE:
                 st.write("WTF " + f"{ temp}" + "°C")
         except:
             st.write("Wetterdaten konnten nicht geladen werden")
-    ## Filter für Live Allhttps://dev.azure.com/BATCloudMES/Superdepot%20ReportingSSCCLabelsPrinted Func ###
+
     def FilterNachDatum(day1, day2,df):
         #df['PlannedDate'] = df['PlannedDate'].dt.strftime('%m/%d/%y')
         df['PlannedDate'] = df['PlannedDate'].astype('datetime64[ns]').dt.date
@@ -511,7 +511,8 @@ class LIVE:
             return timeline_json
         timeline_json = convert_to_timeline_json(df)
         timeline.timeline(timeline_json)
-    ## AG-Grid Func ####
+   
+    ## Daten Anzeigen ##
     def tabelleAnzeigen(df):
         #new df with only the columns we need 'PlannedDate' ,'SapOrderNumber','PartnerName']#'Fertiggestellt','Picks Gesamt','Picks Karton','Picks Paletten','Picks Stangen','Lieferschein erhalten','Fertiggestellt'
         dfAG = df[['PlannedDate','Lieferschein erhalten','DeliveryDepot','SapOrderNumber','PartnerName','Fertiggestellt','Fertige Paletten','Picks Gesamt','UnloadingListIdentifier','ActualNumberOfPallets','EstimatedNumberOfPallets']]
@@ -563,16 +564,30 @@ class LIVE:
 
         col33 ,col34, col35, col36, col37 = st.columns(5)
         with col33:
-            LIVE.figTachoDiagramm_VEGA(dfOr,'Gesamt')
+            try:
+                LIVE.figTachoDiagramm_VEGA(dfOr,'Gesamt')
+            except:
+                st.success('Heute keine Lieferungen')
         with col34:
-            LIVE.figTachoDiagramm_VEGA(dfOr,'KNSTR')
+            try:
+                LIVE.figTachoDiagramm_VEGA(dfOr,'KNSTR')
+            except:
+                st.success('KNSTR Heute keine Lieferungen')
         with col35:
-            LIVE.figTachoDiagramm_VEGA(dfOr,'KNLEJ')
+            try:
+                LIVE.figTachoDiagramm_VEGA(dfOr,'KNLEJ')
+            except:
+                st.success('KNLEJ Heute keine Lieferungen')
         with col36:
-            LIVE.figTachoDiagramm_VEGA(dfOr,'KNBFE')
+            try:
+                LIVE.figTachoDiagramm_VEGA(dfOr,'KNBFE')
+            except:
+                st.success('KNBFE Heute keine Lieferungen')
         with col37:
-            LIVE.figTachoDiagramm_VEGA(dfOr,'KNHAJ')
-
+            try:
+                LIVE.figTachoDiagramm_VEGA(dfOr,'KNHAJ')
+            except:
+                st.success('KNHAJ Heute keine Lieferungen')
         try:
             with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', use_container_width=True, ):
                     LIVE.timeline(dfOr)         
