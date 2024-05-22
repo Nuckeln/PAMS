@@ -13,8 +13,6 @@ from Data_Class.wetter.api import getWetterBayreuth
 from Data_Class.MMSQL_connection import read_Table
 
 import matplotlib.pyplot as plt
-from matplotlib.patches import Arc, PathPatch
-
 
 
 class LIVE:
@@ -432,132 +430,6 @@ class LIVE:
             sum_picks = open_ALL + done_All 
             completion_rate = round((done_All / sum_picks) * 100, 2)
             # Farbgebung basierend auf dem Fortschritt
-            # Farbeinstellungen
-            if completion_rate < 25:
-                bar_color = '#e72582'
-            elif 25 <= completion_rate < 50:
-                bar_color = '#ef7d00'
-            elif 50 <= completion_rate < 75:
-                bar_color = '#ef7d00'
-            else:
-                bar_color = 'green'
-
-            # Grundlinie des Tachometers
-            fig, ax = plt.subplots(figsize=(8, 4))
-            ax.set_xlim(0, 100)
-            ax.set_ylim(-10, 60)  # Veränderte y-Achse, um mehr Raum zu schaffen
-
-            # Grundbogen des Tachometers
-            arc = Arc([50, 0], 100, 100, angle=0, theta1=0, theta2=180, color='lightgrey', lw=10)
-            ax.add_patch(arc)
-
-            # Fortschrittsbogen
-            arc2 = Arc([50, 0], 100, 100, angle=0, theta1=0, theta2=180 * completion_rate / 100, color=bar_color, lw=8)
-            ax.add_patch(arc2)
-
-            # Werte auf dem Tachometer korrekt positionieren, die tatsächlichen Anteile von sum_picks anzeigen
-            scale_factor = sum_picks / 100  # Faktor, um die tatsächlichen Werte basierend auf dem maximalen Wert sum_picks zu berechnen
-            for i in range(0, 101, 10):
-                angle = np.radians(180 - i * 180 / 100)  # Winkel von oben beginnend, gegen den Uhrzeigersinn
-                x = 50 + 45 * np.cos(angle)
-                y = 45 * np.sin(angle)
-                value = int(scale_factor * i)  # Skalierte Werte von 0 bis sum_picks
-                ax.text(x, y, str(value), horizontalalignment='center', verticalalignment='center', color='#0F2B63')
-
-            # Setze Überschrift höher
-            plt.title(delivery_depot, fontsize=30, verticalalignment='bottom', y=1.1, fontdict={'family':'Montserrat', 'weight':'bold'}, color='#0F2B63')
-            # Zentrale Werte und Text
-            plt.text(50, 15, f'{completion_rate:.2f}%', ha='center', va='center', fontsize=24, color='#0F2B63')
-            plt.text(50, 0, f'Gesamt: {sum_picks}', ha='center', va='center', fontsize=12, color='#0F2B63')
-            plt.text(20, -5, f'Fertig: {done_All}', ha='center', va='center', fontsize=12, color='#0F2B63')
-            plt.text(80, -5, f'Offen: {open_ALL}', ha='center', va='center', fontsize=12, color='#0F2B63')
-
-            # Achsen und Raster ausblenden
-            ax.set_aspect('equal')
-            ax.axis('off')
-
-            st.pyplot(fig, clear_figure=True)
-
-
-
-            def masterCase_Outer_Pal_Icoons(img_type,done_value,open_value):
-                '''Function to display the MasterCase, OuterCase and Pallet Icons in the Live Status Page
-                Args:
-                    img_type (str): Type of Icon to display
-                    done_value (int): Value of done picks
-                    open_value (int): Value of open picks
-                '''
-                icon_path_mastercase = 'Data/appData/ico/mastercase_favicon.ico'
-                icon_path_outer = 'Data/appData/ico/favicon_outer.ico'
-                icon_path_pallet = 'Data/appData/ico/pallet_favicon.ico'   
-                icon_path_Delivery = 'Data/appData/ico/delivery-note.ico' 
-
-                #select img type by string
-                if img_type == 'Mastercase':
-                    img = Image.open(icon_path_mastercase)
-                elif img_type == 'Outer':
-                    img = Image.open(icon_path_outer)
-                elif img_type == 'Pallet':
-                    img = Image.open(icon_path_pallet)  
-                elif img_type == 'Delivery':
-                    img = Image.open(icon_path_Delivery)
-                    
-
-                img_type = img
-                col1, col2,col3,col4 = st.columns([0.1,0.1,0.4,0.1])
-                with col1:
-                    st.write('')
-                with col2:
-                    st.image(img_type, width=32,clamp=False)
-                    hide_img_fs = '''
-                    <style>
-                    button[title="View fullscreen"]{
-                        visibility: hidden;}
-                    </style>
-                    '''
-                    st.markdown(hide_img_fs, unsafe_allow_html=True)
-                with col3:
-                    annotated_text(annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
-            
-            # with st.container(border=True):
-            masterCase_Outer_Pal_Icoons('Delivery' ,done_DN, open_DN)
-            masterCase_Outer_Pal_Icoons('Outer' ,open_outer, done_outer)
-            masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done_mastercase)
-            masterCase_Outer_Pal_Icoons('Pallet' ,open_pallet, done_pallet)        
-    
-    def figTachoDiagramm_KREIS_MAT(df, delivery_depot):
-        with st.container(border=True):
-            if delivery_depot == "Gesamt":
-                df = df
-            else:
-                df = df[df['DeliveryDepot'] == delivery_depot]  
-                if delivery_depot == "KNLEJ":
-                    delivery_depot = "Leipzig"
-                elif delivery_depot == "KNSTR":
-                    delivery_depot = "Stuttgart"
-                elif delivery_depot == "KNHAJ":
-                    delivery_depot = "Hannover"
-                elif delivery_depot == "KNBFE":
-                    delivery_depot = "Bielefeld"
-                else:
-                    delivery_depot = "Gesamt"
-            
-            def calPicks(df):
-                    open_DN = df[df['AllSSCCLabelsPrinted']==0]['SapOrderNumber'].nunique()
-                    done_DN = df[df['AllSSCCLabelsPrinted']==1]['SapOrderNumber'].nunique()
-                    done_mastercase = df[df['AllSSCCLabelsPrinted']==0]['Picks Karton'].sum()       
-                    done_outer = df[df['AllSSCCLabelsPrinted']==0]['Picks Stangen'].sum()
-                    done_pallet = df[df['AllSSCCLabelsPrinted']==0]['Picks Paletten'].sum()                       
-                    open_mastercase = df[df['AllSSCCLabelsPrinted']==1]['Picks Karton'].sum()
-                    open_outer = df[df['AllSSCCLabelsPrinted']==1]['Picks Stangen'].sum()
-                    open_pallet = df[df['AllSSCCLabelsPrinted']==1]['Picks Paletten'].sum()                    
-                    open_ALL = df[df['AllSSCCLabelsPrinted']==0]['Picks Gesamt'].sum()
-                    done_All = df[df['AllSSCCLabelsPrinted']==1]['Picks Gesamt'].sum()     
-                    return open_DN, done_DN, done_mastercase, done_outer, done_pallet, open_mastercase, open_outer, open_pallet, open_ALL, done_All
-            open_DN, done_DN, done_mastercase, done_outer, done_pallet, open_mastercase, open_outer, open_pallet, open_ALL, done_All = calPicks(df)
-            sum_picks = open_ALL + done_All 
-            completion_rate = round((done_All / sum_picks) * 100, 2)
-            # Farbgebung basierend auf dem Fortschritt
             if completion_rate < 25:
                 bar_color = '#e72582'
             elif 25 <= completion_rate < 50:
@@ -568,34 +440,43 @@ class LIVE:
                 bar_color = 'green'
             # Erstellen des Tacho-Diagramms
 
+            fig = go.Figure(go.Indicator(
+                mode = "gauge+number",
+                value = completion_rate,
+                gauge = {
+                    'axis': {'range': [None, 100], 'tickvals': [i for i in range(0, 101, 10)], 'ticktext': [f'{int(sum_picks * i / 100)}' for i in range(0, 101, 10)]},
+                    'bar': {'color': bar_color},  # Farbe des Balkens
+                    'steps': [
+                        {'range': [0, 25], 'color': '#0e2b63'},
+                        {'range': [25, 50], 'color': '#0e2b63'},
+                        {'range': [50, 75], 'color': "#0e2b63"},
+                        {'range': [75, 100], 'color': "#0e2b63"}],
+                }))
+            fig.update_layout(
+                title={
+                    'text': f"{delivery_depot}",
+                    'y':0.9,
+                    'x':0.5,
+                    'xanchor': 'center',
+                    'yanchor': 'top'
+                },
+                showlegend=False,
+                font_family="Montserrat",
+                font_color="#0F2B63",
+                title_font_family="Montserrat",
+                title_font_color="#0F2B63",
+                title_font_size=25,
+                autosize=True,
+                # margin=dict(t=78, b=95, l=5, r=5)
+            )
+            fig.update_layout(height=330)
+            fig.add_annotation(x=0.5, y=-0.15, text=f"Gesamt: {sum_picks}", showarrow=False, font=dict(size=14))
+            fig.add_annotation(x=0.1, y=-0.25, text=f"Fertig: {done_All}", showarrow=False, font=dict(size=12))
+            fig.add_annotation(x=0.9, y=-0.25, text=f"Offen: {open_ALL}", showarrow=False, font=dict(size=12))
 
-
-
-            # Kreisdiagramm Daten
-            data = [completion_rate, 100 - completion_rate]
-            colors = [bar_color, 'lightgrey']
-
-            fig, ax = plt.subplots()
-
-            # Tacho-Diagramm
-            wedges, texts = ax.pie(data, colors=colors, startangle=90, radius=1.2,
-                                wedgeprops=dict(width=0.3, edgecolor='w'))
-
-            # Text und Markierungen hinzufügen
-            plt.text(0, 0.5, f'{completion_rate}%', ha='center', va='center', fontsize=18, color='black')
-            plt.text(0, -0.1, f'Gesamt: {sum_picks}', ha='center', va='center', fontsize=12, color='black')
-            plt.text(-1.2, -1.2, f'Fertig: {done_All}', ha='left', va='center', fontsize=12, color='black')
-            plt.text(1.2, -1.2, f'Offen: {open_ALL}', ha='right', va='center', fontsize=12, color='black')
-
-            # Achsen ausblenden und Diagramm anzeigen
-            ax.set_aspect('equal')
-            ax.set_axis_off()
-            
-            # implementiere wedges and texts
-            
             
             # Anzeigen des Diagramms in Streamlit
-            st.pyplot(fig)
+            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
 
 
@@ -643,11 +524,7 @@ class LIVE:
             masterCase_Outer_Pal_Icoons('Outer' ,open_outer, done_outer)
             masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done_mastercase)
             masterCase_Outer_Pal_Icoons('Pallet' ,open_pallet, done_pallet)        
-    
-        
-    
-    
-    
+
     def figTachoDiagramm(df, delivery_depot):
         with st.container(border=True):
             if delivery_depot == "Gesamt":

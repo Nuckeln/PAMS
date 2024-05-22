@@ -142,7 +142,7 @@ def main():
         st.markdown(f'<style>{css.read()}</style>', unsafe_allow_html=True)
     if 'user' not in st.session_state:
         st.session_state.user = None  
-    with st.spinner("Lade Benutzerdaten..."):
+    with st.spinner("Lade Datenbanken..."):
         users_df = read_Table("user")
         users_df.set_index('username', inplace=True)
     # Umstrukturieren des DataFrames, um den erwarteten Schlüsseln zu entsprechen
