@@ -64,11 +64,10 @@ def user_menue_rechte():
     # Logik zur Bestimmung der Menürechte basierend auf den Benutzerrechten
     if st.session_state.rechte == 1:
         # Admin Vollzugriff
-        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','SFG Reports','PDCA','Admin']
-    
+        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Admin']
     elif st.session_state.rechte == 2:
         # Manager BAT
-        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','SFG Reports']
+        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter BAT AD 
@@ -112,11 +111,7 @@ def user_menue_frontend():
 
 
     page = st_navbar(user_menue_rechte(), styles=styles, options={"use_padding": True,'show_menu': False},logo_path='Data/img/logo_white.svg',selected='Depot Live Status')
-    # create df User and sel_menu and date and time and save to SQL
-    time = pd.Timestamp.now()
-    date = time.date()
-    df_log = pd.DataFrame({'PAMS_LOG_User': [st.session_state.user], 'Menu': [page], 'Date': [date], 'Time': [time]})
-    save_Table_append(df_log, 'PAMS_LOG_User')
+
     if page == 'Depot Live Status':
         LIVE.PageTagesReport()
     if page == 'LC Monitor':
@@ -137,15 +132,6 @@ def user_menue_frontend():
     if page == 'C&E check':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
             pageC_E_check()
-    # if page == 'SFG Reports':
-    #     with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
-    #         pageSFG_Reports()   
-    # if page == 'TALL':
-    #     with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
-    #         pageTALL()
-    # if page == 'PDCA':
-    #     with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
-    #         pagePDCA()
     if page == 'Logout':
         st.session_state.user = None
         st.session_state.rechte = None
@@ -156,10 +142,9 @@ def main():
         st.markdown(f'<style>{css.read()}</style>', unsafe_allow_html=True)
     if 'user' not in st.session_state:
         st.session_state.user = None  
-    
-    users_df = read_Table("user")
-    users_df.set_index('username', inplace=True)
-
+    with st.spinner("Lade Benutzerdaten..."):
+        users_df = read_Table("user")
+        users_df.set_index('username', inplace=True)
     # Umstrukturieren des DataFrames, um den erwarteten Schlüsseln zu entsprechen
     credentials = {
         'usernames': dict()
