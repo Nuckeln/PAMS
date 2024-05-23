@@ -312,6 +312,7 @@ class LIVE:
             else:
                 bar_color = 'green'
 
+
             # Grundlinie des Tachometers
             fig, ax = plt.subplots(figsize=(8, 4))
             ax.set_xlim(0, 100)
@@ -321,14 +322,14 @@ class LIVE:
             arc = Arc([50, 0], 100, 100, angle=0, theta1=0, theta2=180, color='lightgrey', lw=10)
             ax.add_patch(arc)
 
-            # Fortschrittsbogen
+            # Fortschrittsbogen anpassen, um von links nach rechts zu laufen
             arc2 = Arc([50, 0], 100, 100, angle=0, theta1=0, theta2=180 * completion_rate / 100, color=bar_color, lw=8)
             ax.add_patch(arc2)
 
             # Werte auf dem Tachometer korrekt positionieren, die tatsächlichen Anteile von sum_picks anzeigen
             scale_factor = sum_picks / 100  # Faktor, um die tatsächlichen Werte basierend auf dem maximalen Wert sum_picks zu berechnen
             for i in range(0, 101, 10):
-                angle = np.radians(180 - i * 180 / 100)  # Winkel von oben beginnend, gegen den Uhrzeigersinn
+                angle = np.radians(i * 180 / 100)  # Winkel von links beginnend, im Uhrzeigersinn
                 x = 50 + 45 * np.cos(angle)
                 y = 45 * np.sin(angle)
                 value = int(scale_factor * i)  # Skalierte Werte von 0 bis sum_picks
@@ -336,6 +337,7 @@ class LIVE:
 
             # Setze Überschrift höher
             plt.title(delivery_depot, fontsize=30, verticalalignment='bottom', y=1.1, fontdict={'family':'Montserrat', 'weight':'bold'}, color='#0F2B63')
+
             # Zentrale Werte und Text
             plt.text(50, 15, f'{completion_rate:.2f}%', ha='center', va='center', fontsize=24, color='#0F2B63')
             plt.text(50, 0, f'Gesamt: {sum_picks}', ha='center', va='center', fontsize=12, color='#0F2B63')
@@ -346,7 +348,7 @@ class LIVE:
             ax.set_aspect('equal')
             ax.axis('off')
 
-            st.pyplot(fig, clear_figure=True)
+            st.pyplot(fig)
 
 
 

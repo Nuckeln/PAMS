@@ -4,6 +4,7 @@ import streamlit_authenticator as stauth
 import bcrypt
 
 import pandas as pd
+
 from Seiten.P_Live import LIVE
 from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
@@ -11,11 +12,9 @@ from Seiten.P_Forecast import main as pageForecast
 from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.P_Ladeplan import main as pageLadeplan
 from Seiten.C_E_check import main as pageC_E_check
-# from Seiten.P_SFG_Reports import main as pageSFG_Reports
-# from Seiten.P_TALL import page as pageTALL
-# from Seiten.P_PDCA_Board import main as pagePDCA
 import hydralit_components as hc
 from Data_Class.MMSQL_connection import read_Table,save_Table_append
+
 #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/main.py"
 
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",)
