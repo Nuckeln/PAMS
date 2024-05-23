@@ -198,9 +198,11 @@ class LIVE:
         #Create Plotly Chart
         title = "<b>Lieferschein in Deadline Fertiggestellt  </b> <span style='color:#4FAF46'>ja</span> / <span style='color:#E72482'>nein</span>"
 
-        fig = px.bar(dfFertig, x='Fertiggestellt', y="Picks Gesamt", color="InTime", hover_data=['PlannedDate','PartnerName','Fertig um','SapOrderNumber','DeliveryDepot'],height=600, title=title)
-        #if in Time 1 set to green else to red
-        fig.update_traces(marker_color=['#4FAF46' if x == 1 else '#E72482' for x in dfFertig['InTime']])
+        fig = px.bar(dfFertig, x='Fertiggestellt', y="Picks Gesamt", color="InTime", 
+                     hover_data=['PlannedDate','PartnerName','Fertig um','SapOrderNumber','DeliveryDepot'],
+                     height=600, title=title, 
+                     color_discrete_map={True: '#4FAF46', False: '#E72482'})
+        
         fig.data[0].text = dfFertig['PartnerName'] + '<br>' + dfFertig['Picks Gesamt'].astype(str)
         fig.layout.xaxis.type = 'category'
         # x aaxis text horizontal
@@ -209,7 +211,13 @@ class LIVE:
         fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
         fig.update_layout(showlegend=False)
         # Date PartnerName to text
+        #Fäbe nun die einzelnen stapel nach InTime = False mit #4FAF46 und InTime = True mit #E72482        
+        
+        
+        fig.update_traces(text=dfFertig['PartnerName'], textposition='inside')
         st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
+
+
 
     def figPicksKunde(df):
         df = df.groupby(['PartnerName', 'SapOrderNumber', "AllSSCCLabelsPrinted", 'DeliveryDepot', 'Fertiggestellt', 'Lieferschein erhalten']).agg({'Picks Gesamt': 'sum'}).reset_index()
