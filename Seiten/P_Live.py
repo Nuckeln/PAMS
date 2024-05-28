@@ -221,7 +221,7 @@ def figPicksKunde(df):
 
     df['Fertiggestellt'] = df['Fertiggestellt'].fillna('0')
     df = df.groupby(['SapOrderNumber','PartnerName', "AllSSCCLabelsPrinted", 'DeliveryDepot', 'Fertiggestellt', 'Lieferschein erhalten']).agg({'Picks Gesamt': 'sum'}).reset_index()
-    # df = df.sort_values(by=['Picks Gesamt', 'AllSSCCLabelsPrinted'], ascending=False)
+    df = df.sort_values(by=['Picks Gesamt', 'AllSSCCLabelsPrinted'], ascending=False)
 
     # HTML-formatted title with different word colors
     title = "<b>Kundenübersicht nach Status:</b> <span style='color:#E72482'>Offen</span> / <span style='color:#4FAF46'>Fertig</span>"
