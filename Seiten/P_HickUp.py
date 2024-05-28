@@ -9,9 +9,15 @@ import hydralit_components as hc
 from Data_Class.st_int_to_textbox import Int_to_Textbox
 from Data_Class.MMSQL_connection import read_Table,save_Table_append
 from Data_Class.eml_msg_to_pdf import process_uploaded_file
+from Data_Class.st_func_Return_selectDF import AG_Select_Grid
 import fitz  # PyMuPDF
 from PIL import Image
 import io
+
+# TODO 
+# - Vorgang Anlegen 
+# - Deadline zum erledigen 
+
 
 def display_pdf(file_bytes):
     # PDF aus Bytes laden
@@ -34,8 +40,6 @@ def load_data():
     return data
 
 def neuer_vorgang():
-    st.markdown('Erstellung eines neuen Vorgangs')
-    
 
     with st.form('Vorgang Details', clear_on_submit=True):
     
@@ -279,41 +283,22 @@ def schneller_vorgang():
     
 def daten_anzeigen(data):
 
-
-    def dataframe_with_selections(df):
-        df_with_selections = df.copy()
-        df_with_selections.insert(0, "Select", False)
-
-        # Get dataframe row-selections from user with st.data_editor
-        edited_df = st.data_editor(
-            df_with_selections,
-            hide_index=True,
-            column_config={"Select": st.column_config.CheckboxColumn(required=True)},
-            disabled=df.columns,
-        )
-
-        # Filter the dataframe using the temporary column, then drop the column
-        selected_rows = edited_df[edited_df.Select]
-        return selected_rows.drop('Select', axis=1)
-
     
-    selection = dataframe_with_selections(data)
-    if st.button('Vorgang laden'):
-        vorgang_data = selection
-        st.data_editor(vorgang_data)
-    # extrahiere die Anhänge aus dem DataFrame in array
-        attachments = vorgang_data['Anhänge']
-        # split the string of filenames into a list
-        attachments = attachments.str.split(', ')
-        st.write(attachments)
+    selection = AG_Select_Grid(data, 300, 'PAMS_HICKUP')
+    
+
+    st.write(selection)
         
-    st.title('File Viewer')
+        
+        
 
-    # Datei-Upload
-    uploaded_file = st.file_uploader('Laden Sie eine EML- oder MSG-Datei hoch', type=['eml', 'msg'])
 
-    if uploaded_file is not None:
-        process_uploaded_file(uploaded_file)
+
+    # # Datei-Upload
+    # uploaded_file = st.file_uploader('Laden Sie eine EML- oder MSG-Datei hoch', type=['eml', 'msg'])
+
+    # if uploaded_file is not None:
+    #     process_uploaded_file(uploaded_file)
 
 
   

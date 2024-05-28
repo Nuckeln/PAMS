@@ -27,6 +27,8 @@ Depot Live Status
 Zugriff auf:
 Depot Live Status
 
+LC
+
 6. Mitarbeiter Extern Sachbearbeiter/Teamleiter
 Zugriff auf:
 

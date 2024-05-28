@@ -5,7 +5,7 @@ import bcrypt
 
 import pandas as pd
 
-from Seiten.P_Live import LIVE
+from Seiten.P_Live import PageTagesReport
 from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
 from Seiten.P_Forecast import main as pageForecast
@@ -113,7 +113,7 @@ def user_menue_frontend():
     page = st_navbar(user_menue_rechte(), styles=styles, options={"use_padding": True,'show_menu': False},logo_path='Data/img/logo_white.svg',selected='Depot Live Status')
 
     if page == 'Depot Live Status':
-        LIVE.PageTagesReport()
+        PageTagesReport()
     if page == 'Hick-Up':
         pageHickUp()
     if page == 'LC Monitor':
