@@ -12,6 +12,7 @@ from Seiten.P_Forecast import main as pageForecast
 from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.P_Ladeplan import main as pageLadeplan
 from Seiten.C_E_check import main as pageC_E_check
+from Seiten.P_HickUp import main as pageHickUp
 import hydralit_components as hc
 from Data_Class.MMSQL_connection import read_Table,save_Table_append
 
@@ -63,7 +64,7 @@ def user_menue_rechte():
     # Logik zur Bestimmung der Menürechte basierend auf den Benutzerrechten
     if st.session_state.rechte == 1:
         # Admin Vollzugriff
-        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Admin']
+        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin']
     elif st.session_state.rechte == 2:
         # Manager BAT
         return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check']
@@ -113,9 +114,11 @@ def user_menue_frontend():
 
     if page == 'Depot Live Status':
         LIVE.PageTagesReport()
+    if page == 'Hick-Up':
+        pageHickUp()
     if page == 'LC Monitor':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='blue'):
-            pageLadeplan()
+        #with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='blue'):
+        pageLadeplan()
     if page == 'Depot Reports':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='red'):
             reportPage()

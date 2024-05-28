@@ -18,7 +18,7 @@ from matplotlib.patches import Arc, PathPatch
 
 
 class LIVE:
-    #@st.cache_data
+    
     def loadDF(day1=None, day2=None): 
         dfOr = read_Table('prod_Kundenbestellungen_14days')
         #load parquet
@@ -80,6 +80,7 @@ class LIVE:
         return df
 
     ## Plotly Charts ###
+    
     def fig_Status_nach_Katergorie(df):
         # Das Balkendiagram Teilt Fertige und Offene Gesamt Picks in Kategorien auf Karton, Paletten und Stangen aus 
             df = df.groupby(['AllSSCCLabelsPrinted'])[['Picks Karton','Picks Paletten','Picks Stangen']].sum().reset_index()        #set index to SapOrderNumber
@@ -166,17 +167,21 @@ class LIVE:
                 sel_deadHan = st.time_input('Hannover', datetime.time(14, 0))
             with col4:
                 sel_deadBiel = st.time_input('Bielefeld', datetime.time(14, 0))
+        
+        
         #add deadlines to df by DeliveryDepot
         df.loc[df['DeliveryDepot'] == 'KNSTR', 'Deadline'] = sel_deadStr
         df.loc[df['DeliveryDepot'] == 'KNLEJ', 'Deadline'] = sel_deadLej
         df.loc[df['DeliveryDepot'] == 'KNHAJ', 'Deadline'] = sel_deadHan
         df.loc[df['DeliveryDepot'] == 'KNBFE', 'Deadline'] = sel_deadBiel
+        
+        
         # Zeige nur übermittelte Aufträge an
         df['Status'] == 'SSCCInformationSent', True, False
         df['Deadline'] = df['Deadline'].astype(str)
-        df['PlannedDate'] = df['PlannedDate'] + pd.to_timedelta(df['Deadline'])        #convert to datetime
+        df['PlannedDate'] = df['PlannedDate'] + pd.to_timedelta(df['Deadline']) 
+        #convert to datetime
         df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
-        
         # filter by fertiggestellt = '0'
         dfFertig = df[df['Fertiggestellt'] != '0']
         dfFertig['Fertiggestellt'] = pd.to_datetime(dfFertig['Fertiggestellt'], format='%Y-%m-%d %H:%M:%S')
@@ -184,7 +189,7 @@ class LIVE:
         dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'].dt.tz_localize(None)
         # Prüfe in dfFertig['InTime'] ob der Zeitstempel von Fertiggestellt vor dem Zeitstempel von Deadline liegt
         dfFertig['InTime'] = dfFertig['Fertiggestellt'] <= dfFertig['PlannedDate']
-        #.astype(int)
+        # Füge eine neue Spalte hinzu, um die Zeit zu runden
         dfFertig['Fertig um'] = dfFertig['Fertiggestellt']
         dfFertig['Fertig um'] = dfFertig['Fertig um'].dt.strftime('%d.%m.%Y %H:%M')
         #rename Feritggestellt to Gerundeter
@@ -210,14 +215,8 @@ class LIVE:
         # remove xaxis and yaxis title
         fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
         fig.update_layout(showlegend=False)
-        # Date PartnerName to text
-        #Fäbe nun die einzelnen stapel nach InTime = False mit #4FAF46 und InTime = True mit #E72482        
-        
-        
         fig.update_traces(text=dfFertig['PartnerName'], textposition='inside')
         st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
-
-
 
     def figPicksKunde(df):
         df = df.groupby(['PartnerName', 'SapOrderNumber', "AllSSCCLabelsPrinted", 'DeliveryDepot', 'Fertiggestellt', 'Lieferschein erhalten']).agg({'Picks Gesamt': 'sum'}).reset_index()

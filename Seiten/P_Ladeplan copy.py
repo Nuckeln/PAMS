@@ -1149,13 +1149,10 @@ def main():
     st.image(img_strip, use_column_width=True, caption='',)   
 
 
-    # schreibe die Funktionszeit in Konsole
-    
 
     df_CW_out, df_CW_inb, df_CW_dds  = load_data_CW()
     df_CW_out = filter_data(df_CW_out,sel_date,'Ist Datum')
     df_CW_inb = filter_data(df_CW_inb,sel_date,'Ist Datum')
-    
     df_LC_out, df_LC_inb, df_LC_dds = load_data_LC()
     df_LC_out = filter_data(df_LC_out,sel_date,'Datum')
     df_LC_inb = filter_data(df_LC_inb,sel_date,'Datum')
