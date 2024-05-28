@@ -102,6 +102,7 @@ pydyf==0.10.0
 Pygments==2.18.0
 pygwalker==0.4.8.5
 PyJWT==2.8.0
+pymupdf
 PyMuPDF==1.24.4
 PyMuPDFb==1.24.3
 pyodbc==5.1.0
