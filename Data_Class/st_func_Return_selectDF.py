@@ -44,6 +44,7 @@ def AG_Select_Grid(df: pd.DataFrame, height_value: int,keyname:str) -> str:
         if response['selected_rows']:
             selected_row = response['selected_rows'][0]
             col_name = df.columns[3]  # Name der Spalte 0
-            return (f"{selected_row[col_name]}")
-
-    # Hauptfunktion
+            try:
+                return (f"{selected_row[col_name]}")
+            except:
+                return "Fehler"

@@ -6,6 +6,7 @@ import uuid
 import os
 import hydralit_components as hc
 
+from Data_Class.AzureStorage import upload_file_to_folder
 from Data_Class.st_int_to_textbox import Int_to_Textbox
 from Data_Class.MMSQL_connection import read_Table,save_Table_append
 from Data_Class.eml_msg_to_pdf import process_uploaded_file
@@ -39,79 +40,71 @@ def load_data():
     data = read_Table('PAMS_HICKUP')
     return data
 
-def neuer_vorgang():
 
+def neuer_vorgang():
     with st.form('Vorgang Details', clear_on_submit=True):
-    
-        ## Kopfdaten Vorgang
-        # TODO Systemzeit an Berlin anpassen
+        # Kopfdaten Vorgang
         erstellungs_datum = datetime.date.today()
         geloest_datum = None
         vorgang_id = uuid.uuid4()
         vorgang_status = 'Neu'
-        
-        
+
         col1, col15, col2 = st.columns([2,0.2,2])
 
         with col1:
             vorgang_datum = st.date_input('Vorfallsdatum', value=datetime.date.today())
-            
-            vorgang_bereich = st.selectbox('Fachbereich',['DIET', 'C&F', 'LEAF', 'Domestic', 'Management', 'LOG-IN', 'K&N'], placeholder='Fachbereich wählen', index=None)
-            vorgang_art = st.selectbox('Art',['Kommunikation' , 'Operativ', 'Administrativ', 'KPI', 'Beobachtung','Sonstiges'], index=None,placeholder='Vorfallsart wählen')
-            vorgang_art_detail = st.selectbox('Katergorie', ['Mehrmenge', 'Mindermenge', 'Vertauscher', 'Beschädigung Gebäude', 'Beschädigung Ware', 'SOS','Fehlende Dokumente','Falsche ausgefertigte Dokumente', 'Sonstiges'], index=None, placeholder='Kategorie wählen')
-            
-            with col15:
-                pass
-            
+            vorgang_bereich = st.selectbox('Fachbereich', ['DIET', 'C&F', 'LEAF', 'Domestic', 'Management', 'LOG-IN', 'K&N'], placeholder='Fachbereich wählen', index=None)
+            vorgang_art = st.selectbox('Art', ['Kommunikation', 'Operativ', 'Administrativ', 'KPI', 'Beobachtung', 'Sonstiges'], index=None, placeholder='Vorfallsart wählen')
+            vorgang_art_detail = st.selectbox('Kategorie', ['Mehrmenge', 'Mindermenge', 'Vertauscher', 'Beschädigung Gebäude', 'Beschädigung Ware', 'SOS', 'Fehlende Dokumente', 'Falsche ausgefertigte Dokumente', 'Sonstiges'], index=None, placeholder='Kategorie wählen')
+
         with col2:
-            erstellungs_datum = st.text_input('Erstellungsdatum', value=erstellungs_datum,disabled=True)
-            ersteller = st.text_input('Ersteller', value=st.session_state.user,disabled=True)
+            erstellungs_datum = st.text_input('Erstellungsdatum', value=erstellungs_datum, disabled=True)
+            ersteller = st.text_input('Ersteller', value=st.session_state.user, disabled=True)
             version = st.text_input('Version', value='1.0', disabled=True)
+
         col1, col2 , col3 = st.columns([1,2,5])
         with col1:
-            kosten_ja_nein = st.radio('Kosten', ['Ja','Eventuell' ,'Nein'], index=2)
-        with col2:   
+            kosten_ja_nein = st.radio('Kosten', ['Ja', 'Eventuell', 'Nein'], index=2)
+        with col2:
             kosten = st.number_input('Kosten', value=0, min_value=0, max_value=1000000)
-        with col3:
-            pass
-        
+
         # Vorgang Details
         col1, col2, col3 = st.columns([2,1,2])
-
         with col1:
-            upload_files = st.file_uploader('Anhänge hochladen', type=['pdf', 'png', 'jpg', 'jpeg', 'docx', 'xlsx', 'csv', 'txt'], accept_multiple_files=True)
-        with col2:
-            pass
+            upload_files = st.file_uploader('Anhänge hochladen', type=['msg','eml' 'pdf', 'png', 'jpg', 'jpeg', 'docx', 'xlsx', 'xls','csv', 'txt'], accept_multiple_files=True)
         with col3:
-            zugeteilt_an = st.selectbox('Verantwortlicher User', ['User1', 'User2', 'User3', 'User4', 'User5'], index=None, placeholder='User wählen')
-        
+            zugeteilt_an = st.selectbox('Verantwortlicher User', ['User1', 'User2', 'User3', 'User4', 'User5'], index=None, placeholder='User wählen',disabled=True)
+
         st.subheader('Details')
-
         col1, col15, col2 = st.columns([2,0.2,2])
-
         with col1:
             kurze_beschreibung = st.text_input('Kurze Beschreibung', value='', max_chars=100)
         with col2:
             st.text('')
             i = st.toggle('Vorgang gelöst', value=False)
 
-        
         sachverhalt = st.text_area('Sachverhalt', value='', max_chars=3000)
-        
-        
+
         if i == True:
             geloest_datum = st.date_input('Gelöst am', value=datetime.date.today())
             vorgang_status = 'Gelöst'
-        
+
         if st.form_submit_button('Vorgang speichern'):
-
-            # Erstelle einen String mit den Namen der hochgeladenen Dateien, getrennt durch Kommas
-            file_names = ", ".join([file.name for file in upload_files])
-
-            # Speichere die hochgeladenen Dateien in einem temporären Verzeichnis
-            for file in upload_files:
-                with open(os.path.join('Data/tmp', file.name), 'wb') as f:
-                    f.write(file.getbuffer())
+            if upload_files and vorgang_id:
+                for file in upload_files:
+                    new_file_name = f"{vorgang_id}_{file.name}"
+                    file_names = ", ".join([new_file_name])
+                    # Temporäre Datei speichern
+                    temp_file_path = os.path.join("/tmp", new_file_name)
+                    with open(temp_file_path, "wb") as temp_file:
+                        temp_file.write(file.getbuffer())
+                    # Datei in Azure hochladen
+                    upload_file_to_folder(temp_file_path, "Hick_Up_Uploads")
+                    # Temporäre Datei löschen
+                    os.remove(temp_file_path)
+                st.success("Vorgang erfolgreich gespeichert.")
+            else:
+                st.error("Bitte laden Sie Dateien hoch und geben Sie eine Vorgangs-ID ein.")
 
             # Speichere die Vorgangsdaten in einem DataFrame 
             vorgang_data = pd.DataFrame({
@@ -135,6 +128,8 @@ def neuer_vorgang():
             st.data_editor(vorgang_data)
             # Speichere die Vorgangsdaten in der Datenbank
             save_Table_append(vorgang_data, 'PAMS_HICKUP')
+
+
 
 def bearbeiten_vorgang(data):
 
@@ -289,17 +284,6 @@ def daten_anzeigen(data):
 
     st.write(selection)
         
-        
-        
-
-
-
-    # # Datei-Upload
-    # uploaded_file = st.file_uploader('Laden Sie eine EML- oder MSG-Datei hoch', type=['eml', 'msg'])
-
-    # if uploaded_file is not None:
-    #     process_uploaded_file(uploaded_file)
-
 
   
 def main():
@@ -324,12 +308,12 @@ def main():
 
     if op == 'Neuer Vorgang':
         neuer_vorgang()
-    if op == 'Vorgang bearbeiten':
-        bearbeiten_vorgang(load_data())
+    # if op == 'Vorgang bearbeiten':
+        # bearbeiten_vorgang(load_data())
     if op == 'Daten anzeigen':
         daten_anzeigen(load_data())
-    if op == 'Schneller Vorgang':
-        schneller_vorgang()
+    # if op == 'Schneller Vorgang':
+    #     schneller_vorgang()
 
 
 

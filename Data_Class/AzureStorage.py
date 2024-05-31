@@ -6,6 +6,35 @@ import streamlit as st
 from Data_Class.MMSQL_connection import read_Table, save_Table
 
 
+import requests
+import os
+
+def upload_file_to_folder(file_path, folder_name):
+    SAS_TOKEN = "sp=racwdl&st=2023-03-01T13:54:27Z&se=2039-02-28T21:54:27Z&spr=https&sv=2021-06-08&sr=c&sig=eaUtdKd2%2F5W320pmME3B8FiCO4dGrznbBIvGywnIMtE%3D"
+    CONTAINER_URL = "https://batstorppnecmesprdclrs03.blob.core.windows.net/superdepotreporting-attachments"
+    # Dateiname aus dem Pfad extrahieren
+    file_name = os.path.basename(file_path)
+    # Vollständigen Blob-Namen erstellen
+    blob_name = f"{folder_name.rstrip('/')}/{file_name}"
+    blob_url = f"{CONTAINER_URL}/{blob_name}?{SAS_TOKEN}"
+    
+    headers = {
+        'x-ms-blob-type': 'BlockBlob'
+    }
+
+    # Datei lesen
+    with open(file_path, 'rb') as file_data:
+        file_content = file_data.read()
+    
+    response = requests.put(blob_url, headers=headers, data=file_content)
+    
+    if response.status_code == 201:
+        print(f"Datei '{file_name}' erfolgreich in den Ordner '{folder_name}' hochgeladen.")
+    else:
+        print(f"Fehler beim Hochladen der Datei '{file_name}' in den Ordner '{folder_name}', Statuscode: {response.status_code}")
+        print(f"Antworttext: {response.text}")
+
+
 def upload_file_to_blob_storage(filename, file_object, herkunft):
     '''Hochladen einer Datei in den Blob-Speicher. erwartet den Dateinamen, den Dateipfad und die Herkunft/Anwendung der Datei'''
 
