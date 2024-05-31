@@ -124,7 +124,6 @@ def load_data_LC():
         st.error('Die Angezeigten Daten sind Veraltet')
         return df_outbound, df_inbound, None    
 
-@st.cache_data(show_spinner=False)
 def load_data_SFG():
     try:
         data = get_file_dev("SFG_SDDS.xlsx")

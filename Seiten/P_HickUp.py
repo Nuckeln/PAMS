@@ -38,10 +38,13 @@ def display_pdf(file_bytes):
 def load_data():
     # Lade die Daten aus der Datenbank
     data = read_Table('PAMS_HICKUP')
+    users = read_Table('user')
     return data
 
 
 def neuer_vorgang():
+    users = read_Table('user')
+   
     with st.form('Vorgang Details', clear_on_submit=True):
         # Kopfdaten Vorgang
         erstellungs_datum = datetime.date.today()
@@ -55,7 +58,7 @@ def neuer_vorgang():
             vorgang_datum = st.date_input('Vorfallsdatum', value=datetime.date.today())
             vorgang_bereich = st.selectbox('Fachbereich', ['DIET', 'C&F', 'LEAF', 'Domestic', 'Management', 'LOG-IN', 'K&N'], placeholder='Fachbereich wählen', index=None)
             vorgang_art = st.selectbox('Art', ['Kommunikation', 'Operativ', 'Administrativ', 'KPI', 'Beobachtung', 'Sonstiges'], index=None, placeholder='Vorfallsart wählen')
-            vorgang_art_detail = st.selectbox('Kategorie', ['Mehrmenge', 'Mindermenge', 'Vertauscher', 'Beschädigung Gebäude', 'Beschädigung Ware', 'SOS', 'Fehlende Dokumente', 'Falsche ausgefertigte Dokumente', 'Sonstiges'], index=None, placeholder='Kategorie wählen')
+            vorgang_art_detail = st.selectbox('Kategorie', ['Mehrmenge', 'Mindermenge', 'ATTP','Vertauscher', 'Beschädigung Gebäude', 'Beschädigung Ware', 'SOS', 'Fehlende Dokumente', 'Falsche ausgefertigte Dokumente', 'Sonstiges'], index=None, placeholder='Kategorie wählen')
 
         with col2:
             erstellungs_datum = st.text_input('Erstellungsdatum', value=erstellungs_datum, disabled=True)
@@ -71,9 +74,10 @@ def neuer_vorgang():
         # Vorgang Details
         col1, col2, col3 = st.columns([2,1,2])
         with col1:
-            upload_files = st.file_uploader('Anhänge hochladen', type=['msg','eml' 'pdf', 'png', 'jpg', 'jpeg', 'docx', 'xlsx', 'xls','csv', 'txt'], accept_multiple_files=True)
+            upload_files = st.file_uploader('Anhänge hochladen', type=['msg','eml','pdf', 'png', 'jpg', 'jpeg', 'docx', 'xlsx', 'xls','csv', 'txt'], accept_multiple_files=True)
         with col3:
-            zugeteilt_an = st.selectbox('Verantwortlicher User', ['User1', 'User2', 'User3', 'User4', 'User5'], index=None, placeholder='User wählen',disabled=True)
+            sel_users = users['username'].tolist()
+            zugeteilt_an = st.selectbox('Verantwortlicher User', sel_users, index=None, placeholder='User wählen')
 
         st.subheader('Details')
         col1, col15, col2 = st.columns([2,0.2,2])
