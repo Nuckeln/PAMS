@@ -224,7 +224,7 @@ def main():
         with col3:
             round_on = st.toggle('Runde SAP', True)
         with col4:
-            sel_zeige_Daten = st.toggle('Zeige Prüfungen', False)
+            sel_zeige_Daten = st.toggle('Zeige Prüfungen', False, disabled=True)
             
     with st.expander('Umrechner ZFG510000', expanded=False):
         with st.form(key='my_form'):
@@ -300,10 +300,10 @@ def main():
                     df = pd.DataFrame({'Datum': [pd.Timestamp.now()], 'User': [st.session_state.username], 'UUID': [str(uuid.uuid4())], 'Fehler gefunden': fehler_ja_nein, 'Lieferscheine SAP': [dn_sap], 'Lieferscheine DBH': [dn_DBH_list], 'Fehlende Lieferscheine': [missing_dn], 'Fehlerhafte Mengen': [diff_table]})
                     save_Table_append(df, 'PAMS_DBH_SAP_Check')
                 
-    if sel_zeige_Daten:
-        with st.expander('Durchgeführte Prüfungen', expanded=True):
-            df_old = read_Table('PAMS_DBH_SAP_Check')
-            st.dataframe(df_old)    
+    # if sel_zeige_Daten:
+    #     with st.expander('Durchgeführte Prüfungen', expanded=True):
+    #         df_old = read_Table('PAMS_DBH_SAP_Check')
+    #         st.dataframe(df_old)    
 if __name__ == '__main__':
     main()
     
