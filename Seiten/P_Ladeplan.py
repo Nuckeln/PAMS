@@ -1155,9 +1155,9 @@ def main():
     df_CW_out = filter_data(df_CW_out,sel_date,'Ist Datum')
     df_CW_inb = filter_data(df_CW_inb,sel_date,'Ist Datum')
     
-    df_LC_out, df_LC_inb, df_LC_dds = load_data_LC()
-    df_LC_out = filter_data(df_LC_out,sel_date,'Datum')
-    df_LC_inb = filter_data(df_LC_inb,sel_date,'Datum')
+    # df_LC_out, df_LC_inb, df_LC_dds = load_data_LC()
+    # df_LC_out = filter_data(df_LC_out,sel_date,'Datum')
+    # df_LC_inb = filter_data(df_LC_inb,sel_date,'Datum')
     df_SFG_out, df_SFG_inb, df_SFG_dds = load_data_SFG()
     df_SFG_out = filter_data(df_SFG_out,sel_date,'Abholdatum Update')
     df_SFG_inb = filter_data(df_SFG_inb,sel_date,'Ist Datum\n(Tatsächliche Anlieferung)')
@@ -1166,7 +1166,9 @@ def main():
     col1,col2 = st.columns([1,1])
     with col1:
         with st.container(border=True):
-            show_LC(df_LC_out, df_LC_inb, df_LC_dds,sel_date)
+            show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
+    #     with st.container(border=True):
+    #         show_LC(df_LC_out, df_LC_inb, df_LC_dds,sel_date)
     with col2:
         with st.container(border=True):
             show_domestic(df_CW_out, df_CW_inb, df_CW_dds,sel_date)
@@ -1179,8 +1181,7 @@ def main():
             show_CF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
     col1,col2 = st.columns([1,1])
     with col1:
-        with st.container(border=True):
-            show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
+        pass
 
 
     # show_domestic(df_CW_out, df_CW_inb, df_CW_dds)

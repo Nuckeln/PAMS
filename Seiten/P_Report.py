@@ -378,6 +378,22 @@ def figFehlerVsLieferscheine(dfIssues,df,show_tables,show_in_day_Week):
         if show_tables:
             st.dataframe(dfIssuesOriginal)
     
+def fig_fehler_LS_Bar(dfIssues,df,show_tables,show_in_day_Week):
+    df = df.groupby(['PlannedDate']).agg({'SapOrderNumber':'count'}).reset_index()
+    dfIssues = dfIssues.groupby(['Datum gemeldet','Art']).size().reset_index(name='Anzahl')
+
+    # Zeige Fehler pro Tag in einem Balkendiagramm und Lieferscheine pro Tag in einem Liniendiagramm
+    fig = go.Figure()
+    fig.add_trace(go.Bar(x=dfIssues['Datum gemeldet'], y=dfIssues['Anzahl'], name='Fehler', marker_color='#ef7d00'))
+    fig.add_trace(go.Scatter(x=df['PlannedDate'], y=df['SapOrderNumber'], mode='lines+markers', name='Lieferscheine', marker_color='#0e2b63'))
+    fig.update_layout(title_text="Fehler vs. Lieferscheine", title_font_size=20, title_font_family="Montserrat", title_font_color="#0F2B63", height=700)
+    fig.update_xaxes(tickformat='%d.%m.%Y')
+    fig.update_xaxes(showticklabels=True)
+    fig.update_layout(font_family="Montserrat")
+    fig.update_layout(legend=dict(title='Legende', orientation='h', y=1.1, yanchor='top', x=0.5, xanchor='center'))
+    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+
+    
 def figFehlerBarDay(dfIssues,df,show_tables,show_in_day_Week):
     dfIssues = dfIssues.groupby(['Datum gemeldet','Art']).size().reset_index(name='Anzahl')
     fig = px.bar(dfIssues, x="Datum gemeldet", y='Anzahl', color="Art", hover_data=["Anzahl","Art","Datum gemeldet"])
@@ -437,6 +453,7 @@ def reportPage():
         if 'Fehler Total nach Art' in sel_filterIssues:
             figIssuesTotal(dfIssues,show_in_day_Week,show_tables)
         figFehlerBarDay(dfIssues,df,show_tables,show_in_day_Week)
+        fig_fehler_LS_Bar(dfIssues,df,show_tables,show_in_day_Week)
     # with st.expander("Bau dir was", expanded=True):
     #     bau_dir_was()
         

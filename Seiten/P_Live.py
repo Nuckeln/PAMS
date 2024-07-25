@@ -5,7 +5,6 @@ import datetime
 import streamlit_autorefresh as sar
 from PIL import Image
 import plotly_express as px
-import plotly.graph_objects as go
 from annotated_text import annotated_text, annotation
 import streamlit_timeline as timeline
 
@@ -13,8 +12,9 @@ from Data_Class.wetter.api import getWetterBayreuth
 from Data_Class.MMSQL_connection import read_Table
 
 import matplotlib.pyplot as plt
-from matplotlib.patches import Arc, PathPatch
+from matplotlib.patches import Arc
 
+import plotly.graph_objects as go
 
 
 
@@ -127,7 +127,7 @@ def fig_trucks_Org(df):
         dfDepotAggregated = dfDepot.groupby(['DeliveryDepot', 'PlannedDate']).agg({'LoadingLaneId': 'nunique', 'Picks Gesamt': 'sum', 'Gepackte Paletten': 'sum', 'Geschätzte Paletten' : 'sum' }).reset_index()
         
         # Erstelle 'label' innerhalb der Schleife
-        dfDepotAggregated['label'] = dfDepotAggregated.apply(lambda row: f"{row['DeliveryDepot']}: {row['LoadingLaneId']} LKW <br>{row['Picks Gesamt']} Picks <br>{row['Gepackte Paletten']} Bereits gepackte Paletten'",axis =1) # <br> {row['Geschätzte Paletten']} noch zu packende Paletten" , axis=1)
+        dfDepotAggregated['label'] = dfDepotAggregated.apply(lambda row: f"{row['DeliveryDepot']}: {row['LoadingLaneId']} Verwendetet Ladespuren <br>{row['Picks Gesamt']} Picks <br>{row['Gepackte Paletten']} Bereits gepackte Paletten'",axis =1) # <br> {row['Geschätzte Paletten']} noch zu packende Paletten" , axis=1)
         
         all_dfs.append(dfDepotAggregated)
 

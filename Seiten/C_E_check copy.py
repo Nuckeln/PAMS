@@ -14,6 +14,7 @@ def normalize_number(value):
         return float(value.replace('.', '').replace(',', '.'))
     return value
 
+
 def check_upload(df_sap:pd.DataFrame, df_dbh: pd.DataFrame, check_aktive:bool = True):
     '''Diese Funktion prüft ob die Spaltennamen und dtypes der neuen Dateien mit den alten übereinstimmen
     Args:
@@ -186,26 +187,10 @@ def umrechnerZFG510000(SKU, Menge):
         return Zollmenge, DenominatorToBaseUnitOfMeasure, NumeratorToBaseUnitOfMeasure
     else:
         pass
-
-def recalculate_quantities(df_sap):
-    # Kopiere den DataFrame, um die Originaldaten nicht zu verändern
-    df = df_sap.copy()
-    
-    # Filtere die Zeilen, wo 'Material Group' gleich 'ZFG510000' ist
-    mask = df['Material Group'] == 'ZFG510000'
-    
-    # Wende die Umrechnung nur auf die gefilterten Zeilen an
-    df.loc[mask, 'Quantity'] = df.loc[mask].apply(
-        lambda row: umrechnerZFG510000(str(row['SKU Number']), row['Quantity'])[0], 
-        axis=1
-    )
-    
-    return df
-
         
 def main():
-    # st.warning('Dies ist noch in der Entwicklung und darf nicht für BAU verwendet werden')
-    # st.subheader('')
+    st.warning('Dies ist noch in der Entwicklung und darf nicht für BAU verwendet werden')
+    st.subheader('')
 
     col1, col2, col3, col4 = st.columns([3,1,1,1])
     with col1:
@@ -217,12 +202,11 @@ def main():
             """.format(f'Hi {st.session_state.username} 👋 Bitte lade deine Dokumente hoch.'), unsafe_allow_html=True)   
         
         with col2:
-            pass
-            # testversionladen = st.toggle('Testversionen laden', False)
-            # if testversionladen == True:
-            #     test = st.slider('Testversion',1,3)
+            testversionladen = st.toggle('Testversionen laden', False)
+            if testversionladen == True:
+                test = st.slider('Testversion',1,3)
         with col3:
-            round_on = st.toggle('Runde SAP', True)
+            round_on = st.toggle('Runde SAP', False)
         with col4:
             sel_zeige_Daten = st.toggle('Zeige Prüfungen', False)
             
@@ -250,16 +234,42 @@ def main():
                             st.write(f'SAP Stammdaten:  DenominatorToBaseUnitOfMeasure {denominator} / NumeratorToBaseUnitOfMeasure {numerator}')
                         except:
                             st.error('SKU hat keine daten zu UnitOfMeasure == KGM prüfe die SKU oder die Einheit in den Stammdaten.')
-                            
-                            
-                            
-                            
-                            
     col1, col2 = st.columns(2)
     with col1:
         uploaded_file = st.file_uploader("Upload SAP File", type=['xlsx'])
     with col2:
         uploaded_file2 = st.file_uploader("Upload DBH File", type=['csv'])
+        
+####################### ANFANG TESTBEDIENUNG ############################
+
+    with st.container(border=True):
+        if testversionladen:
+            df_sap = pd.read_excel(f'Data/appData/testdatendbh/Test{test} SAP.xlsx')
+            df_dbh = pd.read_csv(f'Data/appData/testdatendbh/Test{test}DBH.csv',sep=';')
+            df_sap, df_dbh = check_upload(df_sap, df_dbh,check_aktive=False)
+            diff_table, missing_dn, dn_DBH_list, dn_sap = detaillierte_datenprüfung(df_sap, df_dbh,round_on=round_on)
+            # erstelle einen string je Liste und Trenne mit ; 
+            if diff_table.empty and missing_dn == []:
+                st.success('Good Job 👍 Lieferscheine ☑️ Warengruppen ☑️  Mengen ☑️')
+                fehler_ja_nein = 'Nein'  
+            if missing_dn:
+                st.error('⛔️ Folgende Lieferscheine fehlen ⛔️')
+                st.write(missing_dn)
+                fehler_ja_nein = 'Ja'
+            if not diff_table.empty:
+                st.error('⛔️ Fehler in den Mengen gefunden ⛔️')
+                fehler_ja_nein = 'Ja'
+                st.write(diff_table)
+        
+            dn_DBH_list = ';'.join(map(str, dn_DBH_list))
+            missing_dn = ';'.join(map(str, missing_dn))
+            dn_sap = ';'.join(map(str, dn_sap))
+            diff_table = diff_table.to_dict(orient='records')
+            diff_table = ';'.join(map(str, diff_table))
+            df = pd.DataFrame({'Datum': [pd.Timestamp.now()], 'User': [st.session_state.username], 'UUID': [str(uuid.uuid4())], 'Fehler gefunden': fehler_ja_nein, 'Lieferscheine SAP': [dn_sap], 'Lieferscheine DBH': [dn_DBH_list], 'Fehlende Lieferscheine': [missing_dn], 'Fehlerhafte Mengen': [diff_table]})
+            save_Table_append(df, 'PAMS_DBH_SAP_Check')
+            
+####################### ENDE TESTBEDIENUNG ############################
 
     pd.set_option("display.precision", 2)
     img_strip = Image.open('Data/img/strip.png')   
@@ -274,11 +284,6 @@ def main():
                 if uploaded_file and uploaded_file2 not in [None]:
                     df_sap, df_dbh = check_upload(df_sap, df_dbh, check_aktive=False)
                     df_sap, df_dbh = check_upload(df_sap, df_dbh,check_aktive=False)
-                    
-                    df_sap = recalculate_quantities(df_sap)
-
-                    
-                    
                     diff_table, missing_dn, dn_DBH_list, dn_sap = detaillierte_datenprüfung(df_sap, df_dbh,round_on=round_on)
                     # erstelle einen string je Liste und Trenne mit ; 
                     if diff_table.empty and missing_dn == []:

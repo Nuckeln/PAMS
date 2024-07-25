@@ -18,6 +18,8 @@ from Data_Class.MMSQL_connection import read_Table,save_Table_append
 
 #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/main.py"
 
+# http://localhost:8000
+
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",)
 
 hide_streamlit_style = """
@@ -225,8 +227,14 @@ def main():
                 })
                 save_Table_append(new_user_data, "user")  # Speichert die Daten in der Datenbank
                 st.success("Benutzer erfolgreich registriert, Bitte Kontaktieren Sie Christian Hammann oder Martin Wolf um Berechtigungen zu erhalten.")
+    if authenticator.logout():  
         
-    
+            
+        # remove session state
+        st.session_state.user = None
+        st.session_state.rechte = None
         
 if __name__ == "__main__":
     main()
+    # erstelle logout button
+    

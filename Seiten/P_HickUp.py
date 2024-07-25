@@ -10,7 +10,7 @@ from Data_Class.AzureStorage import upload_file_to_folder
 from Data_Class.st_int_to_textbox import Int_to_Textbox
 from Data_Class.MMSQL_connection import read_Table,save_Table_append
 from Data_Class.eml_msg_to_pdf import process_uploaded_file
-from Data_Class.st_func_Return_selectDF import AG_Select_Grid
+from Data_Class.st_AgGridCheckBox import AG_Select_Grid
 import fitz  # PyMuPDF
 from PIL import Image
 import io
@@ -154,12 +154,12 @@ def bearbeiten_vorgang(data):
         return selected_rows.drop('Select', axis=1)
 
 
-    selection = dataframe_with_selections(data)
-    
+    selection = AG_Select_Grid(data, 300, 'PAMS_HICKUP_Change')
+    if not selection is None:
+        st.write(selection)
 
-    if st.button('Vorgang laden'):
-        vorgang_data = selection
-        
+        # filter data by Vorgang ID and selectet row
+        vorgang_data = data[data['Vorgang ID']] == selection
         if not vorgang_data.empty:
     
             with st.form('Vorgang Bearbeitung', clear_on_submit=False):
@@ -312,8 +312,8 @@ def main():
 
     if op == 'Neuer Vorgang':
         neuer_vorgang()
-    # if op == 'Vorgang bearbeiten':
-        # bearbeiten_vorgang(load_data())
+    if op == 'Vorgang bearbeiten':
+        bearbeiten_vorgang(load_data())
     if op == 'Daten anzeigen':
         daten_anzeigen(load_data())
     # if op == 'Schneller Vorgang':

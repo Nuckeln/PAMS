@@ -257,5 +257,7 @@ def main():
             df = filter_data_by_date(df, sel_Zeitraum, 'dates', vergangenheit=True)
             st.write(f'Zeige bisherige Prognosen für {depot_name}')
             plot_forecast(df['dates'],df[typ], df['mean'], df['mean_ci_lower'], df['mean_ci_upper'], depot_name, show_actual=True)
+            
+            
         
 
