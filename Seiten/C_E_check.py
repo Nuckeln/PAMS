@@ -108,7 +108,7 @@ def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
     # ist round_on True dann runde die float spalten auf 2 nachkommastellen
     if round_on:
         df_sap_agg = truncate_float_columns(df_sap_agg, 2)
-        df_dbh_agg = truncate_float_columns(df_dbh_agg, 2)
+       #df_dbh_agg = truncate_float_columns(df_dbh_agg, 2)
 
     
     df1 = df_dbh_agg
@@ -218,9 +218,6 @@ def main():
         
         with col2:
             pass
-            # testversionladen = st.toggle('Testversionen laden', False)
-            # if testversionladen == True:
-            #     test = st.slider('Testversion',1,3)
         with col3:
             round_on = st.toggle('Runde SAP', True)
         with col4:
@@ -266,20 +263,39 @@ def main():
     img_strip = img_strip.resize((1000, 15))  
     st.image(img_strip, use_column_width=True)
     if uploaded_file and uploaded_file2:
-        df_sap = pd.read_excel(uploaded_file)
-        df_dbh = pd.read_csv(uploaded_file2,sep=';')
+        try:
+            df_sap = pd.read_excel(uploaded_file)
+        except UnicodeDecodeError:
+            st.error('Fehler beim lesen der SAP Datei')
+        try:
+            df_dbh = pd.read_csv(uploaded_file2, sep=';', encoding='utf-8')
+        except UnicodeDecodeError:
+            try:
+                df_dbh = pd.read_csv(uploaded_file2, sep=';', encoding='ISO-8859-1')
+            except Exception as e:
+                st.error(f'Fehler beim Lesen der DBH Datei: {e}')
+                st.stop()
+
+        if df_dbh.empty:
+            st.error("Die DBH-Datei ist leer oder enthält keine Daten.")
+            st.stop()
+            
         if st.button('Daten Hochladen und prüfen'):
         
             with st.container(border=True):
+                
                 if uploaded_file and uploaded_file2 not in [None]:
                     df_sap, df_dbh = check_upload(df_sap, df_dbh, check_aktive=False)
                     df_sap, df_dbh = check_upload(df_sap, df_dbh,check_aktive=False)
+                    df_sap['Gross Weight'] = df_sap['Gross Weight'].astype(float)
+                    df_dbh['Rohmasse'] = df_dbh['Rohmasse'].astype(float)
                     
                     df_sap = recalculate_quantities(df_sap)
 
-                    
-                    
                     diff_table, missing_dn, dn_DBH_list, dn_sap = detaillierte_datenprüfung(df_sap, df_dbh,round_on=round_on)
+
+
+
                     # erstelle einen string je Liste und Trenne mit ; 
                     if diff_table.empty and missing_dn == []:
                         st.success('Good Job 👍 Lieferscheine ☑️ Warengruppen ☑️  Mengen ☑️')
