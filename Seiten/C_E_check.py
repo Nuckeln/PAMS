@@ -7,6 +7,7 @@ import streamlit as st
 import json
 import uuid
 from Data_Class.MMSQL_connection import read_Table, save_Table_append, save_Table
+import hydralit_components as hc
 
 def normalize_number(value):
     if isinstance(value, str):
@@ -221,6 +222,7 @@ def main():
         with col3:
             round_on = st.toggle('Runde SAP', True)
         with col4:
+            #st.write('1.12')
             sel_zeige_Daten = st.toggle('Zeige Prüfungen', False, disabled=True)
             
     with st.expander('Umrechner ZFG510000', expanded=False):
@@ -281,41 +283,41 @@ def main():
             st.stop()
             
         if st.button('Daten Hochladen und prüfen'):
-        
-            with st.container(border=True):
-                
-                if uploaded_file and uploaded_file2 not in [None]:
-                    df_sap, df_dbh = check_upload(df_sap, df_dbh, check_aktive=False)
-                    df_sap, df_dbh = check_upload(df_sap, df_dbh,check_aktive=False)
-                    df_sap['Gross Weight'] = df_sap['Gross Weight'].astype(float)
-                    df_dbh['Rohmasse'] = df_dbh['Rohmasse'].astype(float)
+            with hc.HyLoader(f'',hc.Loaders.points_line):
+            #   with st.container(border=True):
                     
-                    df_sap = recalculate_quantities(df_sap)
+                    if uploaded_file and uploaded_file2 not in [None]:
+                        df_sap, df_dbh = check_upload(df_sap, df_dbh, check_aktive=False)
+                        df_sap, df_dbh = check_upload(df_sap, df_dbh,check_aktive=False)
+                        df_sap['Gross Weight'] = df_sap['Gross Weight'].astype(float)
+                        df_dbh['Rohmasse'] = df_dbh['Rohmasse'].astype(float)
+                        
+                        df_sap = recalculate_quantities(df_sap)
 
-                    diff_table, missing_dn, dn_DBH_list, dn_sap = detaillierte_datenprüfung(df_sap, df_dbh,round_on=round_on)
+                        diff_table, missing_dn, dn_DBH_list, dn_sap = detaillierte_datenprüfung(df_sap, df_dbh,round_on=round_on)
 
 
 
-                    # erstelle einen string je Liste und Trenne mit ; 
-                    if diff_table.empty and missing_dn == []:
-                        st.success('Good Job 👍 Lieferscheine ☑️ Warengruppen ☑️  Mengen ☑️')
-                        fehler_ja_nein = 'Nein'  
-                    if missing_dn:
-                        st.error('⛔️ Folgende Lieferscheine fehlen ⛔️')
-                        st.write(missing_dn)
-                        fehler_ja_nein = 'Ja'
-                    if not diff_table.empty:
-                        st.error('⛔️ Fehler in den Mengen gefunden ⛔️')
-                        fehler_ja_nein = 'Ja'
-                        st.write(diff_table)
-                    dn_DBH_list = ';'.join(map(str, dn_DBH_list))
-                    missing_dn = ';'.join(map(str, missing_dn))
-                    dn_sap = ';'.join(map(str, dn_sap))
-                    diff_table = diff_table.to_dict(orient='records')
-                    diff_table = ';'.join(map(str, diff_table))
-                    df = pd.DataFrame({'Datum': [pd.Timestamp.now()], 'User': [st.session_state.username], 'UUID': [str(uuid.uuid4())], 'Fehler gefunden': fehler_ja_nein, 'Lieferscheine SAP': [dn_sap], 'Lieferscheine DBH': [dn_DBH_list], 'Fehlende Lieferscheine': [missing_dn], 'Fehlerhafte Mengen': [diff_table]})
-                    save_Table_append(df, 'PAMS_DBH_SAP_Check')
-                
+                        # erstelle einen string je Liste und Trenne mit ; 
+                        if diff_table.empty and missing_dn == []:
+                            st.success('Good Job 👍 Lieferscheine ☑️ Warengruppen ☑️  Mengen ☑️')
+                            fehler_ja_nein = 'Nein'  
+                        if missing_dn:
+                            st.error('⛔️ Folgende Lieferscheine fehlen ⛔️')
+                            st.write(missing_dn)
+                            fehler_ja_nein = 'Ja'
+                        if not diff_table.empty:
+                            st.error('⛔️ Fehler in den Mengen gefunden ⛔️')
+                            fehler_ja_nein = 'Ja'
+                            st.write(diff_table)
+                        dn_DBH_list = ';'.join(map(str, dn_DBH_list))
+                        missing_dn = ';'.join(map(str, missing_dn))
+                        dn_sap = ';'.join(map(str, dn_sap))
+                        diff_table = diff_table.to_dict(orient='records')
+                        diff_table = ';'.join(map(str, diff_table))
+                        df = pd.DataFrame({'Datum': [pd.Timestamp.now()], 'User': [st.session_state.username], 'UUID': [str(uuid.uuid4())], 'Fehler gefunden': fehler_ja_nein, 'Lieferscheine SAP': [dn_sap], 'Lieferscheine DBH': [dn_DBH_list], 'Fehlende Lieferscheine': [missing_dn], 'Fehlerhafte Mengen': [diff_table]})
+                        #save_Table_append(df, 'PAMS_DBH_SAP_Check')
+                    
     # if sel_zeige_Daten:
     #     with st.expander('Durchgeführte Prüfungen', expanded=True):
     #         df_old = read_Table('PAMS_DBH_SAP_Check')

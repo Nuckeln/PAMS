@@ -131,11 +131,11 @@ def user_menue_frontend():
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
             pageStellplatzverwaltung()
     if page == 'Admin':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
-            adminPage()
+        #with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
+        adminPage()
     if page == 'C&E check':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
-            pageC_E_check()
+        #with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
+        pageC_E_check()
     if page == 'Logout':
         st.session_state.user = None
         st.session_state.rechte = None
