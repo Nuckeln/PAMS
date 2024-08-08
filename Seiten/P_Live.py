@@ -217,31 +217,43 @@ def figUebermitteltInDeadline(df):
     fig.update_traces(text=dfFertig['PartnerName'], textposition='inside')
     st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
 
+
 def figPicksKunde(df):
-
-    df['Fertiggestellt'] = df['Fertiggestellt'].fillna('0')
-    df = df.groupby(['SapOrderNumber','PartnerName', "AllSSCCLabelsPrinted", 'DeliveryDepot', 'Fertiggestellt', 'Lieferschein erhalten']).agg({'Picks Gesamt': 'sum'}).reset_index()
-    df = df.sort_values(by=['Picks Gesamt', 'AllSSCCLabelsPrinted'], ascending=False)
-
-    # HTML-formatted title with different word colors
-    title = "<b>Kundenübersicht nach Status:</b> <span style='color:#E72482'>Offen</span> / <span style='color:#4FAF46'>Fertig</span>"
-    figTagKunden = px.bar(df, x="PartnerName", y="Picks Gesamt", title=title, hover_data=['Picks Gesamt', 'SapOrderNumber','Lieferschein erhalten', 'Fertiggestellt'], height=900)
+    # wenn AllSSCCLabelsPrinted = 0 und in First_Pick ist ein Wert, dann setze in Arbeit auf 1
+    df['In_Arbeit'] = np.where((df['AllSSCCLabelsPrinted'] == 0) & (df['First_Picking'].notna()), 1, 0)
     
-    figTagKunden.update_traces(marker_color=np.where(df['AllSSCCLabelsPrinted'] == 1, '#4FAF46', '#E72482'))
+    # Rename Col EstimatedNumberOfPallets to Geschätzte Paletten
+    df['Fertiggestellt'] = df['Fertiggestellt'].fillna('0')
+    df = df.groupby(['SapOrderNumber','PartnerName', "AllSSCCLabelsPrinted", 'DeliveryDepot', 'Fertiggestellt', 'Lieferschein erhalten','Fertige Paletten','EstimatedNumberOfPallets','In_Arbeit']).agg({'Picks Gesamt': 'sum'}).reset_index()
+    df = df.sort_values(by=['Picks Gesamt', 'AllSSCCLabelsPrinted'], ascending=False)
+    
+    # HTML-formatted title with different word colors
+    title = "<b>Kundenübersicht nach Status:</b> <span style='color:#E72482'>Offen</span> / <span style='color:#4FAF46'>Fertig</span> / <span style='color:#ef7d00'>In Arbeit</span>"
+    figTagKunden = px.bar(df, x="PartnerName", y="Picks Gesamt", title=title, hover_data=['Picks Gesamt', 'SapOrderNumber','Lieferschein erhalten', 'Fertiggestellt','EstimatedNumberOfPallets','Fertige Paletten'], height=900)
+    
+    # Update Color based on three conditions
+    colors = np.where(df['AllSSCCLabelsPrinted'] == 1, '#4FAF46', 
+                      np.where(df['In_Arbeit'] == 1, '#ef7d00', '#E72482'))
+    figTagKunden.update_traces(marker_color=colors)
+    
     figTagKunden.update_traces(texttemplate='%{text:.3}', text=df['Picks Gesamt'], textposition='inside')
     figTagKunden.update_layout(uniformtext_minsize=10, uniformtext_mode='hide', showlegend=False)
     figTagKunden.layout.xaxis.tickangle = 70
-    figTagKunden.update_layout(font_family="Montserrat", font_color="#0F2B63", title_font_family="Montserrat", title_font_color="#0F2B63",)
-    #disable xaxis title
+    figTagKunden.update_layout(font_family="Montserrat", font_color="#0F2B63", title_font_family="Montserrat", title_font_color="#0F2B63")
+    
+    # Disable xaxis title
     figTagKunden.update_xaxes(title_text='')
     
     figTagKunden.update_layout(
-                annotations=[
-                    {"x": x, "y": total * 1.05, "text": str(total), "showarrow": False}
-                    for x, total in df.groupby("PartnerName", as_index=False).agg({"Picks Gesamt": "sum"}).values])
+        annotations=[
+            {"x": x, "y": total * 1.05, "text": str(total), "showarrow": False}
+            for x, total in df.groupby("PartnerName", as_index=False).agg({"Picks Gesamt": "sum"}).values
+        ]
+    )
     figTagKunden.update_yaxes(title_text='')
     figTagKunden.update_xaxes(title_text='')
-    st.plotly_chart(figTagKunden, use_container_width=True,config={'displayModeBar': False})
+    
+    st.plotly_chart(figTagKunden, use_container_width=True, config={'displayModeBar': False})
 
 def figPicksBy_SAP_Order_CS_PAL(df):
     df = df.groupby(['SapOrderNumber','PartnerName','AllSSCCLabelsPrinted'])[['Picks Karton','Picks Paletten','Picks Stangen']].sum().reset_index()        #set index to SapOrderNumber
@@ -596,6 +608,8 @@ def PageTagesReport():
             figTachoDiagramm_VEGA(dfOr,'KNHAJ')
         except:
             st.success('KNHAJ Heute keine Lieferungen')
+
+    
     try:
             
         with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', use_container_width=True, ):
