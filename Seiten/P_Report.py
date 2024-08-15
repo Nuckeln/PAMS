@@ -116,11 +116,14 @@ def filterDate(df: pd,dfIssues: pd):
     if sel_Day_week == 'Jahren':
         sel_Day_week = 'Jahr'
     return df, dfIssues, tabelle, sel_Day_week
-
+#
+def fig_Palettenschätzung(df,tabelle,show_in_day_Week):
+    pass
 
 ###CREATE PLOTS###
 ## Kennzahlen PLOTS
 def figPICKS_GesamtVolumen(df,tabelle,show_in_day_Week):
+
     dfOriginal = df
     df['Picks Gesamt'] = pd.to_numeric(df['Picks Gesamt'], errors='coerce')
     df = df.groupby([show_in_day_Week]).agg({'Picks Gesamt':'sum'}).reset_index()
@@ -398,25 +401,6 @@ def figFehlerBarDay(dfIssues,df,show_tables,show_in_day_Week):
     dfIssues = dfIssues.groupby(['Datum gemeldet','Art']).size().reset_index(name='Anzahl')
     fig = px.bar(dfIssues, x="Datum gemeldet", y='Anzahl', color="Art", hover_data=["Anzahl","Art","Datum gemeldet"])
     st.plotly_chart(fig, use_container_width=True)
-
-# BAU DIR WAS
-@st.cache_resource
-def get_pygwalker(dataframe)-> "StreamlitRenderer":
-
-    # When you need to publish your app to the public, you should set the debug parameter to False to prevent other users from writing to your chart configuration file.
-    return StreamlitRenderer(dataframe, spec="./gw_config.json", debug=False)
-        
-def bau_dir_was():
-    
-    
-    tables = return_table_names()
-    sel_Table = st.selectbox('Tabelle',tables)
-    df = read_table(sel_Table)
-
-    
-    renderer = get_pygwalker(df)
-    renderer.explorer()
-
 
 
 ###Show Page###

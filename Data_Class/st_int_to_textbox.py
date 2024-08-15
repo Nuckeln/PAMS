@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 class Int_to_Textbox:
 
@@ -54,6 +55,10 @@ class Int_to_Textbox:
         Returns:
         Gibt eine Liste mit den Werten der Checkboxen zurück
         '''
+        # prüfe ob df eine Liste oder DataFrame ist
+        if type(df) == list:
+            df = pd.DataFrame(df)
+            # column name = cols
         input_list = df[cols].unique().tolist()
         
         input_list_count = len(input_list) // 4  # Anzahl der Elemente in jeder Spalte

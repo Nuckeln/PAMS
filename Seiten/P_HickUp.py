@@ -14,6 +14,7 @@ from Data_Class.st_AgGridCheckBox import AG_Select_Grid
 import fitz  # PyMuPDF
 from PIL import Image
 import io
+#from Seiten.subpages.hick_up_change import vorgang_bearbeiten
 
 # TODO 
 # - Vorgang Anlegen 
@@ -107,8 +108,6 @@ def neuer_vorgang():
                     # Temporäre Datei löschen
                     os.remove(temp_file_path)
                 st.success("Vorgang erfolgreich gespeichert.")
-            else:
-                st.error("Bitte laden Sie Dateien hoch und geben Sie eine Vorgangs-ID ein.")
 
             # Speichere die Vorgangsdaten in einem DataFrame 
             vorgang_data = pd.DataFrame({
@@ -133,172 +132,110 @@ def neuer_vorgang():
             # Speichere die Vorgangsdaten in der Datenbank
             save_Table_append(vorgang_data, 'PAMS_HICKUP')
 
+def vorgang_bearbeiten(vorgang_data):
+# Folgende Spalten sind in der Tabelle vorhanden:
+# 'Vorgang ID',
+# 'Version',
+# 'Ersteller',
+# 'Zugeteilt an',
+# 'Erstellungsdatum',
+# 'Vorfallsdatum',
+# 'Fachbereich',
+# 'Art',
+# 'Kategorie',
+# 'Kosten',
+# 'Kosten in €',
+# 'Kurze Beschreibung',
+# 'Sachverhalt',
+# 'Anhänge',
+# 'Gelöst am',
+# 'Status'
+#Prüfen ob Vorgang vorhanden
+    if vorgang_data.empty:  
+        st.error("Vorgang nicht gefunden. Bitte wählen Sie einen Vorgang aus der Liste (Vorne Anklicken).")
+        return
 
-
-def bearbeiten_vorgang(data):
-
-    def dataframe_with_selections(df):
-        df_with_selections = df.copy()
-        df_with_selections.insert(0, "Select", False)
-
-        # Get dataframe row-selections from user with st.data_editor
-        edited_df = st.data_editor(
-            df_with_selections,
-            hide_index=True,
-            column_config={"Select": st.column_config.CheckboxColumn(required=True)},
-            disabled=df.columns,
-        )
-
-        # Filter the dataframe using the temporary column, then drop the column
-        selected_rows = edited_df[edited_df.Select]
-        return selected_rows.drop('Select', axis=1)
-
-
-    selection = AG_Select_Grid(data, 300, 'PAMS_HICKUP_Change')
-    if not selection is None:
-        st.write(selection)
-
-        # filter data by Vorgang ID and selectet row
-        vorgang_data = data[data['Vorgang ID']] == selection
-        if not vorgang_data.empty:
-    
-            with st.form('Vorgang Bearbeitung', clear_on_submit=False):
-                # Kopfdaten Vorgang
-                erstellungs_datum = vorgang_data.at[0, 'Erstellungsdatum']
-                geloest_datum = vorgang_data.at[0, 'Gelöst am']
-                vorgang_id = vorgang_data.at[0, 'Vorgang ID']
-                vorgang_status = vorgang_data.at[0, 'Status']
-                version = str(float(vorgang_data.at[0, 'Version']) + 1)
-
-                col1, col15, col2 = st.columns([2, 0.2, 2])
-                with col1:
-                    vorgang_datum = st.date_input('Vorfallsdatum', value=vorgang_data.at[0, 'Vorfallsdatum'])
-                    vorgang_bereich = st.selectbox('Fachbereich', ['DIET', 'C&F', 'LEAF', 'Domestic', 'Management', 'LOG-IN', 'K&N'], index=None)
-                    vorgang_art = st.selectbox('Art', ['Kommunikation', 'Operativ', 'Administrativ', 'KPI', 'Beobachtung', 'Sonstiges'], index=None)
-                    vorgang_art_detail = st.selectbox('Katergorie', ['Mehrmenge', 'Mindermenge', 'Vertauscher', 'Beschädigung Gebäude', 'Beschädigung Ware', 'SOS', 'Fehlende Dokumente', 'Falsche ausgefertigte Dokumente', 'Sonstiges'], index=None)
-
-                with col2:
-                    st.text_input('Erstellungsdatum', value=erstellungs_datum, disabled=True)
-                    ersteller = st.text_input('Ersteller', value=vorgang_data.at[0, 'Ersteller'], disabled=True)
-                    st.text_input('Version', value=version, disabled=True)
-
-                col1, col2, col3 = st.columns([1, 2, 5])
-                with col1:
-                    kosten_ja_nein = st.radio('Kosten', ['Ja', 'Eventuell', 'Nein'], index=['Ja', 'Eventuell', 'Nein'].index(vorgang_data.at[0, 'Kosten']))
-                with col2:
-                    kosten = st.number_input('Kosten', value=vorgang_data.at[0, 'Kosten in €'], min_value=0, max_value=1000000)
-                
-                # Vorgang Details
-                col1, col2, col3 = st.columns([2, 1, 2])
-                with col1:
-                    upload_files = st.file_uploader('Anhänge hochladen', type=['pdf', 'png', 'jpg', 'jpeg', 'docx', 'xlsx', 'csv', 'txt'], accept_multiple_files=True)
-                with col3:
-                    zugeteilt_an = st.selectbox('Verantwortlicher User', ['User1', 'User2', 'User3', 'User4', 'User5'], index=None)
-
-                st.subheader('Details')
-                col1, col15, col2 = st.columns([2, 0.2, 2])
-                with col1:
-                    kurze_beschreibung = st.text_input('Kurze Beschreibung', value=vorgang_data.at[0, 'Kurze Beschreibung'], max_chars=100)
-                with col2:
-                    st.text('')
-                    i = st.toggle('Vorgang gelöst', value=(vorgang_status == 'Gelöst'))
-
-                sachverhalt = st.text_area('Sachverhalt', value=vorgang_data.at[0, 'Sachverhalt'], max_chars=3000)
-
-                if i:
-                    geloest_datum = st.date_input('Gelöst am', value=datetime.date.today())
-                    vorgang_status = 'Gelöst'
-                
-                if st.form_submit_button('Änderungen speichern'):
-                    file_names = ", ".join([file.name for file in upload_files])
-                    for file in upload_files:
-                        with open(os.path.join('Data/tmp', file.name), 'wb') as f:
-                            f.write(file.getbuffer())
-                    
-                    updated_data = pd.DataFrame({
-                        'Vorgang ID': [vorgang_id],
-                        'Version': [version],
-                        'Ersteller': [ersteller],
-                        'Zugeteilt an': [zugeteilt_an],
-                        'Erstellungsdatum': [erstellungs_datum],
-                        'Vorfallsdatum': [vorgang_datum],
-                        'Fachbereich': [vorgang_bereich],
-                        'Art': [vorgang_art],
-                        'Kategorie': [vorgang_art_detail],
-                        'Kosten': [kosten_ja_nein],
-                        'Kosten in €': [kosten],
-                        'Kurze Beschreibung': [kurze_beschreibung],
-                        'Sachverhalt': [sachverhalt],
-                        'Anhänge': [file_names],
-                        'Gelöst am': [geloest_datum],
-                        'Status': [vorgang_status]
-                    })
-                    
-                    st.data_editor(updated_data)
-                    save_table_append(updated_data, 'PAMS_HICKUP')
-
-def schneller_vorgang():
-    erstellungs_datum = datetime.date.today()
-    geloest_datum = None
-    vorgang_id = uuid.uuid4()
-    vorgang_status = 'Neu'
-    version = '1.0'
-    ersteller = st.session_state.user
-    zugeteilt_an = 'User1'
-    vorgang_datum = datetime.date.today()
-    vorgang_bereich = st.selectbox('Fachbereich', ['DIET', 'C&F', 'LEAF', 'Domestic', 'Management', 'LOG-IN', 'K&N'], index=None)
-    vorgang_art = 'Quick'
-    vorgang_art_detail = ''
-    kosten_ja_nein = 'Nein'
-    kosten = 0
-    file_upload = st.camera_input('Kamera')
-    kurze_beschreibung = st.text_input('Kurze Beschreibung', value='', max_chars=64)
-    sachverhalt = st.text_area('Sachverhalt', value='', max_chars=3000)
-    if st.button('Vorgang speichern'):
-        # save the uploaded file to a temporary directory
-        with open(os.path.join('Data/tmp', 'camera.jpg'), 'wb') as f:
-            f.write(file_upload.getvalue())
-            
-        vorgang_data = pd.DataFrame({
-            'Vorgang ID': [vorgang_id],
-            'Version': [version],
-            'Ersteller': [ersteller],
-            'Zugeteilt an': [zugeteilt_an],
-            'Erstellungsdatum': [erstellungs_datum],
-            'Vorfallsdatum': [vorgang_datum],
-            'Fachbereich': [vorgang_bereich],
-            'Art': [vorgang_art],
-            'Kategorie': [vorgang_art_detail],
-            'Kosten': [kosten_ja_nein],
-            'Kosten in €': [kosten],
-            'Kurze Beschreibung': [kurze_beschreibung],
-            'Sachverhalt': [sachverhalt],
-            'Anhänge': [file_upload],
-            'Gelöst am': [geloest_datum],
-            'Status': [vorgang_status]
-        })
+#### Bearbeiten
+    with st.form('Vorgang Details', clear_on_submit=True):
         st.data_editor(vorgang_data)
-        save_Table_append(vorgang_data, 'PAMS_HICKUP')
-    
-def daten_anzeigen(data):
+        
+        # Lade die vorhandenen Daten in die Formularfelder
+        vorgang_id = vorgang_data['Vorgang ID'].values[0]
+        version = vorgang_data['Version'].values[0]
+        ersteller = vorgang_data['Ersteller'].values[0]
+        zugeteilt_an = vorgang_data['Zugeteilt an'].values[0]
+        erstellungs_datum = vorgang_data['Erstellungsdatum'].values[0]
+        vorgang_datum = vorgang_data['Vorfallsdatum'].values[0]
+        vorgang_bereich = vorgang_data['Fachbereich'].values[0]
+        vorgang_art = vorgang_data['Art'].values[0]
+        vorgang_art_detail = vorgang_data['Kategorie'].values[0]
+        kosten_ja_nein = vorgang_data['Kosten'].values[0]
+        kosten = vorgang_data['Kosten in €'].values[0]
+        kurze_beschreibung = vorgang_data['Kurze Beschreibung'].values[0]
+        sachverhalt = vorgang_data['Sachverhalt'].values[0]
+        anhaenge = vorgang_data['Anhänge'].values[0]
+        geloest_am = vorgang_data['Gelöst am'].values[0]
+        status = vorgang_data['Status'].values[0]
+        
+        col1, col15, col2 = st.columns([2,0.2,2])
 
-    
-    selection = AG_Select_Grid(data, 300, 'PAMS_HICKUP')
-    
-
-    st.write(selection)
+        with col1:
+            vorgang_datum = st.date_input('Vorfallsdatum', value=vorgang_datum)
+            vorgang_bereich_neu = st.selectbox('Fachbereich', ['DIET', 'C&F', 'LEAF', 'Domestic', 'Management', 'LOG-IN', 'K&N'],index=None ,placeholder=vorgang_bereich)
+            vorgang_art_neu = st.selectbox('Art', ['Kommunikation', 'Operativ', 'Administrativ', 'KPI', 'Beobachtung', 'Sonstiges'],index=None, placeholder=vorgang_art)
+            st.write(f'Kategorie: {vorgang_art_neu}')
+            vorgang_art_detail_neu = st.selectbox('Kategorie', ['Mehrmenge', 'Mindermenge', 'ATTP','Vertauscher', 'Beschädigung Gebäude', 'Beschädigung Ware', 'SOS', 'Fehlende Dokumente', 'Falsche ausgefertigte Dokumente', 'Sonstiges'], index=None,placeholder=vorgang_art_detail)
+        with col2:
+            erstellungs_datum = st.text_input('Erstellungsdatum', value=erstellungs_datum, disabled=True)
+            ersteller = st.text_input('Ersteller', value=ersteller, disabled=True)
+            version = st.text_input('Version', value=version, disabled=True)
+        col1, col2 , col3 = st.columns([1,2,5])
+        with col1:
+            kosten_ja_nein = st.radio('Kosten', ['Ja', 'Eventuell', 'Nein'], index=2)
+        with col2:
+            kosten = st.number_input('Kosten', value=kosten, min_value=0, max_value=1000000)
+        
+        # Vorgang Details
+        col1, col2, col3 = st.columns([2,1,2])
+        with col1:
+            pass
+            #upload_files = st.file_uploader('Anhänge hochladen', type=['msg','eml','pdf', 'png', 'jpg', 'jpeg', 'docx', 'xlsx', 'xls','csv', 'txt'], accept_multiple_files=True)
+        with col3:
+            pass
+            #zugeteilt_an = st.selectbox('Verantwortlicher User', sel_users, index=None, placeholder=zugeteilt_an)
+        
+        st.subheader('Details')
+        col1, col15, col2 = st.columns([2,0.2,2])
+        with col1:
+            kurze_beschreibung = st.text_input('Kurze Beschreibung', value=kurze_beschreibung, max_chars=100)
+        with col2:
+            st.text('')
+            i = st.toggle('Vorgang gelöst', value=False)
+        
+        sachverhalt = st.text_area('Sachverhalt', value=sachverhalt, max_chars=3000)
+        
+        if i == True:
+            geloest_datum = st.date_input('Gelöst am', value=datetime.date.today())
+            vorgang_status = 'Gelöst'
         
 
-  
+        if st.form_submit_button('Vorgang ändern'):
+            # Speichere die Vorgangsdaten in einem DataFrame 
+            st.warning("Wird nicht gespeichert ist noch in Arbeit")
+            if vorgang_art_neu == None:
+                vorgang_art_neu = vorgang_art
+            if vorgang_art_detail_neu == None:
+                vorgang_art_detail_neu = vorgang_art_detail
+            if vorgang_bereich_neu == None:
+                vorgang_bereich_neu = vorgang_bereich
+            
 def main():
     st.container(border=True)
     col1,col2 , col3, col4 = st.columns([1, 1, 1,1])    
     # define what option labels and icons to display
     option_data = [
     {'icon': "new", 'label':"Neuer Vorgang"},
-    {'icon':"",'label':"Schneller Vorgang"},
     {'icon': "", 'label':"Vorgang bearbeiten"},
-    {'icon': "", 'label':"Daten anzeigen"}
     ]
 
     # override the theme, else it will use the Streamlit applied theme
@@ -309,14 +246,33 @@ def main():
     op = hc.option_bar(option_definition=option_data,title=' ',key='PrimaryOption',override_theme=over_theme,font_styling=font_fmt,horizontal_orientation=True)
 
 
+    if "df" not in st.session_state:
+        st.session_state.df = load_data()
 
     if op == 'Neuer Vorgang':
         neuer_vorgang()
-    if op == 'Vorgang bearbeiten':
-        bearbeiten_vorgang(load_data())
-    if op == 'Daten anzeigen':
-        daten_anzeigen(load_data())
-    # if op == 'Schneller Vorgang':
+
+    elif op == 'Vorgang bearbeiten':
+
+        st.session_state.df.sort_values(by='Erstellungsdatum', ascending=False, inplace=True)
+
+        event = st.dataframe(
+            st.session_state.df,
+            key="data",
+            on_select="rerun",
+            selection_mode=["single-row"],
+        )
+
+        sel_id = list(event.selection.values())[0]   
+        try:
+        #wert aus df ermitteln in Zeile sel_id
+            df = st.session_state.df.iloc[sel_id]
+        except:
+            df = None
+        if df is not None:
+            vorgang_bearbeiten(df)
+        
+
     #     schneller_vorgang()
 
 

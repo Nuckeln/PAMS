@@ -151,7 +151,9 @@ def fig_trucks_Org(df):
         title_font_color="#0F2B63",
         showlegend=False
     )
-    fig.update_xaxes(showticklabels=True)
+    fig.update_xaxes(showticklabels=False)
+    #disable x axis title
+    fig.update_xaxes(title_text='')
     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
 def figUebermitteltInDeadline(df):      
@@ -216,7 +218,6 @@ def figUebermitteltInDeadline(df):
     fig.update_layout(showlegend=False)
     fig.update_traces(text=dfFertig['PartnerName'], textposition='inside')
     st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
-
 
 def figPicksKunde(df):
     # wenn AllSSCCLabelsPrinted = 0 und in First_Pick ist ein Wert, dann setze in Arbeit auf 1

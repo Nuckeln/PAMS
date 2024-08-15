@@ -20,6 +20,10 @@ from Data_Class.MMSQL_connection import read_Table,save_Table_append
 
 # http://localhost:8000
 
+# df = pd.read_csv('user.csv')
+# st.dataframe(df)
+# save_Table_append(df, "user")
+
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",)
 
 hide_streamlit_style = """
