@@ -131,7 +131,7 @@ st-annotated-text==4.0.1
 st-theme==1.2.3
 stack-data==0.6.3
 statsmodels==0.14.2
-streamlit==1.34.0
+streamlit==1.37.1
 streamlit-aggrid==1.0.5
 streamlit-authenticator==0.3.2
 streamlit-autorefresh==1.0.1
