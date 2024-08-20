@@ -561,7 +561,7 @@ def downLoadTagesReport(df):
 #######------------------Main------------------########
 
 def PageTagesReport():
-    pd.set_option("display.precision", 2)
+    pd.set_option("display.precision", 0)
     sar.st_autorefresh(interval=48000, debounce=True)
     colhead1, colhead2 ,colhead3, colhead4 = st.columns(4)
     with colhead2:

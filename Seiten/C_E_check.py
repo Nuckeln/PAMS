@@ -109,7 +109,7 @@ def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
     # ist round_on True dann runde die float spalten auf 2 nachkommastellen
     if round_on:
         df_sap_agg = truncate_float_columns(df_sap_agg, 2)
-       #df_dbh_agg = truncate_float_columns(df_dbh_agg, 2)
+        df_dbh_agg = truncate_float_columns(df_dbh_agg, 2)
 
     
     df1 = df_dbh_agg

@@ -15,7 +15,7 @@ from Seiten.C_E_check import main as pageC_E_check
 from Seiten.P_HickUp import main as pageHickUp
 import hydralit_components as hc
 from Data_Class.MMSQL_connection import read_Table,save_Table_append
-
+pd.set_option("display.precision",3)
 #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/main.py"
 
 # http://localhost:8000
