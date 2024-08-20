@@ -8,7 +8,7 @@ import hydralit_components as hc
 
 from Data_Class.AzureStorage import upload_file_to_folder
 from Data_Class.st_int_to_textbox import Int_to_Textbox
-from Data_Class.MMSQL_connection import read_Table,save_Table_append
+from Data_Class.MMSQL_connection import read_Table,save_Table_append,loesche_Zeile
 from Data_Class.eml_msg_to_pdf import process_uploaded_file
 from Data_Class.st_AgGridCheckBox import AG_Select_Grid
 import fitz  # PyMuPDF
@@ -50,6 +50,7 @@ def neuer_vorgang():
         # Kopfdaten Vorgang
         erstellungs_datum = datetime.date.today()
         geloest_datum = None
+        file_names = None
         vorgang_id = uuid.uuid4()
         vorgang_status = 'Neu'
 
@@ -108,6 +109,7 @@ def neuer_vorgang():
                     # Temporäre Datei löschen
                     os.remove(temp_file_path)
                 st.success("Vorgang erfolgreich gespeichert.")
+            # Prüfe ob file_names existiert
 
             # Speichere die Vorgangsdaten in einem DataFrame 
             vorgang_data = pd.DataFrame({
@@ -131,6 +133,9 @@ def neuer_vorgang():
             st.data_editor(vorgang_data)
             # Speichere die Vorgangsdaten in der Datenbank
             save_Table_append(vorgang_data, 'PAMS_HICKUP')
+            with st.spinner('Daten werden geladen...'):
+                st.write('Daten erfolgreich gespeichert.')
+                st.rerun()
 
 def vorgang_bearbeiten(vorgang_data):
 # Folgende Spalten sind in der Tabelle vorhanden:
@@ -156,7 +161,7 @@ def vorgang_bearbeiten(vorgang_data):
         return
 
 #### Bearbeiten
-    with st.form('Vorgang Details', clear_on_submit=True):
+    with st.form('Details', clear_on_submit=True ):
         st.data_editor(vorgang_data)
         
         # Lade die vorhandenen Daten in die Formularfelder
@@ -213,67 +218,64 @@ def vorgang_bearbeiten(vorgang_data):
             i = st.toggle('Vorgang gelöst', value=False)
         
         sachverhalt = st.text_area('Sachverhalt', value=sachverhalt, max_chars=3000)
-        
+        vorgang_status = status
         if i == True:
             geloest_datum = st.date_input('Gelöst am', value=datetime.date.today())
             vorgang_status = 'Gelöst'
         
+        col1, col2 = st.columns([1,1])
+        with col1:
+            if st.form_submit_button('Speichern'):
+                data = pd.DataFrame({
+                    'Vorgang ID': [vorgang_id],
+                    'Version': [version],
+                    'Ersteller': [ersteller],
+                    'Zugeteilt an': [zugeteilt_an],
+                    'Erstellungsdatum': [erstellungs_datum],
+                    'Vorfallsdatum': [vorgang_datum],
+                    'Fachbereich': [vorgang_bereich_neu],
+                    'Art': [vorgang_art_neu],
+                    'Kategorie': [vorgang_art_detail_neu],
+                    'Kosten': [kosten_ja_nein],
+                    'Kosten in €': [kosten],
+                    'Kurze Beschreibung': [kurze_beschreibung],
+                    'Sachverhalt': [sachverhalt],
+                    'Anhänge': [anhaenge],
+                    'Gelöst am': [geloest_am],
+                    'Status': [vorgang_status]
+                })
+                st.data_editor(data)
+        with col2:    
+            if st.form_submit_button('Löschen'):
+               loesche_Zeile('PAMS_HICKUP', 'Vorgang ID', wert_str=vorgang_id)    
+            
+            
 
-        if st.form_submit_button('Vorgang ändern'):
-            # Speichere die Vorgangsdaten in einem DataFrame 
-            st.warning("Wird nicht gespeichert ist noch in Arbeit")
-            if vorgang_art_neu == None:
-                vorgang_art_neu = vorgang_art
-            if vorgang_art_detail_neu == None:
-                vorgang_art_detail_neu = vorgang_art_detail
-            if vorgang_bereich_neu == None:
-                vorgang_bereich_neu = vorgang_bereich
+
+
+
             
 def main():
-    st.container(border=True)
-    col1,col2 , col3, col4 = st.columns([1, 1, 1,1])    
-    # define what option labels and icons to display
-    option_data = [
-    {'icon': "new", 'label':"Neuer Vorgang"},
-    {'icon': "", 'label':"Vorgang bearbeiten"},
-    ]
-
-    # override the theme, else it will use the Streamlit applied theme
-    over_theme = {'txc_inactive': 'white','menu_background':'#0e2b63','txc_active':'yellow','option_active':'blue'}
-    font_fmt = {'font-class':'h2','font-size':'150%'}
-
-    # display a horizontal version of the option bar
-    op = hc.option_bar(option_definition=option_data,title=' ',key='PrimaryOption',override_theme=over_theme,font_styling=font_fmt,horizontal_orientation=True)
-
-
-    if "df" not in st.session_state:
-        st.session_state.df = load_data()
-
-    if op == 'Neuer Vorgang':
+    
+    
+    with st.expander("Neuer Vorgang"):
         neuer_vorgang()
-
-    elif op == 'Vorgang bearbeiten':
-
-        st.session_state.df.sort_values(by='Erstellungsdatum', ascending=False, inplace=True)
-
-        event = st.dataframe(
-            st.session_state.df,
-            key="data",
-            on_select="rerun",
-            selection_mode=["single-row"],
+    
+    with st.expander("Vorgang bearbeiten"):
+        df = read_Table('PAMS_HICKUP')
+        
+        selvorgang = st.dataframe(df,
+        use_container_width=True,
+        hide_index=True,
+        on_select="rerun",
+        selection_mode="single-row",
         )
 
-        sel_id = list(event.selection.values())[0]   
-        try:
-        #wert aus df ermitteln in Zeile sel_id
-            df = st.session_state.df.iloc[sel_id]
-        except:
-            df = None
-        if df is not None:
-            vorgang_bearbeiten(df)
-        
+        if selvorgang is not None:
 
-    #     schneller_vorgang()
+            sel_id = list(selvorgang.selection.values())[0]  
+            
+            vorgang_bearbeiten(df.iloc[sel_id])
 
 
 

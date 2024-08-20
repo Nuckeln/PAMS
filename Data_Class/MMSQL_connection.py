@@ -148,7 +148,30 @@ def truncate_Table(table_name):
     db_conn.db.execute(f"TRUNCATE TABLE [{table_name}]")
     # Verbindung schließen
     db_conn.dispose()
+from sqlalchemy import text
 
+from sqlalchemy import text
+
+def loesche_Zeile(tabellenName, spaltenName, wert_str=None, wert_int=None):
+    '''erwartet den Tabellennamen als String und den Spaltennamen als String und den Wert als String oder Integer'''
+    json_path = 'Data/appData/credentials.json'
+    conn_settings = load_connection_settings(json_path)
+    db_conn = AzureDbConnection(conn_settings)
+    # Verbindung herstellen
+    db_conn.connect()
+    
+    sqlQuery = ""
+    if wert_str:
+        sqlQuery = f"DELETE FROM [{tabellenName}] WHERE [{spaltenName}] = '{wert_str}'"
+    elif wert_int:
+        sqlQuery = f"DELETE FROM [{tabellenName}] WHERE [{spaltenName}] = {wert_int}"
+    
+    if sqlQuery:
+        # Konvertiere den SQL-String in ein Text-Objekt
+        sqlQuery = text(sqlQuery)
+        # Verwenden Sie die `execute`-Methode von SQLAlchemy
+        db_conn.conn.execute(sqlQuery)
+        db_conn.conn.commit()
 
 def lade_tab_by(tabellenName, spaltenName, wert_str=None, wert_int=None):
     '''erwartet den Tabellennamen als String und den Spaltennamen als String
