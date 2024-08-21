@@ -136,19 +136,29 @@ def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
         })
         diff_table = pd.concat([diff_table, new_row], ignore_index=True)
 
+
     # Vergleiche die Werte in den Spalten
     for column in set(df1.columns).intersection(df2.columns):
-        for index, (value1, value2) in enumerate(zip(df1[column], df2[column])):
-            if pd.isna(value1) and pd.isna(value2):
-                continue  # Beide Werte sind NaN, kein Unterschied
-            if value1 != value2:
-                new_row = pd.DataFrame({
-                    'Spalte': [column],
-                    'Index_in_Commodity_Code': [index],
-                    'DBH Dokument': [value1],
-                    'SAP Dokument': [value2]
-                })
-                diff_table = pd.concat([diff_table, new_row], ignore_index=True)
+        if df1[column].dtype != df2[column].dtype:
+            new_row = pd.DataFrame({
+                'Spalte': [column],
+                'DBH Dokument': [df1[column].dtype],
+                'SAP Dokument': [df2[column].dtype]
+            })
+            diff_table = pd.concat([diff_table, new_row], ignore_index=True)
+            print(f'Table 3: {diff_table}') 
+        else:
+            for index, (value1, value2) in enumerate(zip(df1[column], df2[column])):
+                if pd.isna(value1) and pd.isna(value2):
+                    continue  # Beide Werte sind NaN
+                if value1 != value2:
+                    new_row = pd.DataFrame({
+                        'Spalte': [column],
+                        'Index_in_Commodity_Code': [index],
+                        'DBH Dokument': [value1],
+                        'SAP Dokument': [value2]
+                    })
+                    diff_table = pd.concat([diff_table, new_row], ignore_index=True)
 
         # suche nach dem Commodity Code in df_sap_agg anhand der Index_in_Commodity_Code in diff_table
     # füge die Spalte Commodity Code in diff_table hinzu

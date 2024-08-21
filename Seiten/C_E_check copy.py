@@ -138,17 +138,25 @@ def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
 
     # Vergleiche die Werte in den Spalten
     for column in set(df1.columns).intersection(df2.columns):
-        for index, (value1, value2) in enumerate(zip(df1[column], df2[column])):
-            if pd.isna(value1) and pd.isna(value2):
-                continue  # Beide Werte sind NaN, kein Unterschied
-            if value1 != value2:
-                new_row = pd.DataFrame({
-                    'Spalte': [column],
-                    'Index_in_Commodity_Code': [index],
-                    'DBH Dokument': [value1],
-                    'SAP Dokument': [value2]
-                })
-                diff_table = pd.concat([diff_table, new_row], ignore_index=True)
+        if df1[column].dtype != df2[column].dtype:
+            new_row = pd.DataFrame({
+                'Spalte': [column],
+                'DBH Dokument': [df1[column].dtype],
+                'SAP Dokument': [df2[column].dtype]
+            })
+            diff_table = pd.concat([diff_table, new_row], ignore_index=True)
+        else:
+            for index, (value1, value2) in enumerate(zip(df1[column], df2[column])):
+                if pd.isna(value1) and pd.isna(value2):
+                    continue  # Beide Werte sind NaN
+                if value1 != value2:
+                    new_row = pd.DataFrame({
+                        'Spalte': [column],
+                        'Index_in_Commodity_Code': [index],
+                        'DBH Dokument': [value1],
+                        'SAP Dokument': [value2]
+                    })
+                    diff_table = pd.concat([diff_table, new_row], ignore_index=True)
 
         # suche nach dem Commodity Code in df_sap_agg anhand der Index_in_Commodity_Code in diff_table
     # füge die Spalte Commodity Code in diff_table hinzu
@@ -158,12 +166,9 @@ def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
         diff_table['Commodity Code'] = diff_table['Index_in_Commodity_Code'].map(df_sap_agg.set_index('IndexStelle')['Commodity Code'])
         #sotiere spalten nach Commodity Code, Spalte SAP Dokument und DBH Dokument drope den rest
         diff_table = diff_table[['Commodity Code','Spalte','DBH Dokument','SAP Dokument']]
-        #konverzt all to string
-        diff_table = diff_table.astype(str)
-    
     except KeyError:
         pass
-    st.data_editor(diff_table)
+    print(diff_table)
     return diff_table, missing_dn, dn_DBH_list, dn_sap
 
 def umrechnerZFG510000(SKU, Menge):
