@@ -11,7 +11,7 @@ import bcrypt
 @st.fragment
 
 def berechtigungen(user_berechtigungen):
-        funktionen = ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin']
+        funktionen = ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','KPI','Admin']
         if user_berechtigungen == None:
             user_berechtigungen = ''
         
@@ -39,13 +39,12 @@ def berechtigungen(user_berechtigungen):
 
 def userverwaltung_neu():
 
-    with st.expander('Userverwaltung'):
-        if "df_user" not in st.session_state:
-                st.session_state.df_user = read_Table('user')
+
+        df_user = read_Table('user')
                 #sort by 'Erstellungsdatum'
                 
         event = st.dataframe(
-            st.session_state.df_user,
+            df_user,
             key="data",
             on_select="rerun",
             selection_mode=["single-row"],
@@ -58,9 +57,9 @@ def userverwaltung_neu():
         
         sel_id = list(event.selection.values())[0]   
         #wert aus df ermitteln in Zeile sel_id
-        df_org = st.session_state.df_user
+        df_org = df_user
         try:
-            df_filtered = st.session_state.df_user.iloc[sel_id]
+            df_filtered = df_user.iloc[sel_id]
             # all_funktionen = df['function'].unique()
 
             name = df_filtered['name'].values[0]
@@ -164,7 +163,7 @@ def userverwaltung_neu():
                         df = pd.concat([df,new_user_data])
                         save_Table(df,'user')
                         #reset session state
-                        st.session_state.df_user = read_Table('user')
+                        df_user = read_Table('user')
                         st.success('Berechtigungen wurden gespeichert')
                         with st.spinner('Berechtigungen werden gespeichert'):
                             time.sleep(2)

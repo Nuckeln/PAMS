@@ -101,18 +101,43 @@ def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
     diff_table = pd.DataFrame(columns=['Spalte', 'Index',])
     # prüfe ob die SapOrderNumber
 
-    def truncate_float_columns(dataframe, decimals):
+#### ALT
+
+
+
+    # def truncate_float_columns(dataframe, decimals):
+    #     factor = 10 ** decimals
+    #     for column in dataframe.columns:
+    #         if dataframe[column].dtype == float:
+    #             dataframe[column] = np.trunc(dataframe[column] * factor) / factor
+    #     return dataframe
+    # # ist round_on True dann runde die float spalten auf 2 nachkommastellen
+    # if round_on:
+    #     df_sap_agg = truncate_float_columns(df_sap_agg, 2)
+    #     df_dbh_agg = truncate_float_columns(df_dbh_agg, 2)
+    # st.write('Gerundet')
+    # st.data_editor(df_sap_agg)
+
+
+##### NEU 
+
+
+    def truncate_float_columns(dataframe, decimals, exclude_columns=[]):
         factor = 10 ** decimals
         for column in dataframe.columns:
-            if dataframe[column].dtype == float:
+            if dataframe[column].dtype == float and column not in exclude_columns:
                 dataframe[column] = np.trunc(dataframe[column] * factor) / factor
         return dataframe
-    # ist round_on True dann runde die float spalten auf 2 nachkommastellen
-    if round_on:
-        df_sap_agg = truncate_float_columns(df_sap_agg, 2)
-        df_dbh_agg = truncate_float_columns(df_dbh_agg, 2)
 
-    
+    # Falls round_on True ist, runde die Float-Spalten außer "Quantity" auf 2 Nachkommastellen
+    if round_on:
+        df_sap_agg = truncate_float_columns(df_sap_agg, 2, exclude_columns=['Quantity'])
+        df_dbh_agg = truncate_float_columns(df_dbh_agg, 2, exclude_columns=['Quantity'])
+
+
+
+# NUR QUANITTY nicht mehr runden 
+
     df1 = df_dbh_agg
     df2 = df_sap_agg    
     
@@ -163,7 +188,7 @@ def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
     
     except KeyError:
         pass
-    st.data_editor(diff_table)
+    #st.data_editor(diff_table)
     return diff_table, missing_dn, dn_DBH_list, dn_sap
 
 def umrechnerZFG510000(SKU, Menge):
@@ -219,7 +244,7 @@ def main():
         with col4:
             #st.write('1.12')
             sel_zeige_Daten = st.toggle('Zeige Prüfungen', False, disabled=True)
-            
+
     with st.expander('Umrechner ZFG510000', expanded=False):
         with st.form(key='my_form'):
             col1, col2, col3= st.columns([1,1,3])

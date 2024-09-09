@@ -15,8 +15,6 @@ from Seiten.C_E_check import main as pageC_E_check
 from Seiten.P_HickUp import main as pageHickUp
 import hydralit_components as hc
 from Data_Class.MMSQL_connection import read_Table,save_Table_append
-from Seiten.KPI import main as pageKPI
-
 pd.set_option("display.precision",3)
 #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/main.py"
 
@@ -65,34 +63,6 @@ hide_streamlit_style = """
 
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 # ----- Config Main Menue -----
-def user_menue_rechte():
-    # Sicherstellen, dass 'rechte' initialisiert ist
-    if 'rechte' not in st.session_state:
-        st.session_state.rechte = None  # oder einen anderen Standardwert, falls geeignet
-    # Logik zur Bestimmung der Menürechte basierend auf den Benutzerrechten
-    if st.session_state.rechte == 1:
-        # Admin Vollzugriff
-        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','KPI','Admin']
-    elif st.session_state.rechte == 2:
-        # Manager BAT
-        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check']
-    
-    elif st.session_state.rechte == 3:
-        # Mitarbeiter BAT AD 
-        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung']
-    
-    elif st.session_state.rechte == 4:
-        # Mitarbeiter Fremd
-        return ["Depot Live Status"]
-    
-    elif st.session_state.rechte == 5:
-        # Live Bildschirm
-        return ["Depot Live Status"]
-   
-    elif st.session_state.rechte == 6:
-        # Mitarbeiter Extern Sachbearbeiter/Teamleiter
-        return ["Depot Live Status", 'Depot Reports', 'Forecast', 'Lagerverwaltung']
-
 
 def user_menue_frontend():
     styles = {
@@ -116,10 +86,11 @@ def user_menue_frontend():
         "background-color": "rgba(255, 255, 255, 0.35)",
     },
     }
-
-
-    page = st_navbar(user_menue_rechte(), styles=styles, options={"use_padding": True,'show_menu': False},logo_path='Data/img/logo_white.svg',selected='Depot Live Status')
-
+    
+    page = st_navbar(st.session_state.rechte, styles=styles, options={"use_padding": True,'show_menu': False},logo_path='Data/img/logo_white.svg',selected='Depot Live Status')
+    st.write(page)
+    st.write(st.session_state.rechte)
+    # ['Depot Live Status']  
     if page == 'Depot Live Status':
         PageTagesReport()
     if page == 'Hick-Up':
@@ -136,9 +107,6 @@ def user_menue_frontend():
     if page == 'Lagerverwaltung':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
             pageStellplatzverwaltung()
-    if page == 'KPI':
-        #with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
-        pageKPI()
     if page == 'Admin':
         #with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
         adminPage()
@@ -158,6 +126,11 @@ def main():
     with st.spinner("Lade Datenbanken..."):
         users_df = read_Table("user")
         users_df.set_index('username', inplace=True)
+        # Konvertiere die Werte aus berechtigungen in eine Liste sie sind mit Komma getrennt. Es kann auch nur ein wert oder garkeiner vorhanden sein.
+    # Konvertiere die Werte aus berechtigungen in eine Liste sie sind mit Komma getrennt.
+        users_df['berechtigungen'] = users_df['berechtigungen'].apply(lambda x: x.split(',') if x else [])
+        
+        
     # Umstrukturieren des DataFrames, um den erwarteten Schlüsseln zu entsprechen
     credentials = {
         'usernames': dict()
@@ -167,7 +140,7 @@ def main():
             'name': row['name'],
             'password': row['password'],
             'email': row.get('email', ''),  
-            'access_rights': row['rechte']  
+            'access_rights': row['berechtigungen']  
         }
 
     # Authentifizierungsobjekt erstellen
@@ -190,13 +163,13 @@ def main():
     )
 
     if authentication_status:
-        st.session_state.rechte = credentials['usernames'][username]['access_rights']  # Zugriffsrechte aus den Benutzerdaten setzen
+        st.session_state.rechte = credentials['usernames'][username]['access_rights']
+        # Zugriffsrechte aus den Benutzerdaten setzen
         if st.session_state.rechte == 0:
             st.error("Sie haben noch keine Berechtigung für diese Anwendung bitte Kontaktieren Sie Christian Hammann oder Martin Wolf.")
             authenticator.logout()
             st.stop()
         user_menue_frontend()
-        
     elif authentication_status is False:
         st.error("Benutzername oder Passwort ist falsch.")
     else:

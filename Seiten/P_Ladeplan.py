@@ -1120,72 +1120,75 @@ def show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date):
         st.data_editor(df_SFG_dds)
 
 def main():
-    with open( "style.css" ) as css:
-        st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
+    
+    st.warning('Offline bis Q4/2024')
+    
+    # with open( "style.css" ) as css:
+    #     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
 
-    col1, col2, col3 = st.columns([2,1,1])
-    with col1:  
-        st.markdown("""
-                    <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
-                    </style>
-                    <h2 style='text-align: left; color: #0F2B63; font-family: Montserrat; font-weight: bold;'>{}</h1>
-                    """.format('Logistics Live Monitor'), unsafe_allow_html=True)   
-    with col2:
-        sel_date = st.date_input('Datum', datetime.date.today())
-    with col3:
-        with open('Data/appData/update_time_Ladeplan.json', 'r') as file:
-            lastupdate = file.read()
-        st.write('Stand: ' + lastupdate)
-        if st.button('Aktualisieren'):
-            with st.spinner('Aktualisierung startet...'):
-                time.sleep(3)
-                save_update_time()
-                st.cache_data.clear()
-                st.rerun()
-    img_strip = Image.open('Data/img/strip.png')   
-    img_strip = img_strip.resize((1000, 15))     
-    st.image(img_strip, use_column_width=True, caption='',)   
+    # col1, col2, col3 = st.columns([2,1,1])
+    # with col1:  
+    #     st.markdown("""
+    #                 <style>
+    #                 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+    #                 </style>
+    #                 <h2 style='text-align: left; color: #0F2B63; font-family: Montserrat; font-weight: bold;'>{}</h1>
+    #                 """.format('Logistics Live Monitor'), unsafe_allow_html=True)   
+    # with col2:
+    #     sel_date = st.date_input('Datum', datetime.date.today())
+    # with col3:
+    #     with open('Data/appData/update_time_Ladeplan.json', 'r') as file:
+    #         lastupdate = file.read()
+    #     st.write('Stand: ' + lastupdate)
+    #     if st.button('Aktualisieren'):
+    #         with st.spinner('Aktualisierung startet...'):
+    #             time.sleep(3)
+    #             save_update_time()
+    #             st.cache_data.clear()
+    #             st.rerun()
+    # img_strip = Image.open('Data/img/strip.png')   
+    # img_strip = img_strip.resize((1000, 15))     
+    # st.image(img_strip, use_column_width=True, caption='',)   
 
 
-    # schreibe die Funktionszeit in Konsole
+    # # schreibe die Funktionszeit in Konsole
     
 
-    df_CW_out, df_CW_inb, df_CW_dds  = load_data_CW()
-    df_CW_out = filter_data(df_CW_out,sel_date,'Ist Datum')
-    df_CW_inb = filter_data(df_CW_inb,sel_date,'Ist Datum')
+    # df_CW_out, df_CW_inb, df_CW_dds  = load_data_CW()
+    # df_CW_out = filter_data(df_CW_out,sel_date,'Ist Datum')
+    # df_CW_inb = filter_data(df_CW_inb,sel_date,'Ist Datum')
     
-    # df_LC_out, df_LC_inb, df_LC_dds = load_data_LC()
-    # df_LC_out = filter_data(df_LC_out,sel_date,'Datum')
-    # df_LC_inb = filter_data(df_LC_inb,sel_date,'Datum')
-    df_SFG_out, df_SFG_inb, df_SFG_dds = load_data_SFG()
-    df_SFG_out = filter_data(df_SFG_out,sel_date,'Abholdatum Update')
-    df_SFG_inb = filter_data(df_SFG_inb,sel_date,'Ist Datum\n(Tatsächliche Anlieferung)')
+    # # df_LC_out, df_LC_inb, df_LC_dds = load_data_LC()
+    # # df_LC_out = filter_data(df_LC_out,sel_date,'Datum')
+    # # df_LC_inb = filter_data(df_LC_inb,sel_date,'Datum')
+    # df_SFG_out, df_SFG_inb, df_SFG_dds = load_data_SFG()
+    # df_SFG_out = filter_data(df_SFG_out,sel_date,'Abholdatum Update')
+    # df_SFG_inb = filter_data(df_SFG_inb,sel_date,'Ist Datum\n(Tatsächliche Anlieferung)')
 
 
-    col1,col2 = st.columns([1,1])
-    with col1:
-        with st.container(border=True):
-            show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
+    # col1,col2 = st.columns([1,1])
+    # with col1:
     #     with st.container(border=True):
-    #         show_LC(df_LC_out, df_LC_inb, df_LC_dds,sel_date)
-    with col2:
-        with st.container(border=True):
-            show_domestic(df_CW_out, df_CW_inb, df_CW_dds,sel_date)
-    col1,col2 = st.columns([1,1])
-    with col1:
-        with st.container(border=True):        
-            show_DIET(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
-    with col2:
-        with st.container(border=True):
-            show_CF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
-    col1,col2 = st.columns([1,1])
-    with col1:
-        pass
+    #         show_LEAF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
+    # #     with st.container(border=True):
+    # #         show_LC(df_LC_out, df_LC_inb, df_LC_dds,sel_date)
+    # with col2:
+    #     with st.container(border=True):
+    #         show_domestic(df_CW_out, df_CW_inb, df_CW_dds,sel_date)
+    # col1,col2 = st.columns([1,1])
+    # with col1:
+    #     with st.container(border=True):        
+    #         show_DIET(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
+    # with col2:
+    #     with st.container(border=True):
+    #         show_CF(df_SFG_out, df_SFG_inb, df_SFG_dds, sel_date)
+    # col1,col2 = st.columns([1,1])
+    # with col1:
+    #     pass
 
 
-    # show_domestic(df_CW_out, df_CW_inb, df_CW_dds)
-    # show_SFG(df_SFG_out, df_SFG_inb, df_SFG_dds)
-    # show_LEAF(df_CW_out, df_CW_inb, df_CW_dds)
-    # show_CF(df_CW_out, df_CW_inb, df_CW_dds)
+    # # show_domestic(df_CW_out, df_CW_inb, df_CW_dds)
+    # # show_SFG(df_SFG_out, df_SFG_inb, df_SFG_dds)
+    # # show_LEAF(df_CW_out, df_CW_inb, df_CW_dds)
+    # # show_CF(df_CW_out, df_CW_inb, df_CW_dds)
     
