@@ -19,21 +19,24 @@ def berechtigungen(user_berechtigungen):
         columns = [col1, col2, col3, col4]
         selected_labels = []
         input_list_count = len(funktionen) // 4  # Anzahl der Elemente in jeder Spalte
-        for i in range(len(funktionen)):
-            unique_label = funktionen[i]
-            unique_key = 'HE' + str(i + 1)
-            
-            # Wähle die entsprechende Spalte aus
-            current_col = columns[i // input_list_count]
-            # prüfe ob die Checkbox ausgewählt ist anhand ob es in user_berechtigungen ist
-            #def_value = unique_label in user_berechtigungen
-            
-            # Erstelle die Checkbox in der aktuellen Spalte
-            value = current_col.checkbox(unique_label, key=unique_key, value=unique_label in user_berechtigungen)
-            
-            # Wenn die Checkbox ausgewählt ist, füge ihr Label dem selected_labels Array hinzu
-            if value:
-                selected_labels.append(unique_label)
+        try:
+            for i in range(len(funktionen)):
+                unique_label = funktionen[i]
+                unique_key = 'HE' + str(i + 1)
+                
+                # Wähle die entsprechende Spalte aus
+                current_col = columns[i // input_list_count]
+                # prüfe ob die Checkbox ausgewählt ist anhand ob es in user_berechtigungen ist
+                #def_value = unique_label in user_berechtigungen
+                
+                # Erstelle die Checkbox in der aktuellen Spalte
+                value = current_col.checkbox(unique_label, key=unique_key, value=unique_label in user_berechtigungen)
+                
+                # Wenn die Checkbox ausgewählt ist, füge ihr Label dem selected_labels Array hinzu
+                if value:
+                    selected_labels.append(unique_label)
+        except:
+            current_col.error('Fehler bei der Berechtigungsvergabe')
         return selected_labels        
      
 

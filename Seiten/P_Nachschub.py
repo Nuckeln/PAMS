@@ -166,7 +166,6 @@ def pageStellplatzverwaltung():
 
     def berechnungen(dfBedarfSKU):
         #st.data_editor(dfBIN)
-        st.write('vor berechnungen')
         #-- Bedarf letzte 7 Tage ermitteln und Df für Figur erstellen
         dfOrg = dfBedarfSKU.copy()
         #drop all columns except MaterialNumber PlannedDate, CorrospondingOuters. CorrospondingMasterCases, SaporderNumber
@@ -187,9 +186,8 @@ def pageStellplatzverwaltung():
         # fill none in LGTYP with 'Kein Stellplatz'
 
         dfBedarfSKU['LGPLA_TN'] = dfBedarfSKU['LGPLA_TN'].fillna('Kein Stellplatz in TN1')
-        st.data_editor(dfBedarfSKU)
         # Fill None in LGPLA with 'Kein Stellplatz'
-        dfBedarfSKU = dfBedarfSKU[['MaterialNumber','PlannedDate','MAMNG_SN0,','CorrespondingOuters','CorrespondingMastercases','SapOrderNumber','LGPLA_SN','LGTYP_SN','LGTYP_TN','LGPLA_TN',]]
+        dfBedarfSKU = dfBedarfSKU[['MaterialNumber','PlannedDate','CorrespondingOuters','CorrespondingMastercases','SapOrderNumber','LGPLA_SN','LGTYP_SN','LGTYP_TN','LGPLA_TN',]]
 
         return dfBedarfSKU, dfOrg, dfBIN_TN, dfBIN_SN
 
