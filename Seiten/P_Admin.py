@@ -8,7 +8,7 @@ from Data_Class.MMSQL_connection import save_Table, read_Table, save_Table_appen
 
 import time
 import bcrypt
-@st.fragment
+#@st.fragment
 
 def berechtigungen(user_berechtigungen):
         funktionen = ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','KPI','Admin']

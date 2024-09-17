@@ -250,6 +250,7 @@ def main():
         save_Table_append(forecast_df, 'PAMS_Forecast')
         st.write(f'Prognose für {depot_name}')
         plot_forecast(dates, actual, forecast, lower_ci, upper_ci, depot_name,show_actual=False)
+        st.data_editor(forecast_df)
         
         if show_old_forecasts:
 
