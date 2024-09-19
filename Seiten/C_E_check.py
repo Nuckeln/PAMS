@@ -9,6 +9,14 @@ import uuid
 from Data_Class.MMSQL_connection import read_Table, save_Table_append, save_Table
 import hydralit_components as hc
 
+
+import streamlit as st
+
+@st.dialog("ACHTUNG")
+def vote(item):
+    st.error(f"Achtung Mengenfehler!!")
+
+
 def check_upload(df_sap:pd.DataFrame, df_dbh: pd.DataFrame, check_aktive:bool = True):
     '''Diese Funktion prüft ob die Spaltennamen und dtypes der neuen Dateien mit den alten übereinstimmen
     Args:
@@ -325,6 +333,7 @@ def main():
                             st.write(missing_dn)
                             fehler_ja_nein = 'Ja'
                         if not diff_table.empty:
+                            vote(diff_table)
                             st.error('⛔️ Fehler in den Mengen gefunden ⛔️')
                             fehler_ja_nein = 'Ja'
                             st.write(diff_table)
