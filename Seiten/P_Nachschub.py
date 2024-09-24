@@ -1,6 +1,6 @@
 import datetime
 import time
-import pandas as pd
+import pandas as pdƒ
 from PIL import Image
 import streamlit as st
 import plotly_express as px
@@ -343,7 +343,7 @@ def pageStellplatzverwaltung():
     if st.button('Aktualisieren'):
         st.cache_data.clear()
         #rerun page
-        st.experimental_rerun()
+        st.rerun()
 
 def seite():
 
