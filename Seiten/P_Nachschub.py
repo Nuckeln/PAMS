@@ -1,6 +1,6 @@
 import datetime
 import time
-import pandas as pdƒ
+import pandas as pd
 from PIL import Image
 import streamlit as st
 import plotly_express as px
@@ -55,9 +55,11 @@ def loadDF():
     masterdata = read_Table('data_materialmaster_Duplicate_InternationalArticleNumber')
 
     df = df[(df['IsDeleted'] == 0) & (df['IsReturnDelivery'] == 0)]
-        
-    dfBIN = pd.read_excel("Data/appData/MLGT.xlsx",header=3)
-    
+
+    try: 
+        dfBIN = pd.read_excel("Data/appData/MLGT.xlsx",header=3)
+    except:
+        dfBIN = pd.read_excel("Data/appData/Data/appData.xlsx",header=2)
     dfBIN = dfBIN[dfBIN['MATNR'].notna()]   
     def read_single_value_from_file(file_path):
         with open(file_path, 'r') as f:

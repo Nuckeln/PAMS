@@ -28,6 +28,7 @@ pd.set_option("display.precision",3)
 
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:",)
 
+
 hide_streamlit_style = """
                 <style>
                 div[data-testid="stToolbar"] {
