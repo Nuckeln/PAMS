@@ -11,6 +11,8 @@ import streamlit_timeline as timeline
 from Data_Class.wetter.api import getWetterBayreuth
 from Data_Class.MMSQL_connection import read_Table
 
+
+
 import matplotlib.pyplot as plt
 from matplotlib.patches import Arc
 
@@ -20,6 +22,7 @@ import plotly.graph_objects as go
 
 def loadDF(day1=None, day2=None): 
     dfOr = read_Table('prod_Kundenbestellungen_14days')
+    #dfOr = berechne_order_daten()
     #load parquet
     #dfOr = pq.read_table('df.parquet.gzip').to_pandas()
     dfOr['PlannedDate'] = dfOr['PlannedDate'].astype(str)
@@ -580,6 +583,9 @@ def PageTagesReport():
         wetter()
     img_strip = Image.open('Data/img/strip.png')   
     img_strip = img_strip.resize((1000, 15))     
+    
+    
+    
 
     st.image(img_strip, use_column_width=True, caption='',)      
 
