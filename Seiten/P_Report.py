@@ -27,7 +27,7 @@ def load_data():
 
     df = read_Table('prod_Kundenbestellungen')
     # Drop rows with TRUE in column 'IsReturnDelivery' and 'IsDeleted'
-    df = df[(df['IsReturnDelivery'] == 0) & (df['IsDeleted'] == 0)]
+    #df = df[(df['IsReturnDelivery'] == 0) & (df['IsDeleted'] == 0)]
     dfIssues = read_Table('PAMS_SD_Issues')
     return df, dfIssues
 
