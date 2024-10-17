@@ -443,10 +443,9 @@ def reportPage():
     # with st.expander("Bau dir was", expanded=True):
     #     bau_dir_was()
         
-    if st.button('Daten vom Server neu laden'):
-        st.cache_data.clear()
-        #rerun page
-        st.experimental_rerun()
+    if st.button('Daten vom Server neu laden', on_click=load_data.clear):
+        load_data.clear()
+        st.rerun()
 
 
 
