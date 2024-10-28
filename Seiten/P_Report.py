@@ -22,12 +22,13 @@ from Data_Class.MMSQL_connection import read_Table
 
 ##### LOAD AND FILTER DATA #####
 BATColurs = ['#0e2b63','#004f9f','#00b1eb','#ef7d00','#ffbb00','#ffaf47','#afca0b','#5a328a','#e72582']
-@st.cache_data(show_spinner=False)
+#@st.cache_data(show_spinner=False)
 def load_data():
 
     df = read_Table('prod_Kundenbestellungen')
     # Drop rows with TRUE in column 'IsReturnDelivery' and 'IsDeleted'
-    #df = df[(df['IsReturnDelivery'] == 0) & (df['IsDeleted'] == 0)]
+        
+    df = df[(df['IsReturnDelivery'] == 0) & (df['IsDeleted'] == 0)]
     dfIssues = read_Table('PAMS_SD_Issues')
     return df, dfIssues
 
@@ -443,9 +444,9 @@ def reportPage():
     # with st.expander("Bau dir was", expanded=True):
     #     bau_dir_was()
         
-    if st.button('Daten vom Server neu laden', on_click=load_data.clear):
-        load_data.clear()
-        st.rerun()
+    # if st.button('Daten vom Server neu laden', on_click=load_data.clear):
+    #     load_data.clear()
+    #     st.rerun()
 
 
 
