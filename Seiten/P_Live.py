@@ -22,6 +22,7 @@ import plotly.graph_objects as go
 
 def loadDF(day1=None, day2=None): 
     dfOr = read_Table('prod_Kundenbestellungen_14days')
+    
     #dfOr = berechne_order_daten()
     #load parquet
     #dfOr = pq.read_table('df.parquet.gzip').to_pandas()
@@ -223,6 +224,8 @@ def figUebermitteltInDeadline(df):
     st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
 
 def figPicksKunde(df):
+
+    
     # wenn AllSSCCLabelsPrinted = 0 und in First_Pick ist ein Wert, dann setze in Arbeit auf 1
     df['In_Arbeit'] = np.where((df['AllSSCCLabelsPrinted'] == 0) & (df['First_Picking'].notna()), 1, 0)
     
@@ -615,14 +618,33 @@ def PageTagesReport():
             figTachoDiagramm_VEGA(dfOr,'KNHAJ')
         except:
             st.success('KNHAJ Heute keine Lieferungen')
-
-    
     try:
-            
         with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', use_container_width=True, ):
             new_timeline(dfOr)      
     except:
         st.write('Keine Daten vorhanden')
+        
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+    with col1:
+        str = st.checkbox('Stuttgart', value=True)
+    with col2:
+        lej = st.checkbox('Leipzig', value=True)
+    with col3:
+        han = st.checkbox('Hannover', value=True)
+    with col4:
+        biel = st.checkbox('Bielefeld', value=True)
+    depots = []
+    if str:
+        depots.append('KNSTR')
+    if lej:
+        depots.append('KNLEJ')
+    if han:
+        depots.append('KNHAJ')
+    if biel:
+        depots.append('KNBFE')
+    #filter df by selected depots
+    dfOr = dfOr[dfOr['DeliveryDepot'].isin(depots)]
+    
     try:
         figPicksKunde(dfOr)
     except:

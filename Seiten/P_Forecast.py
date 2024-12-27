@@ -9,6 +9,10 @@ from datetime import datetime
 from Data_Class.MMSQL_connection import read_Table, save_Table_append
 import plotly.graph_objects as go
 
+
+#TODO Selectbox für die alten Forecast um ersteller und Datum erweitern 
+
+
 @st.cache_data(show_spinner=False)
 def readData():
     '''Lese die Daten aus der Tabelle Prod_Kundenbestellungen und bereite sie für die Prognose vor'''
