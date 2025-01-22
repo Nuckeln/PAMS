@@ -8,7 +8,7 @@ import pandas as pd
 from Seiten.P_Live import PageTagesReport
 from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
-from Seiten.P_Forecast import main as pageForecast
+
 from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.P_Ladeplan import main as pageLadeplan
 from Seiten.C_E_check import main as pageC_E_check
@@ -16,7 +16,7 @@ from Seiten.P_HickUp import main as pageHickUp
 import hydralit_components as hc
 from Data_Class.MMSQL_connection import read_Table,save_Table_append
 from Seiten.KPI import main as pageKPI
-
+from Seiten.forecast import main as mainForecast
 pd.set_option("display.precision",3)
 #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/main.py"
 
@@ -122,15 +122,16 @@ def user_menue_frontend():
         PageTagesReport()
     if page == 'Hick-Up':
         pageHickUp()
-    if page == 'LC Monitor':
-        #with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='blue'):
-        pageLadeplan()
+    # if page == 'LC Monitor':
+    #     #with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='blue'):
+    #     pageLadeplan()
     if page == 'Depot Reports':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='red'):
             reportPage()
     if page == 'Forecast':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
-            pageForecast()
+            mainForecast()
+            #pageForecast()
     if page == 'Lagerverwaltung':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
             pageStellplatzverwaltung()
