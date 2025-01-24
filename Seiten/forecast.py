@@ -12,23 +12,27 @@ import plotly.express as px
 from PIL import Image
 from Data_Class.sql import SQL
 
+import holidays
+de_holidays = holidays.country_holidays(country='DE', subdiv='BY')
+
+@st.cache_data()
+def read_actuals_Pick():
+    df = SQL.read_Table('business_depotDEBYKN-DepotDEBYKNOrders', ['SapOrderNumber', 'PlannedDate'])
+    
+    df2 = SQL.read_Table('business_depotDEBYKN-DepotDEBYKNOrderItems', ['SapOrderNumber', 'CorrespondingMastercases', 'CorrespondingOuters', 'CorrespondingPallets'])
+    dfOrders = pd.merge(df, df2, on='SapOrderNumber', how='inner')
+    #Group by PlannedDate
+    dfOrders = dfOrders.groupby('PlannedDate').sum().reset_index()
+    return dfOrders
 
 def new_forecast(data, spalte_summe,sel_Zeitraum):
-    '''erstelle eine Prognose für die Spalte zb. Picks Gesamt und das Depot zb. KNSTR
-    data: DataFrame mit den Daten
-    depot_name: Name des Depots für das die Prognose erstellt werden soll
-    spalte_summe: Spalte für die die Prognose erstellt werden soll
-    return: DataFrame mit den Prognosewerten
-    
+    '''
     Args:
-        data ([type]): [description]
-        depot_name ([type]): [description]
-        spalte_summe ([type]): [description]
+        data ([type]): [Packtyp]
+        spalte_summe ([int]): [Summenspalte]
+        sel_Zeitraum ([int]): [Zu berechnender Zeitraum in der Zukunft]
     '''    
-    # entferne zeilen wenn DeliveryDepot ist nicht ['KNSTR', 'KNLEJ', 'KNBFE', 'KNHAJ']
-    #data = data[data['DeliveryDepot'].isin(['KNSTR', 'KNLEJ', 'KNBFE', 'KNHAJ'])]
-    
-    # Ändere "None" Werte in PartnerNo mit Kd nicht Gepflegt
+
 
     # Angenommen, df ist Ihr DataFrame
     data['PartnerNo'].replace("None", 'Kd nicht Gepflegt', inplace=True)
@@ -46,7 +50,7 @@ def new_forecast(data, spalte_summe,sel_Zeitraum):
         model = SARIMAX(depot_data, order=order, seasonal_order=seasonal_order, enforce_stationarity=False, enforce_invertibility=False)
         model_fit = model.fit(disp=False)
         
-        # Prognose für die nächsten 30 Geschäftstage
+        # Prognose für die nächsten X Geschäftstage
         forecast = model_fit.get_forecast(steps=sel_Zeitraum)
         forecast_df = forecast.summary_frame()
         
@@ -68,7 +72,7 @@ def create_new_forecast():
     dfOrders = pd.merge(df, df2, on='SapOrderNumber', how='inner')
     #dfOrders({'CorrespondingMastercases': 0, 'CorrespondingOuters': 0, 'CorrespondingPallets': 0}, inplace=True)
     to_cal = ['CorrespondingMastercases', 'CorrespondingOuters', 'CorrespondingPallets']
-    sel_Zeitraum = st.slider('Zeitraum in Tagen anzeigen', 0, 60, 14)
+    sel_Zeitraum = 14#st.slider('Zeitraum in Tagen anzeigen', 0, 60, 14)
     forecast_df = pd.DataFrame()
     for each in to_cal:
         new_forecast_df = new_forecast(dfOrders, each, sel_Zeitraum)
@@ -80,60 +84,19 @@ def create_new_forecast():
     forecast_df['erstellungsDatum'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     forecast_df['run_ID'] = uuid.uuid4()     
     forecast_df['erstellt von'] = st.session_state.user
+    
     return forecast_df
 
-def plot_stacked_bar_chart(df):
-    """
-    Erstellt ein gestapeltes Balkendiagramm für die Summen der Kategorien
-    'CorrespondingMastercases_mean', 'CorrespondingOuters_mean', 'CorrespondingPallets_mean' 
-    pro Tag und fügt Datenbeschriftungen hinzu.
-    
-    Parameter:
-    df (DataFrame): DataFrame mit Datumsspalte 'index' und numerischen Spalten der Kategorien.
-
-    Rückgabe:
-    None (zeigt die Grafik an)
-    """
-    import matplotlib.pyplot as plt
-    import numpy as np
-
-    # Datumsspalte sicherstellen
-    df['index'] = pd.to_datetime(df['index'], errors='coerce')
-    # entferne Uhrzeit aus Datum
-    df['index'] = df['index'].dt.date
-
-    # Gruppieren und Summieren nach Datum
-    df_grouped = df.groupby('index')[
-        ['CorrespondingMastercases_mean', 'CorrespondingOuters_mean', 'CorrespondingPallets_mean']
-    ].sum().reset_index()
-
-    # Plot erstellen
-    fig, ax = plt.subplots(figsize=(12, 6))
-    bars = df_grouped.set_index('index').plot(kind='bar', stacked=True, ax=ax, figsize=(12, 6))
-
-    # Datenbeschriftung je Kategorie hinzufügen
-    for container in ax.containers:
-        ax.bar_label(container, fmt='%.0f', label_type='center', fontsize=10, color='white')
-
-    # Gesamtsumme über jedem Balken hinzufügen
-    totals = df_grouped[['CorrespondingMastercases_mean', 'CorrespondingOuters_mean', 'CorrespondingPallets_mean']].sum(axis=1)
-    for idx, total in enumerate(totals):
-        ax.text(idx, total + max(totals) * 0.01, f'{total:.0f}', ha='center', fontsize=12, fontweight='bold', color='black')
-
-    # Diagrammbeschriftungen
-    ax.set_xlabel('Datum')
-    ax.set_ylabel('Summe')
-    ax.set_title('Forecast Mastercases, Outers und Pallets')
-    ax.legend(title='Kategorie')
-    plt.xticks(rotation=45)
-    plt.grid(axis='y', linestyle='--', alpha=0.7)
-    # passe die höhe des Gesamten Diagramms an auf 400 px
-    plt.tight_layout()
-
-    return st.pyplot(fig, use_container_width=True)
 
 
-def plot_stacked_bar_chart_plotly(df, colors=None):
+
+def create_new_Pallet_forecast():
+    df = read_Table('business_depotDEBYKN-DepotDEBYKNOrders')
+    sel_Zeitraum = 14
+    pal_forecast  = new_forecast(df, 'ActualNumberOfPallets', sel_Zeitraum)
+
+
+def plot_stacked_bar_chart_plotly(df, colors=None,dfOrders=None):
     """
     Erstellt ein gestapeltes Balkendiagramm mit Plotly für die Summen der Kategorien
     'CorrespondingMastercases_mean', 'CorrespondingOuters_mean', 'CorrespondingPallets_mean' 
@@ -200,6 +163,130 @@ def plot_stacked_bar_chart_plotly(df, colors=None):
     return st.plotly_chart(fig, use_container_width=True)
     
 
+def plot_stacked_bars_with_line(df, dfOrders, colors=None):
+    # 1) Datumsspalten parsen
+    df['forecastDate'] = pd.to_datetime(df['forecastDate']).dt.date
+    dfOrders['PlannedDate'] = pd.to_datetime(dfOrders['PlannedDate']).dt.date
+
+    # 2) Zusammenführen
+    merged_df = df.merge(dfOrders, left_on='forecastDate', right_on='PlannedDate', how='inner')
+    #st.write(merged_df)
+
+    if merged_df.empty:
+        st.warning("Keine gemeinsamen Daten für Forecast und Actuals gefunden.")
+        return
+
+    # 3) Standardfarben, falls nicht übergeben
+    if colors is None:
+        colors = {
+            'CorrespondingMastercases_mean': '#0F2B63',
+            'CorrespondingOuters_mean': '#ef7d00',
+            'CorrespondingPallets_mean': '#4FAF46'
+        }
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # TEIL A: Stacked Bars aus Forecast-Daten (df_grouped)
+    # ─────────────────────────────────────────────────────────────────────────
+    df['index'] = pd.to_datetime(df['forecastDate'], errors='coerce').dt.date
+    df_grouped = (
+        df.groupby('index')[['CorrespondingMastercases_mean',
+                             'CorrespondingOuters_mean',
+                             'CorrespondingPallets_mean']]
+          .sum()
+          .reset_index()
+    )
+
+    # Plotly-Figure erzeugen
+    fig = go.Figure()
+
+    # Gestapelte Balken je Kategorie
+    for column in ['CorrespondingMastercases_mean', 'CorrespondingOuters_mean', 'CorrespondingPallets_mean']:
+        fig.add_trace(go.Bar(
+            x=df_grouped['index'],
+            y=df_grouped[column],
+            name=column.replace('_mean', ''),
+            text=df_grouped[column].astype(int),
+            textposition='inside',
+            marker_color=colors[column],
+            hovertemplate=(
+                "<b>%{x}</b><br>" +
+                f"{column.replace('_mean','')}: " +
+                "%{y}<extra></extra>"
+            )
+        ))
+
+    # Gesamtsumme berechnen (nur Forecast-Seite)
+    df_grouped['total_forecast'] = (
+        df_grouped['CorrespondingMastercases_mean'] +
+        df_grouped['CorrespondingOuters_mean'] +
+        df_grouped['CorrespondingPallets_mean']
+    )
+
+    # Summen-Werte als Annotation über die Balken
+    for i, total_val in enumerate(df_grouped['total_forecast']):
+        fig.add_annotation(
+            x=df_grouped['index'][i],
+            y=total_val + max(df_grouped['total_forecast']) * 0.01,
+            text=f'{int(total_val)}',
+            showarrow=False,
+            font=dict(size=12, color='black', family="Arial"),
+        )
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # TEIL B: Linie aus merged_df-Daten (Actuals)
+    # ─────────────────────────────────────────────────────────────────────────
+    # Hier z.B. Summe der echten CorrespondingMastercases/Outers/Pallets
+    # pro 'PlannedDate' bilden:
+    df_line = (
+        merged_df.groupby('PlannedDate')[['CorrespondingMastercases',
+                                          'CorrespondingOuters',
+                                          'CorrespondingPallets']]
+                 .sum()
+                 .reset_index()
+    )
+
+    df_line['total_actual'] = (
+        df_line['CorrespondingMastercases'] +
+        df_line['CorrespondingOuters'] +
+        df_line['CorrespondingPallets']
+    )
+
+    # Scatter-Linie mit customdata für den Hover
+    fig.add_trace(go.Scatter(
+        x=df_line['PlannedDate'],
+        y=df_line['total_actual'],
+        mode='lines+markers',
+        name='Summe Actuals',
+        marker=dict(color='black'),
+        customdata=df_line[['CorrespondingMastercases',
+                            'CorrespondingOuters',
+                            'CorrespondingPallets']],
+        hovertemplate=(
+            "<b>Datum: %{x}</b><br>" +
+            "Gesamt (Ist Werte zu Stichtag): %{y}<br>" +
+            "Mastercases: %{customdata[0]}<br>" +
+            "Outers: %{customdata[1]}<br>" +
+            "Pallets: %{customdata[2]}<extra></extra>"
+        )
+    ))
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # TEIL C: Layout anpassen
+    # ─────────────────────────────────────────────────────────────────────────
+    fig.update_layout(
+        title='Forecast (Stacked) + Actual (Linie)',
+        xaxis_title='Datum',
+        yaxis_title='Summe',
+        barmode='stack',
+        legend_title='Kategorie',
+        height=600,
+        template='plotly_white',
+        hovermode='x'
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
 # Dashboard aufbauen
 def main():
     try: 
@@ -232,8 +319,10 @@ def main():
         new_F['forecastDate'] = new_F['forecastDate'].dt.date
         new_F.drop('index', axis=1, inplace=True)
         # Kombiniere mit bestehenden Daten
-        #SQL.update_Table('PAMS_Forecast', forecast_df, 'run_ID')
+
         save_Table_append(new_F, 'PAMS_Forecast')
+
+        
     img_strip = Image.open('Data/img/strip.png')
     img_strip = img_strip.resize((1000, 15))
     st.image(img_strip, use_column_width=True)
@@ -245,7 +334,9 @@ def main():
         with st.expander(f"Prognose Details von {show_Forecast} anzeigen", expanded=False):
             st.dataframe(sel_forecastID)
     
-    plot_stacked_bar_chart_plotly(sel_forecastID)
+    #plot_stacked_bar_chart_plotly(sel_forecastID)
+    df_orders = read_actuals_Pick()
+    plot_stacked_bars_with_line(sel_forecastID, df_orders)
 
     
 if __name__ == "__main__":

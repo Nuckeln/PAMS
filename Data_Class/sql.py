@@ -4,7 +4,9 @@ from sqlalchemy import types
 import datetime
 
 class SQL:
-    def read_Table(table_name):
+
+    
+    def read_Table(table_name, columns=None):
         server = "batsql-pp-ne-cmes-prod-10.database.windows.net"
         database = "batsdb-pp-ne-prod-reporting_SuperDepot"
         username = "batedp-cmes-prod-reportinguser"
@@ -12,12 +14,21 @@ class SQL:
 
         # Datenbankverbindung erstellen
         engine = create_engine(f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server')
+
+        # Wenn keine Spalten angegeben sind, wähle alle Spalten aus
+        if columns is None:
+            columns = '*'
+        else:
+            columns = ', '.join(columns)
+
         # Daten auslesen
-        df = pd.read_sql(f'SELECT * FROM {table_name}', engine)
+        df = pd.read_sql(f'SELECT {columns} FROM [{table_name}]', engine)
+
         # Connection schließen
         engine.dispose()
         return df
-
+        
+    
     def update_Table(table_name: str, datenframe: pd.DataFrame, id_column: str):
         '''Updatet eine Tabelle in der Datenbank nur neue oder veränderte Zeilen'''
         server = "batsql-pp-ne-cmes-prod-10.database.windows.net"
