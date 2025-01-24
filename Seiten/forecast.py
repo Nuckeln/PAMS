@@ -279,7 +279,7 @@ def plot_stacked_bars_with_line(df, dfOrders, colors=None):
         yaxis_title='Summe',
         barmode='stack',
         legend_title='Kategorie',
-        height=600,
+        height=800,
         template='plotly_white',
         hovermode='x'
     )
