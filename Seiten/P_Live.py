@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import datetime
+
 import streamlit_autorefresh as sar
 from PIL import Image
 import plotly_express as px
@@ -9,23 +9,64 @@ from annotated_text import annotated_text, annotation
 import streamlit_timeline as timeline
 
 from Data_Class.wetter.api import getWetterBayreuth
-from Data_Class.MMSQL_connection import read_Table
-
-
+from Data_Class.sql import SQL
+import datetime
+import pytz
 
 import matplotlib.pyplot as plt
 from matplotlib.patches import Arc
-
-import plotly.graph_objects as go
-
+import time
 
 
 def loadDF(day1=None, day2=None): 
-    dfOr = read_Table('prod_Kundenbestellungen_14days')
+    # Erfasse in Variable Funktionsdauer in Sekunden
+    start = time.time()
     
-    #dfOr = berechne_order_daten()
-    #load parquet
-    #dfOr = pq.read_table('df.parquet.gzip').to_pandas()
+    dfKunden = SQL.read_table('Kunden_mit_Packinfos')
+    dfOrderLabels = SQL.read_table('business_depotDEBYKN-LabelPrintOrders',day1=day1- pd.Timedelta(days=5),day2=day2,date_column='CreatedTimestamp')
+    
+    df = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrders', ['SapOrderNumber', 'PlannedDate','Status',
+                                                                   'UnloadingListIdentifier','ActualNumberOfPallets',
+                                                                   'DeliveryDepot','EstimatedNumberOfPallets','PartnerNo','CreatedTimestamp','AllSSCCLabelsPrinted',
+                                                                   'QuantityCheckTimestamp','UpdatedTimestamp','LoadingLaneId'],
+                        day1, day2, 'PlannedDate')
+    SapOrderNumberList = df['SapOrderNumber'].tolist()
+    ##------------------ Order Items von DB Laden ------------------##
+    df2 = SQL.load_table_by_Col_Content('business_depotDEBYKN-DepotDEBYKNOrderItems','SapOrderNumber',SapOrderNumberList)    
+    
+    #df2 = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrderItems', ['SapOrderNumber','CorrespondingMastercases', 'CorrespondingOuters', 'CorrespondingPallets'])
+
+    # Tabellen geladen 
+    ende = time.time()
+    # kürze auf 2 Nachkommastellen
+    
+    dauerSQL = ende - start
+    dauerSQL = round(dauerSQL, 2)
+    
+    dfOrders = pd.merge(df, df2, on='SapOrderNumber', how='inner')
+
+
+    # Fehlende Daten Berechnen
+    dfOrders['Picks Gesamt'] = dfOrders['CorrespondingMastercases'] + dfOrders['CorrespondingOuters'] + dfOrders['CorrespondingPallets']
+    dfOrders['Fertiggestellt'] = dfOrders['SapOrderNumber'].apply(lambda x: dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp'].max() if len(dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp']) > 0 else np.nan)
+    dfOrders['First_Picking'] = dfOrders['SapOrderNumber'].apply(lambda x: dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp'].min() if len(dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp']) > 0 else np.nan)    
+    
+    # Rename columns
+    dfOrders['Gepackte Paletten'] = dfOrders.ActualNumberOfPallets
+    dfOrders['Fertige Paletten'] = dfOrders.ActualNumberOfPallets
+    dfOrders['Geschätzte Paletten'] = dfOrders.EstimatedNumberOfPallets
+    dfOrders.rename(columns={'CorrespondingMastercases': 'Picks Karton', 'CorrespondingOuters': 'Picks Stangen', 'CorrespondingPallets': 'Picks Paletten'}, inplace=True)
+    dfOrders['Lieferschein erhalten'] = dfOrders['CreatedTimestamp']
+    
+    # Add Costumer Name
+    dfKunden['PartnerNo'] = dfKunden['PartnerNo'].astype(str)
+    dfKunden = dfKunden.drop_duplicates(subset='PartnerNo', keep='first')
+    dfOrders = pd.merge(dfOrders, dfKunden[['PartnerNo', 'PartnerName']], on='PartnerNo', how='left')
+    dfOr = dfOrders
+
+    
+    
+    
     dfOr['PlannedDate'] = dfOr['PlannedDate'].astype(str)
     dfOr['PlannedDate'] = pd.to_datetime(dfOr['PlannedDate'].str[:10])
     if day1 is None:
@@ -41,10 +82,15 @@ def loadDF(day1=None, day2=None):
     dfOr = dfOr[dfOr['Picks Gesamt'] != 0]
     
     dfOr['Fertiggestellt'] = pd.to_datetime(dfOr['Fertiggestellt'], format='%Y-%m-%d %H:%M:%S')
-    #add two hours to Feritggestellt
-    dfOr['Fertiggestellt'] = dfOr['Fertiggestellt'] + pd.to_timedelta('2:00:00')
-
-    return dfOr
+    # Change Fertiggestellt to local time Berlin
+    #dfOr['Fertiggestellt'] = dfOr['Fertiggestellt'].dt.tz_localize('UTC').dt.tz_convert('Europe/Berlin')
+    # Tabellen geladen 
+    ende = time.time()
+    # kürze auf 2 Nachkommastellen
+    
+    dauerSQL = ende - start
+    dauerSQL = round(dauerSQL, 2)
+    return dfOr, dauerSQL
 
 def wetter():
     try:
@@ -160,6 +206,7 @@ def fig_trucks_Org(df):
     fig.update_xaxes(title_text='')
     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
+
 def figUebermitteltInDeadline(df):      
     with st.container():
         col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
@@ -222,6 +269,9 @@ def figUebermitteltInDeadline(df):
     fig.update_layout(showlegend=False)
     fig.update_traces(text=dfFertig['PartnerName'], textposition='inside')
     st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
+
+
+
 
 def figPicksKunde(df):
 
@@ -568,17 +618,33 @@ def downLoadTagesReport(df):
 
 def PageTagesReport():
     pd.set_option("display.precision", 0)
-    sar.st_autorefresh(interval=48000, debounce=True)
+    sar.st_autorefresh(interval=88000, debounce=True)
     colhead1, colhead2 ,colhead3, colhead4 = st.columns(4)
-    with colhead2:
-        lastUpdate = read_Table('prod_KundenbestellungenUpdateTime')
-        lastUpdateDate = lastUpdate['time'].iloc[0]
-        st.write('Letztes Update:')
-        st.write(lastUpdateDate)
     with colhead1:
         sel_date = datetime.date.today()  
         sel_date = st.date_input('Datum', sel_date)   
-        dfOr = loadDF(sel_date,sel_date) 
+        try:
+            dfOr, dauerSQL = loadDF(sel_date,sel_date)
+        except:
+            st.write('Ruhetag chill')
+            img_sonntag = Image.open('Data/img/sonntag.png')
+            img_sonntag = img_sonntag.resize((500, 500))
+            st.image(img_sonntag, use_column_width=True)
+    with colhead2:
+        try:
+            
+            # Zeitzone Berlin
+            berlin_tz = pytz.timezone('Europe/Berlin')
+
+            # Jetzt gerade Zeitzone Berlin
+            isnow = datetime.datetime.now(berlin_tz)
+            # only time
+            isnow = isnow.strftime("%H:%M:%S")
+            print("Aktuelle Zeit in Berlin:", isnow)
+            st.write(f'Letztes Update: {isnow} Uhr')
+            st.write(f'Berechnungsdauer: {dauerSQL} Sekunden')
+        except:
+            pass
         
     with colhead3:
         st.write(f'Hi {st.session_state.user} 👋')
@@ -642,9 +708,10 @@ def PageTagesReport():
         depots.append('KNHAJ')
     if biel:
         depots.append('KNBFE')
-    #filter df by selected depots
-    dfOr = dfOr[dfOr['DeliveryDepot'].isin(depots)]
-    
+    try:
+        dfOr = dfOr[dfOr['DeliveryDepot'].isin(depots)]
+    except:
+        st.write('Keine Daten vorhanden')
     try:
         figPicksKunde(dfOr)
     except:
@@ -655,7 +722,7 @@ def PageTagesReport():
         st.write('Keine Daten vorhanden')
 
     try:
-        fig_trucks_Org(dfOr)
+       fig_trucks_Org(dfOr)
     except:
         st.write('Keine Daten vorhanden')
     try:

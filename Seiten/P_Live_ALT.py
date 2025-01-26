@@ -10,76 +10,22 @@ import streamlit_timeline as timeline
 
 from Data_Class.wetter.api import getWetterBayreuth
 from Data_Class.MMSQL_connection import read_Table
-from Data_Class.sql import SQL
-import datetime
-import pytz
+
+
 
 import matplotlib.pyplot as plt
 from matplotlib.patches import Arc
 
 import plotly.graph_objects as go
-import time
 
 
-@st.cache_data()
+
 def loadDF(day1=None, day2=None): 
-    # Erfasse in Variable Funktionsdauer in Sekunden
-    start = time.time()
+    dfOr = read_Table('prod_Kundenbestellungen_14days')
     
-    dfKunden = SQL.read_table('Kunden_mit_Packinfos')
-    #dfOrderLabels = SQL.read_table('business_depotDEBYKN-LabelPrintOrders',day1=day1,day2=day2,date_column='CreatedTimestamp')
-    #dfOrderLabels = SQL.read_table('business_depotDEBYKN-LabelPrintOrders')
-    df = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrders', ['SapOrderNumber', 'PlannedDate','Status',
-                                                                   'UnloadingListIdentifier','ActualNumberOfPallets',
-                                                                   'DeliveryDepot','EstimatedNumberOfPallets','PartnerNo','CreatedTimestamp','AllSSCCLabelsPrinted',
-                                                                   'QuantityCheckTimestamp','UpdatedTimestamp'],
-                        day1, day2, 'PlannedDate')
-    SapOrderNumberList = df.SapOrderNumber.unique()
-    #convert to string and list
-    SapOrderNumberList = SapOrderNumberList.astype(str)
-    SapOrderNumberList = SapOrderNumberList.tolist()
-    ##------------------ Order Items von DB Laden ------------------##
-    #df2 = SQL.load_table_by_Col_Content('business_depotDEBYKN-DepotDEBYKNOrderItems','SapOrderNumber',SapOrderNumberList)    
-    
-    df2 = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrderItems', ['SapOrderNumber','CorrespondingMastercases', 'CorrespondingOuters', 'CorrespondingPallets'])
-
-    # Tabellen geladen 
-    ende = time.time()
-    # kürze auf 2 Nachkommastellen
-    
-    dauerSQL = ende - start
-    dauerSQL = round(dauerSQL, 2)
-    
-    dfOrders = pd.merge(df, df2, on='SapOrderNumber', how='inner')
-
-
-    # Fehlende Daten Berechnen
-    dfOrders['Picks Gesamt'] = dfOrders['CorrespondingMastercases'] + dfOrders['CorrespondingOuters'] + dfOrders['CorrespondingPallets']
-    #dfOrders = dfOrders.loc[dfOrders['AllSSCCLabelsPrinted'] == 1, 'Fertiggestellt'] = dfOrders.loc[dfOrders['AllSSCCLabelsPrinted'] == 1, 'QuantityCheckTimestamp']
-    #dfOrders['Fertiggestellt'] = dfOrders['SapOrderNumber'].apply(lambda x: dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp'].max() if len(dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp']) > 0 else np.nan)
-    #dfOrders['First_Picking'] = dfOrders['SapOrderNumber'].apply(lambda x: dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp'].min() if len(dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp']) > 0 else np.nan)
-    #dfOrder['Fertiggestellt'] = dfOrder['SapOrderNumber'].apply(lambda x: dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp'].max() if len(dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp']) > 0 else np.nan)
-    #dfOrder['First_Picking'] = dfOrder['SapOrderNumber'].apply(lambda x: dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp'].min() if len(dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp']) > 0 else np.nan)
-    
-    dfOrders['Fertiggestellt'] = dfOrders['UpdatedTimestamp']
-    
-    
-    # Rename columns
-    dfOrders['Gepackte Paletten'] = dfOrders.ActualNumberOfPallets
-    dfOrders['Fertige Paletten'] = dfOrders.ActualNumberOfPallets
-    dfOrders['Geschätzte Paletten'] = dfOrders.EstimatedNumberOfPallets
-    dfOrders.rename(columns={'CorrespondingMastercases': 'Picks Karton', 'CorrespondingOuters': 'Picks Stangen', 'CorrespondingPallets': 'Picks Paletten'}, inplace=True)
-    dfOrders['Lieferschein erhalten'] = dfOrders['CreatedTimestamp']
-    
-    # Add Costumer Name
-    dfKunden['PartnerNo'] = dfKunden['PartnerNo'].astype(str)
-    dfKunden = dfKunden.drop_duplicates(subset='PartnerNo', keep='first')
-    dfOrders = pd.merge(dfOrders, dfKunden[['PartnerNo', 'PartnerName']], on='PartnerNo', how='left')
-    dfOr = dfOrders
-
-    
-    
-    
+    #dfOr = berechne_order_daten()
+    #load parquet
+    #dfOr = pq.read_table('df.parquet.gzip').to_pandas()
     dfOr['PlannedDate'] = dfOr['PlannedDate'].astype(str)
     dfOr['PlannedDate'] = pd.to_datetime(dfOr['PlannedDate'].str[:10])
     if day1 is None:
@@ -95,10 +41,10 @@ def loadDF(day1=None, day2=None):
     dfOr = dfOr[dfOr['Picks Gesamt'] != 0]
     
     dfOr['Fertiggestellt'] = pd.to_datetime(dfOr['Fertiggestellt'], format='%Y-%m-%d %H:%M:%S')
-    # Change Fertiggestellt to local time Berlin
-    #dfOr['Fertiggestellt'] = dfOr['Fertiggestellt'].dt.tz_localize('UTC').dt.tz_convert('Europe/Berlin')
+    #add two hours to Feritggestellt
+    dfOr['Fertiggestellt'] = dfOr['Fertiggestellt'] + pd.to_timedelta('2:00:00')
 
-    return dfOr, dauerSQL
+    return dfOr
 
 def wetter():
     try:
@@ -219,9 +165,9 @@ def figUebermitteltInDeadline(df):
         col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
         with col1:  
             
-            sel_deadStr = st.time_input('Stuttgart', datetime.time(14, 0), key='Stuttgart')
+            sel_deadStr = st.time_input('Stuttgart', datetime.time(14, 0))
         with col2:
-            sel_deadLej = st.time_input('Leipzig', datetime.time(14, 0), key='Leipzig')
+            sel_deadLej = st.time_input('Leipzig', datetime.time(14, 0))
         with col3:    
             sel_deadHan = st.time_input('Hannover', datetime.time(14, 0))
         with col4:
@@ -242,9 +188,7 @@ def figUebermitteltInDeadline(df):
     #convert to datetime
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
     # filter by fertiggestellt = '0'
-    st.data_editor(df)
-    dfFertig = df[df['Status'] == 'OrderInformationSent']
-    st.dataframe(dfFertig)
+    dfFertig = df[df['Fertiggestellt'] != '0']
     dfFertig['Fertiggestellt'] = pd.to_datetime(dfFertig['Fertiggestellt'], format='%Y-%m-%d %H:%M:%S')
     #add two hours to Feritggestellt
     dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'].dt.tz_localize(None)
@@ -278,6 +222,7 @@ def figUebermitteltInDeadline(df):
     fig.update_layout(showlegend=False)
     fig.update_traces(text=dfFertig['PartnerName'], textposition='inside')
     st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
+
 
 def figPicksKunde(df):
 
@@ -624,24 +569,17 @@ def downLoadTagesReport(df):
 
 def PageTagesReport():
     pd.set_option("display.precision", 0)
-    sar.st_autorefresh(interval=88000, debounce=True)
+    sar.st_autorefresh(interval=48000, debounce=True)
     colhead1, colhead2 ,colhead3, colhead4 = st.columns(4)
+    with colhead2:
+        lastUpdate = read_Table('prod_KundenbestellungenUpdateTime')
+        lastUpdateDate = lastUpdate['time'].iloc[0]
+        st.write('Letztes Update:')
+        st.write(lastUpdateDate)
     with colhead1:
         sel_date = datetime.date.today()  
         sel_date = st.date_input('Datum', sel_date)   
-        dfOr, dauerSQL = loadDF(sel_date,sel_date) 
-    with colhead2:
-
-        # Zeitzone Berlin
-        berlin_tz = pytz.timezone('Europe/Berlin')
-
-        # Jetzt gerade Zeitzone Berlin
-        isnow = datetime.datetime.now(berlin_tz)
-        # only time
-        isnow = isnow.strftime("%H:%M:%S")
-        print("Aktuelle Zeit in Berlin:", isnow)
-        st.write(f'Letztes Update: {isnow} Uhr')
-        st.write(f'Berechnungsdauer: {dauerSQL} Sekunden')
+        dfOr = loadDF(sel_date,sel_date) 
         
     with colhead3:
         st.write(f'Hi {st.session_state.user} 👋')
@@ -707,14 +645,15 @@ def PageTagesReport():
         depots.append('KNBFE')
     #filter df by selected depots
     dfOr = dfOr[dfOr['DeliveryDepot'].isin(depots)]
+    
     try:
         figPicksKunde(dfOr)
     except:
         st.write('Keine Daten vorhanden')
-#    try:
-    figUebermitteltInDeadline(dfOr)
- #   except:
-  #      st.write('Keine Daten vorhanden')
+    try:
+        figUebermitteltInDeadline(dfOr)
+    except:
+        st.write('Keine Daten vorhanden')
 
     try:
         fig_trucks_Org(dfOr)

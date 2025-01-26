@@ -33,8 +33,8 @@ class SQL:
         # SQL-Abfrage erstellen
         sql_query = f'SELECT {columns} FROM [{table_name}]'
         if day1 and day2 and date_column:
-            sql_query += f" WHERE {date_column} BETWEEN '{day1}' AND '{day2}'"
-
+            #sql_query += f" WHERE {date_column} BETWEEN '{day1}' AND '{day2}'"
+            sql_query += f" WHERE CONVERT(DATE, {date_column}) BETWEEN '{day1}' AND '{day2}'"
         # Daten auslesen
         df = pd.read_sql(sql_query, engine)
 
