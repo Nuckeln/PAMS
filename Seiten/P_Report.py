@@ -4,8 +4,8 @@ import pandas as pd
 from datetime import datetime
 import plotly.express as px
 import plotly.graph_objs as go
-
 from Data_Class.MMSQL_connection import read_Table
+from Data_Class.sql import SQL
 
 
 ''' BAT Colurs
@@ -24,13 +24,33 @@ from Data_Class.MMSQL_connection import read_Table
 BATColurs = ['#0e2b63','#004f9f','#00b1eb','#ef7d00','#ffbb00','#ffaf47','#afca0b','#5a328a','#e72582']
 @st.cache_data(show_spinner=False)
 def load_data():
+    dfKunden = SQL.read_table('Kunden_mit_Packinfos')
+    df = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrders', ['SapOrderNumber', 'PlannedDate',
+                                                                   'UnloadingListIdentifier','ActualNumberOfPallets',
+                                                                   'DeliveryDepot','EstimatedNumberOfPallets','PartnerNo','CreatedTimestamp'])
+    
+    df2 = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrderItems', ['SapOrderNumber', 'CorrespondingMastercases', 'CorrespondingOuters', 'CorrespondingPallets'])
 
-    df = read_Table('prod_Kundenbestellungen')
+    dfOrders = pd.merge(df, df2, on='SapOrderNumber', how='inner')
+
+
+    # Fehlende Daten Berechnen
+    dfOrders['Picks Gesamt'] = dfOrders['CorrespondingMastercases'] + dfOrders['CorrespondingOuters'] + dfOrders['CorrespondingPallets']
+
+    # Rename columns
+    dfOrders.rename(columns={'CorrespondingMastercases': 'Picks Karton', 'CorrespondingOuters': 'Picks Stangen', 'CorrespondingPallets': 'Picks Paletten','ActualNumberOfPallets': 'Gepackte Paletten'}, inplace=True)
+    dfOrders['Lieferschein erhalten'] = dfOrders['CreatedTimestamp']
+    # Add Costumer Name
+    dfKunden['PartnerNo'] = dfKunden['PartnerNo'].astype(str)
+    dfKunden = dfKunden.drop_duplicates(subset='PartnerNo', keep='first')
+
+    dfOrders = pd.merge(dfOrders, dfKunden[['PartnerNo', 'PartnerName']], on='PartnerNo', how='left')
+
     # Drop rows with TRUE in column 'IsReturnDelivery' and 'IsDeleted'
         
     
     dfIssues = read_Table('PAMS_SD_Issues')
-    return df, dfIssues
+    return dfOrders, dfIssues
 
 def filterDate(df: pd,dfIssues: pd):
     df.PlannedDate = pd.to_datetime(df.PlannedDate)
@@ -151,10 +171,10 @@ def figPicksGesamtKunden(df,tabelle,show_in_day_Week):
     dfOriginal = df
     #sort by PlannedDate
     df.sort_values(show_in_day_Week, inplace=False)
-    try:
-        fig = px.bar(df, x=show_in_day_Week, y="Picks Gesamt", color="PartnerName",hover_data=["Picks Gesamt","DeliveryDepot",show_in_day_Week,"Lieferschein erhalten",'SapOrderNumber'])
-    except:
-        st.warning('Der Filter liefert keine Ergebnisse')
+    #try:
+    fig = px.bar(df, x=show_in_day_Week, y="Picks Gesamt", color="PartnerName",hover_data=["Picks Gesamt","DeliveryDepot",show_in_day_Week,"Lieferschein erhalten",'SapOrderNumber'])
+    #except:
+    #    st.warning('Der Filter liefert keine Ergebnisse')
 
     fig.update_xaxes(tickformat='%d.%m.%Y')
     fig.update_xaxes(showticklabels=True)
@@ -432,18 +452,18 @@ def reportPage():
             auslastung_der_trucks(df,show_tables,show_in_day_Week)
         if sel_filter == []:
             st.warning('Bitte wähle eine Auswertung aus')
-    with st.expander("Kennzahlen Fehler", expanded=True):
-        sel_filterIssues = st.multiselect(
-        "Zeige:",
-        ["Fehler vs. Lieferscheine", "Fehler Total nach Art"], ['Fehler vs. Lieferscheine'])  
-        if 'Fehler vs. Lieferscheine' in sel_filterIssues:
-            figFehlerVsLieferscheine(dfIssues,df,show_tables,show_in_day_Week)
-        if 'Fehler Total nach Art' in sel_filterIssues:
-            figIssuesTotal(dfIssues,show_in_day_Week,show_tables)
-        figFehlerBarDay(dfIssues,df,show_tables,show_in_day_Week)
-        fig_fehler_LS_Bar(dfIssues,df,show_tables,show_in_day_Week)
-    # with st.expander("Bau dir was", expanded=True):
-    #     bau_dir_was()
+    # with st.expander("Kennzahlen Fehler", expanded=True):
+    #     sel_filterIssues = st.multiselect(
+    #     "Zeige:",
+    #     ["Fehler vs. Lieferscheine", "Fehler Total nach Art"], ['Fehler vs. Lieferscheine'])  
+    #     if 'Fehler vs. Lieferscheine' in sel_filterIssues:
+    #         figFehlerVsLieferscheine(dfIssues,df,show_tables,show_in_day_Week)
+    #     if 'Fehler Total nach Art' in sel_filterIssues:
+    #         figIssuesTotal(dfIssues,show_in_day_Week,show_tables)
+    #     figFehlerBarDay(dfIssues,df,show_tables,show_in_day_Week)
+    #     fig_fehler_LS_Bar(dfIssues,df,show_tables,show_in_day_Week)
+    # # with st.expander("Bau dir was", expanded=True):
+    # #     bau_dir_was()
         
     if st.button('Daten vom Server neu laden', on_click=load_data.clear):
         load_data.clear()

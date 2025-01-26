@@ -5,8 +5,8 @@ import uuid
 import streamlit as st
 import datetime
 from datetime import datetime
-
 from Data_Class.MMSQL_connection import read_Table, save_Table_append
+#from Data_Class.MMSQL_connection import read_Table, save_Table_append
 import plotly.graph_objects as go
 import plotly.express as px
 from PIL import Image
@@ -17,9 +17,9 @@ de_holidays = holidays.country_holidays(country='DE', subdiv='BY')
 
 @st.cache_data()
 def read_actuals_Pick():
-    df = SQL.read_Table('business_depotDEBYKN-DepotDEBYKNOrders', ['SapOrderNumber', 'PlannedDate'])
+    df = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrders', ['SapOrderNumber', 'PlannedDate'])
     
-    df2 = SQL.read_Table('business_depotDEBYKN-DepotDEBYKNOrderItems', ['SapOrderNumber', 'CorrespondingMastercases', 'CorrespondingOuters', 'CorrespondingPallets'])
+    df2 = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrderItems', ['SapOrderNumber', 'CorrespondingMastercases', 'CorrespondingOuters', 'CorrespondingPallets'])
     dfOrders = pd.merge(df, df2, on='SapOrderNumber', how='inner')
     #Group by PlannedDate
     dfOrders = dfOrders.groupby('PlannedDate').sum().reset_index()
@@ -173,7 +173,7 @@ def plot_stacked_bars_with_line(df, dfOrders, colors=None):
     #st.write(merged_df)
 
     if merged_df.empty:
-        st.warning("Keine gemeinsamen Daten für Forecast und Actuals gefunden.")
+        plot_stacked_bar_chart_plotly(df, colors)
         return
 
     # 3) Standardfarben, falls nicht übergeben
@@ -290,15 +290,27 @@ def plot_stacked_bars_with_line(df, dfOrders, colors=None):
 # Dashboard aufbauen
 def main():
     try: 
-        exestierende_forecasts = read_Table('PAMS_Forecast')
-        runs = exestierende_forecasts[['run_ID', 'erstellungsDatum', 'erstellt von']].drop_duplicates()
-        #Fasse alle Daten zusammen
-        runs['Bisherige Prognosen'] = runs['erstellungsDatum']  + ' - ' + runs['erstellt von'] + ' - ' + runs['run_ID']
-        # erstelle ein Array aus Bisheigen Prognosen
-        runs = runs['Bisherige Prognosen'].to_list()
-        
-        # Extrahiere nur die gewählte RUN ID aus runs 
+        exestierende_forecasts = SQL.read_table('PAMS_Forecast')
 
+        # Extrahiere nur die gewählte RUN ID aus runs 
+        runs = exestierende_forecasts[['run_ID', 'erstellungsDatum', 'erstellt von']].drop_duplicates()
+
+        # Stelle sicher, dass 'erstellungsDatum' wirklich ein Datums-/Zeitformat ist:
+        runs['erstellungsDatum'] = pd.to_datetime(runs['erstellungsDatum'])
+
+        # Nach Datum absteigend sortieren
+        runs = runs.sort_values(by='erstellungsDatum', ascending=False)
+
+        runs['Bisherige Prognosen'] = (
+            runs['erstellungsDatum'].astype(str) 
+            + ' - ' 
+            + runs['erstellt von'] 
+            + ' - ' 
+            + runs['run_ID']
+        )
+
+        # Array/Listenwert für das selectbox
+        runs_list = runs['Bisherige Prognosen'].tolist()
     except:
         runs = ['Keine Prognose vorhanden Bitte ADMIN kontaktieren','']
         
@@ -306,7 +318,7 @@ def main():
     with col1:
         st.title("📦 Forecast DE30")
     with col2:
-        show_Forecast = st.selectbox('Bisherige Prognosen', runs)  
+        show_Forecast = st.selectbox('Bisherige Prognosen', runs_list)  
         #Extrahiere nur die gewählte RUN ID aus show_Forecast
         sel_runs = show_Forecast.split(' - ')[2]
     with col3:
