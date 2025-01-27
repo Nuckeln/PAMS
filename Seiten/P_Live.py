@@ -56,9 +56,6 @@ def loadDF(day1=None, day2=None):
     # 2) Mit dfOrders mergen
     dfOrders = dfOrders.merge(dfOrderLabelsAgg, on='SapOrderNumber', how='left')
 
-    # dfOrders['Fertiggestellt'] = dfOrders['SapOrderNumber'].apply(lambda x: dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp'].max() if len(dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp']) > 0 else np.nan)
-    # dfOrders['First_Picking'] = dfOrders['SapOrderNumber'].apply(lambda x: dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp'].min() if len(dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp']) > 0 else np.nan)    
-    
     # Rename columns
     dfOrders['Gepackte Paletten'] = dfOrders.ActualNumberOfPallets
     dfOrders['Fertige Paletten'] = dfOrders.ActualNumberOfPallets
@@ -623,7 +620,9 @@ def downLoadTagesReport(df):
 
 def PageTagesReport():
     pd.set_option("display.precision", 0)
-    sar.st_autorefresh(interval=88000, debounce=True)
+    if st.session_state.user == 'Lager':
+        sar.st_autorefresh(interval=88000, debounce=True)
+    
     colhead1, colhead2 ,colhead3, colhead4 = st.columns(4)
     with colhead1:
         sel_date = datetime.date.today()  
@@ -647,7 +646,7 @@ def PageTagesReport():
             isnow = isnow.strftime("%H:%M:%S")
             print("Aktuelle Zeit in Berlin:", isnow)
             st.write(f'Letztes Update: {isnow} Uhr')
-            st.write(f'Berechnungsdauer: {dauerSQL} Sekunden')
+            st.write(f'Datenbankabfrage in: {dauerSQL} Sekunden')
         except:
             pass
         
@@ -689,11 +688,11 @@ def PageTagesReport():
             figTachoDiagramm_VEGA(dfOr,'KNHAJ')
         except:
             st.success('KNHAJ Heute keine Lieferungen')
-    try:
-        with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', use_container_width=True, ):
-            new_timeline(dfOr)      
-    except:
-        st.write('Keine Daten vorhanden')
+    # try:
+    #     with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', use_container_width=True, ):
+    #         new_timeline(dfOr)      
+    # except:
+    #     st.write('Keine Daten vorhanden')
         
     col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
     with col1:
