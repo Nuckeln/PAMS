@@ -48,8 +48,16 @@ def loadDF(day1=None, day2=None):
 
     # Fehlende Daten Berechnen
     dfOrders['Picks Gesamt'] = dfOrders['CorrespondingMastercases'] + dfOrders['CorrespondingOuters'] + dfOrders['CorrespondingPallets']
-    dfOrders['Fertiggestellt'] = dfOrders['SapOrderNumber'].apply(lambda x: dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp'].max() if len(dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp']) > 0 else np.nan)
-    dfOrders['First_Picking'] = dfOrders['SapOrderNumber'].apply(lambda x: dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp'].min() if len(dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp']) > 0 else np.nan)    
+
+    # 1) Gruppieren nach SapOrderNumber, Min und Max der CreatedTimestamp bestimmen
+    dfOrderLabelsAgg = dfOrderLabels.groupby('SapOrderNumber')['CreatedTimestamp'].agg(['min','max']).reset_index()
+    dfOrderLabelsAgg.rename(columns={'min':'First_Picking','max':'Fertiggestellt'}, inplace=True)
+
+    # 2) Mit dfOrders mergen
+    dfOrders = dfOrders.merge(dfOrderLabelsAgg, on='SapOrderNumber', how='left')
+
+    # dfOrders['Fertiggestellt'] = dfOrders['SapOrderNumber'].apply(lambda x: dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp'].max() if len(dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp']) > 0 else np.nan)
+    # dfOrders['First_Picking'] = dfOrders['SapOrderNumber'].apply(lambda x: dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp'].min() if len(dfOrderLabels[dfOrderLabels['SapOrderNumber'] == x]['CreatedTimestamp']) > 0 else np.nan)    
     
     # Rename columns
     dfOrders['Gepackte Paletten'] = dfOrders.ActualNumberOfPallets
@@ -63,9 +71,6 @@ def loadDF(day1=None, day2=None):
     dfKunden = dfKunden.drop_duplicates(subset='PartnerNo', keep='first')
     dfOrders = pd.merge(dfOrders, dfKunden[['PartnerNo', 'PartnerName']], on='PartnerNo', how='left')
     dfOr = dfOrders
-
-    
-    
     
     dfOr['PlannedDate'] = dfOr['PlannedDate'].astype(str)
     dfOr['PlannedDate'] = pd.to_datetime(dfOr['PlannedDate'].str[:10])
