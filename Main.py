@@ -153,14 +153,18 @@ def user_menue_frontend():
         st.session_state.user = None
         st.session_state.rechte = None
         
-               
+@st.cache_data()
+def read_user():
+    users_df = read_Table("user")
+    return users_df
+             
 def main():
     with open("style.css") as css:
         st.markdown(f'<style>{css.read()}</style>', unsafe_allow_html=True)
     if 'user' not in st.session_state:
         st.session_state.user = None  
     with st.spinner("Lade Datenbanken..."):
-        users_df = read_Table("user")
+        users_df = read_user()
         users_df.set_index('username', inplace=True)
     # Umstrukturieren des DataFrames, um den erwarteten Schlüsseln zu entsprechen
     credentials = {

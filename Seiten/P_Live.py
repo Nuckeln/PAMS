@@ -7,6 +7,7 @@ from PIL import Image
 import plotly_express as px
 from annotated_text import annotated_text, annotation
 import streamlit_timeline as timeline
+from PIL import Image, ImageDraw, ImageFont
 
 from Data_Class.wetter.api import getWetterBayreuth
 from Data_Class.sql import SQL
@@ -17,6 +18,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Arc
 import time
 
+TRUCK_IMAGE = Image.open('Data/img/truck.png')  # <--- Pfad anpassen
 
 def loadDF(day1=None, day2=None): 
     # Erfasse in Variable Funktionsdauer in Sekunden
@@ -84,6 +86,8 @@ def loadDF(day1=None, day2=None):
     dfOr = dfOr[dfOr['Picks Gesamt'] != 0]
     
     dfOr['Fertiggestellt'] = pd.to_datetime(dfOr['Fertiggestellt'], format='%Y-%m-%d %H:%M:%S')
+    # Group df by SapOrderNumber
+    #dfOr = dfOr.groupby(['SapOrderNumber','PartnerName','AllSSCCLabelsPrinted','DeliveryDepot','Fertiggestellt','Lieferschein erhalten','Fertige Paletten','EstimatedNumberOfPallets']).agg({'Picks Gesamt':'sum'}).reset_index()
     # Change Fertiggestellt to local time Berlin
     #dfOr['Fertiggestellt'] = dfOr['Fertiggestellt'].dt.tz_localize('UTC').dt.tz_convert('Europe/Berlin')
     # Tabellen geladen 
@@ -616,6 +620,130 @@ def downLoadTagesReport(df):
     key='download-csv'
         )
 
+def LKWProgress(df):
+
+    #dfOriginal = df[df['LoadingLaneId'].notna()]
+    depots = ['KNSTR', 'KNLEJ', 'KNBFE', 'KNHAJ']
+    #Group
+    # Group by SapOrderNumber
+    #Drop duplicates in df SapOrderNumber
+    df = df.drop_duplicates(subset=['SapOrderNumber'])
+    # FILL NA in UnloadingListIdentifier with Kein LKW zugewiesen
+    df['UnloadingListIdentifier'] = df['UnloadingListIdentifier'].fillna('Kein LKW zugewiesen')
+    df_deteils = df.groupby(['SapOrderNumber','PartnerName','DeliveryDepot','PlannedDate','LoadingLaneId']).agg({'Picks Gesamt': 'sum', 'Gepackte Paletten': 'sum', 'Geschätzte Paletten' : 'sum' }).reset_index()
+    df_Trucks = df.groupby(['PlannedDate','DeliveryDepot','LoadingLaneId','UnloadingListIdentifier']).agg({'Gepackte Paletten': 'sum', 'Geschätzte Paletten' : 'sum' }).reset_index()
+    df_deteils['LoadingLaneId'] = df_deteils['LoadingLaneId'].astype(str)
+    df_deteils['LoadingLaneId'] = df_deteils['LoadingLaneId'].replace('.0', '')
+    # Ermittle LoadingLane Auslastung max 33 PALETTEN 
+    df_Trucks['LoadingLaneId'] = df_Trucks['LoadingLaneId'].astype(str)
+    df_Trucks['LoadingLaneId_Auslastung'] = df_Trucks['Gepackte Paletten'] / 33 * 100
+    
+
+    def truck_progress_png(progress, total, total_count, unit, laneid=None, kennzeichen=None):
+        # Lade das Bild
+        total = 33
+
+
+        # Berechne den Prozentsatz des Fortschritts
+        percentage = (progress / total) * 100
+
+        # Erstelle eine Figur mit transparentem Hintergrund für die Fortschrittsleiste
+        fig, ax = plt.subplots(figsize=(35, 11))
+        fig.patch.set_alpha(0)
+
+        # Fortschrittsbalken erstellen
+        ax.barh([''], [percentage], color='#50af47')
+        ax.barh([''], [100-percentage], left=[percentage], color='#4D4D4D')
+
+        # Diagramm anpassen
+        ax.set_xlim(0, 100)
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ax.set_frame_on(False)
+
+        # Fortschrittstext mit zusätzlicher Zeile
+        text_main = f'{progress} von {total} ({percentage:.0f}%)'
+        text_sub = f'{total_count} {unit}'
+        plt.text(0, 0, text_main, ha='left', va='center', color='white', fontsize=205, fontdict={'family': 'Montserrat', 'weight': 'bold'})
+        plt.text(0, -1, text_sub, ha='left', va='center', color='white', fontsize=150, fontdict={'family': 'Montserrat', 'weight': 'bold'})
+
+        # erstelle überschrift
+        plt.text(0, 2, f'{laneid} {kennzeichen}', ha='left', va='center', color='white', fontsize=150, fontdict={'family': 'Montserrat', 'weight': 'bold'})
+
+        # Konvertiere Diagramm in ein NumPy-Array
+        fig.canvas.draw()
+        progress_bar_np = np.array(fig.canvas.renderer._renderer)
+        plt.close()
+
+        # Fortschrittsbalken ins Bild einfügen
+        img_width, img_height = TRUCK_IMAGE.size
+        bar_height, bar_width, _ = progress_bar_np.shape
+        x_offset = 160  # Startpunkt des Balkens
+        y_offset = img_height - bar_height - (img_height // 4)
+
+        # Füge die Fortschrittsleiste hinzu
+        final_img = TRUCK_IMAGE.copy()
+        final_img.paste(Image.fromarray(progress_bar_np), (x_offset, y_offset), Image.fromarray(progress_bar_np))
+        # Erstelle überschrift
+    
+        return final_img
+
+
+    col33 ,col34, col35, col36 = st.columns(4, vertical_alignment='top')
+    with col33:
+        try:
+            # filter by depot and for each lane id a truck progress bar
+            df_LaneId = df_Trucks[df_Trucks['DeliveryDepot'] == 'KNSTR']
+            st.subheader('Stuttgart')
+            for index, row in df_LaneId.iterrows():
+                st.write(f"LaneId: {row['LoadingLaneId']} - {row['UnloadingListIdentifier']}")
+                bild = truck_progress_png(row['Gepackte Paletten'], row['Geschätzte Paletten'], row['Gepackte Paletten'], 'Paletten', row['LoadingLaneId'], row['UnloadingListIdentifier'])
+                st.image(bild, use_column_width=True)
+                # Entferne den .0 aus laneid
+        except:
+            st.success('KNSTR')
+    with col34:
+        try:
+            # filter by depot and for each lane id a truck progress bar
+            df_LaneId = df_Trucks[df_Trucks['DeliveryDepot'] == 'KNLEJ']
+            st.subheader('Leipzig')
+            for index, row in df_LaneId.iterrows():
+                st.write(f"LaneId: {row['LoadingLaneId']} - {row['UnloadingListIdentifier']}")
+
+                # Fortschrittsbalken für jeden LKW erstellen
+                bild = truck_progress_png(row['Gepackte Paletten'], row['Geschätzte Paletten'], row['Gepackte Paletten'], 'Paletten')
+                st.image(bild, use_column_width=True)
+        except:
+            st.success('KNLEJ')
+    with col35:
+        try:
+            # filter by depot and for each lane id a truck progress bar
+            st.subheader('Bielefeld')
+            df_LaneId = df_Trucks[df_Trucks['DeliveryDepot'] == 'KNBFE']
+            for index, row in df_LaneId.iterrows():
+                # Fortschrittsbalken für jeden LKW erstellen
+                st.write(f"LaneId: {row['LoadingLaneId']} - {row['UnloadingListIdentifier']}")
+
+                bild = truck_progress_png(row['Gepackte Paletten'], row['Geschätzte Paletten'], row['Gepackte Paletten'], 'Paletten')
+                st.image(bild, use_column_width=True)
+        except:
+            st.success('KNBFE')
+    with col36:
+        try:
+            # filter by depot and for each lane id a truck progress bar
+            df_LaneId = df_Trucks[df_Trucks['DeliveryDepot'] == 'KNHAJ']
+            st.subheader('Hannover')
+            for index, row in df_LaneId.iterrows():
+                # Fortschrittsbalken für jeden LKW erstellen
+                st.write(f"LaneId: {row['LoadingLaneId']} - {row['UnloadingListIdentifier']}")
+
+                bild = truck_progress_png(row['Gepackte Paletten'], 33, row['Gepackte Paletten'], 'Paletten')
+                st.image(bild, use_column_width=True)
+        except:
+            st.success('KNHAJ')
+
+
+
 #######------------------Main------------------########
 
 def PageTagesReport():
@@ -662,6 +790,8 @@ def PageTagesReport():
 
     st.image(img_strip, use_column_width=True, caption='',)      
 
+    
+    
     col33 ,col34, col35, col36, col37 = st.columns(5)
     with col33:
         try:
@@ -724,9 +854,10 @@ def PageTagesReport():
         figUebermitteltInDeadline(dfOr)
     except:
         st.write('Keine Daten vorhanden')
+    
 
     try:
-       fig_trucks_Org(dfOr)
+        LKWProgress(dfOr)
     except:
         st.write('Keine Daten vorhanden')
     try:

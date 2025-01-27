@@ -46,6 +46,7 @@ def loadDF(day1=None, day2=None):
 
     return dfOr
 
+@st.cache_data()
 def wetter():
     try:
         df = getWetterBayreuth()
