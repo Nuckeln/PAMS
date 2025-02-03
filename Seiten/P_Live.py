@@ -483,7 +483,7 @@ def figTachoDiagramm_VEGA(df, delivery_depot):
 
 def new_timeline(df):
     #https://timeline.knightlab.com/docs/json-format.html#json-text
-    # filter df by AllSSCCLabelsPrinted = 1
+    df = df.drop_duplicates(subset=['SapOrderNumber'])
     df = df[df['AllSSCCLabelsPrinted'] == 1].copy()  # Erstellen Sie eine Kopie des gefilterten DataFrames
     df.loc[:, 'PlannedDate'] = pd.to_datetime(df['PlannedDate'])
     #Fertiggestellt to datetime
@@ -823,7 +823,10 @@ def PageTagesReport():
         except:
             st.success('KNHAJ Heute keine Lieferungen')
     try:
-        with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', use_container_width=True, ):
+        # open_Details = st.button('Auftragsdetails in Timeline')
+        
+        # if open_Details:
+        with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', use_container_width=True):
             new_timeline(dfOr)      
     except:
         st.write('Keine Daten vorhanden')
