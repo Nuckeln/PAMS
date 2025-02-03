@@ -30,8 +30,11 @@ def loadDF(day1=None, day2=None):
     df = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrders', ['SapOrderNumber', 'PlannedDate','Status',
                                                                    'UnloadingListIdentifier','ActualNumberOfPallets',
                                                                    'DeliveryDepot','EstimatedNumberOfPallets','PartnerNo','CreatedTimestamp','AllSSCCLabelsPrinted',
-                                                                   'QuantityCheckTimestamp','UpdatedTimestamp','LoadingLaneId'],
+                                                                   'QuantityCheckTimestamp','UpdatedTimestamp','LoadingLaneId', 'IsReturnDelivery','IsDeleted'],
                         day1, day2, 'PlannedDate')
+    # Filter nach IsDeleted == 0 and IsReturnDelivery == 0
+    df = df[(df['IsDeleted'] == 0) & (df['IsReturnDelivery'] == 0)]
+    
     SapOrderNumberList = df['SapOrderNumber'].tolist()
     ##------------------ Order Items von DB Laden ------------------##
     df2 = SQL.load_table_by_Col_Content('business_depotDEBYKN-DepotDEBYKNOrderItems','SapOrderNumber',SapOrderNumberList)    
@@ -599,9 +602,10 @@ def new_timeline(df):
 def tabelleAnzeigen(df):
     #new df with only the columns we need 'PlannedDate' ,'SapOrderNumber','PartnerName']#'Fertiggestellt','Picks Gesamt','Picks Karton','Picks Paletten','Picks Stangen','Lieferschein erhalten','Fertiggestellt'
     dfAG = df[['PlannedDate','Lieferschein erhalten','DeliveryDepot','SapOrderNumber','PartnerName','Fertiggestellt','Fertige Paletten','Picks Gesamt','UnloadingListIdentifier','ActualNumberOfPallets','EstimatedNumberOfPallets']]
+    df_deteils = df.groupby(['SapOrderNumber','PartnerName','DeliveryDepot','PlannedDate','LoadingLaneId']).agg({'Picks Gesamt': 'sum', 'Gepackte Paletten': 'sum', 'Geschätzte Paletten' : 'sum' }).reset_index()
 
 
-    st.dataframe(data=dfAG, use_container_width=True)
+    st.dataframe(data=df_deteils, use_container_width=True)
 
 def downLoadTagesReport(df):
 
@@ -818,11 +822,11 @@ def PageTagesReport():
             figTachoDiagramm_VEGA(dfOr,'KNHAJ')
         except:
             st.success('KNHAJ Heute keine Lieferungen')
-    # try:
-    #     with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', use_container_width=True, ):
-    #         new_timeline(dfOr)      
-    # except:
-    #     st.write('Keine Daten vorhanden')
+    try:
+        with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', use_container_width=True, ):
+            new_timeline(dfOr)      
+    except:
+        st.write('Keine Daten vorhanden')
         
     col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
     with col1:
