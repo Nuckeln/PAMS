@@ -27,13 +27,20 @@ def load_data():
     dfKunden = SQL.read_table('Kunden_mit_Packinfos')
     df = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrders', ['SapOrderNumber', 'PlannedDate',
                                                                    'UnloadingListIdentifier','ActualNumberOfPallets',
-                                                                   'DeliveryDepot','EstimatedNumberOfPallets','PartnerNo','CreatedTimestamp'])
-    
+                                                                   'DeliveryDepot','EstimatedNumberOfPallets','PartnerNo','CreatedTimestamp','IsDeleted','IsReturnDelivery'])
+    df = df[(df['IsDeleted'] == 0) & (df['IsReturnDelivery'] == 0)]
+
     df2 = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrderItems', ['SapOrderNumber', 'CorrespondingMastercases', 'CorrespondingOuters', 'CorrespondingPallets'])
 
     dfOrders = pd.merge(df, df2, on='SapOrderNumber', how='inner')
+    dfOrderLabels = SQL.read_table('business_depotDEBYKN-LabelPrintOrders')
 
+        # 1) Gruppieren nach SapOrderNumber, Min und Max der CreatedTimestamp bestimmen
+    dfOrderLabelsAgg = dfOrderLabels.groupby('SapOrderNumber')['CreatedTimestamp'].agg(['min','max']).reset_index()
+    dfOrderLabelsAgg.rename(columns={'min':'First_Picking','max':'Fertiggestellt'}, inplace=True)
 
+    # 2) Mit dfOrders mergen
+    dfOrders = dfOrders.merge(dfOrderLabelsAgg, on='SapOrderNumber', how='left')
     # Fehlende Daten Berechnen
     dfOrders['Picks Gesamt'] = dfOrders['CorrespondingMastercases'] + dfOrders['CorrespondingOuters'] + dfOrders['CorrespondingPallets']
 

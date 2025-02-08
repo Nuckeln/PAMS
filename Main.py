@@ -13,12 +13,10 @@ try:
     from Seiten.P_Admin import adminPage
 
     from Seiten.P_Nachschub import pageStellplatzverwaltung
-    from Seiten.P_Ladeplan import main as pageLadeplan
     from Seiten.C_E_check import main as pageC_E_check
     from Seiten.P_HickUp import main as pageHickUp
     import hydralit_components as hc
     from Data_Class.MMSQL_connection import read_Table,save_Table_append
-    from Seiten.KPI import main as pageKPI
     from Seiten.forecast import main as mainForecast
     pd.set_option("display.precision",3)
     #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/main.py"

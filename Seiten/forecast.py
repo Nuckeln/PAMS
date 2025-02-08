@@ -17,8 +17,10 @@ de_holidays = holidays.country_holidays(country='DE', subdiv='BY')
 
 @st.cache_data()
 def read_actuals_Pick():
-    df = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrders', ['SapOrderNumber', 'PlannedDate'])
-    
+    df = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrders', ['SapOrderNumber', 'PlannedDate', 'IsDeleted', 'IsReturnDelivery'])
+    df = df[(df['IsDeleted'] == 0) & (df['IsReturnDelivery'] == 0)]
+    #drop both columns
+    df.drop(['IsDeleted', 'IsReturnDelivery'], axis=1, inplace=True)
     df2 = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrderItems', ['SapOrderNumber', 'CorrespondingMastercases', 'CorrespondingOuters', 'CorrespondingPallets'])
     dfOrders = pd.merge(df, df2, on='SapOrderNumber', how='inner')
     #Group by PlannedDate
