@@ -18,6 +18,7 @@ try:
     import hydralit_components as hc
     from Data_Class.MMSQL_connection import read_Table,save_Table_append
     from Seiten.forecast import main as mainForecast
+    from Seiten.NGP import main as mainNGP
     pd.set_option("display.precision",3)
     #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/main.py"
 
@@ -125,9 +126,9 @@ def user_menue_frontend():
         PageTagesReport()
     if page == 'Hick-Up':
         pageHickUp()
-    # if page == 'LC Monitor':
-    #     #with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='blue'):
-    #     pageLadeplan()
+    if page == 'LC Monitor':
+        #with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='blue'):
+        mainNGP()
     if page == 'Depot Reports':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='red'):
             reportPage()
@@ -138,9 +139,6 @@ def user_menue_frontend():
     if page == 'Lagerverwaltung':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
             pageStellplatzverwaltung()
-    if page == 'KPI':
-        #with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
-        pageKPI()
     if page == 'Admin':
         #with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
         adminPage()
