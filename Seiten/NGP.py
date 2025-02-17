@@ -18,91 +18,28 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Arc
 import time
 
-
+@st.cache_data
 def loadDF(day1=None, day2=None): 
-    # Erfasse in Variable Funktionsdauer in Sekunden
-    start = time.time()
-    
-    dfKunden = SQL.read_table('Kunden_mit_Packinfos')
-    dfOrderLabels = SQL.read_table('business_depotDEBYKN-LabelPrintOrders',day1=day1- pd.Timedelta(days=5),day2=day2,date_column='CreatedTimestamp')
-    
-    df = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrders', ['SapOrderNumber', 'PlannedDate','Status',
-                                                                   'UnloadingListIdentifier','ActualNumberOfPallets',
-                                                                   'DeliveryDepot','EstimatedNumberOfPallets','PartnerNo','CreatedTimestamp','AllSSCCLabelsPrinted',
-                                                                   'QuantityCheckTimestamp','UpdatedTimestamp','LoadingLaneId', 'IsReturnDelivery','IsDeleted'],
-                        day1, day2, 'PlannedDate')
-    # Filter nach IsDeleted == 0 and IsReturnDelivery == 0
-    df = df[(df['IsDeleted'] == 0) & (df['IsReturnDelivery'] == 0)]
-    
-    SapOrderNumberList = df['SapOrderNumber'].tolist()
-    ##------------------ Order Items von DB Laden ------------------##
-    df2 = SQL.load_table_by_Col_Content('business_depotDEBYKN-DepotDEBYKNOrderItems','SapOrderNumber',SapOrderNumberList)    
-    
-    #df2 = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrderItems', ['SapOrderNumber','CorrespondingMastercases', 'CorrespondingOuters', 'CorrespondingPallets'])
+    # lade Daten
+    ngp_detail_tabelle = pd.read_csv('Data/Berechnete_NGP_Daten.csv')
+    ngp_Delivery_level = pd.read_csv('Data/Berechnete_NGP_Kosten.csv')
+    ngp_detail_tabelle['Deliv. date(From/to)'] = pd.to_datetime(ngp_detail_tabelle['Deliv. date(From/to)'])
+    ngp_Delivery_level['Deliv. date(From/to)'] = pd.to_datetime(ngp_Delivery_level['Deliv. date(From/to)'])
+    return ngp_detail_tabelle, ngp_Delivery_level
 
-    # Tabellen geladen 
-    ende = time.time()
-    # kürze auf 2 Nachkommastellen
+def filtereDaten(df, day1, day2):
+    # Konvertiere day1 und day2 in datetime
+    day1 = pd.to_datetime(day1)
+    day2 = pd.to_datetime(day2)
     
-    dauerSQL = ende - start
-    dauerSQL = round(dauerSQL, 2)
-    
-    dfOrders = pd.merge(df, df2, on='SapOrderNumber', how='inner')
+    # Filtere Daten
+    df['Deliv. date(From/to)'] = pd.to_datetime(df['Deliv. date(From/to)'])
+    df = df[(df['Deliv. date(From/to)'] >= day1) & (df['Deliv. date(From/to)'] <= day2)]
+    df['Tag'] = df['Deliv. date(From/to)']
+    return df
 
 
-    # Fehlende Daten Berechnen
-    dfOrders['Picks Gesamt'] = dfOrders['CorrespondingMastercases'] + dfOrders['CorrespondingOuters'] + dfOrders['CorrespondingPallets']
-
-    # 1) Gruppieren nach SapOrderNumber, Min und Max der CreatedTimestamp bestimmen
-    dfOrderLabelsAgg = dfOrderLabels.groupby('SapOrderNumber')['CreatedTimestamp'].agg(['min','max']).reset_index()
-    dfOrderLabelsAgg.rename(columns={'min':'First_Picking','max':'Fertiggestellt'}, inplace=True)
-
-    # 2) Mit dfOrders mergen
-    dfOrders = dfOrders.merge(dfOrderLabelsAgg, on='SapOrderNumber', how='left')
-
-    # Rename columns
-    dfOrders['Gepackte Paletten'] = dfOrders.ActualNumberOfPallets
-    dfOrders['Fertige Paletten'] = dfOrders.ActualNumberOfPallets
-    dfOrders['Geschätzte Paletten'] = dfOrders.EstimatedNumberOfPallets
-    dfOrders.rename(columns={'CorrespondingMastercases': 'Picks Karton', 'CorrespondingOuters': 'Picks Stangen', 'CorrespondingPallets': 'Picks Paletten'}, inplace=True)
-    dfOrders['Lieferschein erhalten'] = dfOrders['CreatedTimestamp']
-    
-    # Add Costumer Name
-    dfKunden['PartnerNo'] = dfKunden['PartnerNo'].astype(str)
-    dfKunden = dfKunden.drop_duplicates(subset='PartnerNo', keep='first')
-    dfOrders = pd.merge(dfOrders, dfKunden[['PartnerNo', 'PartnerName']], on='PartnerNo', how='left')
-    dfOr = dfOrders
-    
-    dfOr['PlannedDate'] = dfOr['PlannedDate'].astype(str)
-    dfOr['PlannedDate'] = pd.to_datetime(dfOr['PlannedDate'].str[:10])
-    if day1 is None:
-        day1 = pd.to_datetime('today').date()
-    else:
-        day1 = pd.to_datetime(day1).date()
-    if day2 is None:
-        day2 = pd.to_datetime('today').date()
-    else:
-        day2 = pd.to_datetime(day2).date()
-    #filter nach Datum
-    dfOr = dfOr[(dfOr['PlannedDate'].dt.date >= day1) & (dfOr['PlannedDate'].dt.date <= day2)]
-    dfOr = dfOr[dfOr['Picks Gesamt'] != 0]
-    
-    dfOr['Fertiggestellt'] = pd.to_datetime(dfOr['Fertiggestellt'], format='%Y-%m-%d %H:%M:%S')
-    # Group df by SapOrderNumber
-    #dfOr = dfOr.groupby(['SapOrderNumber','PartnerName','AllSSCCLabelsPrinted','DeliveryDepot','Fertiggestellt','Lieferschein erhalten','Fertige Paletten','EstimatedNumberOfPallets']).agg({'Picks Gesamt':'sum'}).reset_index()
-    # Change Fertiggestellt to local time Berlin
-    #dfOr['Fertiggestellt'] = dfOr['Fertiggestellt'].dt.tz_localize('UTC').dt.tz_convert('Europe/Berlin')
-    # Tabellen geladen 
-    ende = time.time()
-    # kürze auf 2 Nachkommastellen
-    
-    dauerSQL = ende - start
-    dauerSQL = round(dauerSQL, 2)
-    return dfOr, dauerSQL
-import plotly.express as px
-import streamlit as st
-
-def plot_data(df):
+def plot_data(df,ngp_Delivery_level, plot_as_DD_or_W_MM_or_YY, sum_or_mean):
     ''' 
     BAT Colours
     #0e2b63 darkBlue
@@ -115,55 +52,143 @@ def plot_data(df):
     #5a328a Purple
     #e72582 Pink
     '''
+    # # Runde Werte auf 2 Nachkommastellen
+    # df['Kosten Picking Bayreuth'] = df['Kosten Picking Bayreuth'].round(2)
+    # df['K&N_Kosten'] = df['K&N_Kosten'].round(2)
+    # df['Actual delivery qty'] = df['Actual delivery qty'].round(2)
+    # df['Anzahl_Einheiten'] = df['Anzahl_Einheiten'].round(2)
+    # ngp_Delivery_level['Transportkosten'] = ngp_Delivery_level['Transportkosten'].round(2)
+    # ngp_Delivery_level['TransportkostenLastMile_Fix_Kg_Preis'] = ngp_Delivery_level['TransportkostenLastMile_Fix_Kg_Preis'].round(2)
+    # df['Paletten'] = df['Paletten'].round(2)
+    # df['Cases'] = df['Cases'].round(2)
+    # df['Packs'] = df['Packs'].round(2)
+    
+    
+    ########################################################
+    # Kosten Picking Bayreuth############################################
+    ############################################
+    if sum_or_mean == 'Summe':
+        df_kosten_monat_bay = df.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['Kosten Picking Bayreuth']].sum()
+    elif sum_or_mean == 'Median':
+        df_kosten_monat_bay = df.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['Kosten Picking Bayreuth']].median()
+    else:
+        df_kosten_monat_bay = df.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['Kosten Picking Bayreuth']].mean()
 
-    df_kosten_monat = df.groupby(
-        ['Monat', 'Name of the ship-to party', 'Name'], as_index=False
-    )[['Kosten Picking Bayreuth', 'K&N_Kosten', 'TransportkostenLastMile', 
-       'Paletten', 'Cases', 'Packs', 'Actual delivery qty']].sum()
-
-    # Kosten Picking Bayreuth
-    df_kosten_monat_plot = df_kosten_monat.groupby('Monat', as_index=False)['Kosten Picking Bayreuth'].sum()
-    fig1 = px.bar(df_kosten_monat_plot, x='Monat', y='Kosten Picking Bayreuth', 
-                  title='Kosten Picking Bayreuth pro Monat', text_auto=True)
+    fig1 = px.bar(df_kosten_monat_bay, x=plot_as_DD_or_W_MM_or_YY, y='Kosten Picking Bayreuth', 
+                  title=f'Kosten Picking Bayreuth pro {plot_as_DD_or_W_MM_or_YY}', text_auto=True)
     fig1.update_traces(marker_color='#0e2b63')
-
+    
     # Kosten K&N
-    df_kosten_monat_plot_KN = df_kosten_monat.groupby('Monat', as_index=False)['K&N_Kosten'].sum()
-    fig2 = px.bar(df_kosten_monat_plot_KN, x='Monat', y='K&N_Kosten', 
-                  title='Kosten Picking K&N pro Monat', text_auto=True)
-    fig2.update_traces(marker_color='#0e2b63')
+    if sum_or_mean == 'Summe':
+        df_kosten_monat_plot_KN = df.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['K&N_Kosten']].sum()
+    elif sum_or_mean == 'Median':
+        df_kosten_monat_plot_KN = df.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['K&N_Kosten']].median()
+    else:
+        df_kosten_monat_plot_KN = df.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['K&N_Kosten']].mean()
 
-    # Transportkosten Last Mile
-    df_kosten_monat_trans_plot = df_kosten_monat.groupby('Monat', as_index=False)['TransportkostenLastMile'].sum()
-    fig3 = px.bar(df_kosten_monat_trans_plot, x='Monat', y='TransportkostenLastMile', 
-                  title='Transportkosten pro Monat Last Mile', text_auto=True)
-    fig3.update_traces(marker_color='#0e2b63')
-    # Anzahl Einheiten
-    df_kosten_monat_anzahl_plot = df_kosten_monat.groupby('Monat', as_index=False)['Actual delivery qty'].sum()
-    fig4 = px.bar(df_kosten_monat_anzahl_plot, x='Monat', y='Actual delivery qty', 
-                  title='Anzahl Einheiten pro Monat', text_auto=True)
+    fig2 = px.bar(df_kosten_monat_plot_KN, x=plot_as_DD_or_W_MM_or_YY, y='K&N_Kosten',
+                title=f'Kosten K&N pro {plot_as_DD_or_W_MM_or_YY}', text_auto=True)
+    fig2.update_traces(marker_color='#0e2b63')
+    
+    # Actual delivery qty
+    if sum_or_mean == 'Summe':
+        df_kosten_monat_delq_plot = df.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['Actual delivery qty']].sum()
+    elif sum_or_mean == 'Median':
+        df_kosten_monat_delq_plot = df.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['Actual delivery qty']].median()
+    else:
+        df_kosten_monat_delq_plot = df.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['Actual delivery qty']].mean()
+    fig4 = px.bar(df_kosten_monat_delq_plot, x=plot_as_DD_or_W_MM_or_YY, y='Actual delivery qty',
+                    title=f'Actual delivery qty pro {plot_as_DD_or_W_MM_or_YY}', text_auto=True)
     fig4.update_traces(marker_color='#0e2b63')
-    # Streamlit Darstellung
+    
+    # Picks Gesamt
+    if sum_or_mean == 'Summe':
+        df_kosten_Picks = df.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['Anzahl_Einheiten']].sum()
+    elif sum_or_mean == 'Median':
+        df_kosten_Picks = df.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['Anzahl_Einheiten']].median()
+    else:
+        df_kosten_Picks = df.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['Anzahl_Einheiten']].mean()
+    fig5 = px.bar(df_kosten_Picks, x=plot_as_DD_or_W_MM_or_YY, y='Anzahl_Einheiten',
+                    title=f'Anzahl Einheiten pro {plot_as_DD_or_W_MM_or_YY}', text_auto=True)
+    fig5.update_traces(marker_color='#0e2b63')
+    
     col1, col2 = st.columns(2)
 
     with col1:
-        st.plotly_chart(fig1)
-        if st.checkbox('📊 Daten anzeigen: Picking Bayreuth', value=False, key='data_picking'):
-            st.dataframe(df_kosten_monat_plot)
-
-        st.plotly_chart(fig3)
-        if st.checkbox('📊 Daten anzeigen: Transportkosten Last Mile', value=False, key='data_transport'):
-            st.dataframe(df_kosten_monat_trans_plot)
-
-    with col2:
-        st.plotly_chart(fig2)
-        if st.checkbox('📊 Daten anzeigen: Kosten K&N', value=False, key='data_kn'):
-            st.dataframe(df_kosten_monat_plot_KN)
-
         st.plotly_chart(fig4)
-        if st.checkbox('📊 Daten anzeigen: Anzahl Einheiten', value=False, key='data_qty'):
-            st.dataframe(df_kosten_monat_anzahl_plot)
+        if st.checkbox('📊 Daten anzeigen: Actual delivery qty', value=False, key='data_qty'):
+            st.dataframe(df_kosten_monat_delq_plot)
+            
+        st.plotly_chart(fig2)
+        if st.checkbox('📊 Daten anzeigen: Kosten Picking exK&N', value=False, key='data_kn'):
+            st.dataframe(df_kosten_monat_plot_KN)
+            
+    with col2:
+        st.plotly_chart(fig5)
+        if st.checkbox('📊 Daten anzeigen: Anzahl Einheiten', value=False, key='data_picks'):
+            st.dataframe(df_kosten_Picks)
+        st.plotly_chart(fig1)
+        if st.checkbox('📊 Daten anzeigen: Kosten Picking exBayreuth', value=False, key='data_picking'):
+            st.dataframe(df_kosten_monat_bay)
 
+    ###### Tranportkosten
+    # if transportkosten NaN fill with TransportkostenLastMile_Fix_Kg_Preis
+    ngp_Delivery_level['Transportkosten'] = ngp_Delivery_level['Transportkosten'].fillna(ngp_Delivery_level['TransportkostenLastMile_Fix_Kg_Preis'])
+    # ermittle Tag Monat Jahr aus Deliv. date(From/to)
+    ngp_Delivery_level['Tag'] = ngp_Delivery_level['Deliv. date(From/to)']
+    ngp_Delivery_level['Monat'] = ngp_Delivery_level['Deliv. date(From/to)'].dt.to_period('M')
+    ngp_Delivery_level['Jahr'] = ngp_Delivery_level['Deliv. date(From/to)'].dt.to_period('Y')
+    ngp_Delivery_level['Kalenderwoche'] = ngp_Delivery_level['Deliv. date(From/to)'].dt.isocalendar().week
+    st.info('Transportkosten NaN = Keine PLZ Daten vorhanden anteil ca 30% mit TransportkostenLastMile_Fix_Kg_Preis gefüllt')
+    st.info('Transportkosten nach Kilometern und Gewichtstabellen Kühne+Nagel ACHTUNG: Die Werte sind nicht konsolidiert Anhame ist der einzelne Transport pro Lieferschein.')
+    if sum_or_mean == 'Summe':
+        ngp_Delivery_level_plot = ngp_Delivery_level.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['Transportkosten']].sum()
+    elif sum_or_mean == 'Median':
+        ngp_Delivery_level_plot = ngp_Delivery_level.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['Transportkosten']].median()
+    else:
+        ngp_Delivery_level_plot = ngp_Delivery_level.groupby(
+            [plot_as_DD_or_W_MM_or_YY], as_index=False)[['Transportkosten']].mean()
+    try: 
+        fig3 = px.bar(ngp_Delivery_level_plot, x=plot_as_DD_or_W_MM_or_YY, y='Transportkosten',
+                    title=f'Transportkosten pro {plot_as_DD_or_W_MM_or_YY}', text_auto=True)
+        fig3.update_traces(marker_color='#0e2b63')
+        st.plotly_chart(fig3)
+    except:
+        st.warning('Der Filter liefert keine Ergebnisse')
+    if st.checkbox('📊 Daten anzeigen: Transportkosten', value=False, key='data_transport'):
+        st.dataframe(ngp_Delivery_level_plot)
+    try:
+        if sum_or_mean == 'Summe':
+            ngp_Delivery_level_plot = ngp_Delivery_level.groupby(
+                [plot_as_DD_or_W_MM_or_YY], as_index=False)[['TransportkostenLastMile_Fix_Kg_Preis']].sum()
+        elif sum_or_mean == 'Median':
+            ngp_Delivery_level_plot = ngp_Delivery_level.groupby(
+                [plot_as_DD_or_W_MM_or_YY], as_index=False)[['TransportkostenLastMile_Fix_Kg_Preis']].median()
+        else:
+            ngp_Delivery_level_plot = ngp_Delivery_level.groupby(
+                [plot_as_DD_or_W_MM_or_YY], as_index=False)[['TransportkostenLastMile_Fix_Kg_Preis']].mean()
+        
+        fig8 = px.bar(ngp_Delivery_level_plot, x=plot_as_DD_or_W_MM_or_YY, y='TransportkostenLastMile_Fix_Kg_Preis',
+                        title=f'Transportkosten Last Mile FIX KILO Preis 0.1714€ pro {plot_as_DD_or_W_MM_or_YY}', text_auto=True)
+        st.plotly_chart(fig8)
+    except:
+        st.warning('Der Filter liefert keine Ergebnisse')
+    if st.checkbox('📊 Daten anzeigen: Transportkosten Last Mile FIX KILO Preis', value=False, key='data_transport_lastmile'):
+        st.dataframe(ngp_Delivery_level_plot)
 
 
 def packnaehe(df2):
@@ -220,7 +245,6 @@ def packnaehe(df2):
             st.data_editor(df_packnaehe)
     plot_packnaehe_sunburst(df_packnaehe)
 
-
 def figGesamtKunden(df,tabelle=True,):
     dfOriginal = df
     #sort by PlannedDate
@@ -255,8 +279,34 @@ def figGesamtKunden(df,tabelle=True,):
 
 def main(): 
     pd.set_option("display.precision", 0)
-    df = pd.read_csv('Data/Berechnete_NGP_Daten.csv')
-    st.data_editor(df)
-    plot_data(df)
-
+    ngp_detail_tabelle, ngp_Delivery_level = loadDF()
+    # Konvertiere 'Deliv. date(From/to)' in datetime
     
+    min_day = ngp_detail_tabelle['Deliv. date(From/to)'].min().date()
+    max_day = ngp_detail_tabelle['Deliv. date(From/to)'].max().date()
+    
+    col, col2, col3, col4= st.columns([0.2, 0.2, 0.2, 1])
+    with col:
+        st.subheader('Datenfilter')
+        day1 = st.date_input('Startdatum', min_day)
+        day2 = st.date_input('Enddatum', max_day)
+    with col2:
+        # plot Daten in Tag, Wochen Monat oder Jahr 
+        plot_as_DD_or_W_MM_or_YY = st.radio('Ansicht der Daten', ['Tag', 'Kalenderwoche', 'Monat', 'Jahr'])
+    with col3:
+        sum_or_mean = st.radio('Summe oder Durchschnitt', ['Summe', 'Durchschnitt', 'Median'])
+    with col4:
+        reset_button = st.button('Reset Filter')
+    if reset_button:
+        day1 = min_day
+        day2 = max_day
+        st.rerun()
+    
+    ngp_detail_tabelle = filtereDaten(ngp_detail_tabelle, day1, day2)
+    with st.expander('📊 Detail Daten'):
+        st.data_editor(ngp_detail_tabelle)
+    plot_data(ngp_detail_tabelle,ngp_Delivery_level, plot_as_DD_or_W_MM_or_YY, sum_or_mean)
+
+
+if __name__ == "__main__":
+    main()

@@ -74,14 +74,14 @@ def user_menue_rechte():
     # Logik zur Bestimmung der Menürechte basierend auf den Benutzerrechten
     if st.session_state.rechte == 1:
         # Admin Vollzugriff
-        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin']
+        return ['Depot Live Status', "NGP", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin']
     elif st.session_state.rechte == 2:
         # Manager BAT
-        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check']
+        return ['Depot Live Status','Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter BAT AD 
-        return ['Depot Live Status', "LC Monitor", 'Depot Reports', 'Forecast', 'Lagerverwaltung']
+        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung']
     
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd
@@ -126,7 +126,7 @@ def user_menue_frontend():
         PageTagesReport()
     if page == 'Hick-Up':
         pageHickUp()
-    if page == 'LC Monitor':
+    if page == 'NGP':
         #with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='blue'):
         mainNGP()
     if page == 'Depot Reports':
