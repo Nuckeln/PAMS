@@ -245,16 +245,16 @@ def packnaehe(df2):
             st.data_editor(df_packnaehe)
     plot_packnaehe_sunburst(df_packnaehe)
 
-def figGesamtKunden(df,tabelle=True,):
+def figGesamtKunden(df,tabelle, plot_as_DD_or_W_MM_or_YY):
     dfOriginal = df
     #sort by PlannedDate
     df.sort_values('Deliv. date(From/to)', inplace=False)
     # group by Monat and Name
     # Beispiel: Du hast Spalten 'Transportkosten' und 'Kosten Picking Bayreuth Bayreuth'
-    df_kosten_monat = df.groupby(['Monat', 'Name of the ship-to party'], as_index=False)[['Kosten Picking Bayreuth','K&N_Kosten', 'TransportkostenLastMile', 'Paletten', 'Cases', 'Packs','Actual delivery qty']].sum()
+    df_kosten_monat = df.groupby([plot_as_DD_or_W_MM_or_YY, 'Name of the ship-to party'], as_index=False)[['Kosten Picking Bayreuth','K&N_Kosten', 'TransportkostenLastMile', 'Paletten', 'Cases', 'Packs','Actual delivery qty']].sum()
 
     #try:
-    fig = px.bar(df_kosten_monat, x='Monat', y="Actual delivery qty", color="Name of the ship-to party",hover_data=["Actual delivery qty"])
+    fig = px.bar(df_kosten_monat, x=plot_as_DD_or_W_MM_or_YY, y="Actual delivery qty", color="Name of the ship-to party",hover_data=["Actual delivery qty"])
     #except:
     #    st.warning('Der Filter liefert keine Ergebnisse')
 
@@ -306,7 +306,10 @@ def main():
     with st.expander('📊 Detail Daten'):
         st.data_editor(ngp_detail_tabelle)
     plot_data(ngp_detail_tabelle,ngp_Delivery_level, plot_as_DD_or_W_MM_or_YY, sum_or_mean)
-
+    try:
+        figGesamtKunden(ngp_detail_tabelle,"No",plot_as_DD_or_W_MM_or_YY)
+    except:
+        pass
 
 if __name__ == "__main__":
     main()

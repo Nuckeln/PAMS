@@ -127,8 +127,8 @@ def user_menue_frontend():
     if page == 'Hick-Up':
         pageHickUp()
     if page == 'NGP':
-        #with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='blue'):
-        mainNGP()
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='blue'):
+            mainNGP()
     if page == 'Depot Reports':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='red'):
             reportPage()
