@@ -74,10 +74,11 @@ def user_menue_rechte():
     # Logik zur Bestimmung der Menürechte basierend auf den Benutzerrechten
     if st.session_state.rechte == 1:
         # Admin Vollzugriff
-        return ['Depot Live Status', "NGP", 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin']
+        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin']
+    
     elif st.session_state.rechte == 2:
         # Manager BAT
-        return ['Depot Live Status','Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check']
+        return ['Depot Live Status','Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter BAT AD 
