@@ -15,7 +15,7 @@ from Data_Class.sql import SQL
 import holidays
 de_holidays = holidays.country_holidays(country='DE', subdiv='BY')
 
-@st.cache_data()
+#@st.cache_data()
 def read_actuals_Pick():
     df = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrders', ['SapOrderNumber', 'PlannedDate', 'IsDeleted', 'IsReturnDelivery'])
     df = df[(df['IsDeleted'] == 0) & (df['IsReturnDelivery'] == 0)]

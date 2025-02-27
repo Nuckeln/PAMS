@@ -601,8 +601,10 @@ def new_timeline(df):
 ## Daten Anzeigen ##
 def tabelleAnzeigen(df):
     #new df with only the columns we need 'PlannedDate' ,'SapOrderNumber','PartnerName']#'Fertiggestellt','Picks Gesamt','Picks Karton','Picks Paletten','Picks Stangen','Lieferschein erhalten','Fertiggestellt'
+    # drop duplicates by SapOrderNumber
+    df = df.drop_duplicates(subset=['SapOrderNumber'])
     dfAG = df[['PlannedDate','Lieferschein erhalten','DeliveryDepot','SapOrderNumber','PartnerName','Fertiggestellt','Fertige Paletten','Picks Gesamt','UnloadingListIdentifier','ActualNumberOfPallets','EstimatedNumberOfPallets']]
-    df_deteils = df.groupby(['SapOrderNumber','PartnerName','DeliveryDepot','PlannedDate','LoadingLaneId']).agg({'Picks Gesamt': 'sum', 'Gepackte Paletten': 'sum', 'Geschätzte Paletten' : 'sum' }).reset_index()
+    df_deteils = df.groupby(['SapOrderNumber','PartnerName','DeliveryDepot','PlannedDate','LoadingLaneId','Fertiggestellt']).agg({'Gepackte Paletten': 'sum', 'Geschätzte Paletten' : 'sum' }).reset_index()
 
 
     st.dataframe(data=df_deteils, use_container_width=True)
