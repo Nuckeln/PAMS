@@ -9,8 +9,10 @@ import uuid
 from Data_Class.MMSQL_connection import read_Table, save_Table_append, save_Table
 import hydralit_components as hc
 
-
+import chardet
 import streamlit as st
+import io
+
 
 @st.dialog("ACHTUNG")
 def vote(item):
@@ -66,6 +68,7 @@ def normalize_number(value):
     return value
 
 def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
+#def detaillierte_datenprüfung(df_sap, df_dbh, round_on):
     df_dbh['Rohmasse'] = pd.to_numeric(df_dbh['Rohmasse'], errors='coerce')
     df_sap['Gross Weight'] = pd.to_numeric(df_sap['Gross Weight'], errors='coerce')
     with st.expander('Inhalt der Dokumente anzeigen', expanded=False):
@@ -75,6 +78,8 @@ def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
     #entferne duplikate
     dn_sap = list(dict.fromkeys(dn_sap))
     # Konvertiere die Spalte 'Vorgangsnummer' in einen String
+    #df
+    #df_dbh['Vorgangsnummer'] = df_dbh['Vorgangsnummer'].astype(str)
     df_dbh['Bezugsnummer'] = df_dbh['Bezugsnummer'].astype(str)
     # Erstelle einen regulären Ausdruck, um 10-stellige Zahlen zu finden
     regex = r'(\d{10})'
@@ -109,25 +114,7 @@ def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
     diff_table = pd.DataFrame(columns=['Spalte', 'Index',])
     # prüfe ob die SapOrderNumber
 
-#### ALT
 
-
-
-    # def truncate_float_columns(dataframe, decimals):
-    #     factor = 10 ** decimals
-    #     for column in dataframe.columns:
-    #         if dataframe[column].dtype == float:
-    #             dataframe[column] = np.trunc(dataframe[column] * factor) / factor
-    #     return dataframe
-    # # ist round_on True dann runde die float spalten auf 2 nachkommastellen
-    # if round_on:
-    #     df_sap_agg = truncate_float_columns(df_sap_agg, 2)
-    #     df_dbh_agg = truncate_float_columns(df_dbh_agg, 2)
-    # st.write('Gerundet')
-    # st.data_editor(df_sap_agg)
-
-
-##### NEU 
 
 
     def truncate_float_columns(dataframe, decimals, exclude_columns=[]):
@@ -140,7 +127,7 @@ def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
     # Falls round_on True ist, runde die Float-Spalten außer "Quantity" auf 2 Nachkommastellen
     if round_on:
         df_sap_agg = truncate_float_columns(df_sap_agg, 2, exclude_columns=['Quantity'])
-        df_dbh_agg = truncate_float_columns(df_dbh_agg, 2, exclude_columns=['Quantity'])
+        #df_dbh_agg = truncate_float_columns(df_dbh_agg, 2, exclude_columns=['Quantity'])
 
 
 
@@ -298,13 +285,24 @@ def main():
         except UnicodeDecodeError:
             st.error('Fehler beim lesen der SAP Datei')
         try:
-            df_dbh = pd.read_csv(uploaded_file2, sep=';', encoding='utf-8')
-        except UnicodeDecodeError:
-            try:
-                df_dbh = pd.read_csv(uploaded_file2, sep=';', encoding='ISO-8859-1')
-            except Exception as e:
+            rawdata = uploaded_file2.getvalue()
+            result = chardet.detect(rawdata)
+            encoding = result['encoding']
+            # Datei mit erkanntem Encoding einlesen
+            df_dbh = pd.read_csv(io.StringIO(rawdata.decode(encoding)), sep=';')
+        except Exception as e:
                 st.error(f'Fehler beim Lesen der DBH Datei: {e}')
                 st.stop()
+
+        # Encoding automatisch erkennen
+        rawdata = uploaded_file2.getvalue()
+        result = chardet.detect(rawdata)
+        encoding = result['encoding']
+
+        # Datei mit erkanntem Encoding einlesen
+        df_dbh = pd.read_csv(io.StringIO(rawdata.decode(encoding)), sep=';')
+
+
 
         if df_dbh.empty:
             st.error("Die DBH-Datei ist leer oder enthält keine Daten.")

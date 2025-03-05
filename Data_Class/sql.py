@@ -84,8 +84,6 @@ class SQL:
         engine.dispose()
         return df
 
-
-
     def update_Table(table_name: str, datenframe: pd.DataFrame, id_column: str):
         '''Updatet eine Tabelle in der Datenbank nur neue oder veränderte Zeilen'''
         server = "batsql-pp-ne-cmes-prod-10.database.windows.net"
