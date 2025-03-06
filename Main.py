@@ -18,7 +18,7 @@ try:
     import hydralit_components as hc
     from Data_Class.MMSQL_connection import read_Table,save_Table_append
     from Seiten.forecast import main as mainForecast
-    from Seiten.NGP import main as mainNGP
+    #from Seiten.NGP import main as mainNGP
     pd.set_option("display.precision",3)
     #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/main.py"
 
@@ -74,7 +74,7 @@ def user_menue_rechte():
     # Logik zur Bestimmung der Menürechte basierend auf den Benutzerrechten
     if st.session_state.rechte == 1:
         # Admin Vollzugriff
-        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','NGP','Admin']
+        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin']
     
     elif st.session_state.rechte == 2:
         # Manager BAT
@@ -127,9 +127,9 @@ def user_menue_frontend():
         PageTagesReport()
     if page == 'Hick-Up':
         pageHickUp()
-    if page == 'NGP':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='blue'):
-            mainNGP()
+    # if page == 'NGP':
+    #     with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='blue'):
+    #         mainNGP()
     if page == 'Depot Reports':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='red'):
             reportPage()
