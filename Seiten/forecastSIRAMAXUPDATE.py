@@ -62,8 +62,8 @@ def create_new_forecast():
     df = read_Table('business_depotDEBYKN-DepotDEBYKNOrders')
     df2 = read_Table('business_depotDEBYKN-DepotDEBYKNOrderItems')
     # lösche die letzten 14 Tage aus der Tabelle df PlannendDate
-    df['PlannedDate'] = pd.to_datetime(df['PlannedDate']).dt.tz_localize(None)
-    df = df[df['PlannedDate'] < (pd.Timestamp.today().normalize() - pd.Timedelta(days=40))]
+    # df['PlannedDate'] = pd.to_datetime(df['PlannedDate']).dt.tz_localize(None)
+    # df = df[df['PlannedDate'] < (pd.Timestamp.today().normalize() - pd.Timedelta(days=40))]
     # lösche die letzten 14 Tage aus der Tabelle df2
 
     #'die Kunden stehen in der Spalte PartnerNo'

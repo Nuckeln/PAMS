@@ -77,8 +77,8 @@ def create_new_forecast():
     # Daten laden
     df = read_Table('business_depotDEBYKN-DepotDEBYKNOrders')
     df2 = read_Table('business_depotDEBYKN-DepotDEBYKNOrderItems')
-    df['PlannedDate'] = pd.to_datetime(df['PlannedDate']).dt.tz_localize(None)
-    df = df[df['PlannedDate'] < (pd.Timestamp.today().normalize() - pd.Timedelta(days=40))]
+    # df['PlannedDate'] = pd.to_datetime(df['PlannedDate']).dt.tz_localize(None)
+    # df = df[df['PlannedDate'] < (pd.Timestamp.today().normalize() - pd.Timedelta(days=40))]
 
     #'die Kunden stehen in der Spalte PartnerNo'
     df['PartnerNo'].replace("None", 'Kd nicht Gepflegt', inplace=True)
