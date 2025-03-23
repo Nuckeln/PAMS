@@ -18,7 +18,6 @@ try:
     import hydralit_components as hc
     from Data_Class.MMSQL_connection import read_Table,save_Table_append
     from Seiten.forecast import main as mainForecast
-    from Seiten.forecastSIRAMAXUPDATE import main as pageForecastSIRAMAXUPDATE
     from Seiten.forecast_prophet import main as pageForecastProp
     pd.set_option("display.precision",3)
     #MAC#   streamlit run "/Users/martinwolf/Python/PAMS/Main.py"
@@ -75,11 +74,11 @@ def user_menue_rechte():
     # Logik zur Bestimmung der Menürechte basierend auf den Benutzerrechten
     if st.session_state.rechte == 1:
         # Admin Vollzugriff
-        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin','forecast_prop' ,'forecast_siraneu']
+        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin','forecast_prop']
     
     elif st.session_state.rechte == 2:
         # Manager BAT
-        return ['Depot Live Status','Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','forecast_prop' ,'forecast_siraneu']
+        return ['Depot Live Status','Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','forecast_prop']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter BAT AD 
@@ -147,8 +146,6 @@ def user_menue_frontend():
     if page == 'C&E check':
         #with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
         pageC_E_check()
-    if page == 'forecast_siraneu':
-        pageForecastSIRAMAXUPDATE()
     if page == 'forecast_prop':
         pageForecastProp()
     if page == 'Logout':

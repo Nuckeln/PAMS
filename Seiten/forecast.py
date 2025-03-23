@@ -288,6 +288,56 @@ def plot_stacked_bars_with_line(df, dfOrders, colors=None):
 
     st.plotly_chart(fig, use_container_width=True)
 
+    # erstelle vergleichsstatistik von line zu df
+    df_line['PlannedDate'] = pd.to_datetime(df_line['PlannedDate']).dt.date
+    df_grouped['index'] = pd.to_datetime(df_grouped['index']).dt.date
+    df_line = df_line.merge(df_grouped, left_on='PlannedDate', right_on='index', how='inner')
+    df_line['diff_Mastercases'] = df_line['CorrespondingMastercases'] - df_line['CorrespondingMastercases_mean']
+    df_line['diff_Outers'] = df_line['CorrespondingOuters'] - df_line['CorrespondingOuters_mean']
+    df_line['diff_Pallets'] = df_line['CorrespondingPallets'] - df_line['CorrespondingPallets_mean']
+    # Abweichung Total in Prozent
+    df_line['diff_Total_in%'] = (df_line['total_actual'] - df_line['total_forecast']) / df_line['total_forecast'] * 100
+    df_line['diff_Total_in%'] = df_line['diff_Total_in%'].round(2)
+    #abweichung in Prozent Mastercases
+    df_line['diff_Mastercases_in%'] = (df_line['diff_Mastercases'] / df_line['CorrespondingMastercases_mean']) * 100
+    df_line['diff_Mastercases_in%'] = df_line['diff_Mastercases_in%'].round(2)
+    #abweichung in Prozent Outers
+    df_line['diff_Outers_in%'] = (df_line['diff_Outers'] / df_line['CorrespondingOuters_mean']) * 100
+    df_line['diff_Outers_in%'] = df_line['diff_Outers_in%'].round(2)
+    #abweichung in Prozent Pallets
+    df_line['diff_Pallets_in%'] = (df_line['diff_Pallets'] / df_line['CorrespondingPallets_mean']) * 100
+    df_line['diff_Pallets_in%'] = df_line['diff_Pallets_in%'].round(2)
+    st.dataframe(df_line)
+    #st.write(df_line)
+    # show barchart toatal vs total forecast
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=df_line['PlannedDate'],
+        y=df_line['total_actual'],
+        name='Actual Total',
+        text=df_line['total_actual'],
+        textposition='inside',
+        marker_color='black'
+    ))
+    fig.add_trace(go.Bar(
+        x=df_line['PlannedDate'],
+        y=df_line['total_forecast'],
+        name='Forecast Total',
+        text=df_line['total_forecast'],
+        textposition='inside',
+        marker_color='grey'
+    ))
+    fig.update_layout(
+        title='Actual vs Forecast Total',
+        xaxis_title='Datum',
+        yaxis_title='Summe',
+        barmode='group',
+        legend_title='Kategorie',
+        height=600,
+        template='plotly_white'
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
 
 # Dashboard aufbauen
 def main():
