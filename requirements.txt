@@ -159,4 +159,4 @@ widgetsnbextension==4.0.10
 zopfli==0.2.3
 holidays
 chardet
-prophet
+prophet==1.1.5

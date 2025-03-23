@@ -27,8 +27,6 @@ def display_pdf(file_bytes):
 
 def load_data():
     data = read_Table('PAMS_HICKUP')
-    #save as csv
-    data.to_csv('data_HickUp.csv', index=False)
     users = read_Table('user')
     return data
 
@@ -187,51 +185,25 @@ def vorgang_bearbeiten(vorgang_data):
             status_new = status_alt
         
         if st.form_submit_button('Speichern'):
-            # updated_data = pd.DataFrame({
-            #     'Vorgang ID': [vorgang_id],
-            #     'Version': [version],
-            #     'Ersteller': [ersteller],
-            #     'Zugeteilt an': [zugeteilt_an],
-            #     'Erstellungsdatum': [erstellungs_datum],
-            #     'Vorfallsdatum': [vorgang_datum_new],
-            #     'Fachbereich': [vorgang_bereich_new],
-            #     'Art': [vorgang_art_new],
-            #     'Kategorie': [vorgang_art_detail_new],
-            #     'Kosten': [kosten_ja_nein_new],
-            #     'Kosten in €': [kosten_new],
-            #     'Kurze Beschreibung': [kurze_beschreibung_new],
-            #     'Sachverhalt': [sachverhalt_new],
-            #     'Anhänge': [anhaenge],
-            #     'Gelöst am': [geloest_datum_new],
-            #     'Status': [status_new]
-            # })
-            # # Tabelle mit den bearbeiteten Daten updaten
-            # # Passe die Spalte im DataFrame an
+            updated_data = pd.DataFrame({
+                'Vorgang ID': [vorgang_id],
+                'Version': [version],
+                'Ersteller': [ersteller],
+                'Zugeteilt an': [zugeteilt_an],
+                'Erstellungsdatum': [erstellungs_datum],
+                'Vorfallsdatum': [vorgang_datum_new],
+                'Fachbereich': [vorgang_bereich_new],
+                'Art': [vorgang_art_new],
+                'Kategorie': [vorgang_art_detail_new],
+                'Kosten': [kosten_ja_nein_new],
+                'Kosten in €': [kosten_new],
+                'Kurze Beschreibung': [kurze_beschreibung_new],
+                'Sachverhalt': [sachverhalt_new],
+                'Anhänge': [anhaenge],
+                'Gelöst am': [geloest_datum_new],
+                'Status': [status_new]
+            })
             
-            # st.data_editor(updated_data)
-            
-            Orgdata = read_Table('PAMS_HICKUP')
-
-            # change the data in the dataframe
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Version'] = version
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Ersteller'] = ersteller
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Zugeteilt an'] = zugeteilt_an
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Erstellungsdatum'] = erstellungs_datum
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Vorfallsdatum'] = vorgang_datum_new
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Fachbereich'] = vorgang_bereich_new
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Art'] = vorgang_art_new
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Kategorie'] = vorgang_art_detail_new
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Kosten'] = kosten_ja_nein_new
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Kosten in €'] = kosten_new
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Kurze Beschreibung'] = kurze_beschreibung_new
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Sachverhalt'] = sachverhalt_new
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Anhänge'] = anhaenge
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Gelöst am'] = geloest_datum_new
-            Orgdata.loc[Orgdata['Vorgang ID'] == vorgang_id, 'Status'] = status_new
-            # save the updated data
-            save_Table_append(Orgdata, 'PAMS_HICKUP')
-            st.success("Vorgang erfolgreich aktualisiert.")
-
 def main():
     with st.expander("Neuer Vorgang"):
         neuer_vorgang()

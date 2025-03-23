@@ -82,7 +82,7 @@ def user_menue_rechte():
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter BAT AD 
-        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung']
+        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','forecast_prop']
     
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd
@@ -94,7 +94,7 @@ def user_menue_rechte():
    
     elif st.session_state.rechte == 6:
         # Mitarbeiter Extern Sachbearbeiter/Teamleiter
-        return ["Depot Live Status", 'Depot Reports', 'Forecast', 'Lagerverwaltung']
+        return ["Depot Live Status", 'Depot Reports', 'Forecast', 'Lagerverwaltung','forecast_prop']
 
 
 def user_menue_frontend():
