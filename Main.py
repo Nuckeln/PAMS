@@ -18,9 +18,8 @@ try:
     import hydralit_components as hc
     from Data_Class.MMSQL_connection import read_Table,save_Table_append
     from Seiten.forecast import main as mainForecast
-    #from Seiten.NGP import main as mainNGP
     pd.set_option("display.precision",3)
-    #MAC#   streamlit run "/Library/Python_local/Superdepot Reporting/main.py"
+    #MAC#   streamlit run "/Users/martinwolf/Python/PAMS/Main.py"
 
     # http://localhost:8000/?username=bat&password=bat
 
