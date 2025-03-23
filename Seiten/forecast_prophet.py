@@ -85,7 +85,7 @@ def create_new_forecast():
 
     dfOrders = pd.merge(df, df2, on='SapOrderNumber', how='inner')
     to_cal = ['CorrespondingMastercases', 'CorrespondingOuters', 'CorrespondingPallets']
-    sel_Zeitraum = 28
+    sel_Zeitraum = 14
     forecast_df = pd.DataFrame()
     for each in to_cal:
         new_forecast_df = new_forecast(dfOrders, each, sel_Zeitraum)
