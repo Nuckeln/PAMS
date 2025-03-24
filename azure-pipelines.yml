@@ -1,8 +1,3 @@
-# Python package
-# Create and test a Python package on multiple Python versions.
-# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/python
-
 trigger:
 - master
 
@@ -19,6 +14,14 @@ steps:
     versionSpec: '$(python.version)'
   displayName: 'Use Python $(python.version)'
 
+# Cleanup step: remove all .pyc files and old virtual environment
+- script: |
+    echo "Removing existing .pyc files..."
+    find . -name "*.pyc" -delete
+    rm -rf antenv
+    rm -rf ./antenv/lib/python3.10/site-packages/numpy.libs
+  displayName: 'Clean up environment'
+
 - script: |
     python -m venv antenv
     source antenv/bin/activate
@@ -33,7 +36,7 @@ steps:
     archivetype: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
     replaceExistingArchive: true
-    verbose: true # (no value); this input is optional
+    verbose: true
     
 - publish: $(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip
   displayName: 'Upload Package'
