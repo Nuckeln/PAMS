@@ -31,8 +31,21 @@ steps:
     replaceExistingArchive: true
     verbose: true
     includePatterns: '**'
-    excludePatterns: '**/__pycache__/**'  # 🧹 __pycache__ wird ausgeschlossen
+    excludePatterns: |
+      **/__pycache__/**
+      **/*.pyc
+      **/.DS_Store
 
 - publish: $(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip
   displayName: 'Upload Package'
   artifact: drop
+
+# Clean Deployment auf Azure Web App
+- task: AzureWebApp@1
+  displayName: 'Deploy to Azure Web App (Clean)'
+  inputs:
+    azureSubscription: 'YourServiceConnectionName'  # <- Hier deinen Service Connection Namen eintragen
+    appName: 'WA-PD-NE-CMES-REPORTING-SUPERDEPOTUI-dev'
+    package: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+    deploymentMethod: 'auto'
+    takeAppOfflineFlag: true  # Erzwingt Bereinigung alter Inhalte
