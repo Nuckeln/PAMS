@@ -47,7 +47,7 @@ steps:
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
-    azureSubscription: 'deine-service-connection'  # <-- durch echten Namen ersetzen!
+    azureSubscription: 'WA-PP-NE-CMES-REPORTING-SUPERDEPOTUI-prod'  # <-- durch echten Namen ersetzen!
     appType: 'webAppLinux'
     WebAppName: 'WA-PD-NE-CMES-REPORTING-SUPERDEPOTUI-dev'
     packageForLinux: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
