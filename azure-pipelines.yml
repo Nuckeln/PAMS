@@ -13,7 +13,10 @@ steps:
   inputs:
     versionSpec: '$(python.version)'
   displayName: 'Use Python $(python.version)'
-
+- script: |
+    echo "Force clean checkout"
+    git clean -fdx
+  displayName: 'Clean repository'
 # Cleanup step: remove all .pyc files and old virtual environment
 - script: |
     echo "Removing existing .pyc files..."
@@ -37,7 +40,8 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
     replaceExistingArchive: true
     verbose: true
-    
+
+
 - publish: $(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip
   displayName: 'Upload Package'
   artifact: drop
