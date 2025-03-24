@@ -1,13 +1,9 @@
-# Python package
-# Create and test a Python package on multiple Python versions.
-# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/python
-
 trigger:
 - master
 
 pool:
   vmImage: ubuntu-latest
+
 strategy:
   matrix:
     Python310:
@@ -30,11 +26,13 @@ steps:
   inputs:
     rootFolderOrFile: '$(Build.SourcesDirectory)'
     includeRootFolder: false
-    archivetype: 'zip'
+    archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
     replaceExistingArchive: true
-    verbose: true # (no value); this input is optional
-    
+    verbose: true
+    includePatterns: '**'
+    excludePatterns: '**/__pycache__/**'  # 🧹 __pycache__ wird ausgeschlossen
+
 - publish: $(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip
   displayName: 'Upload Package'
   artifact: drop
