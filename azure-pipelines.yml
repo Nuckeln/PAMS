@@ -38,4 +38,3 @@ steps:
 - publish: $(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip
   displayName: 'Upload Package'
   artifact: drop
-
