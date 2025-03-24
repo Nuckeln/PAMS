@@ -3,12 +3,6 @@ import pandas as pd
 from sqlalchemy import types 
 import datetime
 
-conn_settings = ConnectionSettings(
-    server='batsql-pd-ne-cmes-dev-10.database.windows.net', 
-    database='batsdb-pd-ne-dev-reporting_SuperDepot', 
-    username='batedp-cmes-dev-reportinguser', 
-    password='b2.5v^H!IKjetuXMVNvW')
-
 
 class SQL:
     

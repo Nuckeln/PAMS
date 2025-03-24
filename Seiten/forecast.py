@@ -8,7 +8,6 @@ from datetime import datetime
 from Data_Class.MMSQL_connection import read_Table, save_Table_append
 #from Data_Class.MMSQL_connection import read_Table, save_Table_append
 import plotly.graph_objects as go
-import plotly.express as px
 from PIL import Image
 from Data_Class.sql import SQL
 

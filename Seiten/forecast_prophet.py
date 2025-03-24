@@ -1,5 +1,4 @@
 import pandas as pd
-from statsmodels.tsa.statespace.sarimax import SARIMAX
 import uuid
 from prophet import Prophet
 import warnings
@@ -9,7 +8,6 @@ import streamlit as st
 import datetime
 from datetime import datetime
 from Data_Class.MMSQL_connection import read_Table, save_Table_append
-import plotly.express as px
 import plotly.graph_objects as go
 from PIL import Image
 from Data_Class.sql import SQL

@@ -7,7 +7,7 @@ from PIL import Image
 import plotly_express as px
 from annotated_text import annotated_text, annotation
 import streamlit_timeline as timeline
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 
 from Data_Class.wetter.api import getWetterBayreuth
 from Data_Class.sql import SQL
