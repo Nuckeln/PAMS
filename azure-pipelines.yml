@@ -43,15 +43,15 @@ steps:
   displayName: 'Upload Package'
   artifact: drop
 
-# <-- Der Deployment-Schritt gehört hier hin! -->
-- task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Azure Dev Subscription'  # <-- durch echten Namen ersetzen!
-    appType: 'webAppLinux'
-    WebAppName: 'WA-PD-NE-CMES-REPORTING-SUPERDEPOTUI-dev'
-    packageForLinux: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-    enableCustomDeployment: true
-    DeploymentType: 'zipDeploy'
-    RemoveAdditionalFilesFlag: true
-  displayName: 'Deploy to Azure Web App (Clean Deploy)'
+# # <-- Der Deployment-Schritt gehört hier hin! -->
+# - task: AzureRmWebAppDeployment@4
+#   inputs:
+#     ConnectionType: 'AzureRM'
+#     azureSubscription: 'Azure Dev Subscription'  # <-- durch echten Namen ersetzen!
+#     appType: 'webAppLinux'
+#     WebAppName: 'WA-PD-NE-CMES-REPORTING-SUPERDEPOTUI-dev'
+#     packageForLinux: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+#     enableCustomDeployment: true
+#     DeploymentType: 'zipDeploy'
+#     RemoveAdditionalFilesFlag: true
+#   displayName: 'Deploy to Azure Web App (Clean Deploy)'
