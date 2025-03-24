@@ -22,6 +22,7 @@ steps:
     pip install -r requirements.txt
   displayName: 'Install dependencies'
 
+# Optionaler Testschritt, um zu prüfen, ob Streamlit startet (kann auch weggelassen werden)
 - script: |
     source antenv/bin/activate
     streamlit run your_app.py --server.headless true --server.port 8501 &
@@ -35,7 +36,22 @@ steps:
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
     replaceExistingArchive: true
+    verbose: true
+    excludePatterns: '**/__pycache__/**,**/*.pyc,.git/**'
 
 - publish: $(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip
   displayName: 'Upload Package'
   artifact: drop
+
+# <-- Der Deployment-Schritt gehört hier hin! -->
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'deine-service-connection'  # <-- durch echten Namen ersetzen!
+    appType: 'webAppLinux'
+    WebAppName: 'WA-PD-NE-CMES-REPORTING-SUPERDEPOTUI-dev'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+    enableCustomDeployment: true
+    DeploymentType: 'zipDeploy'
+    RemoveAdditionalFilesFlag: true
+  displayName: 'Deploy to Azure Web App (Clean Deploy)'
