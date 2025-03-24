@@ -39,12 +39,3 @@ steps:
   displayName: 'Upload Package'
   artifact: drop
 
-  # Clean Deployment auf Azure Web App
-- task: AzureWebApp@1
-  displayName: 'Deploy to Azure Web App (Clean)'
-  inputs:
-    azureSubscription: 'YourServiceConnectionName'  # <- Hier deinen Service Connection Namen eintragen
-    appName: 'WA-PD-NE-CMES-REPORTING-SUPERDEPOTUI-dev'
-    package: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-    deploymentMethod: 'auto'
-    takeAppOfflineFlag: true  # Erzwingt Bereinigung alter Inhalte
