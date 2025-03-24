@@ -1,9 +1,13 @@
+# Python package
+# Create and test a Python package on multiple Python versions.
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
 trigger:
 - master
 
 pool:
   vmImage: ubuntu-latest
-
 strategy:
   matrix:
     Python310:
@@ -18,40 +22,19 @@ steps:
 - script: |
     python -m venv antenv
     source antenv/bin/activate
-    python -m pip install --upgrade pip setuptools wheel
-    pip install -r requirements.txt
+    python -m pip install --upgrade pip
+    pip install --target="./antenv/lib/python3.10/site-packages" -r ./requirements.txt
   displayName: 'Install dependencies'
-
-# Optionaler Testschritt, um zu prüfen, ob Streamlit startet (kann auch weggelassen werden)
-- script: |
-    source antenv/bin/activate
-    streamlit run your_app.py --server.headless true --server.port 8501 &
-    sleep 10
-  displayName: 'Run Streamlit (Test)'
 
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(Build.SourcesDirectory)'
     includeRootFolder: false
-    archiveType: 'zip'
+    archivetype: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
     replaceExistingArchive: true
-    verbose: true
-    excludePatterns: '**/__pycache__/**,**/*.pyc,.git/**'
-
+    verbose: true # (no value); this input is optional
+    
 - publish: $(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip
   displayName: 'Upload Package'
   artifact: drop
-
-# # <-- Der Deployment-Schritt gehört hier hin! -->
-# - task: AzureRmWebAppDeployment@4
-#   inputs:
-#     ConnectionType: 'AzureRM'
-#     azureSubscription: 'Azure Dev Subscription'  # <-- durch echten Namen ersetzen!
-#     appType: 'webAppLinux'
-#     WebAppName: 'WA-PD-NE-CMES-REPORTING-SUPERDEPOTUI-dev'
-#     packageForLinux: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-#     enableCustomDeployment: true
-#     DeploymentType: 'zipDeploy'
-#     RemoveAdditionalFilesFlag: true
-#   displayName: 'Deploy to Azure Web App (Clean Deploy)'

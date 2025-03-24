@@ -127,27 +127,24 @@ def user_menue_frontend():
         PageTagesReport()
     if page == 'Hick-Up':
         pageHickUp()
-    # if page == 'NGP':
-    #     with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='blue'):
-    #         mainNGP()
     if page == 'Depot Reports':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='red'):
             reportPage()
     if page == 'Forecast':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
             mainForecast()
-            #pageForecast()
     if page == 'Lagerverwaltung':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
             pageStellplatzverwaltung()
     if page == 'Admin':
-        #with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
-        adminPage()
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
+            adminPage()
     if page == 'C&E check':
-        #with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
-        pageC_E_check()
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
+            pageC_E_check()
     if page == 'forecast_prop':
-        pageForecastProp()
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
+            pageForecastProp()
     if page == 'Logout':
         st.session_state.user = None
         st.session_state.rechte = None
