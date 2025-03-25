@@ -37,6 +37,26 @@ steps:
     echo "Deleted all .pyc files before archiving"
   displayName: 'Final cleanup'
 
+- script: |
+    echo "Listing current directory contents:"
+    ls -alR
+  displayName: 'List directory contents'
+
+- script: |
+    echo "Checking for .pyc files:"
+    find . -name "*.pyc"
+  displayName: 'Check for .pyc files'
+
+- script: |
+    echo "Printing environment variables:"
+    printenv
+  displayName: 'Print environment variables'
+
+- script: |
+    echo "Listing installed Python packages:"
+    pip list
+  displayName: 'List installed Python packages'
+
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(Build.SourcesDirectory)'
