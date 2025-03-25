@@ -47,7 +47,6 @@ steps:
   displayName: 'Upload Package'
   artifact: drop
 
-
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'WA-PP-NE-CMES-REPORTING-SUPERDEPOTUI-prod'
@@ -57,6 +56,5 @@ steps:
     startUpCommand: 'streamlit run Main.py --server.port=8000 --server.enableCORS=false'
     takeAppOfflineFlag: true
     enableCustomDeployment: true
-    deploymentMethod: 'auto'
-    removeAdditionalFilesFlag: true
+    deploymentMethod: 'runFromPackage'  # <- das ist der Gamechanger!
   displayName: 'Deploy Streamlit App to Azure'
