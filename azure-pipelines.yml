@@ -16,6 +16,17 @@ steps:
     sudo rm -rf .venv
     git clean -xfd
   displayName: 'Clean repository completely'
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'WA-PP-NE-CMES-REPORTING-SUPERDEPOTUI-prod'
+    appName: 'WA-PP-NE-CMES-REPORTING-SUPERDEPOTUI-prod'
+    package: '$(System.DefaultWorkingDirectory)/_Superdepot Reporting/drop/*.zip'
+    runtimeStack: 'PYTHON|3.10'
+    startUpCommand: 'streamlit run Main.py --server.port=8000 --server.enableCORS=false'
+    takeAppOfflineFlag: true
+    enableCustomDeployment: true
+    deploymentMethod: 'auto'
+    removeAdditionalFilesFlag: true
 
 - task: ArchiveFiles@2
   inputs:
@@ -36,6 +47,7 @@ steps:
       **/numpy.libs/**
       **/*.so
   displayName: 'Archive app files'
+
 
 - publish: $(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip
   displayName: 'Upload Package'
