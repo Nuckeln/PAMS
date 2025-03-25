@@ -16,17 +16,22 @@ steps:
     sudo rm -rf .venv
     git clean -xfd
   displayName: 'Clean repository completely'
+
+
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'WA-PP-NE-CMES-REPORTING-SUPERDEPOTUI-prod'
     appName: 'WA-PP-NE-CMES-REPORTING-SUPERDEPOTUI-prod'
-    package: '$(System.DefaultWorkingDirectory)/_Superdepot Reporting/drop/*.zip'
+    package: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
     runtimeStack: 'PYTHON|3.10'
     startUpCommand: 'streamlit run Main.py --server.port=8000 --server.enableCORS=false'
     takeAppOfflineFlag: true
     enableCustomDeployment: true
     deploymentMethod: 'auto'
     removeAdditionalFilesFlag: true
+  displayName: 'Deploy Streamlit App to Azure'
+
+
 
 - task: ArchiveFiles@2
   inputs:
