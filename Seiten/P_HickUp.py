@@ -7,19 +7,7 @@ import hydralit_components as hc
 
 from Data_Class.AzureStorage import upload_file_to_folder
 from Data_Class.MMSQL_connection import read_Table, save_Table_append
-from Data_Class.sql import SQL
-import fitz  # PyMuPDF
-from PIL import Image
-import io
 
-# PDF-Anzeige
-def display_pdf(file_bytes):
-    pdf_document = fitz.open("pdf", file_bytes)
-    for page_num in range(len(pdf_document)):
-        page = pdf_document.load_page(page_num)
-        pix = page.get_pixmap()
-        img = Image.open(io.BytesIO(pix.tobytes()))
-        st.image(img, caption=f'Seite {page_num + 1}', use_column_width=True)
 
 def load_data():
     data = read_Table('PAMS_HICKUP')
