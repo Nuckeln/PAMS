@@ -54,7 +54,6 @@ steps:
     package: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
     runtimeStack: 'PYTHON|3.10'
     startUpCommand: 'streamlit run Main.py --server.port=8000 --server.enableCORS=false'
+    deploymentMethod: 'runFromPackage'  # <-- zwingt echtes Run From Package
     takeAppOfflineFlag: true
-    enableCustomDeployment: true
-    deploymentMethod: 'runFromPackage'  # <- das ist der Gamechanger!
   displayName: 'Deploy Streamlit App to Azure'
