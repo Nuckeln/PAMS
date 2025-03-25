@@ -11,9 +11,11 @@ steps:
   displayName: 'Use Python 3.10'
 
 - script: |
-    echo "Clean build environment"
-    git clean -fdx
-  displayName: 'Clean repository'
+    echo "Force full cleanup of working directory"
+    sudo rm -rf antenv
+    sudo rm -rf .venv
+    git clean -xfd
+  displayName: 'Clean repository completely'
 
 - task: ArchiveFiles@2
   inputs:
@@ -22,19 +24,19 @@ steps:
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
     replaceExistingArchive: true
+    verbose: true
     excludePatterns: |
       **/__pycache__/**
       **/*.pyc
-      .venv/**
-      antenv/**
       **/.git/**
       **/.DS_Store
       **/.vscode/**
+      **/antenv/**
+      **/antenv*
+      **/numpy.libs/**
+      **/*.so
   displayName: 'Archive app files'
 
 - publish: $(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip
   displayName: 'Upload Package'
   artifact: drop
-
-
-  
