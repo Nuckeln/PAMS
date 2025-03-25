@@ -3,31 +3,26 @@ trigger:
 
 pool:
   vmImage: ubuntu-latest
+
 strategy:
   matrix:
     Python310:
       python.version: '3.10'
 
 steps:
-- script: |
-    echo "Removing existing .pyc files..."
-    find . -name "*.pyc" -delete
-    rm -rf antenv
-    rm -rf ./antenv/lib/python3.10/site-packages/numpy.libs
-  displayName: 'Clean up environment'
 - task: UsePythonVersion@0
   inputs:
     versionSpec: '$(python.version)'
   displayName: 'Use Python $(python.version)'
+
 - script: |
     echo "Force clean checkout"
     git clean -fdx
   displayName: 'Clean repository'
+
 - script: |
-    python -m venv antenv
-    source antenv/bin/activate
     python -m pip install --upgrade pip
-    pip install --target="./antenv/lib/python3.10/site-packages" -r ./requirements.txt
+    pip install -r requirements.txt
   displayName: 'Install dependencies'
 
 - script: |
@@ -35,35 +30,22 @@ steps:
     echo "Deleted all .pyc files before archiving"
   displayName: 'Final cleanup'
 
-- script: |
-    echo "Listing current directory contents:"
-    ls -alR
-  displayName: 'List directory contents'
-
-- script: |
-    echo "Checking for .pyc files:"
-    find . -name "*.pyc"
-  displayName: 'Check for .pyc files'
-
-- script: |
-    echo "Printing environment variables:"
-    printenv
-  displayName: 'Print environment variables'
-
-- script: |
-    echo "Listing installed Python packages:"
-    pip list
-  displayName: 'List installed Python packages'
-
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(Build.SourcesDirectory)'
     includeRootFolder: false
-    archivetype: 'zip'
+    archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
     replaceExistingArchive: true
     verbose: true
-
+    excludePatterns: |
+      **/*.pyc
+      **/__pycache__/**
+      **/.git/**
+      **/.vscode/**
+      **/.DS_Store
+      antenv/**
+      .venv/**
 
 - publish: $(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip
   displayName: 'Upload Package'
