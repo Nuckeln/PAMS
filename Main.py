@@ -9,6 +9,7 @@ import pandas as pd
 from Seiten.P_Live import PageTagesReport
 from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
+from Seiten.P_Koste import PageKostenreport
 
 from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.C_E_check import main as pageC_E_check
@@ -74,7 +75,7 @@ def user_menue_rechte():
     # Logik zur Bestimmung der Menürechte basierend auf den Benutzerrechten
     if st.session_state.rechte == 1:
         # Admin Vollzugriff
-        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin','forecast_prop']
+        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin','forecast_prop', 'Kostenreport']
     
     elif st.session_state.rechte == 2:
         # Manager BAT
@@ -145,6 +146,9 @@ def user_menue_frontend():
     if page == 'forecast_prop':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
             pageForecastProp()
+    if page == 'Kostenreport':
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
+            PageKostenreport()
     if page == 'Logout':
         st.session_state.user = None
         st.session_state.rechte = None
