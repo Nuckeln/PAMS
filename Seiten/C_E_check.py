@@ -67,7 +67,7 @@ def normalize_number(value):
         return float(value.replace('.', '').replace(',', '.'))
     return value
 
-def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = False):
+def detaillierte_datenprüfung(df_sap, df_dbh, round_on:bool = True):
 #def detaillierte_datenprüfung(df_sap, df_dbh, round_on):
     df_dbh['Rohmasse'] = pd.to_numeric(df_dbh['Rohmasse'], errors='coerce')
     df_sap['Gross Weight'] = pd.to_numeric(df_sap['Gross Weight'], errors='coerce')

@@ -71,6 +71,42 @@ def new_forecast(data, spalte_summe, sel_Zeitraum):
 
     return forecast.set_index('forecastDate')
 
+
+def create_new_forecast_ALL():
+    # Daten laden
+    df = read_Table('business_depotDEBYKN-DepotDEBYKNOrders')
+    df2 = read_Table('business_depotDEBYKN-DepotDEBYKNOrderItems')
+    # df['PlannedDate'] = pd.to_datetime(df['PlannedDate']).dt.tz_localize(None)
+    # df = df[df['PlannedDate'] < (pd.Timestamp.today().normalize() - pd.Timedelta(days=40))]
+
+    #'die Kunden stehen in der Spalte PartnerNo'
+    df['PartnerNo'].replace("None", 'Kd nicht Gepflegt', inplace=True)
+
+    dfOrders = pd.merge(df, df2, on='SapOrderNumber', how='inner')
+    dfOrders['Gesamtanzahl'] = dfOrders['CorrespondingMastercases'] + dfOrders['CorrespondingOuters'] + dfOrders['CorrespondingPallets']    
+    to_cal = ['Gesamtanzahl']
+    sel_Zeitraum = 14
+    forecast_df = pd.DataFrame()
+    for each in to_cal:
+        new_forecast_df = new_forecast(dfOrders, each, sel_Zeitraum)
+        # Rename new Columns to each + '_mean' and each + '_ci_lower' and each + '_ci_upper'
+        new_forecast_df = new_forecast_df.rename(columns={'mean': each + '_mean', 'mean_ci_lower': each + '_ci_lower', 'mean_ci_upper': each + '_ci_upper', 'mean_se': each + '_se'})
+        if forecast_df.empty:
+            forecast_df = new_forecast_df.copy()
+        else:
+            forecast_df = pd.concat([forecast_df, new_forecast_df], axis=1)
+    forecast_df = forecast_df.reset_index()
+    # Apped 
+    forecast_df['erstellungsDatum'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    forecast_df['run_ID'] = uuid.uuid4()     
+    forecast_df['erstellt von'] = st.session_state.user
+    
+    new_F = forecast_df.reset_index()
+    new_F['forecastDate'] = new_F['forecastDate'].dt.date
+
+    return new_F
+
+
 def create_new_forecast():
     # Daten laden
     df = read_Table('business_depotDEBYKN-DepotDEBYKNOrders')
@@ -349,6 +385,8 @@ def plot_stacked_bars_with_line(df, dfOrders, colors=None):
     )
     st.plotly_chart(fig, use_container_width=True)
 
+#TODO 
+# Feiertage mit Reten Balken "Abfrage beim 3PL"
 
 # Dashboard aufbauen
 def main():
@@ -377,7 +415,7 @@ def main():
     except:
         runs = ['Keine Prognose vorhanden Bitte ADMIN kontaktieren','']
         
-    col1, col2, col3 = st.columns([2, 1,2])
+    col1, col2, col3, col4 = st.columns([2, 1,2,1])
     with col1:
         st.title("📦 Forecast DE30")
     with col2:
@@ -386,12 +424,21 @@ def main():
         sel_runs = show_Forecast.split(' - ')[2]
     with col3:
         neu = st.button('Neue Prognose erstellen', help='Erstellt eine neue Prognose und speichert sie in der Datenbank.')
+    with col4:
+        neu_all = st.button('Neue Prognose für alle Artikel erstellen', help='Erstellt eine neue Prognose für alle Artikel und speichert sie in der Datenbank.')
     if neu:
         new_F = create_new_forecast()
         st.write(new_F)
         # Kombiniere mit bestehenden Daten
 
         save_Table_append(new_F, 'PAMS_Forecast_NEW')
+    
+    if neu_all:
+        new_F = create_new_forecast_ALL()
+        st.write(new_F)
+        # Kombiniere mit bestehenden Daten
+        #save_Table_append(new_F, 'PAMS_Forecast_NEW')
+        st.success('Neue Prognose wurde erstellt und gespeichert.')
 
         
     img_strip = Image.open('Data/img/strip.png')
