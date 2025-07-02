@@ -25,8 +25,8 @@ def loadDF(day1=None, day2=None):
     start = time.time()
     
     dfOrderLabels = SQL.read_table('business_depotDEBYKN-LabelPrintOrders',day1=day1- pd.Timedelta(days=5),day2=day2,date_column='CreatedTimestamp')
-    dfOrderLabels = SQL.read_table('business_depotDEBYKN-LabelPrintOrders')
-    st.dataframe(dfOrderLabels)
+    #dfOrderLabels = SQL.read_table('business_depotDEBYKN-LabelPrintOrders')
+    #st.dataframe(dfOrderLabels)
 
     dfKunden = SQL.read_table('Kunden_mit_Packinfos')
     
