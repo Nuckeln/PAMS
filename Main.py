@@ -9,8 +9,6 @@ import pandas as pd
 from Seiten.P_Live import PageTagesReport
 from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
-from Seiten.P_Koste import PageKostenreport
-
 from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.C_E_check import main as pageC_E_check
 from Seiten.P_HickUp import main as pageHickUp
