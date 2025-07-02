@@ -290,7 +290,6 @@ def figPicksKunde(df):
     
     # wenn AllSSCCLabelsPrinted = 0 und in First_Pick ist ein Wert, dann setze in Arbeit auf 1
     df['In_Arbeit'] = np.where((df['AllSSCCLabelsPrinted'] == 0) & (df['First_Picking'].notna()), 1, 0)
-    st.dataframe(df)
     # Rename Col EstimatedNumberOfPallets to Geschätzte Paletten
     df['Fertiggestellt'] = df['Fertiggestellt'].fillna('0')
     df = df.groupby(['SapOrderNumber','PartnerName', "AllSSCCLabelsPrinted", 'DeliveryDepot', 'Fertiggestellt', 'Lieferschein erhalten','Fertige Paletten','EstimatedNumberOfPallets','In_Arbeit']).agg({'Picks Gesamt': 'sum'}).reset_index()
