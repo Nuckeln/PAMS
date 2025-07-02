@@ -24,8 +24,11 @@ def loadDF(day1=None, day2=None):
     # Erfasse in Variable Funktionsdauer in Sekunden
     start = time.time()
     
-    dfKunden = SQL.read_table('Kunden_mit_Packinfos')
     dfOrderLabels = SQL.read_table('business_depotDEBYKN-LabelPrintOrders',day1=day1- pd.Timedelta(days=5),day2=day2,date_column='CreatedTimestamp')
+    dfOrderLabels = SQL.read_table('business_depotDEBYKN-LabelPrintOrders')
+    st.dataframe(dfOrderLabels)
+
+    dfKunden = SQL.read_table('Kunden_mit_Packinfos')
     
     df = SQL.read_table('business_depotDEBYKN-DepotDEBYKNOrders', ['SapOrderNumber', 'PlannedDate','Status',
                                                                    'UnloadingListIdentifier','ActualNumberOfPallets',
@@ -287,7 +290,7 @@ def figPicksKunde(df):
     
     # wenn AllSSCCLabelsPrinted = 0 und in First_Pick ist ein Wert, dann setze in Arbeit auf 1
     df['In_Arbeit'] = np.where((df['AllSSCCLabelsPrinted'] == 0) & (df['First_Picking'].notna()), 1, 0)
-    
+    st.dataframe(df)
     # Rename Col EstimatedNumberOfPallets to Geschätzte Paletten
     df['Fertiggestellt'] = df['Fertiggestellt'].fillna('0')
     df = df.groupby(['SapOrderNumber','PartnerName', "AllSSCCLabelsPrinted", 'DeliveryDepot', 'Fertiggestellt', 'Lieferschein erhalten','Fertige Paletten','EstimatedNumberOfPallets','In_Arbeit']).agg({'Picks Gesamt': 'sum'}).reset_index()

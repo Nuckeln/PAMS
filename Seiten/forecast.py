@@ -85,7 +85,10 @@ def create_new_forecast():
     forecast_df['erstellungsDatum'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     forecast_df['run_ID'] = uuid.uuid4()     
     forecast_df['erstellt von'] = st.session_state.user
-    
+    # schlage 10 % pauschal auf die Forecast Werte
+    forecast_df['CorrespondingMastercases_mean'] = forecast_df['CorrespondingMastercases_mean'] * 1.1
+    forecast_df['CorrespondingOuters_mean'] = forecast_df['CorrespondingOuters_mean'] * 1.1
+    forecast_df['CorrespondingPallets_mean'] = forecast_df['CorrespondingPallets_mean'] * 1.1
     return forecast_df
 
 
