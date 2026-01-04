@@ -71,7 +71,7 @@ def loadDF(day1=None, day2=None):
     dfOrders.rename(columns={'CorrespondingMastercases': 'Picks Karton', 'CorrespondingOuters': 'Picks Stangen', 'CorrespondingPallets': 'Picks Paletten'}, inplace=True)
     dfOrders['Lieferschein erhalten'] = dfOrders['CreatedTimestamp']
     
-    # Add Costumer Name
+    # Add Costumer Name´
     dfKunden['PartnerNo'] = dfKunden['PartnerNo'].astype(str)
     dfKunden = dfKunden.drop_duplicates(subset='PartnerNo', keep='first')
     dfOrders = pd.merge(dfOrders, dfKunden[['PartnerNo', 'PartnerName']], on='PartnerNo', how='left')
@@ -143,6 +143,7 @@ def FilterNachDatum(day1, day2,df):
 ## Plotly Charts ###
 
 def fig_Status_nach_Katergorie(df):
+    # Das Balkendiagram Teilt Fertige und Offene Gesamt Picks in Kategorien auf Karton, Paletten und Stangen aus 
     # Das Balkendiagram Teilt Fertige und Offene Gesamt Picks in Kategorien auf Karton, Paletten und Stangen aus 
         df = df.groupby(['AllSSCCLabelsPrinted'])[['Picks Karton','Picks Paletten','Picks Stangen']].sum().reset_index()        #set index to SapOrderNumber
         df['Picks Gesamt'] = df['Picks Karton'] + df['Picks Paletten'] + df['Picks Stangen']

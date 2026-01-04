@@ -15,6 +15,7 @@ from Seiten.P_HickUp import main as pageHickUp
 import hydralit_components as hc
 from Data_Class.MMSQL_connection import read_Table,save_Table_append
 from Seiten.forecast import main as mainForecast
+from Seiten.PageWhatsNext import app as PageWhatsNext
 from Seiten.forecast_prophet import main as pageForecastProp
 pd.set_option("display.precision",3)
 #MAC#   streamlit run "/Users/martinwolf/Python/PAMS/Main.py"
@@ -73,7 +74,7 @@ def user_menue_rechte():
     # Logik zur Bestimmung der Menürechte basierend auf den Benutzerrechten
     if st.session_state.rechte == 1:
         # Admin Vollzugriff
-        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin','forecast_prop', 'Kostenreport']
+        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin','forecast_prop', 'Kostenreport', '"What\'s Next"']
     
     elif st.session_state.rechte == 2:
         # Manager BAT
@@ -144,16 +145,18 @@ def user_menue_frontend():
     if page == 'forecast_prop':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
             pageForecastProp()
-    if page == 'Kostenreport':
+    if page == '"What\'s Next"':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
-            PageKostenreport()
+            PageWhatsNext()
     if page == 'Logout':
         st.session_state.user = None
         st.session_state.rechte = None
         
 @st.cache_data()
 def read_user():
+
     users_df = read_Table("user")
+    users_df = pd.DataFrame(columns=["username", "name", "password", "function", "rechte"])
     return users_df
              
 def main():
@@ -164,6 +167,8 @@ def main():
     with st.spinner("Lade Datenbanken..."):
         users_df = read_user()
         users_df.set_index('username', inplace=True)
+        print("Benutzerdaten geladen.")
+        print(users_df.head())
     # Umstrukturieren des DataFrames, um den erwarteten Schlüsseln zu entsprechen
     credentials = {
         'usernames': dict()

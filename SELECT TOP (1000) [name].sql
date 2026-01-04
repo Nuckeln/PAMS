@@ -1,0 +1,7 @@
+SELECT TOP (1000) [name]
+      ,[username]
+      ,[password]
+      ,[function]
+      ,[rechte]
+      ,[berechtigungen]
+  FROM [dbo].[user]
