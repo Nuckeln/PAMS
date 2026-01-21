@@ -4,4 +4,7 @@ myenv/
 .Archiv/
 
 __pycache__/
-*.pyc
+*.pyctest.zip
+NeuStammdaten.csv
+test.zip
+NeuStammdaten.csv
