@@ -10,6 +10,9 @@ variables:
   webAppName: 'WA-PD-NE-CMES-REPORTING-SUPERDEPOTUI-dev'
   azureServiceConnection: 'DEIN_SERVICE_CONNECTION_NAME'
 
+
+
+
 stages:
 - stage: Build
   jobs:
