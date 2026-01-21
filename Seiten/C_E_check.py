@@ -289,7 +289,7 @@ def main():
     pd.set_option("display.precision", 2)
     img_strip = Image.open('Data/img/strip.png')   
     img_strip = img_strip.resize((1000, 15))  
-    st.image(img_strip, use_column_width=True)
+    st.image(img_strip, width="stretch")
     if uploaded_file and uploaded_file2:
         try:
             df_sap = pd.read_excel(uploaded_file)

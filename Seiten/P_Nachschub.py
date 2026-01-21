@@ -207,7 +207,7 @@ def pageStellplatzverwaltung():
         heatmap = st.toggle('Heatmap', key='heatmap')
     img_strip = Image.open('Data/img/strip.png')   
     img_strip = img_strip.resize((1000, 15))     
-    st.image(img_strip, use_column_width=True, caption='',)     
+    st.image(img_strip, width="stretch", caption='',)     
     
     
     # filter dfBedarfSKU by MaterialNumber 10192253

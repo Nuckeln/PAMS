@@ -5,7 +5,6 @@ import numpy as np
 import streamlit_autorefresh as sar
 from PIL import Image
 import plotly_express as px
-from annotated_text import annotated_text, annotation
 import streamlit_timeline as timeline
 from PIL import Image
 
@@ -475,10 +474,24 @@ def figTachoDiagramm_VEGA(df, delivery_depot):
                 </style>
                 '''
                 st.markdown(hide_img_fs, unsafe_allow_html=True)
+
             with col3:
-                annotated_text(annotation(str(done_value),'', "#50af47", font_family="Montserrat"),'  / ',annotation(str(open_value),'', "#ef7d00", font_family="Montserrat"))
-        
-        # with st.container(border=True):
+                    # HTML/CSS für die farbigen Badges (Original-Look)
+                    st.markdown(
+                        f"""
+                        <div style="font-family: 'Montserrat'; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 8px; margin-top: 5px;">
+                            <span style="background-color: #50af47; color: white; padding: 2px 12px; border-radius: 12px; min-width: 35px; text-align: center;">
+                                {done_value}
+                            </span>
+                            <span style="color: #ef7d00; font-size: 18px;"> / </span>
+                            <span style="background-color: #ef7d00; color: white; padding: 2px 12px; border-radius: 12px; min-width: 35px; text-align: center;">
+                                {open_value}
+                            </span>
+                        </div>
+                        """, 
+                        unsafe_allow_html=True
+                    )
+            
         masterCase_Outer_Pal_Icoons('Delivery' ,done_DN, open_DN)
         masterCase_Outer_Pal_Icoons('Outer' ,open_outer, done_outer)
         masterCase_Outer_Pal_Icoons('Mastercase' ,open_mastercase, done_mastercase)
@@ -707,7 +720,7 @@ def LKWProgress(df):
             for index, row in df_LaneId.iterrows():
                 st.write(f"LaneId: {row['LoadingLaneId']} - {row['UnloadingListIdentifier']}")
                 bild = truck_progress_png(row['Gepackte Paletten'], row['Geschätzte Paletten'], row['Gepackte Paletten'], 'Paletten', row['LoadingLaneId'], row['UnloadingListIdentifier'])
-                st.image(bild, use_column_width=True)
+                st.image(bild, width="stretch")
                 # Entferne den .0 aus laneid
         except:
             st.success('KNSTR')
@@ -721,7 +734,7 @@ def LKWProgress(df):
 
                 # Fortschrittsbalken für jeden LKW erstellen
                 bild = truck_progress_png(row['Gepackte Paletten'], row['Geschätzte Paletten'], row['Gepackte Paletten'], 'Paletten')
-                st.image(bild, use_column_width=True)
+                st.image(bild, width="stretch")
         except:
             st.success('KNLEJ')
     with col35:
@@ -734,7 +747,7 @@ def LKWProgress(df):
                 st.write(f"LaneId: {row['LoadingLaneId']} - {row['UnloadingListIdentifier']}")
 
                 bild = truck_progress_png(row['Gepackte Paletten'], row['Geschätzte Paletten'], row['Gepackte Paletten'], 'Paletten')
-                st.image(bild, use_column_width=True)
+                st.image(bild, width="stretch")
         except:
             st.success('KNBFE')
     with col36:
@@ -747,7 +760,7 @@ def LKWProgress(df):
                 st.write(f"LaneId: {row['LoadingLaneId']} - {row['UnloadingListIdentifier']}")
 
                 bild = truck_progress_png(row['Gepackte Paletten'], 33, row['Gepackte Paletten'], 'Paletten')
-                st.image(bild, use_column_width=True)
+                st.image(bild, width="stretch")
         except:
             st.success('KNHAJ')
 
@@ -770,7 +783,7 @@ def PageTagesReport():
             st.write('Ruhetag chill')
             img_sonntag = Image.open('Data/img/sonntag.png')
             img_sonntag = img_sonntag.resize((500, 500))
-            st.image(img_sonntag, use_column_width=True)
+            st.image(img_sonntag, width="stretch")
     with colhead2:
         try:
             
@@ -797,7 +810,7 @@ def PageTagesReport():
     
     
 
-    st.image(img_strip, use_column_width=True, caption='',)      
+    st.image(img_strip, width="stretch", caption='',)      
 
     
     

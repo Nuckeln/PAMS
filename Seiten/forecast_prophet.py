@@ -443,7 +443,7 @@ def main():
         
     img_strip = Image.open('Data/img/strip.png')
     img_strip = img_strip.resize((1000, 15))
-    st.image(img_strip, use_column_width=True)
+    st.image(img_strip, width="stretch")
 
     sel_forecastID = exestierende_forecasts[exestierende_forecasts['run_ID'] == sel_runs].copy()
     if show_Forecast == 'Keine Prognose vorhanden Bitte ADMIN kontaktieren':
