@@ -83,6 +83,7 @@ def user_menue_frontend():
     # 1. Verfügbare Seiten holen
     seiten = user_menue_rechte()
     
+    
     # 2. CSS: Perfektes Layout & Styling
     st.markdown("""
         <style>
