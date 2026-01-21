@@ -17,9 +17,7 @@ class ConnectionSettings:
     database: str
     username: str
     password: str
-    #driver: str = '{ODBC Driver 18 for SQL Server}'
-    #driver: str = '{ODBC Driver 13 for SQL Server}'
-    driver: str = '{ODBC Driver 18 for SQL Server}'
+    driver: str = '{ODBC Driver 17 for SQL Server}'
     timeout: int = 30
 
 class AzureDbConnection:
@@ -43,13 +41,13 @@ class AzureDbConnection:
         AzureDbConnection.db = create_engine(conn_string, echo=echo)
         
     def connect(self) -> None:
-        try:
+        # try:
             """Establish connection."""
             self.conn = self.db.connect()
-        except Exception as e:
-            st.error("Die Verbindung zur Datenbank konnte nicht hergestellt werden. Bitte Seite neu laden. Sollte dieses Problem wiederholt auftreten, wenden Sie sich bitte an Martin Wolf")
-            st.error(f"Error: {e}")
-            st.stop()
+        # except Exception as e:
+        #     st.error("Die Verbindung zur Datenbank konnte nicht hergestellt werden. Bitte Seite neu laden. Sollte dieses Problem wiederholt auftreten, wenden Sie sich bitte an Martin Wolf")
+        #     st.error(f"Error: {e}")
+        #     st.stop()
 
     def get_tables(self) -> Iterable[str]:
         """Get list of tables."""
