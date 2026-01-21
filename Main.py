@@ -111,13 +111,13 @@ def user_menue_frontend():
                 top: 0;
                 left: 0;
                 width: 100%;
-                height: 6rem; /* Höhe des Headers */
+                height: 8rem; /* Höhe des Headers */
                 background-color: #0e2b63; 
                 z-index: 0; /* Ganz hinten */
             }
             
             /* 4. Inhalt (Logo/Menü) muss über dem Hintergrund liegen */
-            div[data-testid="stVerticalBlock"] > div:first-child {
+            div[data-testid="stVerticalBlock"] > div:nth-child(3){
                 position: relative;
                 z-index: 1; 
             }
