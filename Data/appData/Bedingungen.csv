@@ -1,0 +1,9 @@
+Product Category,Temp LL (°C),Temp UL (°C),RH LL (%),RH UL (%),Max Exposure Time (days),Zusätzliche Anmerkungen
+FMC,-10,25,45,75,31,
+OTP,4,23,50,70,15,
+THP Sticks,5,25,40,65,31,
+Vapour Consumables Cartridges,15,25,40,60,21,abhängig von Temperatur
+Vapour Consumables E-Liquid Bottles,5,25,40,75,21,abhängig von Temperatur
+Modern Oral,-18,27,60,90,21,
+Devices,10,30,20,75,30,abhängig von Temperatur und RH
+Modern Disposables,15,25,30,70,21,

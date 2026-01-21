@@ -14,9 +14,11 @@ from Seiten.C_E_check import main as pageC_E_check
 from Seiten.P_HickUp import main as pageHickUp
 import hydralit_components as hc
 from Data_Class.MMSQL_connection import read_Table,save_Table_append
-from Seiten.forecast import main as mainForecast
-from Seiten.PageWhatsNext import app as PageWhatsNext
+#from Seiten.PageWhatsNext import app as PageWhatsNext
 from Seiten.forecast_prophet import main as pageForecastProp
+import Seiten.WarehouseConditions_details as WarehouseConditions_details
+import Seiten.WarehouseConditions  as warehouseConditions
+
 pd.set_option("display.precision",3)
 #MAC#   streamlit run "/Users/martinwolf/Python/PAMS/Main.py"
 
@@ -74,15 +76,15 @@ def user_menue_rechte():
     # Logik zur Bestimmung der Menürechte basierend auf den Benutzerrechten
     if st.session_state.rechte == 1:
         # Admin Vollzugriff
-        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin','forecast_prop', 'Kostenreport', '"What\'s Next"']
+        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin','Warehouse Conditions', 'Warehouse Conditions Details','"What\'s Next"']
     
     elif st.session_state.rechte == 2:
         # Manager BAT
-        return ['Depot Live Status','Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','forecast_prop']
+        return ['Depot Live Status','Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up', 'Warehouse Conditions', 'Warehouse Conditions Details','"What\'s Next"']
     
     elif st.session_state.rechte == 3:
         # Mitarbeiter BAT AD 
-        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','forecast_prop']
+        return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','']
     
     elif st.session_state.rechte == 4:
         # Mitarbeiter Fremd
@@ -94,7 +96,7 @@ def user_menue_rechte():
    
     elif st.session_state.rechte == 6:
         # Mitarbeiter Extern Sachbearbeiter/Teamleiter
-        return ["Depot Live Status", 'Depot Reports', 'Forecast', 'Lagerverwaltung','forecast_prop']
+        return ["Depot Live Status", 'Depot Reports', 'Forecast', 'Lagerverwaltung']
 
 
 def user_menue_frontend():
@@ -128,26 +130,29 @@ def user_menue_frontend():
     if page == 'Hick-Up':
         pageHickUp()
     if page == 'Depot Reports':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders, primary_color='red'):
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='red'):
             reportPage()
     if page == 'Forecast':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
-            mainForecast()
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
+            pageForecastProp()
     if page == 'Lagerverwaltung':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders):
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
             pageStellplatzverwaltung()
     if page == 'Admin':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman):
             adminPage()
     if page == 'C&E check':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman,primary_color='green '):
             pageC_E_check()
-    if page == 'forecast_prop':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
-            pageForecastProp()
-    if page == '"What\'s Next"':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
-            PageWhatsNext()
+    elif page == "Warehouse Conditions":
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman,primary_color='green '):
+            warehouseConditions.app()
+    elif page == "Warehouse Conditions Details":
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman,primary_color='green '):
+            WarehouseConditions_details.app()
+    # if page == '"What\'s Next"':
+    #     with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='green '):
+    #         PageWhatsNext()
     if page == 'Logout':
         st.session_state.user = None
         st.session_state.rechte = None
@@ -156,7 +161,7 @@ def user_menue_frontend():
 def read_user():
 
     users_df = read_Table("user")
-    users_df = pd.DataFrame(columns=["username", "name", "password", "function", "rechte"])
+    
     return users_df
              
 def main():
