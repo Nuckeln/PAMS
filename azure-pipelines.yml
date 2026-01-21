@@ -10,7 +10,7 @@ pool:
   vmImage: ubuntu-latest
 strategy:
   matrix:
-    Python310:
+    Python312:
       python.version: '3.12'
 
 steps:
