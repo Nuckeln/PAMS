@@ -202,21 +202,35 @@ def user_menue_frontend():
     if page == 'Depot Live Status':
         PageTagesReport()
     elif page == 'Depot Reports':
-        reportPage()
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='Blue'):
+            reportPage()
     elif page == 'Forecast':
-        pageForecastProp()
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='Blue'):
+            pageForecastProp()
     elif page == 'Lagerverwaltung':
-        pageStellplatzverwaltung()
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='Blue'):
+            pageStellplatzverwaltung()
     elif page == 'C&E check':
-        pageC_E_check()
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='Blue'):
+            pageC_E_check()
     elif page == 'Hick-Up':
-        pageHickUp()
-    elif page == 'Admin':
-        adminPage()
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='Blue'):
+            pageHickUp()
     elif page == 'Warehouse Conditions':
-        warehouseConditions.app()
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='Blue'):
+            warehouseConditions.main()
     elif page == 'Warehouse Conditions Details':
-        WarehouseConditions_details.app()
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='Blue'):
+            WarehouseConditions_details.main()
+    elif page == 'Admin':
+        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='Blue'):
+            adminPage()
+    # elif page == '"What\'s Next"':
+    #     with hc.HyLoader(f'Lade {page}',hc.Loaders.pretty_loaders,primary_color='blue '):
+    #         PageWhatsNext()
+    elif page == 'Logout':
+        st.session_state.user = None
+        st.session_state.rechte = None
 
 
 
