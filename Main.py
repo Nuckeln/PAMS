@@ -1,7 +1,6 @@
 import streamlit as st
 import streamlit_authenticator as stauth
 import pandas as pd
-import hydralit_components as hc
 
 # --- DEINE IMPORTS ---
 # Stellen Sie sicher, dass diese Dateien existieren und fehlerfrei sind
@@ -68,17 +67,13 @@ PAGES_CONFIG = {
     '"What\'s Next"': {'func': lambda: st.write("Coming Soon")},
 }
 
-
 def apply_styling():
     # --- LOGO RECHTS VORBEREITEN ---
-    # Pfad zu deinem rechten Logo
     logo_path = "Data/img/bat_logo White.svg"
-    
-    logo_css = ""
     img_b64 = get_base64_of_bin_file(logo_path)
     
+    logo_css = ""
     if img_b64:
-        # Hier wird das Logo via CSS 'eingeschleust'
         logo_css = f"""
             header[data-testid="stHeader"]::after {{
                 content: "";
@@ -86,63 +81,179 @@ def apply_styling():
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position: right center;
-                /* Größe und Position anpassen: */
                 height: 35px; 
                 width: 120px; 
                 position: absolute;
-                top: 0.5rem; 
-                right: 0.5rem; /* Abstand von rechts */
+                top: 0.8rem; 
+                right: 1rem; 
                 z-index: 999;
+                pointer-events: none;
             }}
         """
 
     st.markdown(f"""
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+            /* ============================================================ */
+            /* 1. DEIN STYLE.CSS CODE (EXAKT ÜBERNOMMEN) */
+            /* ============================================================ */
             
-            html, body, [class*="css"]  {{
-                font-family: 'Montserrat', sans-serif;
+            /* Fonts laden */
+            @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+            /* GUT - ICON-FREUNDLICH */
+            html, body {{
+                font-family: 'Montserrat', sans-serif !important;
             }}
 
-            /* --- 1. HEADER (TOP NAVIGATION) EINFÄRBEN --- */
+            /* Hier KEIN 'span' und KEIN 'div' und KEIN '[class*="css"]' reinnehmen! */
+            p, h1, h2, h3, h4, h5, h6, label, button, input, textarea {{
+                font-family: 'Montserrat', sans-serif !important;
+            }}
+
+            /* 3. ICON-SCHUTZ (Der Panzer) */
+            /* Wir targeten ALLE möglichen Klassen, die Streamlit für Icons nutzt */
+            .material-symbols-rounded, 
+            .material-icons, 
+            .material-icons-outlined, 
+            .material-icons-two-tone, 
+            .material-icons-round, 
+            .material-icons-sharp,
+            [class*="material-symbols"], 
+            [class*="material-icons"] {{
+                font-family: 'Material Symbols Rounded' !important; /* Original Font erzwingen */
+                font-weight: normal !important;
+                font-style: normal !important;
+                font-size: 24px; /* Standardgröße sicherstellen */
+                line-height: 1;
+                letter-spacing: normal;
+                text-transform: none;
+                display: inline-block;
+                white-space: nowrap;
+                word-wrap: normal;
+                direction: ltr;
+                -webkit-font-feature-settings: 'liga';
+                -webkit-font-smoothing: antialiased;
+            }}
+
+            /* Sonderfall für Popover/Expanders */
+            button > div > span {{
+               /* Leer gelassen wie in deiner Vorgabe */
+            }}
+
+            /* ============================================================ */
+            /* 2. LAYOUT-ERGÄNZUNGEN (Blauer Header & Logo) */
+            /* ============================================================ */
+
+            /* Header Hintergrund Blau */
             header[data-testid="stHeader"] {{
                 background-color: #0e2b63 !important;
-            }}
-
-            /* --- 2. TEXT & ICONS WEISS MACHEN --- */
-            header[data-testid="stHeader"] * {{
-                color: white !important;
-            }}
-            
-            /* --- 3. HAMBURGER MENU ANPASSEN --- */
-            header[data-testid="stHeader"] button {{
-                color: white !important;
-            }}
-
-            /* --- 4. LOGO RECHTS EINÜGEN --- */
-            {logo_css}
-            /* Padding oben anpassen, damit das Logo nicht abgeschnitten wird */
-            header[data-testid="stHeader"] {{
                 padding-top: 1.5rem;
                 padding-bottom: 1.5rem;
             }}
 
+            /* Header Text Weiß */
+            header[data-testid="stHeader"] * {{
+                color: white !important;
+            }}
+            
+            /* Hamburger Menü Button Weiß */
+            header[data-testid="stHeader"] button {{
+                color: white !important;
+            }}
+
+            /* Rechtes Logo einfügen */
+            {logo_css}
+
+            /* Sidebar Grau */
             [data-testid="stSidebar"] {{
                 background-color: #f0f2f6;
             }}
             
-            /* Elemente ausblenden wie gewünscht */
-            div[data-testid="stStatusWidget"] {{
-                visibility: hidden;
-                height: 0%;
-                position: fixed;
-            }}
+            /* Clean UI: Footer ausblenden */
+            div[data-testid="stStatusWidget"],
             #MainMenu {{
                 visibility: hidden;
                 height: 0%;
             }}
         </style>
     """, unsafe_allow_html=True)
+
+
+# def apply_styling():
+#     # --- LOGO RECHTS VORBEREITEN ---
+#     # Pfad zu deinem rechten Logo
+#     logo_path = "Data/img/bat_logo White.svg"
+    
+#     logo_css = ""
+#     img_b64 = get_base64_of_bin_file(logo_path)
+    
+#     if img_b64:
+#         # Hier wird das Logo via CSS 'eingeschleust'
+#         logo_css = f"""
+#             header[data-testid="stHeader"]::after {{
+#                 content: "";
+#                 background-image: url("data:image/svg+xml;base64,{img_b64}");
+#                 background-size: contain;
+#                 background-repeat: no-repeat;
+#                 background-position: right center;
+#                 /* Größe und Position anpassen: */
+#                 height: 35px; 
+#                 width: 120px; 
+#                 position: absolute;
+#                 top: 0.5rem; 
+#                 right: 0.5rem; /* Abstand von rechts */
+#                 z-index: 999;
+#             }}
+#         """
+
+#     st.markdown(f"""
+#         <style>
+#             @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+            
+#             html, body, [class*="css"]  {{
+#                 font-family: 'Montserrat', sans-serif;
+#             }}
+
+#             /* --- 1. HEADER (TOP NAVIGATION) EINFÄRBEN --- */
+#             header[data-testid="stHeader"] {{
+#                 background-color: #0e2b63 !important;
+#             }}
+
+#             /* --- 2. TEXT & ICONS WEISS MACHEN --- */
+#             header[data-testid="stHeader"] * {{
+#                 color: white !important;
+#             }}
+            
+#             /* --- 3. HAMBURGER MENU ANPASSEN --- */
+#             header[data-testid="stHeader"] button {{
+#                 color: white !important;
+#             }}
+
+#             /* --- 4. LOGO RECHTS EINÜGEN --- */
+#             {logo_css}
+#             /* Padding oben anpassen, damit das Logo nicht abgeschnitten wird */
+#             header[data-testid="stHeader"] {{
+#                 padding-top: 1.5rem;
+#                 padding-bottom: 1.5rem;
+#             }}
+
+#             [data-testid="stSidebar"] {{
+#                 background-color: #f0f2f6;
+#             }}
+            
+#             /* Elemente ausblenden wie gewünscht */
+#             div[data-testid="stStatusWidget"] {{
+#                 visibility: hidden;
+#                 height: 0%;
+#                 position: fixed;
+#             }}
+#             #MainMenu {{
+#                 visibility: hidden;
+#                 height: 0%;
+#             }}
+#         </style>
+#     """, unsafe_allow_html=True)
 
 
 apply_styling()
@@ -285,3 +396,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
