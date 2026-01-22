@@ -24,7 +24,17 @@ steps:
     source antenv/bin/activate
     python -m pip install --upgrade pip
     pip install -r ./requirements.txt
-  displayName: 'Install dependencies'
+    # Hier könnten theoretisch noch Tests laufen (pytest etc.)
+  displayName: 'Install dependencies (Test Build)'
+
+# --- NEUER SCHRITT ---
+# Wir löschen das venv wieder.
+# Grund: Die kompilierten C-Bibliotheken (numpy/pandas) vom Build-Agent (Ubuntu)
+# funktionieren oft nicht auf der Azure WebApp. Azure soll sie selbst installieren.
+- script: |
+    rm -rf antenv
+  displayName: 'Remove venv before zipping'
+# ---------------------
 
 - task: ArchiveFiles@2
   inputs:
@@ -33,7 +43,7 @@ steps:
     archivetype: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
     replaceExistingArchive: true
-    verbose: true # (no value); this input is optional
+    verbose: true 
     
 - publish: $(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip
   displayName: 'Upload Package'
