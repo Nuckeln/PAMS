@@ -478,7 +478,6 @@ def figTachoDiagramm_VEGA(df, delivery_depot):
                     # HTML/CSS für die farbigen Badges (Original-Look)
                     st.markdown(
                         f"""
-                        <div style="font-family: 'Montserrat'; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 8px; margin-top: 5px;">
                             <span style="background-color: #50af47; color: white; padding: 2px 12px; border-radius: 12px; min-width: 35px; text-align: center;">
                                 {done_value}
                             </span>

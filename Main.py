@@ -21,42 +21,6 @@ st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar
 
 
 
-# hide_streamlit_style = """
-#                 <style>
-#                 div[data-testid="stToolbar"] {
-#                 visibility: hidden;
-#                 height: 0%;
-#                 position: fixed;
-#                 }
-                
-#                 div[data-testid="stDecoration"] {
-#                 visibility: hidden;
-#                 height: 0%;
-#                 position: fixed;
-#                 }
-                
-#                 div[data-testid="stStatusWidget"] {
-#                 visibility: hidden;
-#                 height: 0%;
-#                 position: fixed;
-#                 }
-#                 #MainMenu {
-#                 visibility: hidden;
-#                 height: 0%;
-#                 }
-#                 header {
-#                 visibility: hidden;
-#                 height: 0%;
-#                 }
-#                 footer {
-#                 visibility: hidden;
-#                 height: 0%;
-#                 }
-
-#                 </style>
-#                 """
-
-# st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 
 def user_menue_rechte():
@@ -78,14 +42,50 @@ def user_menue_rechte():
     return []
 
 def user_menue_frontend():
+
     # 1. Verfügbare Seiten holen
     seiten = user_menue_rechte()
     
-    
-    # 2. CSS: Perfektes Layout & Styling
+
+# 2. CSS: Perfektes Layout & Styling
     st.markdown("""
         <style>
-            /* 1. Alles von Streamlit ausblenden, was Platz wegnimmt */
+            /* --- 0. FONTS LADEN --- */
+            @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+            /* --- 1. GLOBALER FONT --- */
+            /* WICHTIG: Wir setzen den Font auf 'html' und 'body'. */
+            /* Alle anderen Elemente (div, span, p) erben das automatisch. */
+            /* Wir zwingen es NICHT direkt auf 'span', damit Icons überleben. */
+            
+            html, body {
+                font-family: 'Montserrat', sans-serif !important;
+            }
+
+            /* Nur Elemente, die oft eigene Fonts haben, zwingen wir sanft: */
+            h1, h2, h3, h4, h5, h6, p, a, button, input, textarea, label {
+                 font-family: 'Montserrat', sans-serif !important;
+            }
+
+            /* --- 2. ICON-SCHUTZ (Sicherheitsnetz) --- */
+            /* Falls doch mal was schief geht, zwingen wir Icons zurück */
+            .material-symbols-rounded, 
+            .material-icons,
+            .material-icons-outlined {
+                font-family: 'Material Symbols Rounded' !important;
+                font-weight: normal !important;
+                font-style: normal !important;
+                /* Sicherstellen, dass Ligaturen funktionieren */
+                display: inline-block;
+                white-space: nowrap;
+                word-wrap: normal;
+                direction: ltr;
+                -webkit-font-feature-settings: 'liga'; 
+                -webkit-font-smoothing: antialiased;
+            }
+
+            /* --- 3. LAYOUT BEREINIGUNG (Dein restlicher Code) --- */
             header[data-testid="stHeader"],
             div[data-testid="stToolbar"],
             div[data-testid="stDecoration"] {
@@ -93,70 +93,61 @@ def user_menue_frontend():
                 visibility: hidden !important;
             }
             
-            /* 2. Der Haupt-Container: Startet GANZ OBEN */
             .block-container {
-                padding-top: 0rem !important; /* Etwas Abstand für den Inhalt nach oben */
+                padding-top: 0rem !important;
                 padding-left: 2rem !important;
                 padding-right: 2rem !important;
                 padding-bottom: 0rem !important;
                 max-width: 100% !important;
             }
 
-            /* 3. Der Blaue Hintergrund (ABSOLUTE POSITION) */
-            /* WICHTIG: absolute statt fixed, damit er mitscrollt! */
             div[data-testid="stAppViewContainer"]::before {
                 content: "";
                 position: fixed; 
                 top: 0;
                 left: 0;
                 width: 100%;
-                height: 8rem; /* Höhe des Headers */
+                height: 8rem;
                 background-color: #0e2b63; 
-                z-index: 0; /* Ganz hinten */
+                z-index: 0;
             }
             
-            /* 4. Inhalt (Logo/Menü) muss über dem Hintergrund liegen */
             div[data-testid="stVerticalBlock"] > div:nth-child(3){
                 position: relative;
                 z-index: 1; 
             }
 
-            /* --- PILLS (BUTTONS) STYLING --- */
-            
-            /* Container Hintergrund transparent */
+            /* --- PILLS (BUTTONS) --- */
             div[data-testid="stPills"] {
                 background-color: transparent !important;
             }
 
-            /* TEXT: Immer Weiß erzwingen (für inaktive Buttons) */
             div[data-testid="stPills"] p {
                 color: white !important;
-                font-family: 'Montserrat', sans-serif;
+                /* Hier ist es okay, weil p Text ist */
+                font-family: 'Montserrat', sans-serif !important; 
                 font-weight: 500;
             }
+            
             div[data-testid="stPills"] span {
                 color: white !important;
+                /* HIER KEIN FONT FAMILY SETZEN! */
             }
 
-            /* INAKTIVE Buttons: Transparent */
             div[data-testid="stPills"] div[role="option"][aria-selected="false"] {
                 background-color: transparent !important;
                 border: 1px solid transparent !important;
             }
 
-            /* HOVER: Leicht weiß */
             div[data-testid="stPills"] div[role="option"]:hover {
                 background-color: rgba(255,255,255,0.1) !important;
             }
 
-            /* AKTIVER Button: WEISS mit BLAUER Schrift */
-            /* Das löst das Problem, dass man nicht sieht, was gewählt ist */
             div[data-testid="stPills"] div[role="option"][aria-selected="true"] {
                 background-color: #ef7d00 !important;
                 border: none !important;
             }
             
-            /* WICHTIG: Schriftfarbe im aktiven Button auf Blau ändern */
             div[data-testid="stPills"] div[role="option"][aria-selected="true"] p {
                 color: #ef7d00 !important;
                 font-weight: bold !important;
@@ -165,14 +156,14 @@ def user_menue_frontend():
         </style>
     """, unsafe_allow_html=True)
 
+
+
     # 3. Menü Aufbau
     with st.container():
         # Layout: Logo links, Navigation rechts
-        # Wir nutzen columns, um sie nebeneinander zu packen
         col_logo, col_nav = st.columns([1.2, 8.8], vertical_alignment="center")
         
         with col_logo:
-            # Logo
             st.image('Data/img/logo_white.svg', width='stretch') 
             
         with col_nav:
@@ -190,8 +181,6 @@ def user_menue_frontend():
             if selection:
                 st.session_state.current_page = selection
 
-    # 4. Abstandshalter NACH dem Header
-    # Damit der Inhalt der Seite nicht direkt am Header klebt
     st.markdown("<div style='margin-bottom: 2rem;'></div>", unsafe_allow_html=True)
 
     page = st.session_state.current_page

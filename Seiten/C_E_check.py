@@ -240,7 +240,6 @@ def main():
             <style>
             @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
             </style>
-            <h3 style='text-align: left; color: #0F2B63; font-family: Montserrat; font-weight: bold;'>{}</h3>
             """.format(f'Hi {st.session_state.username} 👋 Bitte lade deine Dokumente hoch.'), unsafe_allow_html=True)   
         
         with col2:
