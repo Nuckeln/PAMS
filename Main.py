@@ -152,7 +152,7 @@ def user_menue_frontend():
             /* AKTIVER Button: WEISS mit BLAUER Schrift */
             /* Das löst das Problem, dass man nicht sieht, was gewählt ist */
             div[data-testid="stPills"] div[role="option"][aria-selected="true"] {
-                background-color: #ffffff !important;
+                background-color: #ef7d00 !important;
                 border: none !important;
             }
             
@@ -234,6 +234,8 @@ def read_user():
     return read_Table("user")
              
 def main():
+    with open("style.css") as css:
+        st.markdown(f'<style>{css.read()}</style>', unsafe_allow_html=True)
     if 'user' not in st.session_state:
         st.session_state.user = None  
 

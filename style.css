@@ -1,11 +1,43 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:wght@100&display=swap'); 
+/* Fallback for browsers that don't support local fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+/* Regular */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('Data/appData/Montserrat/static/Montserrat-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Italic */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('Data/appData/Montserrat/static/Montserrat-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+/* Bold */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('Data/appData/Montserrat/static/Montserrat-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* Bold Italic */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('Data/appData/Montserrat/static/Montserrat-BoldItalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+}
 
 [class^=st-emotion] {
-    font-family: myFont !important
+    font-family: 'Montserrat', sans-serif !important;
 }
 
 
 body * {
     font-family: 'Montserrat', sans-serif !important;
 }
-
