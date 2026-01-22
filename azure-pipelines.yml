@@ -10,7 +10,7 @@ pool:
   vmImage: ubuntu-latest
 strategy:
   matrix:
-    Python310:
+    Python312:
       python.version: '3.12'
 
 steps:
@@ -23,7 +23,7 @@ steps:
     python -m venv antenv
     source antenv/bin/activate
     python -m pip install --upgrade pip
-    pip install --target="./antenv/lib/python3.10/site-packages" -r ./requirements.txt
+    pip install -r ./requirements.txt
   displayName: 'Install dependencies'
 
 - task: ArchiveFiles@2

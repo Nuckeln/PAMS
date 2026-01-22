@@ -51,7 +51,7 @@ def userverwaltung_neu():
             key="data",
             on_select="rerun",
             selection_mode=["single-row"],
-            use_container_width=    True,
+            width='stretch',
         )
         if event == None:
             st.warning("Bitte einen User auswählen")
@@ -146,7 +146,7 @@ def userverwaltung_neu():
                 #                 time.sleep(2)
                 #             st.rerun()
             
-            with st.popover('Berechtigungen', use_container_width=True):
+            with st.popover('Berechtigungen', width='stretch'):
                     selected_labels = berechtigungen(user_berechtigungen)
                     # selected_labels = berechtigungen(user_berechtigungen)
                     if st.button('Speichern Berechtigungen'):

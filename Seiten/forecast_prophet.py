@@ -209,7 +209,7 @@ def plot_stacked_bar_chart_plotly(df, colors=None,dfOrders=None):
         template='plotly_white'
     )
 
-    return st.plotly_chart(fig, use_container_width=True)
+    return st.plotly_chart(fig, width='stretch')
     
 
 def plot_stacked_bars_with_line(df, dfOrders, colors=None):
@@ -333,7 +333,7 @@ def plot_stacked_bars_with_line(df, dfOrders, colors=None):
         hovermode='x'
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
     # erstelle vergleichsstatistik von line zu df
     df_line['PlannedDate'] = pd.to_datetime(df_line['PlannedDate']).dt.date
@@ -383,7 +383,7 @@ def plot_stacked_bars_with_line(df, dfOrders, colors=None):
         height=600,
         template='plotly_white'
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 #TODO 
 # Feiertage mit Reten Balken "Abfrage beim 3PL"

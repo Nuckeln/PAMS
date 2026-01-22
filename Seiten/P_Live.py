@@ -175,7 +175,7 @@ def fig_Status_nach_Katergorie(df):
         figPicksBySAPOrder.update_yaxes(title_text='')
         figPicksBySAPOrder.update_xaxes(title_text='')
 
-        st.plotly_chart(figPicksBySAPOrder,use_container_width=True,config={'displayModeBar': False})
+        st.plotly_chart(figPicksBySAPOrder,width='stretch',config={'displayModeBar': False})
 
 def fig_trucks_Org(df):
     #st.dataframe(df)
@@ -216,7 +216,7 @@ def fig_trucks_Org(df):
     fig.update_xaxes(showticklabels=False)
     #disable x axis title
     fig.update_xaxes(title_text='')
-    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+    st.plotly_chart(fig, width='stretch', config={'displayModeBar': False})
 
 
 def figUebermitteltInDeadline(df):      
@@ -247,7 +247,7 @@ def figUebermitteltInDeadline(df):
     #convert to datetime
     df['PlannedDate'] = pd.to_datetime(df['PlannedDate'])
     # filter by fertiggestellt = '0'
-    dfFertig = df[df['Fertiggestellt'] != '0']
+    dfFertig = df[df['Fertiggestellt'].notna()]
     dfFertig['Fertiggestellt'] = pd.to_datetime(dfFertig['Fertiggestellt'], format='%Y-%m-%d %H:%M:%S')
     #add two hours to Feritggestellt
     dfFertig['Fertiggestellt'] = dfFertig['Fertiggestellt'].dt.tz_localize(None)
@@ -280,7 +280,7 @@ def figUebermitteltInDeadline(df):
     fig.update_layout(font_family="Montserrat",font_color="#0F2B63",title_font_family="Montserrat",title_font_color="#0F2B63")
     fig.update_layout(showlegend=False)
     fig.update_traces(text=dfFertig['PartnerName'], textposition='inside')
-    st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
+    st.plotly_chart(fig, width='stretch',config={'displayModeBar': False})
 
 
 
@@ -291,7 +291,6 @@ def figPicksKunde(df):
     # wenn AllSSCCLabelsPrinted = 0 und in First_Pick ist ein Wert, dann setze in Arbeit auf 1
     df['In_Arbeit'] = np.where((df['AllSSCCLabelsPrinted'] == 0) & (df['First_Picking'].notna()), 1, 0)
     # Rename Col EstimatedNumberOfPallets to Geschätzte Paletten
-    df['Fertiggestellt'] = df['Fertiggestellt'].fillna('0')
     df = df.groupby(['SapOrderNumber','PartnerName', "AllSSCCLabelsPrinted", 'DeliveryDepot', 'Fertiggestellt', 'Lieferschein erhalten','Fertige Paletten','EstimatedNumberOfPallets','In_Arbeit']).agg({'Picks Gesamt': 'sum'}).reset_index()
     df = df.sort_values(by=['Picks Gesamt', 'AllSSCCLabelsPrinted'], ascending=False)
     
@@ -321,7 +320,7 @@ def figPicksKunde(df):
     figTagKunden.update_yaxes(title_text='')
     figTagKunden.update_xaxes(title_text='')
     
-    st.plotly_chart(figTagKunden, use_container_width=True, config={'displayModeBar': False})
+    st.plotly_chart(figTagKunden, width='stretch', config={'displayModeBar': False})
 
 def figPicksBy_SAP_Order_CS_PAL(df):
     df = df.groupby(['SapOrderNumber','PartnerName','AllSSCCLabelsPrinted'])[['Picks Karton','Picks Paletten','Picks Stangen']].sum().reset_index()        #set index to SapOrderNumber
@@ -354,7 +353,7 @@ def figPicksBy_SAP_Order_CS_PAL(df):
     figPicksBySAPOrder.update_xaxes(title_text='')
 
 
-    st.plotly_chart(figPicksBySAPOrder,use_container_width=True,config={'displayModeBar': False})
+    st.plotly_chart(figPicksBySAPOrder,width='stretch',config={'displayModeBar': False})
 
 def figTachoDiagramm_VEGA(df, delivery_depot):
     with st.container(border=True):
@@ -623,7 +622,7 @@ def tabelleAnzeigen(df):
     df_deteils = df.groupby(['SapOrderNumber','PartnerName','DeliveryDepot','PlannedDate','LoadingLaneId','Fertiggestellt']).agg({'Gepackte Paletten': 'sum', 'Geschätzte Paletten' : 'sum' }).reset_index()
 
 
-    st.dataframe(data=df_deteils, use_container_width=True)
+    st.dataframe(data=df_deteils, width='stretch')
 
 def downLoadTagesReport(df):
 
@@ -844,7 +843,7 @@ def PageTagesReport():
         # open_Details = st.button('Auftragsdetails in Timeline')
         
         # if open_Details:
-        with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', use_container_width=True):
+        with st.popover('Auftragsdetails in Timeline',help='Details zu den Aufträgen', width='stretch'):
             new_timeline(dfOr)      
     except:
         st.write('Keine Daten vorhanden')

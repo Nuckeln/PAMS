@@ -169,7 +169,7 @@ def figPICKS_GesamtVolumen(df,tabelle,show_in_day_Week):
     #update font to Montserrat
     fig.update_layout(font_family="Montserrat")
 
-    st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
+    st.plotly_chart(fig,width='stretch',config={'displayModeBar': False})
 
     if tabelle == True:
         st.data_editor(dfOriginal)
@@ -193,10 +193,7 @@ def figPicksGesamtKunden(df,tabelle,show_in_day_Week):
         {"x": x, "y": total * 1.05, "text": str(total), "showarrow": False}
         for x, total in agg_data.values]
     #add sum of each bar to text
-    fig.update_layout(
-        annotations=annotations)
-
-    st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})       
+    st.plotly_chart(fig, width='stretch',config={'displayModeBar': False})       
     ## FARBEN
     if tabelle == True:
         st.data_editor(dfOriginal,key='KundenFIG')
@@ -231,7 +228,7 @@ def figPicksGesamtnachTagUndVerfügbarkeit(df,tabelle,show_in_day_Week):
         annotations=annotations)
     colurs = ['#4FAF46', '#4FAF46', '#4FAF46']
 
-    st.plotly_chart(fig, use_container_width=True,config={'displayModeBar': False})
+    st.plotly_chart(fig, width='stretch',config={'displayModeBar': False})
 
     ## FARBEN
     if tabelle == True:
@@ -263,7 +260,7 @@ def fig_Picksgesamt_kategorie(df, tabelle, show_in_day_Week):
     figPicksBySAPOrder.update_xaxes(showticklabels=True)
     
     # Diagramm und Datentabelle in Streamlit anzeigen
-    st.plotly_chart(figPicksBySAPOrder, use_container_width=True,config={'displayModeBar': False})
+    st.plotly_chart(figPicksBySAPOrder, width='stretch',config={'displayModeBar': False})
     if tabelle == True:
          st.dataframe(df)
 
@@ -308,7 +305,7 @@ def auslastung_der_trucks(df, tabelle, show_in_day_Week):
             showlegend=False))
         
         # Anzeigen des Diagramms
-        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        st.plotly_chart(fig, width='stretch', config={'displayModeBar': False})
         if tabelle == True:
             st.data_editor(df)
     
@@ -344,7 +341,7 @@ def fig_trucks_Org(df, tabelle, show_in_day_Week):
 
 
     # Anzeigen des Diagramms
-    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+    st.plotly_chart(fig, width='stretch', config={'displayModeBar': False})
     if tabelle == True:
         st.dataframe(dfOriginal)
 ### Fehler PLOTS ###
@@ -374,9 +371,8 @@ def figIssuesTotal(dfIssues,show_in_day_Week, show_tables):
 
 
 
-    st.plotly_chart(fig, use_container_width=True)
-    if show_tables == True:
-        st.dataframe(dfIssues)
+    st.plotly_chart(fig, width='stretch')
+    st.dataframe(dfIssues)
 
 def figFehlerVsLieferscheine(dfIssues,df,show_tables,show_in_day_Week):
         dfIssuesOriginal = dfIssues
@@ -404,9 +400,9 @@ def figFehlerVsLieferscheine(dfIssues,df,show_tables,show_in_day_Week):
 
         col1, col2 = st.columns(2)
         with col1:
-            st.plotly_chart(fig1, use_container_width=True, config={'displayModeBar': False})
+            st.plotly_chart(fig1, width='stretch', config={'displayModeBar': False})
         with col2:
-            st.plotly_chart(fig2, use_container_width=True, config={'displayModeBar': False})
+            st.plotly_chart(fig2, width='stretch', config={'displayModeBar': False})
 
         if show_tables:
             st.dataframe(dfIssuesOriginal)
@@ -424,13 +420,13 @@ def fig_fehler_LS_Bar(dfIssues,df,show_tables,show_in_day_Week):
     fig.update_xaxes(showticklabels=True)
     fig.update_layout(font_family="Montserrat")
     fig.update_layout(legend=dict(title='Legende', orientation='h', y=1.1, yanchor='top', x=0.5, xanchor='center'))
-    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+    st.plotly_chart(fig, width='stretch', config={'displayModeBar': False})
 
     
 def figFehlerBarDay(dfIssues,df,show_tables,show_in_day_Week):
     dfIssues = dfIssues.groupby(['Datum gemeldet','Art']).size().reset_index(name='Anzahl')
     fig = px.bar(dfIssues, x="Datum gemeldet", y='Anzahl', color="Art", hover_data=["Anzahl","Art","Datum gemeldet"])
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 
 ###Show Page###

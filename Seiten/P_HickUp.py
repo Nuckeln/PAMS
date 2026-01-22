@@ -223,7 +223,7 @@ def main():
     with st.expander("Vorgang bearbeiten"):
         df = read_Table('PAMS_HICKUP')
         selected_row = st.dataframe(df,
-                                    use_container_width=True,
+                                    width='stretch',
                                     hide_index=True,
                                     on_select="rerun",
                                     selection_mode="single-row")
@@ -235,7 +235,7 @@ def main():
         df = read_Table('PAMS_HICKUP')
         
         selvorgang = st.dataframe(df,
-        use_container_width=True,
+        width='stretch',
         hide_index=True,
         on_select="rerun",
         selection_mode="single-row",key='Vorgang Löschen'

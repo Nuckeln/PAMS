@@ -140,8 +140,8 @@ def app():
 
         # Buttons in einer Reihe
         b1, b2 = st.columns(2)
-        submitted = b1.form_submit_button("Filter anwenden", use_container_width=True)
-        reset_pressed = b2.form_submit_button("Filter zurücksetzen", use_container_width=True)
+        submitted = b1.form_submit_button("Filter anwenden", width='stretch')
+        reset_pressed = b2.form_submit_button("Filter zurücksetzen", width='stretch')
 
         if reset_pressed:
             st.session_state.filters_reset = True
@@ -214,4 +214,4 @@ def app():
     if 'ViolationDate_Temp_Filter' in final_table_display.columns:
         final_table_display = final_table_display.drop(columns=['ViolationDate_Temp_Filter'])
 
-    st.dataframe(final_table_display.head(10000), use_container_width=True)
+    st.dataframe(final_table_display.head(10000), width='stretch')

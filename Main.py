@@ -10,7 +10,6 @@ from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
 from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.C_E_check import main as pageC_E_check
-from Seiten.P_HickUp import main as pageHickUp
 from Data_Class.MMSQL_connection import read_Table, save_Table_append
 from Seiten.forecast_prophet import main as pageForecastProp
 import Seiten.WarehouseConditions_details as WarehouseConditions_details
@@ -20,45 +19,44 @@ pd.set_option("display.precision", 3)
 
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:")
 
-# --- MINIMALES CSS FÜR STICKY MENU ---
-# Nur das Nötigste: Header ausblenden und Menü oben festkleben
 
-hide_streamlit_style = """
-                <style>
-                div[data-testid="stToolbar"] {
-                visibility: hidden;
-                height: 0%;
-                position: fixed;
-                }
+
+# hide_streamlit_style = """
+#                 <style>
+#                 div[data-testid="stToolbar"] {
+#                 visibility: hidden;
+#                 height: 0%;
+#                 position: fixed;
+#                 }
                 
-                div[data-testid="stDecoration"] {
-                visibility: hidden;
-                height: 0%;
-                position: fixed;
-                }
+#                 div[data-testid="stDecoration"] {
+#                 visibility: hidden;
+#                 height: 0%;
+#                 position: fixed;
+#                 }
                 
-                div[data-testid="stStatusWidget"] {
-                visibility: hidden;
-                height: 0%;
-                position: fixed;
-                }
-                #MainMenu {
-                visibility: hidden;
-                height: 0%;
-                }
-                header {
-                visibility: hidden;
-                height: 0%;
-                }
-                footer {
-                visibility: hidden;
-                height: 0%;
-                }
+#                 div[data-testid="stStatusWidget"] {
+#                 visibility: hidden;
+#                 height: 0%;
+#                 position: fixed;
+#                 }
+#                 #MainMenu {
+#                 visibility: hidden;
+#                 height: 0%;
+#                 }
+#                 header {
+#                 visibility: hidden;
+#                 height: 0%;
+#                 }
+#                 footer {
+#                 visibility: hidden;
+#                 height: 0%;
+#                 }
 
-                </style>
-                """
+#                 </style>
+#                 """
 
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+# st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 
 def user_menue_rechte():
@@ -97,7 +95,7 @@ def user_menue_frontend():
             
             /* 2. Der Haupt-Container: Startet GANZ OBEN */
             .block-container {
-                padding-top: 1rem !important; /* Etwas Abstand für den Inhalt nach oben */
+                padding-top: 0rem !important; /* Etwas Abstand für den Inhalt nach oben */
                 padding-left: 2rem !important;
                 padding-right: 2rem !important;
                 padding-bottom: 0rem !important;
@@ -160,7 +158,7 @@ def user_menue_frontend():
             
             /* WICHTIG: Schriftfarbe im aktiven Button auf Blau ändern */
             div[data-testid="stPills"] div[role="option"][aria-selected="true"] p {
-                color: #0e2b63 !important;
+                color: #ef7d00 !important;
                 font-weight: bold !important;
             }
 
@@ -175,7 +173,7 @@ def user_menue_frontend():
         
         with col_logo:
             # Logo
-            st.image('Data/img/logo_white.svg', use_container_width=True) 
+            st.image('Data/img/logo_white.svg', width='stretch') 
             
         with col_nav:
             if "current_page" not in st.session_state:
@@ -213,9 +211,6 @@ def user_menue_frontend():
     elif page == 'C&E check':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='Blue'):
             pageC_E_check()
-    elif page == 'Hick-Up':
-        with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='Blue'):
-            pageHickUp()
     elif page == 'Warehouse Conditions':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='Blue'):
             warehouseConditions.main()

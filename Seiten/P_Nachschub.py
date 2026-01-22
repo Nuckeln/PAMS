@@ -261,10 +261,7 @@ def pageStellplatzverwaltung():
             st.data_editor(dfBedarfSKU_SN, key='my_editorSNBedarf')
             #save to excel
             dfBedarfSKU.to_excel('Data/dfBedarfSKU.xlsx', index=False)
-            fig = px.bar(dfBedarfSKU_SN, x='System BIN', y='Abruf MC gewählter Zeitraum', color='Abruf MC gewählter Zeitraum',hover_data=['MaterialNumber'])
-            fig.update(layout_coloraxis_showscale=False)
-            fig.update_layout(yaxis=dict(visible=False))
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
     if stangenbedarf:    
         with st.expander('Stangenbedarf TN1',expanded=True):
 
@@ -290,7 +287,7 @@ def pageStellplatzverwaltung():
             fig = px.bar(dfBedarfSKU_TN, x='LGPLA_TN', y='CorrespondingOuters', color='CorrespondingOuters',hover_data=['MaterialNumber'])
             fig.update(layout_coloraxis_showscale=False)
             fig.update_layout(yaxis=dict(visible=False))
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
 
     def karton_heatmap(dfBedarf):
 

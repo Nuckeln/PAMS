@@ -128,7 +128,7 @@ def app():
             edited_df = st.data_editor(
                 conditions_df,
                 num_rows="dynamic",
-                use_container_width=True
+                width='stretch'
             )
             
             submitted = st.form_submit_button("Änderungen speichern")
@@ -200,11 +200,11 @@ def app():
         
         with col_temp:
             fig_t = create_simple_line_chart(temp_data_median, 'Messwert', 'Messzeitpunkt', "Temperatur (Tagesmedian)", "#d62728", "°C", temp_limits)
-            st.plotly_chart(fig_t, use_container_width=True)
+            st.plotly_chart(fig_t, width='stretch')
             
         with col_hum:
             fig_h = create_simple_line_chart(hum_data_median, 'Messwert', 'Messzeitpunkt', "Luftfeuchtigkeit (Tagesmedian)", "#1f77b4", "%rF", hum_limits)
-            st.plotly_chart(fig_h, use_container_width=True)
+            st.plotly_chart(fig_h, width='stretch')
 
         # --- Violations anzeigen ---
         if not viol_df.empty:
@@ -220,11 +220,11 @@ def app():
                 with st.expander(expander_title, expanded=False):
                     st.dataframe(
                         area_violations[['Artikelnummer', 'Artikelbeschreibung', 'ViolationReason', 'ExceededValue', 'LimitValue', 'ViolationDate']],
-                        use_container_width=True,
+                        width='stretch',
                         hide_index=True
                     )
         with st.expander("Rohdaten dieser Bereichsanalyse anzeigen", expanded=False):
-            st.dataframe(group.sort_values('Messzeitpunkt'), use_container_width=True)
+            st.dataframe(group.sort_values('Messzeitpunkt'), width='stretch')
         st.markdown("---")
 
 if __name__ == "__main__":
