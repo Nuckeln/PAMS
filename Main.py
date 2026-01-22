@@ -41,6 +41,8 @@ def user_menue_rechte():
         return ["Depot Live Status", 'Depot Reports', 'Forecast', 'Lagerverwaltung']
     return []
 
+
+
 def user_menue_frontend():
 
     # 1. Verfügbare Seiten holen
@@ -92,7 +94,28 @@ def user_menue_frontend():
                 display: none !important;
                 visibility: hidden !important;
             }
+            /* --- 5. MENÜ INHALT (LOGO & PILLS) FIXIEREN --- */
+            /* KORREKTUR: Wir nutzen jetzt einen strikten Pfad ("Child Combinator" >). */
+            /* Wir starten beim Haupt-Container (.block-container) und gehen zum ERSTEN Vertical Block. */
+            /* Dadurch werden alle anderen Container (LKWs weiter unten) ignoriert. */
             
+            .block-container > div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"]:nth-of-type(1) > div[data-testid="stHorizontalBlock"] {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 8rem !important;
+                z-index: 999 !important; 
+                padding-top: 1.5rem !important; 
+                padding-left: 3rem !important; 
+                padding-right: 3rem !important;
+                pointer-events: none; 
+            }
+            
+            /* Klickbarkeit wiederherstellen */
+            .block-container > div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"]:nth-of-type(1) > div[data-testid="stHorizontalBlock"] * {
+                pointer-events: auto !important;
+            }
             .block-container {
                 padding-top: 0rem !important;
                 padding-left: 2rem !important;
@@ -202,10 +225,10 @@ def user_menue_frontend():
             pageC_E_check()
     elif page == 'Warehouse Conditions':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='Blue'):
-            warehouseConditions.main()
+            warehouseConditions.app()
     elif page == 'Warehouse Conditions Details':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='Blue'):
-            WarehouseConditions_details.main()
+            WarehouseConditions_details.app()
     elif page == 'Admin':
         with hc.HyLoader(f'Lade {page}',hc.Loaders.pacman, primary_color='Blue'):
             adminPage()
