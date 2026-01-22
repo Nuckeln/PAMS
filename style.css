@@ -1,48 +1,11 @@
-/* 1. Deine Fonts laden (wie gehabt) */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:wght@100&display=swap'); 
 
-/* Wir laden sicherheitshalber auch die Icon-Font manuell, falls sie blockiert wird */
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+[class^=st-emotion] {
+    font-family: myFont !important
+}
 
-/* --- DEINE LOKALEN FONTS (Hier gekürzt, lass sie so wie sie sind) --- */
-/* @font-face { ... dein Code ... } */
 
-/* GUT - ICON-FREUNDLICH */
-html, body {
+body * {
     font-family: 'Montserrat', sans-serif !important;
-}
-
-/* Hier KEIN 'span' und KEIN 'div' und KEIN '[class*="css"]' reinnehmen! */
-p, h1, h2, h3, h4, h5, h6, label, button, input, textarea {
-    font-family: 'Montserrat', sans-serif !important;
-}
-/* 3. ICON-SCHUTZ (Der Panzer) */
-/* Wir targeten ALLE möglichen Klassen, die Streamlit für Icons nutzt */
-.material-symbols-rounded, 
-.material-icons, 
-.material-icons-outlined, 
-.material-icons-two-tone, 
-.material-icons-round, 
-.material-icons-sharp,
-[class*="material-symbols"], 
-[class*="material-icons"] {
-    font-family: 'Material Symbols Rounded' !important; /* Original Font erzwingen */
-    font-weight: normal !important;
-    font-style: normal !important;
-    font-size: 24px; /* Standardgröße sicherstellen */
-    line-height: 1;
-    letter-spacing: normal;
-    text-transform: none;
-    display: inline-block;
-    white-space: nowrap;
-    word-wrap: normal;
-    direction: ltr;
-    -webkit-font-feature-settings: 'liga';
-    -webkit-font-smoothing: antialiased;
-}
-
-/* Sonderfall für Popover/Expanders, falls diese spezifischer sind */
-button > div > span {
-    /* Falls Streamlit das Icon direkt in ein span ohne Klasse packt (selten, aber möglich) */
-    /* Hier NICHTS global setzen, da es Text sein könnte. */
+    font-weight: 100 !important;
 }

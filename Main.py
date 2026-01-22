@@ -14,10 +14,21 @@ from Data_Class.MMSQL_connection import read_Table
 from Seiten.forecast_prophet import main as pageForecastProp
 import Seiten.WarehouseConditions_details as WarehouseConditions_details
 import Seiten.WarehouseConditions as warehouseConditions
+import base64
+import os # Hilfreich, um zu prüfen, ob die Datei existiert
 
 # --- 1. PAGE CONFIG (Muss immer ganz oben stehen) ---
 st.set_page_config(layout="wide", page_title="PAMS Report-Tool", page_icon=":bar_chart:")
-
+def get_base64_of_bin_file(bin_file):
+    """
+    Liest eine Datei und gibt den Base64-String zurück.
+    """
+    try:
+        with open(bin_file, 'rb') as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
+    except FileNotFoundError:
+        return None
 pd.set_option("display.precision", 3)
 
 # --- 2. HELPER FUNKTIONEN ---
@@ -59,37 +70,81 @@ PAGES_CONFIG = {
 
 
 def apply_styling():
-    st.markdown("""
+    # --- LOGO RECHTS VORBEREITEN ---
+    # Pfad zu deinem rechten Logo
+    logo_path = "Data/img/bat_logo White.svg"
+    
+    logo_css = ""
+    img_b64 = get_base64_of_bin_file(logo_path)
+    
+    if img_b64:
+        # Hier wird das Logo via CSS 'eingeschleust'
+        logo_css = f"""
+            header[data-testid="stHeader"]::after {{
+                content: "";
+                background-image: url("data:image/svg+xml;base64,{img_b64}");
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: right center;
+                /* Größe und Position anpassen: */
+                height: 35px; 
+                width: 120px; 
+                position: absolute;
+                top: 0.5rem; 
+                right: 0.5rem; /* Abstand von rechts */
+                z-index: 999;
+            }}
+        """
+
+    st.markdown(f"""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
             
-            html, body, [class*="css"]  {
+            html, body, [class*="css"]  {{
                 font-family: 'Montserrat', sans-serif;
-            }
+            }}
 
             /* --- 1. HEADER (TOP NAVIGATION) EINFÄRBEN --- */
-            header[data-testid="stHeader"] {
-                background-color: #0e2b63 !important; /* Dein Blau */
-            }
+            header[data-testid="stHeader"] {{
+                background-color: #0e2b63 !important;
+            }}
 
             /* --- 2. TEXT & ICONS WEISS MACHEN --- */
-            /* Damit man die Schrift auf dem blauen Hintergrund lesen kann */
-            header[data-testid="stHeader"] * {
+            header[data-testid="stHeader"] * {{
                 color: white !important;
-            }
+            }}
             
-            /* --- 3. HAMBURGER MENU (RECHTS OBEN) ANPASSEN --- */
-            /* Das Menü-Icon und der "Deploy"-Button */
-            header[data-testid="stHeader"] button {
+            /* --- 3. HAMBURGER MENU ANPASSEN --- */
+            header[data-testid="stHeader"] button {{
                 color: white !important;
-            }
+            }}
 
-            /* Optional: Sidebar Hintergrund (falls du sie doch mal nutzt) */
-            [data-testid="stSidebar"] {
+            /* --- 4. LOGO RECHTS EINÜGEN --- */
+            {logo_css}
+            /* Padding oben anpassen, damit das Logo nicht abgeschnitten wird */
+            header[data-testid="stHeader"] {{
+                padding-top: 1.5rem;
+                padding-bottom: 1.5rem;
+            }}
+
+            [data-testid="stSidebar"] {{
                 background-color: #f0f2f6;
-            }
+            }}
+            
+            /* Elemente ausblenden wie gewünscht */
+            div[data-testid="stStatusWidget"] {{
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+            }}
+            #MainMenu {{
+                visibility: hidden;
+                height: 0%;
+            }}
         </style>
     """, unsafe_allow_html=True)
+
+
 apply_styling()
 def user_menue_rechte():
     if 'rechte' not in st.session_state:
@@ -187,7 +242,7 @@ def main():
             st.stop()
 
         # 2. Logo setzen
-        st.logo("Data/img/logo_white.svg") 
+        st.logo("/Users/martinwolf/Python/PAMS/Data/img/PAMS.svg") 
 
         # 3. Seiten zusammenstellen
         allowed_page_names = user_menue_rechte()
@@ -203,7 +258,6 @@ def main():
             if page_name in PAGES_CONFIG:
                 cfg = PAGES_CONFIG[page_name]
                 
-                # Wrapper nutzen (HyLoader ist aktuell deaktiviert)
                 wrapped_func = page_loader_wrapper(cfg['func'], page_name)
                 
                 # URL Pfad säubern (Fix für "wrapper" Fehler)
@@ -222,6 +276,7 @@ def main():
         st_pages.append(
             st.Page(logout_page, title="Logout", icon="🚪", url_path="logout")
         )
+
         try:
             pg = st.navigation(st_pages, position='top',expanded=True)
             pg.run()
