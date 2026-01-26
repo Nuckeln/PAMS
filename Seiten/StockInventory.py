@@ -275,13 +275,13 @@ def render_tile(title, category_key, df_inv, df_conf, latest_date_norm):
         m1, m2 = st.columns(2)
         with m1:
             st.metric(label=f"Bestand ({unit})", value=f"{current_val:,.0f}")
-        
+            st.caption(f"Kapazität:")
         with m2:
             if capacity > 0:
                 utilization = (current_val / capacity) * 100
                 st.metric(label="Auslastung", value=f"{utilization:.1f}%")
                 # Kapazität klein darunter für den vollen Überblick
-                st.caption(f"Kapazität: {capacity:,.0f} {unit}")
+                st.caption(f"{capacity:,.0f} {unit}")
             else:
                 st.metric(label="Kapazität", value="n/a")
 
@@ -336,7 +336,7 @@ def app():
         return
 
     # --- 1. BAYREUTH HUB ---
-    st.markdown("---")
+    #st.markdown("---")
     # Layout: 5 Columns
     cols = st.columns(5)
     
