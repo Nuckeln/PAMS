@@ -176,35 +176,35 @@ def app():
     if df.empty:
         return
 
-    # --- TIMELINE ---
-    st.markdown("##### 📅 Loading Plan (Timeline)")
+    # # --- TIMELINE ---
+    # st.markdown("##### 📅 Loading Plan (Timeline)")
     
-    fig_timeline = px.scatter(
-        df, 
-        x='LoadingDateExBayreuth', 
-        y='Display_Area',
-        size='Order_Quantity', 
-        color='Display_Area',
-        color_discrete_map=COLOR_MAP,
-        symbol='Stock_Bottleneck',
-        opacity=0.8,
-        hover_data={'Display_Quantity': False, 'Receiving_Plant': True, 'Article_Text': True},
-        height=300
-    )
-    fig_timeline.update_layout(
-        font_family="Montserrat",
-        plot_bgcolor="white",
-        yaxis_title=None,
-        xaxis_title="Planned Loading Date",
-        showlegend=False,
-        margin=dict(t=10, b=10)
-    )
-    fig_timeline.update_xaxes(showgrid=True, gridcolor='#eee', tickformat="%d.%m")
-    fig_timeline.update_yaxes(showgrid=True, gridcolor='#eee')
+    # fig_timeline = px.scatter(
+    #     df, 
+    #     x='LoadingDateExBayreuth', 
+    #     y='Display_Area',
+    #     size='Order_Quantity', 
+    #     color='Display_Area',
+    #     color_discrete_map=COLOR_MAP,
+    #     symbol='Stock_Bottleneck',
+    #     opacity=0.8,
+    #     hover_data={'Display_Quantity': False, 'Receiving_Plant': True, 'Article_Text': True},
+    #     height=300
+    # )
+    # fig_timeline.update_layout(
+    #     font_family="Montserrat",
+    #     plot_bgcolor="white",
+    #     yaxis_title=None,
+    #     xaxis_title="Planned Loading Date",
+    #     showlegend=False,
+    #     margin=dict(t=10, b=10)
+    # )
+    # fig_timeline.update_xaxes(showgrid=True, gridcolor='#eee', tickformat="%d.%m")
+    # fig_timeline.update_yaxes(showgrid=True, gridcolor='#eee')
     
-    st.plotly_chart(fig_timeline, width="stretch", config={'displayModeBar': False})
+    # st.plotly_chart(fig_timeline, width="stretch", config={'displayModeBar': False})
 
-    st.markdown("---")
+    # st.markdown("---")
     
     # --- 4 TILES (GRID) ---
     target_areas = ['DIET', 'LEAF', 'FMC', 'CASING & FLAVOR']

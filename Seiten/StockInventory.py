@@ -20,6 +20,8 @@ LOGO_MAP = {
     'C&F': 'Data/img/C&F_LOGO.png',
     'KN': 'Data/img/kuehne-nagel-logo-blue.png',
     'Bayreuth': 'Data/img/logo_login_spedition.png',
+    'LOG-IN': 'Data/img/logo_login_spedition.png',
+    'ARVATO': 'Data/img/arvato.png',
     # Individuelle KN Logos
     'Berlin': 'Data/img/KN_Berlin.py.png',
     'Duisburg': 'Data/img/KN_Dui.py.png',
@@ -153,11 +155,17 @@ def get_filtered_metrics(category, df_inv, df_conf, latest_date):
             m_conf = (df_conf['Fachbereich'] == 'C&F') & (df_conf['Lagerzone'] == 'Regallager')
 
     elif category == 'EXPORT':
-        zones = ['Hochregallager', 'Regallager', 'Blocklager']
-        m_inv = (df_inv['Fachbereich'] == 'Finished Goods Export') & (df_inv['Lagerzone'].isin(zones))
-        if m_conf is not None:
-            m_conf = (df_conf['Fachbereich'] == 'Finished Goods Export') & (df_conf['Lagerzone'].isin(zones))
-
+            # Erweiterte Fachbereiche
+            fbs = ['Finished Goods Export', 'WMS', "Domestic FG's"]
+            # Definierte Zonen
+            zones = ['Hochregallager', 'Regallager', 'Blocklager']
+            
+            # Filter für Inventory
+            m_inv = (df_inv['Fachbereich'].isin(fbs)) & (df_inv['Lagerzone'].isin(zones))
+            
+            # Filter für Config (Kapazität)
+            if m_conf is not None:
+                m_conf = (df_conf['Fachbereich'].isin(fbs)) & (df_conf['Lagerzone'].isin(zones))
     elif category == 'DOMESTIC':
         zones = ['Blocklager', 'Regallager']
         m_inv = (df_inv['Fachbereich'] == 'Domestic Deutschland') & \
@@ -177,21 +185,51 @@ def get_filtered_metrics(category, df_inv, df_conf, latest_date):
                      (df_conf['Lagerzone'] == 'Paletten Zone') & \
                      (df_conf['StandortName'] == category)
 
+    elif category == 'LOG-IN':
+        m_inv = (df_inv['StandortGeografisch'] == 'Hegnabrunn') & (df_inv['Lagerzone'] == 'Lager Rack')
+        if m_conf is not None:
+            m_conf = (df_conf['StandortGeografisch'] == 'Hegnabrunn') & (df_conf['Lagerzone'] == 'Lager Rack')
+
+    elif category == 'ARVATO':
+        m_inv = (df_inv['StandortGeografisch'] == 'Elmshorn') & (df_inv['Lagerzone'] == 'Lager Rack')
+        if m_conf is not None:
+            m_conf = (df_conf['StandortGeografisch'] == 'Elmshorn') & (df_conf['Lagerzone'] == 'Lager Rack')
+
     # --- 3. Kapazitäts-Berechnung (Erst Filtern, dann Duplikate weg) ---
     capacity_val = 0
     if m_conf is not None and not df_conf.empty:
         df_c_filtered = df_conf[m_conf].copy()
         if not df_c_filtered.empty:
-            # Wir entfernen Duplikate basierend auf der Sensor_ID. 
-            # Da Sensor_ID bei KN teils NaN ist, nehmen wir eine Kombi aus Lagerzone/Halle als Fallback.
-            df_c_filtered['dedup_key'] = df_c_filtered['Sensor_ID'].fillna(
-                df_c_filtered['StandortGeografisch'] + df_c_filtered['Lagerhalle'] + df_c_filtered['Lagerzone']
+            # 1. Spalten sicherstellen und Numeric
+            for col in ['MaxKapazitaetLagerzone', 'MaxKapazitaetHalle']:
+                if col not in df_c_filtered.columns:
+                    df_c_filtered[col] = 0
+                else:
+                    df_c_filtered[col] = pd.to_numeric(df_c_filtered[col], errors='coerce').fillna(0)
+
+            # 2. Effektive Kapazität pro Zeile berechnen (Entweder Zone oder Halle)
+            # Wir nehmen Zone, wenn > 0, sonst Halle.
+            df_c_filtered['EffectiveCap'] = df_c_filtered.apply(
+                lambda row: row['MaxKapazitaetLagerzone'] if row['MaxKapazitaetLagerzone'] > 0 else row['MaxKapazitaetHalle'],
+                axis=1
             )
-            df_c_unique = df_c_filtered.drop_duplicates(subset=['dedup_key'])
-            capacity_val = df_c_unique['MaxKapazitaetLagerzone'].sum()
-            # wenn leer dann vernde die Spalte MaxKapazitaetHalle
-            if capacity_val == 0 and 'MaxKapazitaetHalle' in df_c_unique.columns:
-                capacity_val = df_c_unique['MaxKapazitaetHalle'].sum()
+
+            # 3. Duplikate entfernen (Sensor-Level -> Storage Unit Level)
+            # Nutzung von StorageHash wenn vorhanden, sonst Fallback auf Standort+Halle+Zone
+            if 'StorageHash' in df_c_filtered.columns:
+                df_c_unique = df_c_filtered.drop_duplicates(subset=['StorageHash'])
+            else:
+                # Fallback Key
+                df_c_filtered['dedup_key'] = (
+                    df_c_filtered['StandortGeografisch'].fillna('') + 
+                    df_c_filtered['Lagerhalle'].fillna('') + 
+                    df_c_filtered['Lagerzone'].fillna('') +
+                    df_c_filtered['Fachbereich'].fillna('')
+                )
+                df_c_unique = df_c_filtered.drop_duplicates(subset=['dedup_key'])
+            
+            # 4. Summe bilden
+            capacity_val = df_c_unique['EffectiveCap'].sum()
 
     # --- 4. Bestands-Berechnung ---
     df_inv_filtered = df_inv[m_inv].copy()
@@ -217,7 +255,7 @@ def render_tile(title, category_key, df_inv, df_conf, latest_date_norm):
     current_val, capacity, history, df_details = get_filtered_metrics(category_key, df_inv, df_conf, latest_date_norm)
     
     # Determine Unit Label
-    unit = "Karton" if category_key in ['DIET', 'Leaf'] else "Pal"
+    unit = "Karton" if category_key in ['DIET', 'LEAF'] else "Pal"
     
     with st.container(border=True):
         # --- ZEILE 1: LOGO (Linksbündig & Größer) ---
@@ -298,8 +336,7 @@ def app():
         return
 
     # --- 1. BAYREUTH HUB ---
-    st.subheader("🏭 Bayreuth Hub")
-    
+    st.markdown("---")
     # Layout: 5 Columns
     cols = st.columns(5)
     
@@ -312,7 +349,6 @@ def app():
     st.markdown("---")
 
     # --- 2. KÜHNE & NAGEL ---
-    st.subheader("🚚 Kühne & Nagel Network")
     
     # Layout: 5 Columns
     cols_kn = st.columns(5)
@@ -321,6 +357,17 @@ def app():
     for i, city in enumerate(kn_cities):
         with cols_kn[i]:
             render_tile(city, city, df_inv, df_conf, latest_date)
+
+    st.markdown("---")
+
+    # --- 3. RRP Läger ---
+    
+    cols_rrp = st.columns(5)
+    rrp_cats = ['LOG-IN', 'ARVATO']
+
+    for i, cat in enumerate(rrp_cats):
+        with cols_rrp[i]:
+            render_tile(cat, cat, df_inv, df_conf, latest_date)
 
 
 if __name__ == "__main__":
