@@ -28,6 +28,7 @@ SQLAlchemy==2.0.30
 pyodbc==5.1.0
 delta-spark
 deltalake
+adlfs==2025.8.0
 
 # utils
 bcrypt==4.1.3

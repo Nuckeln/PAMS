@@ -768,8 +768,8 @@ def LKWProgress(df):
 
 def PageTagesReport():
     pd.set_option("display.precision", 0)
-    if st.session_state.user == 'Lager':
-        sar.st_autorefresh(interval=88000, debounce=True)
+    #if st.session_state.user == 'Lager':
+    sar.st_autorefresh(interval=180000, debounce=True)
     
     colhead1, colhead2 ,colhead3, colhead4 = st.columns(4)
     with colhead1:

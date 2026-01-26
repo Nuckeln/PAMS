@@ -35,9 +35,10 @@ class SynapseReader:
             cls._fs = pa.fs.PyFileSystem(pa.fs.FSSpecHandler(abfs))
 
     @classmethod
-    def load_delta(cls, folder_path: str, as_pandas: bool = False):
+    def load_delta(cls, folder_path: str, as_pandas: bool = False, filters=None):
         """
-        Lädt eine Delta-Tabelle vollständig (ohne Filter).
+        Lädt eine Delta-Tabelle.
+        Optional mit Filter (PyArrow Compute Expression), z.B. pc.field("Date") >= ...
         Rückgabe: PyArrow Table (default) oder Pandas DataFrame (as_pandas=True).
         """
         delta_uri = f"abfs://{cls.CONTAINER_NAME}@{cls.STORAGE_ACCOUNT_NAME}.dfs.core.windows.net/{folder_path}"
@@ -49,7 +50,11 @@ class SynapseReader:
         try:
             dt = DeltaTable(delta_uri, storage_options=storage_options)
             dataset = dt.to_pyarrow_dataset()
-            table = dataset.scanner(use_threads=True).to_table()
+            
+            # Use filter if provided
+            scanner = dataset.scanner(use_threads=True, filter=filters) if filters is not None else dataset.scanner(use_threads=True)
+            table = scanner.to_table()
+            
             return table.to_pandas(split_blocks=True, self_destruct=True) if as_pandas else table
         except TableNotFoundError:
             print(f"Warning: Delta table not found at {delta_uri}")
