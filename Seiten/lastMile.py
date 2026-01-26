@@ -7,6 +7,7 @@ import os
 import ssl
 import datetime
 import re
+import streamlit_autorefresh as sar
 
 # --- FIX: SSL Zertifikatsfehler umgehen ---
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -254,7 +255,8 @@ def plot_fancy_map(df, depot_name_mapping):
 
 
 def app():
-    # Daten laden
+    sar.st_autorefresh(interval=120000, debounce=True)
+
     df_raw, df_Kunden = load_and_prep_data()
     
     if df_raw.empty:
