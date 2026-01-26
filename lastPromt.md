@@ -114,4 +114,3 @@ Summe aus MaxKapazitaetLagerzone
 
 
 
-

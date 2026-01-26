@@ -135,19 +135,19 @@ def get_filtered_metrics(category, df_inv, df_conf, latest_date):
         metric_type = 'sum_unit'
         # StockConfig
         if not df_conf.empty:
-            mask_conf = (df_conf['StockConfigGermany'] == 'DIET') & (df_conf['Lagerzone'] == 'Blocklager')
+            mask_conf = (df_conf['Fachbereich'] == 'DIET') & (df_conf['Lagerzone'] == 'Blocklager')
             
     elif category == 'LEAF':
         mask_inv = (df_inv['Fachbereich'] == 'LEAF') & (df_inv['Lagerzone'] == 'Blocklager')
         metric_type = 'sum_unit'
         if not df_conf.empty:
-            mask_conf = (df_conf['StockConfigGermany'] == 'LEAF') & (df_conf['Lagerzone'] == 'Blocklager')
+            mask_conf = (df_conf['Fachbereich'] == 'LEAF') & (df_conf['Lagerzone'] == 'Blocklager')
 
     elif category == 'C&F':
         mask_inv = (df_inv['Fachbereich'] == 'C&F') & (df_inv['Lagerzone'] == 'Regallager')
         metric_type = 'count'
         if not df_conf.empty:
-            mask_conf = (df_conf['StockConfigGermany'] == 'C&F') & (df_conf['Lagerzone'] == 'Regallager')
+            mask_conf = (df_conf['Fachbereich'] == 'C&F') & (df_conf['Lagerzone'] == 'Regallager')
 
     elif category == 'EXPORT':
         # Fachbereich = Finished Goods Export
@@ -156,7 +156,7 @@ def get_filtered_metrics(category, df_inv, df_conf, latest_date):
                    (df_inv['Lagerzone'].isin(['Hochregallager', 'Regallager', 'Blocklager']))
         metric_type = 'count'
         if not df_conf.empty:
-            mask_conf = (df_conf['StockConfigGermany'] == 'Finished Goods Export') & \
+            mask_conf = (df_conf['Fachbereich'] == 'Finished Goods Export') & \
                         (df_conf['Lagerzone'].isin(['Hochregallager', 'Regallager', 'Blocklager']))
 
     elif category == 'DOMESTIC':
@@ -168,7 +168,7 @@ def get_filtered_metrics(category, df_inv, df_conf, latest_date):
                    (df_inv['StandortGeografisch'] == 'Bayreuth')
         metric_type = 'count'
         if not df_conf.empty:
-            mask_conf = (df_conf['StockConfigGermany'] == 'Domestic Deutschland') & \
+            mask_conf = (df_conf['Fachbereich'] == 'Domestic Deutschland') & \
                         (df_conf['StandortGeografisch'] == 'Bayreuth') & \
                         (df_conf['Lagerzone'].isin(['Blocklager', 'Regallager']))
 

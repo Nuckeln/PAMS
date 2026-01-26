@@ -38,3 +38,4 @@ patsy==0.5.6 # dependency for statsmodels
 scipy==1.13.0 # dependency for statsmodels
 fsspec
 watchdog
+pgeocode
