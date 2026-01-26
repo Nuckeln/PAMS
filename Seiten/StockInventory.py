@@ -14,7 +14,7 @@ except ImportError:
 LOGO_MAP = {
     'DIET': 'Data/img/DIET_LOGO.png',
     'LEAF': 'Data/img/LEAF_LOGO.png',
-    'EXPORT': 'Data/img/outbound.png', 
+    'EXPORT': 'Data/img/LC_LOGO.png', 
     'DOMESTIC': 'Data/img/Domestic_LOGO.png',
     'C&F': 'Data/img/C&F_LOGO.png',
     'KN': 'Data/img/kuehne-nagel-logo-blue.png',

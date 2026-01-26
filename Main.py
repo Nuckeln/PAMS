@@ -282,7 +282,7 @@ def main():
             st.stop()
 
         # 2. Logo setzen
-        st.logo("/Users/martinwolf/Python/PAMS/Data/img/PAMS.svg") 
+        st.logo("Data/img/PAMS.svg") 
 
         # 3. Seiten zusammenstellen
         allowed_page_names = user_menue_rechte()
