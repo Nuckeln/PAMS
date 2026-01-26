@@ -22,27 +22,27 @@ st.set_page_config(page_title="Last Mile Analytics", layout="wide", page_icon="�
 
 # --- Globale Konstanten ---
 DEPOT_NAME_MAPPING = {
-    "BE5": "Bielefeld",
+    "BE5": "Berlin",
     "BF5": "Bielefeld",
-    "ECH": "DE52 - München",
-    "GNM": "DE53 - Berlin",
+    "ECH": "München",
+    "GNM": "Berlin",
     "GRE": "Bielefeld",
-    "HA5": "DE55 - Sehnde",
-    "HH5": "DE54 - Hamburg",
-    "HRO": "DE54 - Hamburg",
-    "KIE": "DE54 - Hamburg",
-    "LE5": "DE57 - Schkeuditz",
+    "HA5": "Hannover",
+    "HH5": "Hamburg",
+    "HRO": "Hamburg",
+    "KIE": "Hamburg",
+    "LE5": "Schkeuditz",
     "MA5": "Mainz",
-    "MU5": "DE52 - München",
-    "NU5": "DE52 - München",
-    "PTD": "DE53 - Berlin",
-    "Rheine": "DE56 - Duisburg",
-    "ROW": "DE54 - Hamburg",
-    "ST5": "DE59 - Gärtringen",
-    "STB": "DE52 - München",
-    "STW": "DE52 - München"
+    "RH5": "Duisburg",
+    "MU5": "München",
+    "NU5": "München",
+    "PTD": "Berlin",
+    "Rheine": "Duisburg",
+    "ROW": "Hamburg",
+    "ST5": "Gärtringen",
+    "STB": "München",
+    "STW": "München"
 }
-
 
 # --- 1. Helper Funktionen & Mapping (NEU ANGEPASST) ---
 
@@ -91,36 +91,13 @@ def check_punctuality(row):
     return True
 
 def get_status_category(row):
-    """
-    Exaktes Mapping nach Kundenvorgabe
-    """
-    code = str(row['ZEBRAXXSTATUSCODE'])
-    
-    # --- GRÜN: Erfolg ---
+    code = str(row.get('ZEBRAXXSTATUSCODE', ''))
     if code == '8021':
-        return "Erfolgreich zugestellt", "#2ca02c" # Sattgrün
-        
-    # --- BLAU: Unterwegs / Aktiv ---
-    elif code == '8010':
-        return "In Zustellung (bei Fahrer)", "#1f77b4" # Kräftiges Blau
-        
-    # --- HELLBLAU: Geplant / Noch im Depot ---
-    elif code == '8001':
-        return "Geplant / Papierprozess", "#aec7e8" # Helles Blau
-        
-    # --- ROT: Kritisch / Probleme ---
-    elif code in ['8023', '8025', '8041']:
-        # 8023: AV Kunde
-        # 8025: Nicht übergeben (Streik etc)
-        # 8041: Rücklauf im Depot
-        return "Problem / Retoure", "#d62728" # Rot
-        
-    # --- GRAU: Storniert / Gelöscht ---
-    elif code in ['8009', '8026', '8027']:
-        return "Storniert / Gelöscht", "#7f7f7f" # Grau
+        return "Geliefert", "#2ca02c"  # Grün
+    else:
+        return "Nicht geliefert", "#d62728"  # Rot
 
-    # Fallback
-    return "Unbekannter Status", "#bcbd22"
+
 
 @st.cache_data
 def load_and_prep_data():
@@ -152,6 +129,8 @@ def load_and_prep_data():
 
     # Geocoding
     nomi = pgeocode.Nominatim('de')
+    # Ensure PLZ is string and 5 chars (leading zeros)
+    df['PLZ'] = df['PLZ'].astype(str).str.zfill(5)
     plz_locations = df['PLZ'].unique()
     geo_data = nomi.query_postal_code(plz_locations.astype(str))
     
@@ -182,81 +161,97 @@ def load_and_prep_data():
     
     return df, df_kunden
 
-# --- 2. Visualisierung: Die Map (ZOOM FIX) ---
-
 def plot_fancy_map(df, depot_name_mapping):
     if df.empty or 'latitude' not in df.columns:
         st.warning("Keine Geodaten verfügbar.")
         return go.Figure()
 
-    # Depot Zentren berechnen
-    depot_centers = df.groupby('ZUSTELLENDESDEPOT')[['latitude', 'longitude']].mean().reset_index()
-    depot_centers.rename(columns={'latitude': 'depot_lat', 'longitude': 'depot_lon'}, inplace=True)
+    df_map = df.copy()
     
-    # Map depot codes to names for display
-    depot_centers['DEPOT_NAME_DISPLAY'] = depot_centers['ZUSTELLENDESDEPOT'].map(depot_name_mapping).fillna(depot_centers['ZUSTELLENDESDEPOT'])
+    # Sicherstellen, dass die Status-Spalten existieren (falls Cache-Probleme vorliegen)
+    if 'Status_Text' not in df_map.columns:
+        df_map[['Status_Text', 'Color']] = df_map.apply(lambda row: pd.Series(get_status_category(row)), axis=1)
+
+    # Depot Mapping
+    df_map['DEPOT_NAME_DISPLAY'] = df_map['ZUSTELLENDESDEPOT'].map(depot_name_mapping).fillna(df_map['ZUSTELLENDESDEPOT'])
+
+    depot_locations = {
+        "Bielefeld": {"depot_lat": 52.0302, "depot_lon": 8.5325},
+        "München": {"depot_lat": 48.1351, "depot_lon": 11.5820},
+        "Berlin": {"depot_lat": 52.5200, "depot_lon": 13.4050},
+        "Hamburg": {"depot_lat": 53.5511, "depot_lon": 9.9937},
+        "Hannover": {"depot_lat": 52.3759, "depot_lon": 9.7320},
+        "Duisburg": {"depot_lat": 51.4325, "depot_lon": 6.7623},
+        "Schkeuditz": {"depot_lat": 51.3936, "depot_lon": 12.2230},
+        "Gärtringen": {"depot_lat": 48.6410, "depot_lon": 8.8988},
+        "Mainz": {"depot_lat": 49.9929, "depot_lon": 8.2473}
+    }
     
-    df_map = df.merge(depot_centers, on='ZUSTELLENDESDEPOT', how='left')
+    depot_centers = pd.DataFrame.from_dict(depot_locations, orient='index').reset_index()
+    depot_centers.rename(columns={'index': 'DEPOT_NAME_DISPLAY'}, inplace=True)
+    df_map = df_map.merge(depot_centers, on='DEPOT_NAME_DISPLAY', how='left')
+    df_map = df_map.dropna(subset=['latitude', 'longitude', 'depot_lat', 'depot_lon'])
 
     fig = go.Figure()
 
-    # A. Linien (Spider)
-    for status, color in df_map[['Status_Text', 'Color']].drop_duplicates().values:
+    # Wir nutzen die tatsächlichen Werte, die in der Spalte vorkommen
+    available_statuses = df_map['Status_Text'].unique()
+
+    for status in available_statuses:
         subset = df_map[df_map['Status_Text'] == status]
-        lats = []
-        lons = []
+        color = subset['Color'].iloc[0]
+        
+        # A. Linien
+        lats, lons = [], []
         for _, row in subset.iterrows():
-            lats.append(row['depot_lat'])
-            lats.append(row['latitude'])
-            lats.append(None)
-            lons.append(row['depot_lon'])
-            lons.append(row['longitude'])
-            lons.append(None)
+            lats.extend([row['depot_lat'], row['latitude'], None])
+            lons.extend([row['depot_lon'], row['longitude'], None])
         
         fig.add_trace(go.Scattermapbox(
             mode="lines",
-            lon=lons,
-            lat=lats,
+            lon=lons, lat=lats,
             line=dict(width=1, color=color),
-            opacity=0.5, # Etwas sichtbarer gemacht
-            name=f"Route ({status})",
-            hoverinfo='skip'
+            opacity=0.4, 
+            name=f"Route {status}",
+            showlegend=False,
+            legendgroup=status
         ))
 
-    # B. Kunden Punkte
-    fig.add_trace(go.Scattermapbox(
-        mode="markers",
-        lon=df_map['longitude'],
-        lat=df_map['latitude'],
-        marker=dict(size=9, color=df_map['Color']),
-        text=df_map['NAME'] + "<br>" + df_map['Status_Text'],
-        name="Kunden"
-    ))
+        # B. Kunden Punkte
+        fig.add_trace(go.Scattermapbox(
+            mode="markers",
+            lon=subset['longitude'],
+            lat=subset['latitude'],
+            marker=dict(size=8, color=color),
+            text=subset['NAME'] + "<br>Status: " + status,
+            name=status,
+            legendgroup=status
+        ))
 
-    # C. Depots
+    # C. Depots (Immer Schwarz)
+    active_depots = depot_centers[depot_centers['DEPOT_NAME_DISPLAY'].isin(df_map['DEPOT_NAME_DISPLAY'].unique())]
     fig.add_trace(go.Scattermapbox(
         mode="markers+text",
-        lon=depot_centers['depot_lon'],
-        lat=depot_centers['depot_lat'],
-        marker=dict(size=18, color='black', symbol='circle'), # Etwas größer
-        text=depot_centers['DEPOT_NAME_DISPLAY'],
+        lon=active_depots['depot_lon'],
+        lat=active_depots['depot_lat'],
+        marker=dict(size=14, color='black'),
+        text=active_depots['DEPOT_NAME_DISPLAY'],
         textposition="top center",
         name="Depots"
     ))
 
-    # --- MAP OPTIMIERUNG ---
     fig.update_layout(
         mapbox_style="carto-positron",
-        mapbox_zoom=5.8, # <-- HIER: Zoom erhöht (näher ran)
-        mapbox_center={"lat": 51.1657, "lon": 10.4515}, # Geometrisches Zentrum DE
+        mapbox_zoom=5.6,
+        mapbox_center={"lat": 51.1657, "lon": 10.4515},
         margin={"r":0,"t":0,"l":0,"b":0},
         height=800,
-        legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01, bgcolor="rgba(255,255,255,0.8)")
+        #legend=dict(bgcolor="rgba(255,255,255,0.7)")
     )
-    
+    #legende ausblenden 
+    fig.update_layout(showlegend=False)
     return fig
 
-# --- 3. Haupt-App ---
 
 def app():
     # Daten laden
@@ -319,119 +314,66 @@ def app():
             st.info(f"Keine Aufträge für den {selected_date} gefunden.")
 
     with col_depots:
+            st.subheader("🏢 Depot Übersicht")
+            
+            # --- FIX: STRIKTES MAPPING FÜR DEPOT-KARTEN ---
+            df_display = df.copy()
+            # Mappen OHNE fillna(), damit unbekannte Depots zu NaN werden
+            df_display['ZUSTELLENDESDEPOT_NAME'] = df_display['ZUSTELLENDESDEPOT'].map(DEPOT_NAME_MAPPING)
+            
+            # Alle Zeilen löschen, die keinem der 9 Hauptdepots zugeordnet werden konnten
+            df_display = df_display.dropna(subset=['ZUSTELLENDESDEPOT_NAME'])
+            
+            # Jetzt erhalten wir maximal 9 Depots
+            depots = sorted(df_display['ZUSTELLENDESDEPOT_NAME'].unique())
+            
+            if depots:
+                # Wir erstellen 2 Spalten für die Depot-Karten (kompakteres Layout)
+                col_d1, col_d2 = st.columns(2)
 
-        
-        # Temporäre Spalte für die Anzeige erstellen
-        df_display = df.copy()
-        df_display['ZUSTELLENDESDEPOT_NAME'] = df_display['ZUSTELLENDESDEPOT'].map(DEPOT_NAME_MAPPING).fillna(df_display['ZUSTELLENDESDEPOT'])
-        
-        depots = sorted(df_display['ZUSTELLENDESDEPOT_NAME'].unique())
-        
-        if depots:
-            col_d1, col_d2 = st.columns(2)
-
-            for i, depot_name in enumerate(depots):
-                current_col = col_d1 if i % 2 == 0 else col_d2
-                
-                with current_col:
-                    depot_df = df_display[df_display['ZUSTELLENDESDEPOT_NAME'] == depot_name]
-                    total = len(depot_df)
-                    delivered = len(depot_df[depot_df['ZEBRAXXSTATUSCODE'].astype(str) == '8021'])
+                for i, depot_name in enumerate(depots):
+                    current_col = col_d1 if i % 2 == 0 else col_d2
                     
-                    # Pünktlichkeit berechnen
-                    # Wir schauen nur auf Delivered Items
-                    delivered_df = depot_df[depot_df['ZEBRAXXSTATUSCODE'].astype(str) == '8021']
-                    punctual_count = len(delivered_df[delivered_df['Is_Punctual'] == True])
-                    punctuality_rate = 0
-                    if delivered > 0:
-                        punctuality_rate = (punctual_count / delivered) * 100
-
-                    # Gesamtwartezeit berechnen
-                    total_wait_min = depot_df['Wartezeit_min'].sum()
-                    
-                    with st.container(border=True):
-                        logo_col, title_col = st.columns([1, 4])
-                        kn_logo_path = "Data/img/kuehne-nagel-logo-blue.png"
-                        if os.path.exists(kn_logo_path):
-                            logo_col.image(kn_logo_path, width=30)
+                    with current_col:
+                        depot_df = df_display[df_display['ZUSTELLENDESDEPOT_NAME'] == depot_name]
+                        total = len(depot_df)
+                        delivered = len(depot_df[depot_df['ZEBRAXXSTATUSCODE'].astype(str) == '8021'])
                         
-                        title_col.markdown(f"**{depot_name}**")
+                        # Pünktlichkeit berechnen
+                        delivered_df = depot_df[depot_df['ZEBRAXXSTATUSCODE'].astype(str) == '8021']
+                        punctual_count = len(delivered_df[delivered_df['Is_Punctual'] == True])
+                        punctuality_rate = (punctual_count / delivered * 100) if delivered > 0 else 0
 
-                        # 1. Text: Zugestellt
-                        st.write(f"{delivered} von {total} zugestellt.")
+                        # Gesamtwartezeit in Minuten
+                        total_wait_min = depot_df['Wartezeit_min'].sum()
                         
-                        # 2. Balken (Status)
-                        if total > 0:
-                            progress_value = delivered / total
+                        with st.container(border=True):
+                            # Titelzeile mit kleinem Icon
+                            logo_col, title_col = st.columns([1, 4])
+                            # Falls du das Kühne+Nagel Logo hast, wird es hier angezeigt, sonst Text
+                            kn_logo_path = "Data/img/kuehne-nagel-logo-blue.png"
+                            if os.path.exists(kn_logo_path):
+                                logo_col.image(kn_logo_path, width=30)
+                            
+                            title_col.markdown(f"**{depot_name}**")
+
+                            # 1. Status Text
+                            st.caption(f"{delivered} von {total} zugestellt")
+                            
+                            # 2. Fortschrittsbalken
+                            progress_value = (delivered / total) if total > 0 else 0
                             st.progress(progress_value)
-                        else:
-                            st.progress(0)
-                            
-                        # 3. Wartezeit & Pünktlichkeit
-                        c_wait, c_punc = st.columns(2)
-                        c_wait.write(f"⏳ Wartezeit: {total_wait_min:.0f} min")
-                        c_punc.write(f"⏱️ Pünktlich: {punctuality_rate:.1f}%")
+                                
+                            # 3. KPIs klein darunter
+                            c_wait, c_punc = st.columns(2)
+                            c_wait.write(f"⏳ {total_wait_min:.0f} min")
+                            c_punc.write(f"⏱️ {punctuality_rate:.0f}%")
 
-        else:
-            st.info("Keine Depot-Daten für das ausgewählte Datum.")
+            else:
+                st.info("Keine passenden Depot-Daten für das ausgewählte Datum.")
 
-    # --- Top Kunden Übersicht ---
-    st.markdown("---")
-    st.subheader("🏆 Top Kunden Status")
-    st.markdown("Übersicht Key-Accounts")
-    
-    logo_map = {
-        "EDEKA": "Data/img/Kundenlogos/EDEKA.png",
-        "NETTO": "Data/img/Kundenlogos/NETTO.png",
-        "REWE": "Data/img/Kundenlogos/REWE.png",
-        "HALL": "Data/img/Kundenlogos/HALL.jpg"
-    }
 
-    if not df.empty:
-        # Decide on number of columns based on number of logos
-        cols = st.columns(len(logo_map))
-
-        for idx, (key, path) in enumerate(logo_map.items()):
-            with cols[idx]:
-                with st.container(border=True):
-                    if os.path.exists(path):
-                        st.image(path, width='content')
-                    else:
-                        st.markdown(f"**{key}**")
-                    
-                    client_df = df[df['NAME'].str.contains(key, case=False, na=False)]
-                    
-                    if not client_df.empty:
-                        cnt = len(client_df)
-                        fails = len(client_df[client_df['ZEBRAXXSTATUSCODE'].astype(str).isin(['8023', '8041', '8025'])])
-                        avg_wait_time = client_df['Wartezeit_min'].mean()
-                        
-                        # Pünktlichkeit Kunde
-                        client_del = client_df[client_df['ZEBRAXXSTATUSCODE'].astype(str) == '8021']
-                        client_punc_rate = 0
-                        if len(client_del) > 0:
-                            p_cnt = len(client_del[client_del['Is_Punctual'] == True])
-                            client_punc_rate = (p_cnt / len(client_del)) * 100
-
-                        st.metric("Aufträge", f"{cnt}")
-                        
-                        if fails > 0:
-                            st.metric("Kritisch", f"{fails}", delta=f"{fails * -1}")
-                        else:
-                            st.metric("Kritisch", "0", delta="0")
-
-                        if not pd.isna(avg_wait_time) and avg_wait_time > 0:
-                            st.metric("Ø Wartezeit", f"{avg_wait_time:.0f} min")
-                        else:
-                            st.metric("Ø Wartezeit", "-")
-                            
-                        st.metric("Pünktlichkeit", f"{client_punc_rate:.1f}%")
-                    else:
-                        st.caption("Keine Aufträge")
-    else:
-        st.info("Keine Kundendaten für das ausgewählte Datum.")
-
-    # Detail Tabelle
+        # Detail Tabelle
     st.markdown("---")
     with st.expander("📋 Detaillierte Datentabelle ansehen"):
         if not df.empty:
@@ -480,6 +422,7 @@ def app():
                 df_display_table[existing_cols].rename(columns=rename_map),
                 width='content'
             )
+            st.dataframe(df, width='content')
 
 if __name__ == "__main__":
     app()

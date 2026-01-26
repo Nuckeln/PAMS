@@ -11,6 +11,7 @@ except ImportError:
     SynapseReader = None
 
 # --- CONFIGURATION & LOGOS ---
+# --- CONFIGURATION & LOGOS ---
 LOGO_MAP = {
     'DIET': 'Data/img/DIET_LOGO.png',
     'LEAF': 'Data/img/LEAF_LOGO.png',
@@ -18,9 +19,14 @@ LOGO_MAP = {
     'DOMESTIC': 'Data/img/Domestic_LOGO.png',
     'C&F': 'Data/img/C&F_LOGO.png',
     'KN': 'Data/img/kuehne-nagel-logo-blue.png',
-    'Bayreuth': 'Data/img/logo_login_spedition.png'
+    'Bayreuth': 'Data/img/logo_login_spedition.png',
+    # Individuelle KN Logos
+    'Berlin': 'Data/img/KN_Berlin.py.png',
+    'Duisburg': 'Data/img/KN_Dui.py.png',
+    'Hamburg': 'Data/img/KN_Hamburg.py.png',
+    'Mainz': 'Data/img/KN_mainz.py.png',
+    'München': 'Data/img/KN_muc.py.png'
 }
-
 # KN Location Mapping
 KN_MAPPING = {
     'DE52': 'München', 'MU5': 'München', 'NU5': 'München', 'STB': 'München', 'STW': 'München', 'ECH': 'München',
@@ -109,123 +115,100 @@ def process_data(df_inv, df_conf):
 
     return df_inv, df_conf
 
+
 def get_filtered_metrics(category, df_inv, df_conf, latest_date):
     """
-    Calculates metrics for a specific category based on the defined rules.
-    Returns:
-        current_stock (float/int),
-        capacity (float/int),
-        history_df (DataFrame),
-        current_df_filtered (DataFrame)
+    Berechnet Bestände und Kapazitäten mit strikter Duplikat-Bereinigung 
+    nach dem Filtern.
     """
-    
-    # --- 1. Define Filters ---
-    
-    # Inventory Filters (Boolean Masks)
-    mask_inv = None
-    metric_type = 'count' # or 'sum_unit'
-    
-    # Config Filters (Boolean Masks)
-    mask_conf = None
-    
-    # Logic Switch
-    if category == 'DIET':
-        # StockInventory
-        mask_inv = (df_inv['Fachbereich'] == 'DIET') & (df_inv['Lagerzone'] == 'Blocklager')
-        metric_type = 'sum_unit'
-        # StockConfig
-        if not df_conf.empty:
-            mask_conf = (df_conf['Fachbereich'] == 'DIET') & (df_conf['Lagerzone'] == 'Blocklager')
-            
-    elif category == 'LEAF':
-        mask_inv = (df_inv['Fachbereich'] == 'LEAF') & (df_inv['Lagerzone'] == 'Blocklager')
-        metric_type = 'sum_unit'
-        if not df_conf.empty:
-            mask_conf = (df_conf['Fachbereich'] == 'LEAF') & (df_conf['Lagerzone'] == 'Blocklager')
-
-    elif category == 'C&F':
-        mask_inv = (df_inv['Fachbereich'] == 'C&F') & (df_inv['Lagerzone'] == 'Regallager')
-        metric_type = 'count'
-        if not df_conf.empty:
-            mask_conf = (df_conf['Fachbereich'] == 'C&F') & (df_conf['Lagerzone'] == 'Regallager')
-
-    elif category == 'EXPORT':
-        # Fachbereich = Finished Goods Export
-        # Lagerzone = Hochregallager OR Regallager OR Blocklager
-        mask_inv = (df_inv['Fachbereich'] == 'Finished Goods Export') & \
-                   (df_inv['Lagerzone'].isin(['Hochregallager', 'Regallager', 'Blocklager']))
-        metric_type = 'count'
-        if not df_conf.empty:
-            mask_conf = (df_conf['Fachbereich'] == 'Finished Goods Export') & \
-                        (df_conf['Lagerzone'].isin(['Hochregallager', 'Regallager', 'Blocklager']))
-
-    elif category == 'DOMESTIC':
-        # Fachbereich = Domestic Deutschland
-        # Lagerzone = Blocklager OR Regallager
-        # StandortGeografisch = Bayreuth
-        mask_inv = (df_inv['Fachbereich'] == 'Domestic Deutschland') & \
-                   (df_inv['Lagerzone'].isin(['Blocklager', 'Regallager'])) & \
-                   (df_inv['StandortGeografisch'] == 'Bayreuth')
-        metric_type = 'count'
-        if not df_conf.empty:
-            mask_conf = (df_conf['Fachbereich'] == 'Domestic Deutschland') & \
-                        (df_conf['StandortGeografisch'] == 'Bayreuth') & \
-                        (df_conf['Lagerzone'].isin(['Blocklager', 'Regallager']))
-
-    elif category in ['München', 'Hamburg', 'Mainz', 'Duisburg', 'Berlin']: # KN Depots
-        # Uses Mapped Name column 'StandortName'
-        mask_inv = (df_inv['Fachbereich'] == 'Domestic Deutschland') & \
-                   (df_inv['Lagerzone'] == 'Paletten Zone') & \
-                   (df_inv['StandortName'] == category)
-        metric_type = 'count'
-        
-        if not df_conf.empty:
-            mask_conf = (df_conf['Fachbereich'] == 'Domestic Deutschland') & \
-                        (df_conf['Lagerzone'] == 'Paletten Zone') & \
-                        (df_conf['StandortName'] == category)
-            
-    else:
+    if df_inv.empty:
         return 0, 0, pd.DataFrame(), pd.DataFrame()
 
-    # --- 2. Calculate Inventory Metrics ---
-    
-    # Filter full inventory history
-    df_inv_filtered = df_inv[mask_inv].copy() if not df_inv.empty else pd.DataFrame()
-    
-    # Calculate Daily Stats (History)
-    if not df_inv_filtered.empty:
-        if metric_type == 'sum_unit':
-            history = df_inv_filtered.groupby('Date')['MengeVerkaufseinheit'].sum().reset_index(name='Value')
-        else: # count rows
-            history = df_inv_filtered.groupby('Date').size().reset_index(name='Value')
-    else:
-        history = pd.DataFrame(columns=['Date', 'Value'])
+    # --- 1. Filter-Initialisierung ---
+    m_inv = pd.Series(False, index=df_inv.index)
+    m_conf = pd.Series(False, index=df_conf.index) if not df_conf.empty else None
+    metric_type = 'count' # Standard: Paletten zählen
 
-    # Current Stock Value (latest available date in dataset)
-    current_val = 0
-    df_current_filtered = pd.DataFrame()
+    # --- 2. Spezifische Filter-Regeln ---
     
-    if not df_inv_filtered.empty:
-        df_current_filtered = df_inv_filtered[df_inv_filtered['Date'] == latest_date]
-        
-        if metric_type == 'sum_unit':
-            current_val = df_current_filtered['MengeVerkaufseinheit'].sum()
-        else:
-            current_val = len(df_current_filtered)
-            
-    # --- 3. Calculate Capacity ---
+    if category == 'DIET':
+        m_inv = (df_inv['Fachbereich'] == 'DIET') & (df_inv['Lagerzone'] == 'Blocklager')
+        metric_type = 'sum_unit'
+        if m_conf is not None:
+            m_conf = (df_conf['Fachbereich'] == 'DIET') & (df_conf['Lagerzone'] == 'Blocklager')
+
+    elif category == 'LEAF':
+        # Abfrage auf beide Schreibweisen zur Sicherheit
+        target_fb = ['Leaf', 'LEAF']
+        target_zones = ['Blocklager']
+
+        m_inv = (df_inv['Fachbereich'].isin(target_fb)) & (df_inv['Lagerzone'].isin(target_zones))
+        metric_type = 'sum_unit'
+        if m_conf is not None:
+            m_conf = (df_conf['Fachbereich'].isin(target_fb)) & (df_conf['Lagerzone'].isin(target_zones))
+
+    elif category == 'C&F':
+        m_inv = (df_inv['Fachbereich'] == 'C&F') & (df_inv['Lagerzone'] == 'Regallager')
+        if m_conf is not None:
+            m_conf = (df_conf['Fachbereich'] == 'C&F') & (df_conf['Lagerzone'] == 'Regallager')
+
+    elif category == 'EXPORT':
+        zones = ['Hochregallager', 'Regallager', 'Blocklager']
+        m_inv = (df_inv['Fachbereich'] == 'Finished Goods Export') & (df_inv['Lagerzone'].isin(zones))
+        if m_conf is not None:
+            m_conf = (df_conf['Fachbereich'] == 'Finished Goods Export') & (df_conf['Lagerzone'].isin(zones))
+
+    elif category == 'DOMESTIC':
+        zones = ['Blocklager', 'Regallager']
+        m_inv = (df_inv['Fachbereich'] == 'Domestic Deutschland') & \
+                (df_inv['Lagerzone'].isin(zones)) & \
+                (df_inv['StandortGeografisch'] == 'Bayreuth')
+        if m_conf is not None:
+            m_conf = (df_conf['Fachbereich'] == 'Domestic Deutschland') & \
+                     (df_conf['StandortGeografisch'] == 'Bayreuth') & \
+                     (df_conf['Lagerzone'].isin(zones))
+
+    elif category in ['München', 'Hamburg', 'Mainz', 'Duisburg', 'Berlin']:
+        m_inv = (df_inv['Fachbereich'] == 'Domestic Deutschland') & \
+                (df_inv['Lagerzone'] == 'Paletten Zone') & \
+                (df_inv['StandortName'] == category)
+        if m_conf is not None:
+            m_conf = (df_conf['Fachbereich'] == 'Domestic Deutschland') & \
+                     (df_conf['Lagerzone'] == 'Paletten Zone') & \
+                     (df_conf['StandortName'] == category)
+
+    # --- 3. Kapazitäts-Berechnung (Erst Filtern, dann Duplikate weg) ---
     capacity_val = 0
-    if mask_conf is not None and not df_conf.empty:
-        df_conf_filtered = df_conf[mask_conf]
-        if not df_conf_filtered.empty:
-            # Remove duplicates from Sensor_ID
-            if 'Sensor_ID' in df_conf_filtered.columns:
-                df_conf_dedup = df_conf_filtered.drop_duplicates(subset=['Sensor_ID'])
-                capacity_val = df_conf_dedup['MaxKapazitaetLagerzone'].sum()
-            else:
-                capacity_val = df_conf_filtered['MaxKapazitaetLagerzone'].sum()
+    if m_conf is not None and not df_conf.empty:
+        df_c_filtered = df_conf[m_conf].copy()
+        if not df_c_filtered.empty:
+            # Wir entfernen Duplikate basierend auf der Sensor_ID. 
+            # Da Sensor_ID bei KN teils NaN ist, nehmen wir eine Kombi aus Lagerzone/Halle als Fallback.
+            df_c_filtered['dedup_key'] = df_c_filtered['Sensor_ID'].fillna(
+                df_c_filtered['StandortGeografisch'] + df_c_filtered['Lagerhalle'] + df_c_filtered['Lagerzone']
+            )
+            df_c_unique = df_c_filtered.drop_duplicates(subset=['dedup_key'])
+            capacity_val = df_c_unique['MaxKapazitaetLagerzone'].sum()
+            # wenn leer dann vernde die Spalte MaxKapazitaetHalle
+            if capacity_val == 0 and 'MaxKapazitaetHalle' in df_c_unique.columns:
+                capacity_val = df_c_unique['MaxKapazitaetHalle'].sum()
 
-    return current_val, capacity_val, history, df_current_filtered
+    # --- 4. Bestands-Berechnung ---
+    df_inv_filtered = df_inv[m_inv].copy()
+    if df_inv_filtered.empty:
+        return 0, capacity_val, pd.DataFrame(columns=['Date', 'Value']), pd.DataFrame()
+
+    # Historie (Summe oder Count)
+    if metric_type == 'sum_unit':
+        history = df_inv_filtered.groupby('Date')['MengeVerkaufseinheit'].sum().reset_index(name='Value')
+    else:
+        history = df_inv_filtered.groupby('Date').size().reset_index(name='Value')
+    
+    # Aktueller Tag
+    df_curr = df_inv_filtered[df_inv_filtered['Date'] == latest_date]
+    current_val = df_curr['MengeVerkaufseinheit'].sum() if metric_type == 'sum_unit' else len(df_curr)
+
+    return current_val, capacity_val, history, df_curr
 
 
 def render_tile(title, category_key, df_inv, df_conf, latest_date_norm):
@@ -234,61 +217,67 @@ def render_tile(title, category_key, df_inv, df_conf, latest_date_norm):
     current_val, capacity, history, df_details = get_filtered_metrics(category_key, df_inv, df_conf, latest_date_norm)
     
     # Determine Unit Label
-    unit = "Karton" if category_key in ['DIET', 'LEAF'] else "Pal"
+    unit = "Karton" if category_key in ['DIET', 'Leaf'] else "Pal"
     
     with st.container(border=True):
-        # Header / Logo
-        col_logo, col_metric = st.columns([1, 2])
+        # --- ZEILE 1: LOGO (Linksbündig & Größer) ---
+        logo_path = LOGO_MAP.get(category_key)
+        if not logo_path:
+            logo_path = LOGO_MAP.get('KN')
         
-        with col_logo:
-            logo_path = LOGO_MAP.get(category_key, LOGO_MAP.get('KN', None))
-            # KN logic
-            if category_key in ['München', 'Hamburg', 'Mainz', 'Duisburg', 'Berlin']:
-                 logo_path = LOGO_MAP['KN']
-            
+        # Spalten für linksbündige Ausrichtung (75% Breite für das Logo)
+        log_col, _ = st.columns([3, 1]) 
+        with log_col:
             if logo_path and os.path.exists(logo_path):
                 st.image(logo_path, use_container_width=True)
             else:
-                st.write(f"**{title}**")
+                st.markdown(f"### {title}")
 
-        with col_metric:
+        # --- ZEILE 2: METRIKEN (Bestand & Auslastung/Kapazität) ---
+        m1, m2 = st.columns(2)
+        with m1:
             st.metric(label=f"Bestand ({unit})", value=f"{current_val:,.0f}")
+        
+        with m2:
             if capacity > 0:
                 utilization = (current_val / capacity) * 100
-                st.caption(f"Kapazität: {capacity:,.0f} ({utilization:.1f}%)")
+                st.metric(label="Auslastung", value=f"{utilization:.1f}%")
+                # Kapazität klein darunter für den vollen Überblick
+                st.caption(f"Kapazität: {capacity:,.0f} {unit}")
             else:
-                st.caption("Kapazität: n/a")
+                st.metric(label="Kapazität", value="n/a")
 
-        # Sparkline / Chart
+        # --- ZEILE 3: SPARKLINE (Historie) ---
         if not history.empty:
             fig = px.area(history, x='Date', y='Value')
             fig.update_layout(
                 showlegend=False,
-                margin=dict(l=0, r=0, t=10, b=0),
-                height=80,
+                margin=dict(l=0, r=0, t=5, b=5),
+                height=50,
                 xaxis=dict(visible=False),
                 yaxis=dict(visible=False),
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)'
             )
-            fig.update_traces(line=dict(color='#0e2b63', width=2), fillcolor='rgba(14, 43, 99, 0.1)')
+            fig.update_traces(
+                line=dict(color='#0e2b63', width=2), 
+                fillcolor='rgba(14, 43, 99, 0.1)'
+            )
             st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
         
-        # Popup / Expander for Details
-        with st.expander("🔎 Details anzeigen"):
+        # --- ZEILE 4: DETAILS (Expander) ---
+        with st.expander("🔎 Details"):
             if not df_details.empty:
-                st.caption(f"Gefilterte Daten für {latest_date_norm.date()}")
-                # Select only relevant columns for display
-                display_cols = ['Material', 'Artikeltext', 'Charge', 'MengeVerkaufseinheit', 'Lagerplatz', 'Lagerzone']
+                display_cols = ['Material', 'Artikeltext', 'Charge', 'MengeVerkaufseinheit', 'Lagerplatz']
                 final_cols = [c for c in display_cols if c in df_details.columns]
-                if not final_cols: final_cols = df_details.columns 
-                
-                st.dataframe(df_details[final_cols], use_container_width=True, hide_index=True)
+                st.dataframe(df_details[final_cols], hide_index=True, use_container_width=True)
             else:
-                st.info("Keine Daten für den aktuellen Filter vorhanden.")
+                st.info("Keine Detaildaten.")
+
+
+
 
 def app():
-    st.markdown("## 📦 Lagerbestands-Übersicht")
     
     # Load Data
     with st.spinner("Lade Bestandsdaten..."):
@@ -304,7 +293,6 @@ def app():
     # Determine Latest Date (Global)
     if 'Date' in df_inv.columns:
         latest_date = df_inv['Date'].max()
-        st.info(f"Datenstand: {latest_date.strftime('%d.%m.%Y')}")
     else:
         st.error("Fehler: Datumsspalte konnte nicht ermittelt werden.")
         return

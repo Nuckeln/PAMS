@@ -18,24 +18,24 @@ StockConfigGermany Filtern auf
 
 StockConfigGermany = DIET
 Lagerzone = Blocklager 
-Duplicate aus Sensor_ID entfernen 
+Duplicate aus Lagerzone entfernen 
 Summe aus MaxKapazitaetLagerzone
 
-LEAF 
+Leaf 
 
 Anzeigen in Karton 
 StockInventoryGermany Filtern auf 
 
-Fachbereich = LEAF
+Fachbereich = Leaf
 Lagerzone = Blocklager 
 Summe aus MengeVerkaufseinheit
 
 Maximalwert für die Berechnung der Lagerauslastung
 StockConfigGermany Filtern auf 
 
-StockConfigGermany = LEAF
+StockConfigGermany = Leaf
 Lagerzone = Blocklager 
-Duplicate aus Sensor_ID entfernen 
+Duplicate aus Lagerzone entfernen 
 Summe aus MaxKapazitaetLagerzone
 
 C&F 
@@ -52,7 +52,7 @@ StockConfigGermany Filtern auf
 
 StockConfigGermany = C&F
 Lagerzone = Regallager 
-Duplicate aus Sensor_ID entfernen 
+Duplicate aus Lagerzone entfernen 
 Summe aus MaxKapazitaetLagerzone
 
 EXPORT
@@ -69,7 +69,7 @@ StockConfigGermany Filtern auf
 
 StockConfigGermany = Finished Goods Export
 Lagerzone = Hochregallager und  Regallager und Blocklager 
-Duplicate aus Sensor_ID entfernen 
+Duplicate aus Lagerzone entfernen 
 Summe aus MaxKapazitaetLagerzone
 
 
@@ -90,7 +90,7 @@ StockConfigGermany Filtern auf
 StockConfigGermany = Domestic Deutschland
 StandortGeografisch = Bayreuth
 Lagerzone = Blocklager und Regallager
-Duplicate aus Sensor_ID entfernen 
+Duplicate aus Lagerzone entfernen 
 Summe aus MaxKapazitaetLagerzone
 
 Für die Kühne und Nagel Läger gilt 
@@ -109,8 +109,32 @@ StockConfigGermany Filtern auf
 Fachbereich = Domestic Deutschland
 Lagerzone = Paletten Zone
 StandortGeografisch = das jeweilige DEPOT Main, Hamburg, München, Duisburg oder Berlin
-Duplicate aus Sensor_ID entfernen 
+Duplicate aus Lagerzone entfernen 
 Summe aus MaxKapazitaetLagerzone
 
 
 
+Hi schau mal die Map passt noch nicht die Koordinaten scheinen Verzogen zu sein? 
+
+Bitte sehe dir das Bild an und wir haben nur diese ausliefernden Depots wird müssen das zusammenfassen in der Übersicht das Passiert aktuell nicht denke ich 
+DEPOT_NAME_MAPPING = {
+    "BE5": "Bielefeld",
+    "BF5": "Bielefeld",
+    "ECH": "DE52 - München",
+    "GNM": "DE53 - Berlin",
+    "GRE": "Bielefeld",
+    "HA5": "DE55 - Hannover",
+    "HH5": "DE54 - Hamburg",
+    "HRO": "DE54 - Hamburg",
+    "KIE": "DE54 - Hamburg",
+    "LE5": "DE57 - Schkeuditz",
+    "MA5": "Mainz",
+    "MU5": "DE52 - München",
+    "NU5": "DE52 - München",
+    "PTD": "DE53 - Berlin",
+    "Rheine": "DE56 - Duisburg",
+    "ROW": "DE54 - Hamburg",
+    "ST5": "DE59 - Gärtringen",
+    "STB": "DE52 - München",
+    "STW": "DE52 - München"
+}
