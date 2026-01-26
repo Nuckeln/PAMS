@@ -145,7 +145,7 @@ def user_menue_rechte():
     return []
 
 # --- 4. DATENBANK ---
-@st.cache_data()
+
 def read_user():
     return read_Table("user")
 

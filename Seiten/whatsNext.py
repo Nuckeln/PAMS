@@ -8,7 +8,7 @@ from Data_Class import SynapseReader  # Assuming read_synapse.py is in the same 
 # --- CONFIGURATION & LOGOS ---
 # Paths to your logos (adjusted for 4 areas)
 LOGO_MAP = {
-    'DIET': 'Data/img/diet_logo.png',
+    'DIET': 'Data/img/DIET_LOGO.png',
     'LEAF': 'Data/img/LEAF_LOGO.png',
     'FMC': 'Data/img/LC_LOGO.png',
     'CASING & FLAVOR': 'Data/img/C&F_LOGO.png', # Shared logo

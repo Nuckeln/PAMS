@@ -138,3 +138,9 @@ DEPOT_NAME_MAPPING = {
     "STB": "DE52 - München",
     "STW": "DE52 - München"
 }
+user
+Test
+klarname
+Testo
+Passwort
+Testrer
