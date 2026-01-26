@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Dict, Any, Iterable
 from pandas import DataFrame
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import create_engine, inspect, text
 import urllib
 import pandas as pd
 import time
@@ -9,6 +9,7 @@ import json
 from sqlalchemy import Table, Column, Integer, MetaData
 import streamlit as st
 import pyodbc
+
 
 @dataclass(frozen=True)
 class ConnectionSettings:
@@ -146,9 +147,7 @@ def truncate_Table(table_name):
     db_conn.db.execute(f"TRUNCATE TABLE [{table_name}]")
     # Verbindung schließen
     db_conn.dispose()
-from sqlalchemy import text
 
-from sqlalchemy import text
 
 def loesche_Zeile(tabellenName, spaltenName, wert_str=None, wert_int=None):
     '''erwartet den Tabellennamen als String und den Spaltennamen als String und den Wert als String oder Integer'''

@@ -41,12 +41,10 @@ def page_loader_wrapper(func, title):
     return wrapper
 
 def logout_page():
-    # 1. Cookie und Auth-Status im Authenticator löschen
+    st.title("Abmelden")
+    st.write("Bitte bestätigen Sie die Abmeldung.")
+    # Der Authenticator-Logout-Button kümmert sich um Cookie-Löschung und Session-Bereinigung.
     st.session_state.authenticator.logout('Abmelden', 'main')
-    # 2. Session State leeren
-    st.session_state.user = None
-    st.session_state.rechte = None
-    st.rerun()
 
 def show_registration_form(users_df):
     """Zeigt das Registrierungs-Formular als Popover an."""
@@ -72,7 +70,13 @@ def show_registration_form(users_df):
                 return
                 
             # Passwort hashen und speichern
-            hashed_password = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt()).decode()
+            try:
+                from streamlit_authenticator.utilities.hasher import Hasher
+                hashed_password = Hasher([new_password]).generate()[0]
+            except Exception as e:
+                st.error(f"Fehler beim Hashen des Passworts: {e}")
+                return
+
             new_user_data = pd.DataFrame({
                 "username": [new_user],
                 "name": [new_username],
@@ -82,6 +86,8 @@ def show_registration_form(users_df):
             })
             save_Table_append(new_user_data, "user")
             st.success("Benutzer erfolgreich registriert. Bitte kontaktieren Sie Christian Hammann oder Martin Wolf, um Berechtigungen zu erhalten.")
+            read_user.clear()
+            st.rerun()
 
 # --- 3. SEITEN KONFIGURATION & STYLING ---
 PAGES_CONFIG = {
@@ -164,16 +170,18 @@ def main():
             'access_rights': row['rechte']  
         }
 
-    # 3. Authenticator im Session State halten (WICHTIG für Tabs/Cookies)
-    if 'authenticator' not in st.session_state:
-        st.session_state.authenticator = stauth.Authenticate(
-            credentials=credentials,
-            cookie_name='pams_cookie',
-            cookie_key='super_secret_key', # Muss auf PROD und DEV identisch sein
-            cookie_expiry_days=30
-        )
+    # 3. Authenticator instanziieren
+    # Wir speichern den Authenticator NICHT im Session State, da sich die Credentials (z.B. nach Registrierung)
+    # ändern können. Das Objekt muss bei jedem Rerun mit den aktuellen Daten erstellt werden.
+    authenticator = stauth.Authenticate(
+        credentials=credentials,
+        cookie_name='pams_cookie',
+        cookie_key='super_secret_key', # Muss auf PROD und DEV identisch sein
+        cookie_expiry_days=30
+    )
     
-    authenticator = st.session_state.authenticator
+    # Authenticator im Session State für Logout-Funktion verfügbar machen (falls benötigt)
+    st.session_state.authenticator = authenticator
 
     # 4. Login-Check (Prüft automatisch Cookies!)
     name, authentication_status, username = authenticator.login(location='main')
@@ -190,8 +198,7 @@ def main():
         # Rechteprüfung
         if st.session_state.rechte == 0:
             st.error("Sie haben noch keine Berechtigung für diese Anwendung. Bitte Kontaktieren Sie den Admin.")
-            if st.button("Logout"):
-                logout_page()
+            logout_page()
             st.stop()
 
         # --- NAVIGATION LADEN ---
