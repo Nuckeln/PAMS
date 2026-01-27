@@ -62,7 +62,7 @@ def create_simple_line_chart(df, data_col, time_col, title, color, unit, limits=
 
 def app():
     # --- Daten Laden ---
-    @st.cache_data(ttl=3600)
+    @st.cache_data(ttl=7700)
     def load_synapse_datasets():
         try:
             environmental_data = SynapseReader.load_delta("gold/EnvironmentalData/", as_pandas=True)

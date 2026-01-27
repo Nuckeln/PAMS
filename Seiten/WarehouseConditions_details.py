@@ -3,7 +3,7 @@ from Data_Class.SynapseReader import SynapseReader
 import streamlit as st
 
 
-@st.cache_data
+@st.cache_data(ttl=7200)
 def load_datasets():
     try:
         df_config = SynapseReader.load_delta("gold/StockConfigGermany//", as_pandas=True)

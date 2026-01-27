@@ -99,8 +99,7 @@ def get_status_category(row):
         return "Nicht geliefert", "#d62728"  # Rot
 
 
-
-@st.cache_data
+@st.cache_data(ttl=650)
 def load_and_prep_data():
     if SynapseReader:
         df = SynapseReader.load_delta("silver/Logistics/Germany/Supplychain/LastMile/DDN/thirdparty_kn_ddn_bat_statusreporting/", as_pandas=True)

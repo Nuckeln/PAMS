@@ -4,6 +4,7 @@ import plotly.express as px
 import os
 import pyarrow.compute as pc
 from datetime import datetime, timedelta, timezone
+from Data_Class.sql import SQL
 
 try:
     from Data_Class.SynapseReader import SynapseReader
@@ -72,14 +73,20 @@ def load_data():
         
         # 2. Load Config (StockConfigGermany) - usually smaller, load full or filter if needed
         df_conf = SynapseReader.load_delta('gold/StockConfigGermany/', as_pandas=True)
+
+      
+        dfStammdaten = SQL.read_table('data_materialmaster-MaterialMasterUnitOfMeasures', ['UnitOfMeasure', 'MaterialNumber','NumeratorToBaseUnitOfMeasure',
+                                                                    'DenominatorToBaseUnitOfMeasure'],
+                            )
+
         
-        return df_inv, df_conf
+        return df_inv, df_conf, dfStammdaten
         
     except Exception as e:
         st.error(f"Error loading data: {e}")
         return pd.DataFrame(), pd.DataFrame()
 
-def process_data(df_inv, df_conf):
+def process_data(df_inv, df_conf, dfStammdaten):
     """
     Pre-processes dataframes: ensures date columns, standardized types, and mapped columns.
     """
@@ -114,6 +121,25 @@ def process_data(df_inv, df_conf):
             df_conf['StandortName'] = df_conf['StandortGeografisch'].apply(get_kn_location_name)
         else:
              df_conf['StandortName'] = 'Unknown'
+
+    # Nur relevante Einheiten
+    units = ['D97']
+    dfStammdaten = dfStammdaten[dfStammdaten['UnitOfMeasure'].isin(units)].copy()
+
+    # Neue Spalten berechnen (vektorisiert)
+    dfStammdaten['Menge'] = dfStammdaten['NumeratorToBaseUnitOfMeasure'] / dfStammdaten['DenominatorToBaseUnitOfMeasure']
+
+    df_inv['Artikelnummer'] = df_inv['Artikelnummer'].astype(str)
+    
+    df_inv = pd.merge(df_inv, dfStammdaten[['MaterialNumber', 'Menge']], left_on='Artikelnummer', right_on='MaterialNumber', how='left')
+    # wenn in df_inv MengeVerkaufseinheit kleiner als 1 ist  und QuellSystem = Bayreuth SWISSLOG dann runde auf 1 auf
+    mask_small = df_inv['MengeVerkaufseinheit'] < 1
+    mask_bayreuth = df_inv['QuellSystem'] == 'Bayreuth SWISSLOG'
+    df_inv.loc[mask_small & mask_bayreuth, 'MengeVerkaufseinheit'] = 1
+    # wenn in df_inv MengeVerkaufseinheit 0 oder leer ist und QuellSystem = Bayreuth SWISSLOG dann MengeVerkaufseinheit = MenginTHoderKG / Menge
+    mask_zero = (df_inv['MengeVerkaufseinheit'] == 0) | (df_inv['MengeVerkaufseinheit'].isna())
+    mask_bayreuth = df_inv['QuellSystem'] == 'Bayreuth SWISSLOG'
+    df_inv.loc[mask_zero & mask_bayreuth, 'MengeVerkaufseinheit'] = df_inv.loc[mask_zero & mask_bayreuth, 'MengeinTHoderKG'] / df_inv.loc[mask_zero & mask_bayreuth, 'Menge']
 
     return df_inv, df_conf
 
@@ -162,6 +188,7 @@ def get_filtered_metrics(category, df_inv, df_conf, latest_date):
             
             # Filter für Inventory
             m_inv = (df_inv['Fachbereich'].isin(fbs)) & (df_inv['Lagerzone'].isin(zones))
+            metric_type = 'sum_unit'
             
             # Filter für Config (Kapazität)
             if m_conf is not None:
@@ -319,14 +346,14 @@ def app():
     
     # Load Data
     with st.spinner("Lade Bestandsdaten..."):
-        df_inv_raw, df_conf_raw = load_data()
-    
+        df_inv_raw, df_conf_raw, dfStammdaten = load_data()
     if df_inv_raw.empty:
         st.warning("Keine Bestandsdaten gefunden. Bitte prüfen Sie die Quelle.")
         return
 
     # Process
-    df_inv, df_conf = process_data(df_inv_raw, df_conf_raw)
+    df_inv, df_conf = process_data(df_inv_raw, df_conf_raw, dfStammdaten)
+    #st.dataframe(df_inv.head(200))
     
     # Determine Latest Date (Global)
     if 'Date' in df_inv.columns:

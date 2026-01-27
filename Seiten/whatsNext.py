@@ -76,7 +76,7 @@ def format_logistics_quantity(row):
     else:
         return f"<b>{fmt(row['Order_Quantity'])} {row['Order_Unit']}</b>"
 
-@st.cache_data
+@st.cache_data(ttl=7000)
 def load_data():
     df = SynapseReader.SynapseReader.load_delta('silver/SAP/SAP_VIEWS/VIEW_SFG_SAPECC_WhatsNext/VIEW_SFG_SAPECC_WhatsNext/', as_pandas=True)
     print("Data loaded from Synapse blob storage.")
