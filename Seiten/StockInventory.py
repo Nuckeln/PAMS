@@ -275,6 +275,10 @@ def get_filtered_metrics(category, df_inv, df_conf, latest_date):
 
     return current_val, capacity_val, history, df_curr
 
+@st.dialog("Detailsansicht", width='large')
+def show_details_dialog(title, df_details):
+    st.markdown(f"### Details für {title}")
+    st.dataframe(df_details, hide_index=True, use_container_width=True)
 
 def render_tile(title, category_key, df_inv, df_conf, latest_date_norm):
     
@@ -331,13 +335,13 @@ def render_tile(title, category_key, df_inv, df_conf, latest_date_norm):
             st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
         
         # --- ZEILE 4: DETAILS (Expander) ---
-        with st.expander("🔎 Details"):
-            if not df_details.empty:
-                display_cols = ['Material', 'Artikeltext', 'Charge', 'MengeVerkaufseinheit', 'Lagerplatz']
-                final_cols = [c for c in display_cols if c in df_details.columns]
-                st.dataframe(df_details[final_cols], hide_index=True, use_container_width=True)
-            else:
-                st.info("Keine Detaildaten.")
+            if st.button("🔎 Details", key=f"btn_details_{category_key}", use_container_width=True):
+                show_details_dialog(title, df_details)
+            #     display_cols = ['Material', 'Artikeltext', 'Charge', 'MengeVerkaufseinheit', 'Lagerplatz']
+            #     final_cols = [c for c in display_cols if c in df_details.columns]
+            #     st.dataframe(df_details[final_cols], hide_index=True, use_container_width=True)
+            # else:
+            #     st.info("Keine Detaildaten.")
 
 
 
