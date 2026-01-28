@@ -318,6 +318,54 @@ def show_depot_details_dialog(title, df_details):
         use_container_width=True
     )
 
+@st.dialog("Lieferdetails", width='large')
+def show_customer_details_dialog(name, row):
+    st.markdown(f"### Details für {name}")
+    
+    # Transponieren für bessere Lesbarkeit eines einzelnen Datensatzes
+    # Wir machen daraus einen DataFrame mit 2 Spalten: Attribut, Wert
+    
+    data_items = []
+    
+    # Wichtige Felder zuerst
+    prio_fields = [
+        ('Kunde', 'NAME'),
+        ('Ort', 'ORT'),
+        ('PLZ', 'PLZ'),
+        ('Status', 'Status_Text'),
+        ('Lieferfenster', 'Anlieferzeit'),
+        ('Ankunft', 'STARTSTANDZEIT'),
+        ('Abfahrt', 'ENDESTANDZEIT'),
+        ('Wartezeit', 'Wartezeit_min'),
+        ('Code', 'ZEBRAXXSTATUSCODE'),
+        ('Depot', 'ZUSTELLENDESDEPOT')
+    ]
+    
+    # Lieferschein hinzufügen
+    ls_col = get_lieferschein_col(pd.DataFrame([row]))
+    if ls_col:
+        prio_fields.insert(1, ('Lieferschein', ls_col))
+
+    for label, col_name in prio_fields:
+        val = row.get(col_name)
+        # Formatierung
+        if col_name in ['STARTSTANDZEIT', 'ENDESTANDZEIT'] and pd.notna(val):
+             try:
+                 val = val.strftime('%H:%M')
+             except:
+                 pass
+        if col_name == 'Wartezeit_min' and pd.notnull(val):
+             val = f"{val:.0f} min"
+             
+        data_items.append({"Attribut": label, "Wert": str(val) if pd.notna(val) else "-"})
+
+    st.table(pd.DataFrame(data_items))
+    
+    # Raw Data Expander
+    with st.expander("Alle Rohdaten anzeigen"):
+        st.write(row)
+
+
 
 def app():
     sar.st_autorefresh(interval=120000, debounce=True)
@@ -339,8 +387,6 @@ def app():
     
     # Filterung
     df = df_raw[df_raw['LIEFERTERMIN'].dt.date == selected_date]
-    # st.dataframe(df, width='content')  
-    # st.dataframe(df_Kunden, width='content')
 
     # --- KPI BEREICH (Angepasst an neue Codes) ---
     total_orders = len(df)
@@ -370,7 +416,7 @@ def app():
 
     st.markdown("---")
 
-    # --- LAYOUT ---
+#########KARTE UND DEPOTS ÜBERSICHT #########
     col_map, col_depots = st.columns([2, 1.5])
 
     with col_map:
@@ -380,7 +426,9 @@ def app():
             st.plotly_chart(map_fig, use_container_width=True)
         else:
             st.info(f"Keine Aufträge für den {selected_date} gefunden.")
-    
+
+    # --- KUNDEN LOGO ÜBERSICHT ---
+
         logo_map = {
             "EDEKA": "Data/img/Kundenlogos/EDEKA.png",
             "NETTO": "Data/img/Kundenlogos/NETTO.png",
@@ -399,13 +447,13 @@ def app():
                         if os.path.exists(path):
                             st.image(path, width='stretch')
                             st.markdown("""
-    <style>
-    [data-testid="stImage"] img {
-        max-height: 80px;
-        object-fit: contain;
-    }
-    </style>
-""", unsafe_allow_html=True)
+                    <style>
+                    [data-testid="stImage"] img {
+                        max-height: 80px;
+                        object-fit: contain;
+                    }
+                    </style>
+                """, unsafe_allow_html=True)
                         else:
                             st.markdown(f"**{key}**")
                         
@@ -430,17 +478,18 @@ def app():
                                 st.metric("Ø Wartezeit", "0 min")
                                 
                             st.metric("Pünktlichkeit", f"{client_punc_rate:.1f}%")
+
+                            if st.button("🔎 Details", key=f"btn_client_det_{key}", use_container_width=True):
+                                show_depot_details_dialog(key, client_df)
                         else:
                             st.caption("Keine Aufträge")
         else:
             st.info("Keine Kundendaten für das ausgewählte Datum.")
 
-
-
-
-
-
+    # --- LAYOUT DEPOTS --
+    
     with col_depots:
+
             st.subheader("🏢 Depot Übersicht")
             
             # --- FIX: STRIKTES MAPPING FÜR DEPOT-KARTEN ---
@@ -516,7 +565,7 @@ def app():
                      df_display_table[c] = df_display_table[c].dt.strftime('%H:%M')
 
             # Show detailed columns
-            cols_to_show = [
+            cols_to_show = LIEFERSCHEIN_CANDIDATES + [
                 'ZUSTELLENDESDEPOT', 
                 'LIEFERTERMIN', 
                 'NAME', 
@@ -528,7 +577,7 @@ def app():
                 'Is_Punctual',       # Pünktlich?
                 'ZEBRAXXSTATUSCODE', 
                 'Status_Text'
-            ] + LIEFERSCHEIN_CANDIDATES
+            ] 
             
             # Spalten umbenennen für User
             rename_map = {
