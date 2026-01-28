@@ -380,6 +380,65 @@ def app():
             st.plotly_chart(map_fig, use_container_width=True)
         else:
             st.info(f"Keine Aufträge für den {selected_date} gefunden.")
+    
+        logo_map = {
+            "EDEKA": "Data/img/Kundenlogos/EDEKA.png",
+            "NETTO": "Data/img/Kundenlogos/NETTO.png",
+            "REWE": "Data/img/Kundenlogos/REWE.png",
+            "HALL": "Data/img/Kundenlogos/HALL.jpg",
+            "Lekkerland": "Data/img/Lekkerland_logo.svg",
+        }
+
+        if not df.empty:
+            # Decide on number of columns based on number of logos
+            cols = st.columns(len(logo_map))
+
+            for idx, (key, path) in enumerate(logo_map.items()):
+                with cols[idx]:
+                    with st.container(border=True):
+                        if os.path.exists(path):
+                            st.image(path, width='stretch')
+                            st.markdown("""
+    <style>
+    [data-testid="stImage"] img {
+        max-height: 80px;
+        object-fit: contain;
+    }
+    </style>
+""", unsafe_allow_html=True)
+                        else:
+                            st.markdown(f"**{key}**")
+                        
+                        client_df = df[df['NAME'].str.contains(key, case=False, na=False)]
+                        
+                        if not client_df.empty:
+                            cnt = len(client_df)
+                            avg_wait_time = client_df['Wartezeit_min'].mean()
+                            
+                            # Pünktlichkeit Kunde
+                            client_del = client_df[client_df['ZEBRAXXSTATUSCODE'].astype(str) == '8021']
+                            client_punc_rate = 0
+                            if len(client_del) > 0:
+                                p_cnt = len(client_del[client_del['Is_Punctual'] == True])
+                                client_punc_rate = (p_cnt / len(client_del)) * 100
+
+                            st.metric("Aufträge", f"{cnt}")
+                            
+                            if not pd.isna(avg_wait_time) and avg_wait_time > 0:
+                                st.metric("Ø Wartezeit", f"{avg_wait_time:.0f} min")
+                            else:
+                                st.metric("Ø Wartezeit", "0 min")
+                                
+                            st.metric("Pünktlichkeit", f"{client_punc_rate:.1f}%")
+                        else:
+                            st.caption("Keine Aufträge")
+        else:
+            st.info("Keine Kundendaten für das ausgewählte Datum.")
+
+
+
+
+
 
     with col_depots:
             st.subheader("🏢 Depot Übersicht")
