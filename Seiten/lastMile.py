@@ -470,7 +470,7 @@ def app():
                                 p_cnt = len(client_del[client_del['Is_Punctual'] == True])
                                 client_punc_rate = (p_cnt / len(client_del)) * 100
 
-                            st.metric("Aufträge", f"{cnt}")
+                            st.metric("Zugestellt", f"{len(client_del)} von {cnt}")
                             
                             if not pd.isna(avg_wait_time) and avg_wait_time > 0:
                                 st.metric("Ø Wartezeit", f"{avg_wait_time:.0f} min")
