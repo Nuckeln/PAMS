@@ -98,6 +98,17 @@ def get_status_category(row):
     else:
         return "Nicht geliefert", "#d62728"  # Rot
 
+LIEFERSCHEIN_CANDIDATES = [
+    'LIEFERSCHEIN', 'Lieferschein', 'LIEFERSCHEINNUMMER', 
+    'Delivery_Note_Number', 'SapOrderNumber', 
+    'REFERENZ', 'Referenz', 'Sendungsnummer', 'Auftragsnummer'
+]
+
+def get_lieferschein_col(df):
+    for c in LIEFERSCHEIN_CANDIDATES:
+        if c in df.columns:
+            return c
+    return None
 
 @st.cache_data(ttl=650)
 def load_and_prep_data():
@@ -196,6 +207,9 @@ def plot_fancy_map(df, depot_name_mapping):
 
     # Wir nutzen die tatsächlichen Werte, die in der Spalte vorkommen
     available_statuses = df_map['Status_Text'].unique()
+    
+    # Determine Lieferschein Column
+    ls_col = get_lieferschein_col(df_map)
 
     for status in available_statuses:
         subset = df_map[df_map['Status_Text'] == status]
@@ -218,12 +232,16 @@ def plot_fancy_map(df, depot_name_mapping):
         ))
 
         # B. Kunden Punkte
+        hover_text = subset['NAME'] + "<br>Status: " + status
+        if ls_col:
+             hover_text += "<br>LS: " + subset[ls_col].astype(str)
+
         fig.add_trace(go.Scattermapbox(
             mode="markers",
             lon=subset['longitude'],
             lat=subset['latitude'],
             marker=dict(size=8, color=color),
-            text=subset['NAME'] + "<br>Status: " + status,
+            text=hover_text,
             name=status,
             legendgroup=status
         ))
@@ -252,6 +270,54 @@ def plot_fancy_map(df, depot_name_mapping):
     fig.update_layout(showlegend=False)
     return fig
 
+@st.dialog("Depot Details", width='large')
+def show_depot_details_dialog(title, df_details):
+    st.markdown(f"### Details für {title}")
+    
+    # Prepare data for display
+    df_display = df_details.copy()
+    
+    # Formatiere Zeitstempel für Anzeige
+    for c in ['STARTSTANDZEIT', 'ENDESTANDZEIT']:
+        if c in df_display.columns:
+             df_display[c] = df_display[c].dt.strftime('%H:%M')
+
+    cols_to_show = [
+        'LIEFERTERMIN', 
+        'NAME', 
+        'ORT', 
+        'Anlieferzeit',      # Lieferfenster
+        'STARTSTANDZEIT',    # Ankunft
+        'ENDESTANDZEIT',     # Abfahrt
+        'Wartezeit_min',     # Dauer
+        'Is_Punctual',       # Pünktlich?
+        'ZEBRAXXSTATUSCODE', 
+        'Status_Text'
+    ] + LIEFERSCHEIN_CANDIDATES
+    
+    rename_map = {
+        'LIEFERTERMIN': 'Datum',
+        'NAME': 'Kunde',
+        'ORT': 'Ort',
+        'Anlieferzeit': 'Lieferfenster',
+        'STARTSTANDZEIT': 'Ankunft',
+        'ENDESTANDZEIT': 'Abfahrt',
+        'Wartezeit_min': 'Wartezeit (Min)',
+        'Is_Punctual': 'Pünktlich',
+        'ZEBRAXXSTATUSCODE': 'Code',
+        'Status_Text': 'Status'
+    }
+    for c in LIEFERSCHEIN_CANDIDATES:
+        rename_map[c] = 'Lieferschein'
+
+    existing_cols = [c for c in cols_to_show if c in df_display.columns]
+    
+    st.dataframe(
+        df_display[existing_cols].rename(columns=rename_map),
+        hide_index=True,
+        use_container_width=True
+    )
+
 
 def app():
     sar.st_autorefresh(interval=120000, debounce=True)
@@ -262,9 +328,9 @@ def app():
         st.error("Keine Daten geladen.")
         return
 
-    # Datepicker
-    st.markdown("---")
-    col_filter, _ = st.columns([1, 3])
+
+
+    col_filter, kpi1, kpi2, kpi3, kpi4 = st.columns([1, 1,1,1,1])
     with col_filter:
         selected_date = st.date_input(
             "📅 Lieferdatum auswählen:",
@@ -290,7 +356,8 @@ def app():
         punctual_count = len(df[(df['ZEBRAXXSTATUSCODE'].astype(str) == '8021') & (df['Is_Punctual'] == True)])
         global_punctuality = (punctual_count / delivered) * 100
 
-    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+
+    
     kpi1.metric("📦 Gesamtaufträge", total_orders)
     
     quote = 0
@@ -359,7 +426,7 @@ def app():
                             title_col.markdown(f"**{depot_name}**")
 
                             # 1. Status Text
-                            st.caption(f"{delivered} von {total} zugestellt")
+                            st.caption(f"{delivered} von {total} Lieferscheinen zugestellt")
                             
                             # 2. Fortschrittsbalken
                             progress_value = (delivered / total) if total > 0 else 0
@@ -367,8 +434,11 @@ def app():
                                 
                             # 3. KPIs klein darunter
                             c_wait, c_punc = st.columns(2)
-                            c_wait.write(f"⏳ {total_wait_min:.0f} min")
-                            c_punc.write(f"⏱️ {punctuality_rate:.0f}%")
+                            c_wait.write(f"⏳ {total_wait_min:.0f} min Wartezeit")
+                            c_punc.write(f"⏱️ {punctuality_rate:.0f}% In Time")
+
+                            if st.button("🔎 Details", key=f"btn_det_{depot_name}", use_container_width=True):
+                                show_depot_details_dialog(depot_name, depot_df)
 
             else:
                 st.info("Keine passenden Depot-Daten für das ausgewählte Datum.")
@@ -399,7 +469,7 @@ def app():
                 'Is_Punctual',       # Pünktlich?
                 'ZEBRAXXSTATUSCODE', 
                 'Status_Text'
-            ]
+            ] + LIEFERSCHEIN_CANDIDATES
             
             # Spalten umbenennen für User
             rename_map = {
@@ -415,6 +485,8 @@ def app():
                 'ZEBRAXXSTATUSCODE': 'Code',
                 'Status_Text': 'Status'
             }
+            for c in LIEFERSCHEIN_CANDIDATES:
+                rename_map[c] = 'Lieferschein'
             
             # Filtere nur vorhandene Spalten
             existing_cols = [c for c in cols_to_show if c in df_display_table.columns]

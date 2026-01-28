@@ -11,11 +11,9 @@ plotly_express==0.4.1
 
 # web app
 streamlit==1.53.0
-streamlit-aggrid==1.0.5
 streamlit-authenticator==0.3.2
 streamlit-autorefresh==1.0.1
 streamlit-timeline==0.0.2
-hydralit_components==1.0.10
 
 # time series and stats
 statsmodels==0.14.2

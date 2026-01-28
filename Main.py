@@ -9,7 +9,6 @@ import os
 from Seiten.P_Live import PageTagesReport
 from Seiten.P_Report import reportPage
 from Seiten.P_Admin import adminPage
-from Seiten.P_Nachschub import pageStellplatzverwaltung
 from Seiten.C_E_check import main as pageC_E_check
 from Seiten.forecast_prophet import main as pageForecastProp
 import Seiten.lastMile as lastMile
@@ -94,7 +93,6 @@ PAGES_CONFIG = {
     'Depot Live Status': {'func': PageTagesReport},
     'Depot Reports': {'func': reportPage, 'color': 'green'},
     'Forecast': {'func': pageForecastProp},
-    'Lagerverwaltung': {'func': pageStellplatzverwaltung},
     'C&E check': {'func': pageC_E_check},
     'Admin': {'func': adminPage},
     'Warehouse Conditions': {'func': warehouseConditions.app},
@@ -137,16 +135,16 @@ apply_styling()
 
 def user_menue_rechte():
     rights = st.session_state.get('rechte', None)
-    if rights == 1: return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Admin','Warehouse Conditions', 'Warehouse Conditions Details','"What\'s Next"', 'Last Mile', 'Stock Inventory']
-    elif rights == 2: return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung','C&E check','Hick-Up','Warehouse Conditions', 'Warehouse Conditions Details','"What\'s Next"', 'Last Mile', 'Stock Inventory']
-    elif rights == 3: return ['Depot Live Status', 'Depot Reports', 'Forecast', 'Lagerverwaltung']
+    if rights == 1: return ['Depot Live Status', 'Depot Reports', 'Forecast','C&E check','Hick-Up','Admin','Warehouse Conditions', 'Warehouse Conditions Details','"What\'s Next"', 'Last Mile', 'Stock Inventory']
+    elif rights == 2: return ['Depot Live Status', 'Depot Reports', 'Forecast','C&E check','Hick-Up','Warehouse Conditions', 'Warehouse Conditions Details','"What\'s Next"', 'Last Mile', 'Stock Inventory']
+    elif rights == 3: return ['Depot Live Status', 'Depot Reports', 'Forecast']
     elif rights == 4 or rights == 5: return ["Depot Live Status"]
-    elif rights == 6: return ["Depot Live Status", 'Depot Reports', 'Forecast', 'Lagerverwaltung']
+    elif rights == 6: return ["Depot Live Status", 'Depot Reports', 'Forecast']
     return []
 
 # --- 4. DATENBANK ---
 
-def read_user():
+def read_user():    
     return read_Table("user")
 
 

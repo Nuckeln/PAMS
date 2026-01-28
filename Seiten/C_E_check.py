@@ -7,7 +7,6 @@ import streamlit as st
 import json
 import uuid
 from Data_Class.MMSQL_connection import read_Table, save_Table_append, save_Table
-import hydralit_components as hc
 
 import chardet
 import streamlit as st
@@ -319,7 +318,7 @@ def main():
             st.stop()
             
         if st.button('Daten Hochladen und prüfen'):
-            with hc.HyLoader(f'',hc.Loaders.points_line):
+            with st.spinner('Daten werden geprüft...'):
             #   with st.container(border=True):
                     
                     if uploaded_file and uploaded_file2 not in [None]:
